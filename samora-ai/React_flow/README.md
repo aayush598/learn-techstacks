@@ -7,14 +7,15 @@
 **A:** The core components are `<ReactFlow>` (the main canvas wrapper), `<Node>` (custom node components), `<Edge>` (connection lines), and `<Handle>` (connection points on nodes). Built-in node types include `input`, `default`, and `output`.
 
 ## Q3: How do you set up a basic React Flow instance?
-**A:** ```jsx
+**A:** 
 import { ReactFlow } from '@xyflow/react';
+
 function Flow() {
   const nodes = [{ id: '1', position: { x: 0, y: 0 }, data: { label: 'Node' } }];
   const edges = [];
   return <ReactFlow nodes={nodes} edges={edges} />;
 }
-```
+
 Provide `nodes` and `edges` arrays (possibly with state management) and render the `ReactFlow` component.
 
 ## Q4: What is the `@xyflow/react` package?
