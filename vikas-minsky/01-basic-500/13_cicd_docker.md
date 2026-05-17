@@ -19,7 +19,7 @@
 **Answer:** Continuous Deployment automatically deploys every change that passes the CI pipeline to production. It extends CI by making successful builds go live without manual approval, enabling rapid feature delivery and immediate user feedback.
 
 354. Explain GitHub Actions.
-     G
+     
 
 **Answer:** GitHub Actions is a CI/CD platform integrated with GitHub. Workflows defined in YAML files trigger on events (push, PR, schedule). Jobs run in parallel or sequentially on GitHub-hosted or self-hosted runners with reusable actions from the marketplace.
 
