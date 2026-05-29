@@ -27,7 +27,7 @@ from voice_agent.models import AgentConfig, VoiceConfig
 
 # Initialize client
 client = VoiceAgent(
-    api_key="sk_live_...",
+    api_key="va_live_...",
     environment="sandbox"  # or "production"
 )
 

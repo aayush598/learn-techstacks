@@ -7,7 +7,7 @@ Secure API key generation produces cryptographically random keys with a structur
 ## Key Format
 
 ```
-sk_live_tenant_abc123_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p
+va_live_EXAMPLE_KEY_FOR_DOCS_ONLY
 ├── Prefix ─┘    ├── Tenant ──┘   ├── Secret (60+ bits entropy)
 ```
 
@@ -24,7 +24,7 @@ class ApiKeyGenerator {
   generate(tenantId: string, environment: 'live' | 'test' = 'live'): GeneratedApiKey {
     const env = environment === 'live' ? 'live' : 'test';
     const tenantPrefix = tenantId.slice(0, 8);
-    const keyPrefix = `sk_${env}_${tenantPrefix}_`;
+    const keyPrefix = `va_${env}_${tenantPrefix}_`;
 
     const secret = randomBytes(32).toString('hex');
     const key = keyPrefix + secret;
@@ -34,7 +34,7 @@ class ApiKeyGenerator {
   }
 
   validateKeyFormat(key: string): boolean {
-    return /^sk_(live|test)_[a-z0-9]{8}_[a-f0-9]{64}$/.test(key);
+    return /^va_(live|test)_[a-z0-9]{8}_[a-f0-9]{64}$/.test(key);
   }
 
   hashKey(key: string): string {

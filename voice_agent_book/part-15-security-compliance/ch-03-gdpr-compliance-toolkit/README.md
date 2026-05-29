@@ -1,33 +1,11 @@
-# Chapter 03: GDPR Compliance Toolkit
+# 03 Gdpr Compliance Toolkit
 
-> **Part:** 15 - Security, Compliance & Governance
+> **Part:** part-15-security-compliance
 
 ---
 
 ## Sections
 
-| # | Section | Description |
-|---|---------|-------------|
-| 01 | [GDPR Data Mapping](sec-01-gdpr-data-mapping.md) | Data inventory, processing activities, lawful basis identification, data flow diagrams |
-| 02 | [Consent Management](sec-02-consent-management.md) | Consent capture during signup, consent storage, withdrawal mechanism, consent records audit |
-| 03 | [Data Subject Access Requests](sec-03-data-subject-access-requests.md) | DSAR intake workflow, data collection across systems, response formatting, timeline tracking |
-| 04 | [Right to Erasure (Data Deletion)](sec-04-right-to-erasure.md) | Deletion scope definition, cascade deletion logic, verification reporting, retention exceptions |
-| 05 | [Data Processing Records](sec-05-data-processing-records.md) | Record of processing activities (ROPA), vendor DPA management, subprocessor register |
-| 06 | [Cross-Border Data Transfers](sec-06-cross-border-transfers.md) | Standard Contractual Clauses, Transfer Impact Assessment, adequacy decisions, data localization |
-| 07 | [GDPR API Endpoints](sec-07-gdpr-api-endpoints.md) | Automated DSAR API, deletion API, data portability export, consent status API |
-| 08 | [GDPR Audit Trail](sec-08-gdpr-audit-trail.md) | Processing activity logging, consent changes audit, DSAR request history, data deletion proof |
-
----
-
-## GDPR Compliance Checklist
-
-- [ ] Data mapping and ROPA maintained
-- [ ] Lawful basis documented for all processing
-- [ ] Consent mechanism with withdrawal
-- [ ] DSAR process automated
-- [ ] Data deletion (right to erasure) implemented
-- [ ] Data Processing Agreements with subprocessors
-- [ ] Cross-border transfer mechanism in place
-- [ ] Data breach notification procedure
-- [ ] DPO appointed (if required)
-- [ ] Privacy by design in new features
+| # | Section |
+|---|---------|
+\n| 01 | [Centralized Secrets Store](sec-01-centralized-secrets-store.md) |\n| 02 | [Environment Injection](sec-02-environment-injection.md) |\n| 03 | [Automatic Secret Rotation](sec-03-automatic-secret-rotation.md) |\n| 04 | [Secrets Cicd Pipelines](sec-04-secrets-cicd-pipelines.md) |\n| 05 | [Audit Trail Secret Access](sec-05-audit-trail-secret-access.md) |\n| 06 | [Dynamic Secrets](sec-06-dynamic-secrets.md) |\n| 07 | [Tenant Secrets Isolation](sec-07-tenant-secrets-isolation.md) |\n| 00sec-08-incident-response-secret-leakage | [Incident Response Secret Leakage](sec-08-incident-response-secret-leakage.md) | |

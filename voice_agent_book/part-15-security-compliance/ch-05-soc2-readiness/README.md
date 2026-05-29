@@ -1,50 +1,11 @@
-# Chapter 05: SOC 2 Readiness
+# 05 Soc2 Readiness
 
-> **Part:** 15 - Security, Compliance & Governance
+> **Part:** part-15-security-compliance
 
 ---
 
 ## Sections
 
-| # | Section | Description |
-|---|---------|-------------|
-| 01 | [SOC 2 Trust Services Criteria](sec-01-soc2-trust-services-criteria.md) | Security, availability, processing integrity, confidentiality, privacy - Type I vs Type II |
-| 02 | [Security Controls Implementation](sec-02-soc2-security-controls.md) | Access controls, logical security, monitoring, change management, risk assessment |
-| 03 | [Availability Controls](sec-03-soc2-availability-controls.md) | Capacity management, disaster recovery, incident response, monitoring SLAs |
-| 04 | [Processing Integrity](sec-04-soc2-processing-integrity.md) | Input validation, error handling, data completeness, processing timeliness |
-| 05 | [Confidentiality Controls](sec-05-soc2-confidentiality-controls.md) | Data classification, access restrictions, encryption, data retention and disposal |
-| 06 | [Privacy Controls](sec-06-soc2-privacy-controls.md) | Notice, choice, consent, data minimization, use and retention, disclosure |
-| 07 | [SOC 2 Evidence Collection](sec-07-soc2-evidence-collection.md) | Automated evidence gathering, system-generated reports, screenshots, policy documentation |
-| 08 | [SOC 2 Audit Preparation](sec-08-soc2-audit-preparation.md) | Readiness assessment, gap analysis, remediation plan, auditor selection, audit execution |
-
----
-
-## SOC 2 Control Categories
-
-```
-Security (Common Criteria) → CC1-CC9
-  ├── CC1: Control Environment
-  ├── CC2: Communication & Information
-  ├── CC3: Risk Assessment
-  ├── CC4: Monitoring Activities
-  ├── CC5: Control Activities
-  ├── CC6: Logical & Physical Access
-  ├── CC7: System Operations
-  ├── CC8: Change Management
-  └── CC9: Risk Mitigation
-
-+ Additional Criteria for A, C, PI, P
-```
-
----
-
-## Learning Objectives
-
-- Understand SOC 2 trust services criteria and audit types
-- Implement security controls aligned with SOC 2 common criteria
-- Build availability controls for capacity and disaster recovery
-- Design processing integrity controls for data accuracy
-- Implement confidentiality controls for data classification
-- Create privacy controls aligned with SOC 2 privacy criteria
-- Automate SOC 2 evidence collection and retention
-- Prepare for SOC 2 Type I and Type II audits
+| # | Section |
+|---|---------|
+\n| 01 | [Data Processing Agreement](sec-01-data-processing-agreement.md) |\n| 02 | [Dsar Data Subject Access](sec-02-dsar-data-subject-access.md) |\n| 03 | [Right To Erasure](sec-03-right-to-erasure.md) |\n| 04 | [Data Portability](sec-04-data-portability.md) |\n| 05 | [Consent Management](sec-05-consent-management.md) |\n| 06 | [Data Retention Policies](sec-06-data-retention-policies.md) |\n| 07 | [Breach Notification](sec-07-breach-notification.md) |\n| 00sec-08-privacy-by-design | [Privacy By Design](sec-08-privacy-by-design.md) | |

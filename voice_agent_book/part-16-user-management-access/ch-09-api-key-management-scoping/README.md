@@ -22,14 +22,14 @@
 ## API Key Format
 
 ```
-sk_live_tenant_abc123_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p
+va_live_EXAMPLE_KEY_FOR_DOCS_ONLY
 ├── Prefix ─┘    ├── Tenant ──┘   ├── Secret (60+ bits entropy)
 ```
 
 ```typescript
 // Key generation
 function generateApiKey(tenantId: string): { key: string; hash: string } {
-  const prefix = `sk_live_${tenantId.slice(0, 8)}_`;
+  const prefix = `va_live_${tenantId.slice(0, 8)}_`;
   const secret = crypto.randomBytes(32).toString('hex');
   const key = prefix + secret;
   const hash = crypto.createHash('sha256').update(key).digest('hex');

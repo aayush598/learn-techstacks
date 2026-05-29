@@ -56,7 +56,7 @@ const KEY_SECURITY_GUIDELINES: KeySecurityGuideline[] = [
 ```typescript
 class KeyLeakDetectionService {
   private patterns = [
-    /sk_(live|test)_[a-z0-9]{8}_[a-f0-9]{64}/g,
+    /va_(live|test)_[a-z0-9]{8}_[a-f0-9]{64}/g,
     /API_KEY=['"][A-Za-z0-9_-]{20,}['"]/g,
   ];
 
