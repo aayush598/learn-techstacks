@@ -1,0 +1,51 @@
+# Bitmask DP — Complete Guide
+
+## What is Bitmask DP?
+
+Bitmask DP uses an integer's bits to represent which elements are active:
+- mask = (0011) means elements 0 and 1 are picked
+- dp[mask][i] = optimal value with visited set = mask, ending at node/task i
+
+**n elements: Total states = 2^n**
+
+**Common operations:**
+  mask | (1 << k)       # pick/set k
+  mask & (1 << k)       # test if k is set
+  mask & ~(1 << k)      # clear/remove k
+  mask ^ (1 << k)       # toggle k
+  (mask >> k) & 1       # get bit k
+  popcount = bin(mask).count('1')  # number of set bits
+
+**When to use:**
+- n <= 20 (2^20 ~ 1 million, still tractable)
+- Elements have binary state
+- Order of picks matters -> dp[mask][last] pattern
+
+---
+
+## Generic DP on Graphs with Masks
+
+def bitmask_template(n, cost_fn):
+    INF = 10**9
+    dp = [[INF]*n for _ in range(1<<n)]
+    for i in range(n):
+        dp[1<<i][i] = 0
+    for mask in range(1<<n):
+        for last in range(n):
+            if not (mask >> last & 1):
+                continue
+            if dp[mask][last] == INF:
+                continue
+            for nxt in range(n):
+                if mask >> nxt & 1:
+                    continue
+                cost = cost_fn(last, nxt)
+                if cost == INF:
+                    continue
+                nm = mask | (1<<nxt)
+                dp[nm][nxt] = min(dp[nm][nxt], dp[mask][last] + cost)
+    full = (1<<n)-1
+    return min(dp[full])
+
+### Key Insight
+This template solves: Hamiltonian path (no return). TSP adds return cost.
