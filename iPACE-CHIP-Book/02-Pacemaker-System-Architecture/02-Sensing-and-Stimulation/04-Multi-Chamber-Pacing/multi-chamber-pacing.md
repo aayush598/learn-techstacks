@@ -1,633 +1,723 @@
 # Multi-Chamber Pacing
 
-## 2.2.4 Multi-Chamber Pacing
+## 2.2.4 Pacing Modes, Timing Cycles, and Rate-Adaptive Algorithms
 
-### 2.2.4.1 Pacing Mode Nomenclature (NBG Code)
-
-The North American Society of Pacing and Electrophysiology (NASPE) and British
-Pacing and Electrophysiology Group (BPEG) coding system defines pacemaker modes
-using a standardized 5-letter code.
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    NBG PACING MODE CODE                                      │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  FORMAT: 1-2-3-4-5                                                   │  │
-│  │                                                                      │  │
-│  │  Position 1: Chamber Paced                                           │  │
-│  │  ─────────────────────────                                           │  │
-│  │  O = None (no pacing)                                                │  │
-│  │  A = Atrium                                                          │  │
-│  │  V = Ventricle                                                       │  │
-│  │  D = Dual (A + V)                                                   │  │
-│  │                                                                      │  │
-│  │  Position 2: Chamber Sensed                                          │  │
-│  │  ──────────────────────────                                          │  │
-│  │  O = None (no sensing)                                               │  │
-│  │  A = Atrium                                                          │  │
-│  │  V = Ventricle                                                       │  │
-│  │  D = Dual (A + V)                                                   │  │
-│  │                                                                      │  │
-│  │  Position 3: Response to Sensing                                     │  │
-│  │  ─────────────────────────────                                       │  │
-│  │  O = None (no response to sensing)                                   │  │
-│  │  I = Inhibited (pace inhibited by sensed event)                      │  │
-│  │  T = Triggered (sense triggers pace)                                 │  │
-│  │  D = Dual (I + T)                                                   │  │
-│  │                                                                      │  │
-│  │  Position 4: Rate Response                                           │  │
-│  │  ────────────────────────                                            │  │
-│  │  O = No rate response (fixed rate)                                   │  │
-│  │  R = Rate responsive (sensor-driven rate adjustment)                 │  │
-│  │                                                                      │  │
-│  │  Position 5: Multi-Site Pacing                                       │  │
-│  │  ───────────────────────────                                         │  │
-│  │  O = No multi-site pacing                                            │  │
-│  │  A = Multi-site atrial pacing                                        │  │
-│  │  V = Multi-site ventricular pacing (biventricular)                  │  │
-│  │  D = Multi-site dual chamber pacing                                 │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  COMMON PACING MODES:                                                      │
-│  ┌──────┬────────────────────────────────────────────────────────────┐    │
-│  │ Mode │ Description                                                │    │
-│  ├──────┼────────────────────────────────────────────────────────────┤    │
-│  │ ODO  │ Monitor only (no pacing, no sensing response)             │    │
-│  │ AAI  │ Atrial paced, atrial sensed, inhibited response          │    │
-│  │ AAIR │ AAI + rate response                                      │    │
-│  │ VVI  │ Ventricular paced, ventricular sensed, inhibited          │    │
-│  │ VVIR │ VVI + rate response                                      │    │
-│  │ DDD  │ Dual paced, dual sensed, dual response (inhibit+trigger)│    │
-│  │ DDDR │ DDD + rate response                                      │    │
-│  │ VOO  │ Ventricular asynchronous (no sensing)                    │    │
-│  │ AOO  │ Atrial asynchronous (no sensing)                         │    │
-│  │ DOO  │ Dual asynchronous (no sensing)                           │    │
-│  │ VVT  │ Ventricular triggered (test mode)                        │    │
-│  │ VAT  │ Atrial sensed → ventricular triggered (obsolete)         │    │
-│  └──────┴────────────────────────────────────────────────────────────┘    │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.4.2 Mode-Specific Timing Cycles
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    MODE-SPECIFIC TIMING CYCLES                               │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  VVI MODE TIMING:                                                   │  │
-│  │  ────────────────                                                   │  │
-│  │                                                                      │  │
-│  │  VS = Ventricular Sense    VP = Ventricular Pace                    │  │
-│  │                                                                      │  │
-│  │  VS           VP           VP           VS           VP            │  │
-│  │   │            │            │            │            │             │  │
-│  │   ┌────────────┐            ┌────────────┐            ┌──────      │  │
-│  │   │            │            │            │            │             │  │
-│  │ ──┘            └────────────┘            └────────────┘             │  │
-│  │   │            │            │            │            │             │  │
-│  │   ◄── LRI ───►│            ◄── LRI ───►│            ◄── LRI ──►  │  │
-│  │   (escape      │            (escape      │            (escape       │  │
-│  │    interval)   │            interval)   │            interval)     │  │
-│  │                                                                      │  │
-│  │  Timing Rules:                                                      │  │
-│  │  • If no sensed event within LRI → deliver VP (escape interval)   │  │
-│  │  • If sensed event (VS) → reset LRI timer, inhibit pacing         │  │
-│  │  • LRI = 60,000 / LRL (ms), where LRL = lower rate limit (ppm)  │  │
-│  │                                                                      │  │
-│  │  Example (LRL = 60 ppm):                                           │  │
-│  │  • LRI = 60,000 / 60 = 1000 ms                                    │  │
-│  │  • If no R-wave detected for 1000 ms → pace V                    │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  DDD MODE TIMING:                                                   │  │
-│  │  ────────────────                                                   │  │
-│  │                                                                      │  │
-│  │  AS = Atrial Sense    AP = Atrial Pace                              │  │
-│  │  VS = Ventricular Sense    VP = Ventricular Pace                    │  │
-│  │                                                                      │  │
-│  │  AS     VP      AS     VP      AS     VP      AP     VP           │  │
-│  │   │      │       │      │       │      │       │      │            │  │
-│  │   │  ┌───┤       │  ┌───┤       │  ┌───┤   ┌───┤  ┌───┤            │  │
-│  │   │  │AVD│       │  │AVD│       │  │AVD│   │AVD│  │AVD│            │  │
-│  │   └──┘   └───    └──┘   └───    └──┘   └───┘   └──┘   └───       │  │
-│  │   │      │       │      │       │      │       │      │            │  │
-│  │   ◄─VA──►│       ◄─VA──►│       ◄─VA──►│       ◄─VA──►│           │  │
-│  │    interval      interval      interval      interval              │  │
-│  │                                                                      │  │
-│  │  Timing Rules:                                                      │  │
-│  │  1. VA interval: After VS/VP, wait VA interval before next AP/AS │  │
-│  │  2. AV delay: After AS/AP, wait AV delay before next VP          │  │
-│  │  3. VA interval = LRI - AV delay                                   │  │
-│  │  4. Total cycle: VA + AV delay = LRI                              │  │
-│  │                                                                      │  │
-│  │  Example (LRL = 60 ppm, AV delay = 200 ms):                       │  │
-│  │  • LRI = 1000 ms                                                   │  │
-│  │  • VA interval = 1000 - 200 = 800 ms                              │  │
-│  │  • Sequence: VS → wait 800ms → AP → wait 200ms → VP             │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  AAI MODE TIMING:                                                   │  │
-│  │  ────────────────                                                   │  │
-│  │                                                                      │  │
-│  │  AS     AP      AS     AP      AS     AP      AS     AP           │  │
-│  │   │      │       │      │       │      │       │      │            │  │
-│  │   │      │       │      │       │      │       │      │            │  │
-│  │ ──┘      └───    └──┘   └───    └──┘   └───    └──┘   └───       │  │
-│  │   │      │       │      │       │      │       │      │            │  │
-│  │   ◄─LRI─►│       ◄─LRI─►│       ◄─LRI─►│       ◄─LRI─►│           │  │
-│  │                                                                      │  │
-│  │  Timing Rules:                                                      │  │
-│  │  • If no P-wave sensed within LRI → deliver AP                    │  │
-│  │  • If P-wave sensed (AS) → reset LRI, inhibit pacing             │  │
-│  │  • No AV delay (single-chamber atrial pacing)                     │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  DDDR MODE TIMING:                                                  │  │
-│  │  ──────────────────                                                  │  │
-│  │                                                                      │  │
-│  │  Same as DDD, but LRI is adjusted by sensor:                       │  │
-│  │                                                                      │  │
-│  │  LRI = min(LRI_sensor, LRI_LRL)                                    │  │
-│  │                                                                      │  │
-│  │  Where:                                                              │  │
-│  │  • LRI_sensor = 60,000 / SIR (sensor-indicated rate)              │  │
-│  │  • LRI_LRL = 60,000 / LRL (lower rate limit)                     │  │
-│  │  • SIR is determined by activity sensor (accelerometer)            │  │
-│  │                                                                      │  │
-│  │  Sensor Response Curve:                                             │  │
-│  │                                                                      │  │
-│  │  SIR (ppm)                                                           │  │
-│  │    │                                                                 │  │
-│  │ 120┤                              ╱──────── URL                    │  │
-│  │    │                             ╱                                  │  │
-│  │ 110┤                            ╱                                   │  │
-│  │    │                           ╱                                    │  │
-│  │ 100┤                          ╱                                     │  │
-│  │    │                         ╱                                      │  │
-│  │  90┤                        ╱                                       │  │
-│  │    │                       ╱                                        │  │
-│  │  80┤                      ╱                                         │  │
-│  │    │                     ╱                                          │  │
-│  │  70┤────────────────────╱─────── LRL                               │  │
-│  │    │                   ╱                                            │  │
-│  │  60┤                  ╱                                             │  │
-│  │    └──────┼──────┼──────┼──────┼──────┼──────▶                     │  │
-│  │           1      2      3      4      5    Activity Level (g)      │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.4.3 AV Delay and VA Interval Management
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    AV DELAY AND VA INTERVAL MANAGEMENT                       │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  AV DELAY PARAMETERS:                                                │  │
-│  │                                                                      │  │
-│  │  • Programmed AV delay: Fixed value (e.g., 200 ms)                 │  │
-│  │  • Sensor-indicated AV delay: Adjusts with sensor rate             │  │
-│  │  • Rate-adaptive AV delay: Shortens at higher rates                │  │
-│  │  • Dynamic AV delay: Automatically adjusts based on intrinsic AV   │  │
-│  │                                                                      │  │
-│  │  RATE-ADAPTIVE AV DELAY:                                             │  │
-│  │                                                                      │  │
-│  │  AV_delay = AV_min + (AV_max - AV_min) × (1 - (SIR-LRL)/(URL-LRL))│  │
-│  │                                                                      │  │
-│  │  Example:                                                           │  │
-│  │  • AV_max = 300 ms (at LRL = 60 ppm)                              │  │
-│  │  • AV_min = 120 ms (at URL = 120 ppm)                             │  │
-│  │  • At SIR = 90 ppm: AV = 120 + (300-120) × (1 - 30/60) = 210 ms │  │
-│  │                                                                      │  │
-│  │  AV DELAY RATE RESPONSE CURVE:                                      │  │
-│  │                                                                      │  │
-│  │  AV Delay                                                           │  │
-│  │  (ms)                                                                │  │
-│  │    │                                                                 │  │
-│  │  300┤────────────╲                                                  │  │
-│  │     │             ╲                                                 │  │
-│  │  250┤              ╲                                                │  │
-│  │     │               ╲                                               │  │
-│  │  200┤                ╲                                              │  │
-│  │     │                 ╲                                             │  │
-│  │  150┤                  ╲                                            │  │
-│  │     │                   ╲                                           │  │
-│  │  120┤────────────────────╲────── AV_min                            │  │
-│  │     │                     ╲                                         │  │
-│  │     └──────┼──────┼──────┼──────┼──────▶                           │  │
-│  │            60     80    100    120     Sensor Rate (ppm)           │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  VA INTERVAL MANAGEMENT:                                             │  │
-│  │                                                                      │  │
-│  │  VA interval = LRI - AV delay                                       │  │
-│  │                                                                      │  │
-│  │  For rate-adaptive modes:                                            │  │
-│  │  VA_interval = (60,000 / SIR) - AV_delay                            │  │
-│  │                                                                      │  │
-│  │  Example at different rates:                                        │  │
-│  │  ┌──────────┬────────┬──────────┬──────────┐                       │  │
-│  │  │ Rate     │ LRI    │ AV Delay │ VA       │                       │  │
-│  │  │ (ppm)    │ (ms)   │ (ms)     │ (ms)     │                       │  │
-│  │  ├──────────┼────────┼──────────┼──────────┤                       │  │
-│  │  │ 60       │ 1000   │ 300      │ 700      │                       │  │
-│  │  │ 75       │ 800    │ 250      │ 550      │                       │  │
-│  │  │ 90       │ 667    │ 200      │ 467      │                       │  │
-│  │  │ 100      │ 600    │ 170      │ 430      │                       │  │
-│  │  │ 120      │ 500    │ 130      │ 370      │                       │  │
-│  │  └──────────┴────────┴──────────┴──────────┘                       │  │
-│  │                                                                      │  │
-│  │  MINIMUM VA INTERVAL:                                               │  │
-│  │  • Must be > PVARP + PVAB to prevent far-field sensing            │  │
-│  │  • Typical minimum: 300 ms                                         │  │
-│  │  • At high rates, VA may be limited by minimum VA                  │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  PVARP (POST-VENTRICULAR ATRIAL REFRACTORY PERIOD):                 │  │
-│  │                                                                      │  │
-│  │  Purpose: Prevents sensing of far-field R-waves on atrial channel  │  │
-│  │                                                                      │  │
-│  │  VP/VS                                                              │  │
-│  │   │                                                                 │  │
-│  │   ├──┐  ◄─ PVARP ────────────────────────────────────────────►   │  │
-│  │   │  │    (typically 250-350 ms)                                   │  │
-│  │   │  │                                                             │  │
-│  │   │  │  Events during PVARP:                                       │  │
-│  │   │  │  • Atrial sense → counted as refractory (not tracked)     │  │
-│  │   │  │  • Does NOT reset VA interval                              │  │
-│  │   │  │  • Used to prevent pacemaker-mediated tachycardia (PMT)   │  │
-│  │   │                                                                 │  │
-│  │   │  ◄─ PVAB ──►                                                  │  │
-│  │   │   (100ms)                                                      │  │
-│  │   │   (Post-Ventricular Atrial Blanking)                          │  │
-│  │   │   Completely blanks atrial channel (no sensing at all)        │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.4.4 Upper Rate Limit and Mode Switching
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    UPPER RATE LIMIT AND MODE SWITCHING                       │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  UPPER RATE LIMIT (URL):                                             │  │
-│  │                                                                      │  │
-│  │  Maximum tracking rate of the pacemaker in DDD/DDDR mode.          │  │
-│  │  Prevents 1:1 tracking of rapid atrial rates (e.g., atrial        │  │
-│  │  flutter at 300 bpm).                                               │  │
-│  │                                                                      │  │
-│  │  URL behavior:                                                      │  │
-│  │  • If atrial rate > URL → Wenckebach or 2:1 block occurs          │  │
-│  │  • Pacemaker tracks at URL with progressively longer AV delays     │  │
-│  │  • Eventually 2:1 block (every other P-wave tracked)              │  │
-│  │                                                                      │  │
-│  │  Example (URL = 120 ppm):                                          │  │
-│  │                                                                      │  │
-│  │  Atrial rate:  150  140  130  120  110  100  90  80  70           │  │
-│  │  Vent. rate:   120  120  120  120  110  100  90  80  70           │  │
-│  │  AV delay:     260  240  220  200  200  200  200 200 200          │  │
-│  │                                                                      │  │
-│  │  At atrial rate > URL:                                              │  │
-│  │  • AV delay extends progressively (Wenckebach behavior)            │  │
-│  │  • Ventricular rate capped at URL                                  │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  MODE SWITCHING (MS):                                                │  │
-│  │                                                                      │  │
-│  │  Automatic switch from DDD/DDDR to VVIR when atrial rate           │  │
-│  │  exceeds threshold (indicating atrial fibrillation/flutter).        │  │
-│  │                                                                      │  │
-│  │  Detection criteria:                                                │  │
-│  │  • Atrial rate > MS rate (programmable, typically 170-200 ppm)    │  │
-│  │  • Duration > MS duration (programmable, typically 20-30 seconds) │  │
-│  │  • Both criteria must be met simultaneously                        │  │
-│  │                                                                      │  │
-│  │  Mode Switch Transition:                                            │  │
-│  │                                                                      │  │
-│  │  DDD/DDDR                                                          │  │
-│  │    │                                                                │  │
-│  │    │  AF detected (rate > MS threshold for > MS duration)          │  │
-│  │    │                                                                │  │
-│  │    ▼                                                                │  │
-│  │  VVIR                                                              │  │
-│  │    │                                                                │  │
-│  │    │  Ventricular pacing at sensor-indicated rate                  │  │
-│  │    │  Atrial sensing inhibited (no atrial pacing)                 │  │
-│  │    │                                                                │  │
-│  │    │  AF terminated (atrial rate < MS threshold for > 1 minute)  │  │
-│  │    │                                                                │  │
-│  │    ▼                                                                │  │
-│  │  DDD/DDDR (resumed)                                                │  │
-│  │                                                                      │  │
-│  │  Benefits:                                                          │  │
-│  │  • Prevents rapid ventricular tracking of AF                       │  │
-│  │  • Maintains hemodynamic stability                                 │  │
-│  │  • Automatic and seamless transition                              │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  PACEMAKER-MEDIATED TACHYCARDIA (PMT) PREVENTION:                  │  │
-│  │                                                                      │  │
-│  │  PMT is an endless-loop tachycardia using the AV delay as the      │  │
-│  │  antegrade limb and the atrial sensing as the retrograde limb.     │  │
-│  │                                                                      │  │
-│  │  PMT Circuit:                                                       │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐  │  │
-│  │  │                                                              │  │  │
-│  │  │  VP ──→ Retrograde P-wave ──→ AS ──→ AV delay ──→ VP ──→  │  │  │
-│  │  │  │                                                                │  │
-│  │  │  └──────────────────────────────────────────────────────────┘  │  │
-│  │  │                                                                      │  │
-│  │  │  PMT Detection:                                                    │  │
-│  │  │  • Rate > URL for > 8 beats                                       │  │
-│  │  │  • Fixed AV interval (no variability)                            │  │
-│  │  │  • Regular RR intervals                                           │  │
-│  │  │                                                                      │  │
-│  │  │  PMT Termination:                                                  │  │
-│  │  │  • Extend PVARP for one cycle (breaks the loop)                  │  │
-│  │  │  • Or: Deliver atrial pace without AV delay (overdrive)          │  │
-│  │  │                                                                      │  │
-│  │  └──────────────────────────────────────────────────────────────┘  │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.4.5 Biventricular Pacing (CRT)
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    BIVENTRICULAR PACING (CARDIAC RESYNCHRONIZATION)          │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  INDICATION:                                                        │  │
-│  │  • Dilated cardiomyopathy with wide QRS (>120ms)                   │  │
-│  │  • Left bundle branch block (LBBB) pattern                         │  │
-│  │  • NYHA Class III-IV despite optimal medical therapy               │  │
-│  │  • EF < 35%                                                         │  │
-│  │                                                                      │  │
-│  │  GOAL:                                                              │  │
-│  │  Resynchronize left and right ventricular contraction to improve   │  │
-│  │  cardiac output by 15-25%.                                         │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │  WITHOUT CRT (LBBB):                                         │   │  │
-│  │  │  ┌──────────────────────────────────────────────────────┐   │   │  │
-│  │  │  │  RV ──────┐                                         │   │   │  │
-│  │  │  │           │   Septum    LV                         │   │   │  │
-│  │  │  │  Contract │   ──────→   Contract                  │   │   │  │
-│  │  │  │  (early)  │   (delayed) (late)                    │   │   │  │
-│  │  │  │           │                                         │   │   │  │
-│  │  │  │  RV depol: 0ms    LV depol: 80ms                   │   │   │  │
-│  │  │  │  (LBBB causes delayed LV activation)               │   │   │  │
-│  │  │  └──────────────────────────────────────────────────────┘   │   │  │
-│  │  │                                                              │   │  │
-│  │  │  WITH CRT:                                                   │   │  │
-│  │  │  ┌──────────────────────────────────────────────────────┐   │   │  │
-│  │  │  │  RV ──────┐                                         │   │   │  │
-│  │  │  │           │   Septum    LV                         │   │   │  │
-│  │  │  │  Contract │   ──────→   Contract                  │   │   │  │
-│  │  │  │  (simultaneous)                                    │   │   │  │
-│  │  │  │           │                                         │   │   │  │
-│  │  │  │  RV depol: 0ms    LV depol: 10ms                   │   │   │  │
-│  │  │  │  (BiV pacing synchronizes activation)              │   │   │  │
-│  │  │  └──────────────────────────────────────────────────────┘   │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  CRT PACING MODE: DDD/RV5 (BiV + sensor)                          │  │
-│  │                                                                      │  │
-│  │  Lead Configuration:                                                │  │
-│  │  • RA lead: Right atrial appendage (sensing/pacing)                │  │
-│  │  • RV lead: RV apex or septum (sensing/pacing)                     │  │
-│  │  • LV lead: Coronary sinus / lateral vein (pacing only)            │  │
-│  │                                                                      │  │
-│  │  LV Lead Placement:                                                 │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │         ┌──────────┐                                        │   │  │
-│  │  │         │          │                                        │   │  │
-│  │  │         │   RA     │                                        │   │  │
-│  │  │         │  lead    │                                        │   │  │
-│  │  │         │    │     │                                        │   │  │
-│  │  │         │    ▼     │                                        │   │  │
-│  │  │         │ ┌──────┐ │     ┌──────────┐                      │   │  │
-│  │  │         │ │      │ │     │  LV lead │                      │   │  │
-│  │  │         │ │  RV  │ │     │  (via    │                      │   │  │
-│  │  │         │ │ lead │ │     │  coronary│                      │   │  │
-│  │  │         │ │   │  │ │     │  sinus)  │                      │   │  │
-│  │  │         │ │   ▼  │ │     │    │     │                      │   │  │
-│  │  │         │ └──────┘ │     │    ▼     │                      │   │  │
-│  │  │         │          │     │  LV free │                      │   │  │
-│  │  │         └──────────┘     │  wall    │                      │   │  │
-│  │  │                          └──────────┘                      │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  │                                                                      │  │
-│  │  TIMING OPTIONS:                                                    │  │
-│  │  • Simultaneous BiV: RV and LV paced simultaneously               │  │
-│  │  • Sequential BiV: RV paced first, then LV (configurable delay)   │  │
-│  │  • LV-only: Only LV paced (if RV sense occurring naturally)       │  │
-│  │                                                                      │  │
-│  │  LV OFFSET:                                                         │  │
-│  │  • LV can be paced before, during, or after RV                    │  │
-│  │  • Range: -80 ms to +80 ms (LV relative to RV)                    │  │
-│  │  • Optimal offset determined by echocardiography or empiric       │  │
-│  │                                                                      │  │
-│  │  Example timing (simultaneous BiV):                                │  │
-│  │  AS ──────► AV delay ──────► RV pace + LV pace (simultaneous)    │  │
-│  │                                                                      │  │
-│  │  Example timing (sequential BiV):                                  │  │
-│  │  AS ──────► AV delay ──► RV pace ──► 20ms ──► LV pace           │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.4.6 Rate Response Algorithm
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    RATE RESPONSE ALGORITHM                                    │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  SENSOR TYPES:                                                      │  │
-│  │                                                                      │  │
-│  │  1. ACCELEROMETER (Most common)                                    │  │
-│  │     • Measures body vibration/movement                              │  │
-│  │     • Low power (<1 µW)                                            │  │
-│  │     • Response time: 10-15 seconds                                  │  │
-│  │     • Limitation: Does not respond to non-movement exercise       │  │
-│  │                                                                      │  │
-│  │  2. IMPEDANCE PNEUMOGRAPHY                                          │  │
-│  │     • Measures respiration rate via thoracic impedance             │  │
-│  │     • Better correlation with metabolic demand                      │  │
-│  │     • Higher power consumption                                     │  │
-│  │     • Used in some dual-sensor systems                             │  │
-│  │                                                                      │  │
-│  │  3. QT INTERVAL                                                     │  │
-│  │     • Measures QT interval from ventricular EGM                    │  │
-│  │     • Shortens with exercise (sympathetic response)                │  │
-│  │     • Very accurate but complex to implement                       │  │
-│  │                                                                      │  │
-│  │  4. DUAL SENSOR (Accelerometer + Impedance)                        │  │
-│  │     • Combines benefits of both sensors                            │  │
-│  │     • Better response across all activity types                    │  │
-│  │     • Higher complexity and power                                  │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  RATE RESPONSE ALGORITHM (ACCELEROMETER):                            │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │  1. SAMPLE accelerometer at 32 Hz (every 31.25 ms)          │   │  │
-│  │  │                                                              │   │  │
-│  │  │  2. COMPUTE activity level:                                  │   │  │
-│  │  │     Activity = |Accel[n] - Accel[n-1]| + |Accel[n-1] - ...| │   │  │
-│  │  │     (Sum of absolute differences over 1-second window)       │   │  │
-│  │  │                                                              │   │  │
-│  │  │  3. APPLY smoothing filter:                                  │   │  │
-│  │  │     Smoothed_Activity = α × Activity + (1-α) × Prev_Smooth │   │  │
-│  │  │     (α = 0.1 for slow response, 0.5 for fast response)     │   │  │
-│  │  │                                                              │   │  │
-│  │  │  4. MAP to sensor-indicated rate (SIR):                     │   │  │
-│  │  │     SIR = Lookup_Table(Smoothed_Activity)                   │   │  │
-│  │  │                                                              │   │  │
-│  │  │  5. APPLY rate smoothing:                                    │   │  │
-│  │  │     • Maximum rate change: 12 bpm/beat (configurable)       │   │  │
-│  │  │     • Prevents abrupt rate changes                           │   │  │
-│  │  │                                                              │   │  │
-│  │  │  6. CLAMP to allowed range:                                  │   │  │
-│  │  │     SIR = max(LRL, min(URL, SIR))                          │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  │                                                                      │  │
-│  │  LOOKUP TABLE:                                                      │  │
-│  │                                                                      │  │
-│  │  Activity Level: 0    10    20    30    40    50    60    70     │  │
-│  │  SIR (ppm):      60   70    80    90   100   110   120   120    │  │
-│  │                                                                      │  │
-│  │  (Linear interpolation between points)                              │  │
-│  │                                                                      │  │
-│  │  RESPONSE CURVES:                                                   │  │
-│  │                                                                      │  │
-│  │  SIR (ppm)                                                           │  │
-│  │    │                                                                 │  │
-│  │ 120┤                              ╱──────── Fast response          │  │
-│  │    │                             ╱  ╱─────── Medium response       │  │
-│  │ 100┤                            ╱  ╱  ╱──── Slow response         │  │
-│  │    │                           ╱  ╱  ╱                            │  │
-│  │  80┤                          ╱  ╱  ╱                             │  │
-│  │    │                         ╱  ╱  ╱                              │  │
-│  │  60┤────────────────────────╱──╱──╱─────────── LRL               │  │
-│  │    │                                                                    │  │
-│  │    └──────┼──────┼──────┼──────┼──────┼──────▶                    │  │
-│  │           10     20     30     40     50    Activity Level        │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  RATE RESPONSE PARAMETERS:                                           │  │
-│  │                                                                      │  │
-│  │  ┌────────────────────────┬──────────────────────────────────────┐  │  │
-│  │  │ Parameter              │ Typical Value                        │  │  │
-│  │  ├────────────────────────┼──────────────────────────────────────┤  │  │
-│  │  │ Lower rate limit (LRL) │ 60 ppm (programmable 50-90)         │  │  │
-│  │  │ Upper rate limit (URL) │ 120 ppm (programmable 80-180)      │  │  │
-│  │  │ Max rate increase      │ 12 bpm/beat (programmable 6-24)     │  │  │
-│  │  │ Reaction time          │ 10 sec (programmable 5-30)          │  │  │
-│  │  │ Recovery time          │ 5 min (programmable 2-10)           │  │  │
-│  │  │ Sensor threshold       │ Programmed per patient               │  │  │
-│  │  │ Sensor slope           │ Programmed per patient               │  │  │
-│  │  │ Sensor blend           │ 50% accel + 50% impedance (dual)   │  │  │
-│  │  └────────────────────────┴──────────────────────────────────────┘  │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.4.7 Timing Cycle Parameters Summary
-
-| Parameter                 | Range          | Typical   | Step  | Notes                    |
-|---------------------------|----------------|-----------|-------|--------------------------|
-| Lower rate limit (LRL)    | 30–170 ppm     | 60 ppm    | 5 ppm | Minimum pacing rate      |
-| Upper rate limit (URL)    | 80–180 ppm     | 120 ppm   | 5 ppm | Maximum tracking rate    |
-| AV delay                  | 30–350 ms      | 200 ms    | 10 ms | Atrial-to-ventricular   |
-| VA interval               | 200–1500 ms    | 800 ms    | 10 ms | Ventricular-to-atrial   |
-| PVARP                     | 150–500 ms     | 300 ms    | 10 ms | Post-vent. atrial refr. |
-| PVAB                      | 50–400 ms      | 100 ms    | 10 ms | Post-vent. atrial blank |
-| Vent. blank period        | 50–200 ms      | 100 ms    | 10 ms | Post-pace/sense blank   |
-| Atrial blank period       | 25–100 ms      | 50 ms     | 5 ms  | Post-pace/sense blank   |
-| Post-pace blank (V)       | 50–200 ms      | 100 ms    | 10 ms | Extra blank after pace  |
-| Post-pace blank (A)       | 25–100 ms      | 50 ms     | 5 ms  | Extra blank after pace  |
-| Rate smoothing            | 3–24 bpm/beat  | 6 bpm     | 3 bpm | Max rate change per beat|
-| Sensor reaction time      | 5–30 sec       | 10 sec    | 5 sec | Response to activity    |
-| Sensor recovery time      | 2–10 min       | 5 min     | 1 min | Return to baseline      |
-| MS detection rate         | 150–250 ppm    | 175 ppm   | 5 ppm | Mode switch threshold   |
-| MS detection duration     | 10–60 sec      | 20 sec    | 5 sec | Confirmation window     |
-| LV offset                 | -80 to +80 ms  | 0 ms      | 10 ms | LV vs RV timing (CRT)   |
-| Rate-adaptive AV slope    | 0.5–2.0        | 1.0       | 0.1   | AV adjustment factor    |
-
-### 2.2.4.8 Mode Selection Guide
-
-| Clinical Scenario              | Recommended Mode | Rationale                              |
-|--------------------------------|------------------|----------------------------------------|
-| Sinus node dysfunction         | AAI/AAIR         | Atrial bradycardia, intact AV conduction|
-| Complete heart block           | VVI/VVIR         | No AV conduction                       |
-| Sinus bradycardia + intact AV  | AAI/AAIR         | Atrial pacing only                     |
-| Intermittent AV block          | DDD/DDDR         | Dual-chamber support                   |
-| Atrial fibrillation            | VVIR             | No atrial pacing useful                |
-| Sick sinus syndrome + AV block | DDD/DDDR         | Full dual-chamber support              |
-| Rate-variable response needed  | DDDR/VVIR        | Sensor-driven rate                     |
-| Heart failure + wide QRS       | DDDR + BiV (CRT) | Cardiac resynchronization              |
-| Elderly, limited activity     | VVI              | Simple, reliable                       |
-| Active patient, normal AV      | AAI              | Maintain AV synchrony naturally        |
-| Testing/troubleshooting        | VOO/AOO/DOO      | Asynchronous modes for testing         |
+Multi-chamber pacing encompasses the complete set of timing cycles, mode
+logic, and rate-adaptive algorithms that govern dual-chamber and biventricular
+pacing. This chapter provides a detailed treatment of DDD/DDDR timing
+cycles, mode switching, rate adaptation, and the advanced algorithms used
+in modern cardiac rhythm management devices.
 
 ---
 
-*Section 2.2.4 — Multi-Chamber Pacing*
-*Previous: Section 2.2.3 — Lead Interface Design*
-*Next: Section 2.3 — Power Management*
+## 2.8.1 Pacing Mode Taxonomy
+
+### NBG Code Extended
+
+The NBG (NASPE/BPEG Generic) code provides a standardized notation for
+describing pacemaker modes. The full code consists of five positions:
+
+```
+  Position:    1         2         3         4         5
+  Meaning:    Paced     Sensed    Response   Rate      Site
+              Chamber   Chamber   to Sense   Modulation (Advanced)
+```
+
+| Position | Code | Meaning |
+|----------|------|---------|
+| 1 (Paced) | O | None |
+| | A | Atrium |
+| | V | Ventricle |
+| | D | Dual (A+V) |
+| 2 (Sensed) | O | None |
+| | A | Atrium |
+| | V | Ventricle |
+| | D | Dual (A+V) |
+| 3 (Response) | O | None |
+| | I | Inhibited |
+| | T | Triggered |
+| | D | Dual (I+T) |
+| 4 (Rate Modulation) | O | None |
+| | R | Rate-adaptive |
+| 5 (Site) | O | None |
+| | A | Atrial |
+| | B | Biatrial |
+| | V | Ventricular |
+| | BV | Biventricular |
+
+### Mode Summary Table
+
+| Mode | Code | Paced | Sensed | Response | Rate | Site | Use Case |
+|------|------|-------|--------|----------|------|------|----------|
+| OOO | — | None | None | None | None | None | Diagnostic only |
+| AOO | Asynch | A | None | None | None | None | Atrial overdrive |
+| VOO | Asynch | V | None | None | None | None | Backup pacing |
+| DOO | Asynch | D | None | None | None | None | Backup pacing |
+| AAI | Demand | A | A | Inhibited | None | None | Sinus bradycardia |
+| VVI | Demand | V | V | Inhibited | None | None | AF with slow ventricular |
+| DDD | Demand | D | D | I+T | None | None | AV block with sinus node |
+| AAIR | Rate-adapt | A | A | Inhibited | R | None | Sinus node dysfunction |
+| VVIR | Rate-adapt | V | V | Inhibited | R | None | AF with chronotropic incompetence |
+| DDDR | Rate-adapt | D | D | I+T | R | None | Complete AV block |
+| DDI | Inhibited | D | D | Inhibited | None | None | AF with AV block |
+| DDIR | Rate-adapt | D | D | Inhibited | R | None | AF with AV block + chronotropic |
+| VDD | Single-lead | None | D | I+T | None | None | AV block, intact sinus |
+| VDDR | Single-lead | None | D | I+T | R | None | VDD + chronotropic incompetence |
+
+---
+
+## 2.8.2 DDD Mode Complete Timing Cycle
+
+The DDD mode is the most complex and commonly used dual-chamber pacing mode.
+It provides sensing and pacing in both atrial and ventricular channels, with
+inhibited and triggered responses.
+
+### Timing Intervals
+
+```
+                    DDD MODE TIMING INTERVALS
+
+  Lower Rate Interval (LRI) = 60000 / LRL (ms)
+  
+  │◄──────────────────── LRI ────────────────────►│
+  │                                                 │
+  │  V-A Interval = LRI - AV Delay                  │
+  │                                                 │
+  │  │◄── VA Interval ──►│◄── AV Delay ──►│        │
+  │  │                    │                │        │
+  │  V                    A                V        │
+  │  Event               Event            Event    │
+  │  │                    │                │        │
+  │  ▼                    ▼                ▼        │
+  │  ─────────────────────────────────────────────  │
+  │                                                 │
+  │  Upper Rate Interval (URI) = 60000 / URL (ms)   │
+  │                                                 │
+  │  │◄── URI ──►│                                 │
+  │  │            │                                 │
+  │  V            V (earliest next)                 │
+  │  Event       Event                             │
+```
+
+### DDD Timing State Machine (Detailed)
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                    DDD MODE DETAILED STATE MACHINE                          │
+│                                                                             │
+│                                                                             │
+│  STATE 1: WAITING FOR ATRIAL EVENT                                         │
+│  ─────────────────────────────────────                                      │
+│  • Atrial channel active (sensing enabled)                                 │
+│  • VA timer running                                                        │
+│  • Ventricular refractory period active                                    │
+│                                                                             │
+│  Transitions:                                                               │
+│  • Atrial sense → Go to STATE 2                                            │
+│  • VA timer expires → Atrial pace → Go to STATE 2                          │
+│  • Ventricular event during atrial blanking → Extend VA                    │
+│                                                                             │
+│                                                                             │
+│  STATE 2: WAITING FOR VENTRICULAR EVENT                                    │
+│  ─────────────────────────────────────────                                  │
+│  • AV timer running (from atrial event)                                    │
+│  • Atrial refractory period active (PVARP)                                 │
+│  • Ventricular channel active (sensing enabled)                            │
+│                                                                             │
+│  Transitions:                                                               │
+│  • Ventricular sense → Go to STATE 3 (inhibited)                           │
+│  • AV timer expires → Ventricular pace → Go to STATE 3 (triggered)         │
+│  • Upper rate limit exceeded → Extend AV delay                              │
+│                                                                             │
+│                                                                             │
+│  STATE 3: POST-VENTRICULAR                                                  │
+│  ──────────────────────────                                                 │
+│  • PVARP timer running                                                      │
+│  • Ventricular refractory period active                                    │
+│  • Atrial blanking active (PVAB)                                           │
+│                                                                             │
+│  Transitions:                                                               │
+│  • PVARP expires → Go to STATE 1                                            │
+│  • Atrial event during PVARP → Counted as refractory, extend PVARP        │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### DDD Timing Diagram — Normal Sinus Rhythm with Atrial Pacing
+
+```
+  Atrial Channel
+  │
+  │  A-sense     A-pace        A-sense     A-pace
+  │    │           │             │           │
+  │    ▼           ▼             ▼           ▼
+  │────┬───────────┬─────────────┬───────────┬─────────────
+  │    │           │             │           │
+  │    │← AV Delay→│             │← AV Delay→│
+  │    │           │             │           │
+  │    │           │ V-sense     │           │ V-sense
+  │    │           │   │         │           │   │
+  │    │           │   ▼         │           │   ▼
+  │────┼───────────┼───┬─────────┼───────────┼───┬─────────
+  │    │           │   │         │           │   │
+  Ventricular Channel
+  │
+  │    │←─── LRI ──→│             │←─── LRI ──→│
+  │                                                 │
+  │    │←──────── VA Interval ──────→│              │
+  │                                                 │
+```
+
+### DDD Timing Diagram — AV Block with Ventricular Pacing
+
+```
+  Atrial Channel
+  │
+  │  A-sense        A-sense        A-sense
+  │    │              │              │
+  │    ▼              ▼              ▼
+  │────┬──────────────┬──────────────┬──────────────
+  │    │              │              │
+  │    │← AV Delay ──→│← AV Delay ──→│
+  │    │              │              │
+  │    │              │ V-pace       │ V-pace
+  │    │              │   │          │   │
+  │    │              │   ▼          │   ▼
+  │────┼──────────────┼───┬──────────┼───┬──────────
+  │    │              │   │          │   │
+  Ventricular Channel
+  │
+  │    │←────── LRI ─────→│←────── LRI ─────→│
+  │
+```
+
+---
+
+## 2.8.3 Upper Rate Behavior
+
+### Rate Limiting Mechanisms
+
+When the atrial rate exceeds the upper rate limit, the pacemaker must limit
+the ventricular pacing rate while maintaining AV synchrony as much as
+possible.
+
+**Mechanism 1: Maximum Tracking Rate (MTR)**
+
+The MTR limits the rate at which the pacemaker can track atrial events. When
+the atrial rate exceeds the MTR:
+
+```
+  Atrial rate > MTR → Ventricular pace delayed until MTR interval
+  has elapsed since the last ventricular event
+
+  Effective ventricular rate = MTR
+  AV delay = Effective AV delay + (Atrial interval - MTR interval)
+```
+
+**Mechanism 2: Wenckebach Behavior**
+
+When the atrial rate slightly exceeds the MTR, the pacemaker exhibits
+Wenckebach-like behavior:
+
+```
+  Atrial Rate = 130 bpm (MTR = 120 bpm)
+  
+  Beat 1: A-sense → V-pace (AV = 200 ms, normal)
+  Beat 2: A-sense → V-pace (AV = 250 ms, extended)
+  Beat 3: A-sense → V-pace (AV = 300 ms, extended)
+  Beat 4: A-sense → V-pace (AV = 350 ms, extended)
+  Beat 5: A-sense → A-sense (2:1 block, no V-pace)
+  Beat 6: A-sense → V-pace (AV = 200 ms, normal, cycle restarts)
+```
+
+**Mechanism 3: Fixed-Ratio Block**
+
+When the atrial rate significantly exceeds the MTR, the pacemaker may exhibit
+fixed-ratio (2:1, 3:1) block:
+
+```
+  Atrial rate = 180 bpm (MTR = 120 bpm)
+  
+  Effective ventricular rate = MTR = 120 bpm
+  Block ratio = 180/120 = 1.5 → 2:1 block
+  Actual ventricular rate = 90 bpm
+```
+
+### Upper Rate Timing Diagram
+
+```
+  Atrial Channel
+  │
+  │  A-sense  A-sense  A-sense  A-sense  A-sense
+  │    │        │        │        │        │
+  │    ▼        ▼        ▼        ▼        ▼
+  │────┬────────┬────────┬────────┬────────┬────
+  │    │        │        │        │        │
+  │    │← URI ──→│        │← URI ──→│        │
+  │    │        │        │        │        │
+  │    │ V-pace │        │ V-pace │        │
+  │    │   │    │        │   │    │        │
+  │    │   ▼    │        │   ▼    │        │
+  │────┼───┬────┼────────┼───┬────┼────────┼────
+  │    │   │    │        │   │    │        │
+  Ventricular Channel
+  │
+  │    │←── MTR Interval ──→│←── MTR Interval ──→│
+  │                                                 │
+  │    AV delay extends to maintain MTR limit       │
+```
+
+---
+
+## 2.8.4 Mode Switching Algorithm
+
+### Detection Algorithm
+
+The mode switch algorithm detects atrial tachyarrhythmias and automatically
+switches from a tracking mode (DDD/DDDR) to a non-tracking mode (VVI/VVIR
+or DDI/DDIR).
+
+```
+                    MODE SWITCH DETECTION ALGORITHM
+
+  ┌──────────────────────────────────────────────────────────────┐
+  │                                                              │
+  │  1. Measure atrial rate                                      │
+  │     AR = 60000 / Mean_Atrial_Interval (bpm)                  │
+  │                                                              │
+  │  2. Compare with mode switch threshold                       │
+  │     If (AR > MS_Rate) then                                  │
+  │         Increment MS_counter                                 │
+  │     Else                                                     │
+  │         Decrement MS_counter (minimum = 0)                   │
+  │                                                              │
+  │  3. Check detection criteria                                 │
+  │     If (MS_counter >= N_detect) then                         │
+  │         MODE SWITCH TRIGGERED                                │
+  │         Switch to VVI/VVIR or DDI/DDIR                       │
+  │         Store episode in diagnostic memory                    │
+  │                                                              │
+  │  4. Monitor for switch-back                                  │
+  │     If (AR < SB_Rate for M consecutive beats) then           │
+  │         MODE SWITCH BACK                                     │
+  │         Switch to DDD/DDDR                                   │
+  │                                                              │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+### Mode Switch Parameters
+
+| Parameter | Symbol | Range | Default | Unit |
+|-----------|--------|-------|---------|------|
+| Mode switch rate | MS_Rate | 100-250 | 150 | bpm |
+| Detection count | N_detect | 3-20 | 10 | beats |
+| Switch-back rate | SB_Rate | 80-200 | 120 | bpm |
+| Switch-back count | M | 3-20 | 10 | beats |
+| Mode switch duration | MSD | 1-300 | 60 | min |
+| High rate duration | HRD | 3-30 | 10 | min |
+| Detection method | — | Rate/Interval | Rate | — |
+
+### Mode Switch Behavior Diagram
+
+```
+  Atrial Rate
+  (bpm)
+    │
+  200├────────────────────────────────────────
+    │              ╱╲
+  180├─────────────╱──╲───────────────────────
+    │            ╱    ╲
+  160├───────────╱──────╲─────────────────────
+    │          ╱        ╲
+  150├─────────╱──────────╲──────────────────── MS Rate
+    │        ╱            ╲
+  140├───────╱──────────────╲─────────────────
+    │      ╱                ╲
+  120├─────╱──────────────────╲─────────────── SB Rate
+    │    ╱                    ╲
+  100├───╱──────────────────────╲─────────────
+    │  ╱                        ╲
+   80├─╱──────────────────────────╲───────────
+    │╱                            ╲
+   60├──────────────────────────────╲─────────
+    │
+    0├────┬────┬────┬────┬────┬────┬────┬────
+    0   1min  2min  3min  4min  5min  6min  7min
+
+    │← DDD Mode →│← VVI Mode (MS) →│← DDD Mode →│
+    │  (Tracking) │  (Non-tracking)  │  (Tracking) │
+```
+
+---
+
+## 2.8.5 Biventricular Pacing (CRT)
+
+### Cardiac Resynchronization Therapy
+
+Cardiac Resynchronization Therapy (CRT) is a treatment for heart failure
+with ventricular dyssynchrony. CRT paces both ventricles simultaneously
+(or with a programmed V-V delay) to improve cardiac output.
+
+### CRT-P vs. CRT-D
+
+| Feature | CRT-P | CRT-D |
+|---------|-------|-------|
+| Function | Pacing only | Pacing + Defibrillation |
+| Device size | Smaller | Larger |
+| Battery life | 8-12 years | 5-8 years |
+| Cost | Lower | Higher |
+| Indication | Mild-moderate HF | Severe HF with SCD risk |
+
+### Biventricular Pacing Modes
+
+| Mode | Description | Use Case |
+|------|------------|----------|
+| VVIR | Single-chamber ventricular with rate adaptation | Simple CRT |
+| DDDR | Dual-chamber with rate adaptation | CRT with intact sinus |
+| DDD + LV offset | Dual-chamber with LV timing offset | Most common CRT |
+| BiV synchronous | Simultaneous RV + LV pacing | Basic CRT |
+
+### V-V Delay
+
+The V-V delay is the timing offset between right ventricular (RV) and left
+ventricular (LV) pacing pulses:
+
+```
+                    V-V DELAY TIMING
+
+  RV Pacing Pulse          LV Pacing Pulse
+  │                        │
+  ▼                        ▼
+  ┌────────┐              ┌────────┐
+  │        │              │        │
+  │  RV    │◄─ V-V Delay →│  LV    │
+  │  Pulse │   (0-80ms)   │  Pulse │
+  │        │              │        │
+  └────────┘              └────────┘
+
+  V-V Delay = 0 ms:    Simultaneous pacing (RV = LV)
+  V-V Delay = 20-40 ms: LV pre-excitation (most common)
+  V-V Delay = 60-80 ms: Maximum LV pre-excitation
+  V-V Delay = -20 to -80 ms: RV pre-excitation (rare)
+```
+
+### CRT Timing Cycle
+
+```
+                    CRT TIMING CYCLE (DDD + LV OFFSET)
+
+  Atrial Channel
+  │
+  │  A-sense        A-pace
+  │    │              │
+  │    ▼              ▼
+  │────┬──────────────┬──────────────────────
+  │    │              │
+  │    │← AV Delay ──→│
+  │    │              │
+  │    │              │ RV-pace    LV-pace
+  │    │              │   │          │
+  │    │              │   │← V-V ──→│
+  │    │              │   │  Delay   │
+  │    │              │   ▼          ▼
+  │────┼──────────────┼───┬──────────┬────────
+  │    │              │   │          │
+  Ventricular Channels
+  │
+  │    │←────── LRI ─────→│
+  │                                                 │
+  │    │←─── VA Interval ────→│                     │
+```
+
+---
+
+## 2.8.6 Rate-Adaptive Pacing
+
+### Sensor Types
+
+| Sensor | Measurement | Response Time | Power | Accuracy |
+|--------|------------|--------------|-------|---------|
+| Accelerometer | Activity/vibration | Fast (1-5 s) | Low | Moderate |
+| Minute ventilation | Impedance-based respiration | Medium (5-15 s) | Low | Good |
+| QT interval | Repolarization timing | Slow (15-30 s) | Medium | Good |
+| Mixed sensor | Multiple sensors | Variable | Medium | Best |
+
+### Accelerometer-Based Rate Adaptation
+
+The accelerometer measures body vibration/movement, which correlates with
+physical activity and metabolic demand.
+
+```
+                    ACCELEROMETER RATE ADAPTATION
+
+  ┌──────────────────────────────────────────────────────────────┐
+  │                                                              │
+  │  1. Sample accelerometer output                              │
+  │     ACC[n] = Accelerometer reading at time n                 │
+  │                                                              │
+  │  2. Calculate activity level                                 │
+  │     Activity = (1/K) × Σ |ACC[i] - ACC_baseline|            │
+  │     K = averaging window (16-64 samples)                     │
+  │                                                              │
+  │  3. Apply sensor response curve                              │
+  │     Sensor_Rate = LRL + (URL - LRL) × f(Activity)           │
+  │     f(Activity) = Transfer function (programmable)           │
+  │                                                              │
+  │  4. Apply rate response slope                                │
+  │     Target_Rate = LRL + Slope × (Sensor_Rate - LRL)         │
+  │     Slope = Rate response factor (0.1-1.0, programmable)     │
+  │                                                              │
+  │  5. Apply rate smoothing                                     │
+  │     If (Target_Rate > Current_Rate) then                    │
+  │         Rate increase = Acceleration_time_constant           │
+  │     Else                                                     │
+  │         Rate decrease = Deceleration_time_constant           │
+  │                                                              │
+  │  6. Limit to URL                                             │
+  │     Pacing_Rate = min(Target_Rate, URL)                      │
+  │                                                              │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+### Sensor Response Curve
+
+```
+  Sensor-Induced
+  Rate (bpm)
+    │
+  150├──────────────────────────────────── URL
+    │                          ╱
+  140├─────────────────────────╱──────────
+    │                       ╱
+  130├──────────────────────╱─────────────
+    │                    ╱
+  120├───────────────────╱────────────────
+    │                 ╱
+  110├────────────────╱───────────────────
+    │              ╱
+  100├─────────────╱──────────────────────
+    │           ╱
+   90├──────────╱─────────────────────────
+    │        ╱
+   80├───────╱────────────────────────────
+    │     ╱
+   70├────╱───────────────────────────────
+    │  ╱
+   60├─╱────────────────────────────────── LRL
+    │
+    0├────┬────┬────┬────┬────┬────┬────
+    Rest  Low  Mod  High Max  Very Max
+              Activity Level
+
+  Activity = 0 → Rate = LRL (60 bpm)
+  Activity = max → Rate = URL (150 bpm)
+  Curve shape: Programmable (linear, exponential, piecewise linear)
+```
+
+### Rate Response Parameters
+
+| Parameter | Symbol | Range | Default | Unit |
+|-----------|--------|-------|---------|------|
+| Lower rate limit | LRL | 30-120 | 60 | bpm |
+| Upper rate limit | URL | 100-200 | 120 | bpm |
+| Rate response slope | Slope | 0.1-1.0 | 0.5 | — |
+| Acceleration time | T_acc | 15-120 | 30 | s |
+| Deceleration time | T_dec | 15-300 | 120 | s |
+| Sensor threshold | Th_sensor | 1-10 | 3 | — |
+| Sensor gain | Gain | 1-10 | 5 | — |
+
+### Minute Ventilation Sensing
+
+Minute ventilation (MV) is the product of respiratory rate and tidal volume,
+which correlates well with metabolic demand. MV is measured by injecting a
+sub-threshold current pulse through the pacing lead and measuring the
+impedance change caused by respiration.
+
+```
+                    MINUTE VENTILATION MEASUREMENT
+
+  ┌──────────────────────────────────────────────────────────────┐
+  │                                                              │
+  │  1. Inject sub-threshold current pulse                       │
+  │     I_inject = 100-500 µA (below pacing threshold)           │
+  │     Frequency: 16-64 Hz (sample rate)                        │
+  │                                                              │
+  │  2. Measure impedance                                        │
+  │     Z(t) = V_measured / I_inject                             │
+  │     Z varies with respiration (tidal volume)                 │
+  │                                                              │
+  │  3. Extract respiratory component                            │
+  │     Z_resp(t) = Z(t) - Z_baseline                           │
+  │     Z_baseline = slowly varying component (activity, posture)│
+  │                                                              │
+  │  4. Calculate respiratory rate                               │
+  │     RR = 60 / (period of Z_resp oscillation)                 │
+  │                                                              │
+  │  5. Calculate tidal volume                                   │
+  │     TV = amplitude of Z_resp oscillation                     │
+  │                                                              │
+  │  6. Calculate minute ventilation                             │
+  │     MV = RR × TV                                             │
+  │                                                              │
+  │  7. Map MV to sensor-indicated rate                          │
+  │     Sensor_Rate = f(MV)                                      │
+  │                                                              │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 2.8.7 Advanced Timing Features
+
+### Rate Smoothing
+
+Rate smoothing prevents abrupt changes in pacing rate by limiting the
+rate change per cardiac cycle:
+
+```
+  Rate smoothing algorithm:
+
+  If (Target_Rate > Current_Rate) then
+      New_Rate = Current_Rate + max_rate_increase
+  Else if (Target_Rate < Current_Rate) then
+      New_Rate = Current_Rate - max_rate_decrease
+  Else
+      New_Rate = Target_Rate
+
+  max_rate_increase = 1-10 bpm per beat (programmable)
+  max_rate_decrease = 1-10 bpm per beat (programmable)
+```
+
+### Rate Hysteresis
+
+Rate hysteresis allows the pacemaker to pace at a lower rate than the
+lower rate limit for a period after a sensed event, encouraging intrinsic
+conduction:
+
+```
+  Rate hysteresis:
+
+  Hysteresis_Rate = LRL - Hysteresis_Offset
+
+  If (sensed event occurs) then
+      Pacing_Rate = Hysteresis_Rate (lower than LRL)
+      Wait for sensed event or timer expiry
+  If (no sensed event for Hysteresis_Interval) then
+      Pacing_Rate = LRL (normal lower rate limit)
+```
+
+### Post-Exercise Rate Response
+
+After exercise, the pacing rate should decrease gradually to match the
+decreasing metabolic demand:
+
+```
+  Post-exercise rate response:
+
+  Deceleration_time_constant = 30-300 s (programmable)
+
+  Rate(t) = Rate(exercise_end) × e^(-t/T_dec) + LRL × (1 - e^(-t/T_dec))
+
+  where:
+    Rate(exercise_end) = rate at end of exercise
+    T_dec = deceleration time constant
+    LRL = lower rate limit
+```
+
+### Automatic Mode Switch Back
+
+The mode switch back algorithm returns to DDD/DDDR mode when sinus rhythm
+resumes:
+
+```
+  Mode switch back algorithm:
+
+  1. Monitor atrial rate during mode switch (VVI/VVIR)
+  2. If (Atrial_Rate < SB_Rate for M consecutive beats) then
+      a. Verify stable sinus rhythm (rate variability < threshold)
+      b. Verify P-wave morphology consistent with sinus rhythm
+      c. If all criteria met → Switch back to DDD/DDDR
+      d. Start rate smoothing ramp (gradual rate increase)
+  3. If (Atrial_Rate > SB_Rate) then
+      Reset switch-back counter
+      Continue in VVI/VVIR mode
+```
+
+---
+
+## 2.8.8 PVC Detection and Response
+
+### PVC Detection
+
+A Premature Ventricular Contraction (PVC) is detected when a ventricular
+event occurs without a preceding atrial event within the AV interval:
+
+```
+  PVC detection:
+
+  If (Ventricular sense occurs) AND
+     (No atrial event within AV interval) AND
+     (V-A interval < minimum_VA_interval) then
+      Classify as PVC
+      Increment PVC counter
+      Store PVC event in diagnostic memory
+```
+
+### PVC Response Options
+
+| Response | Description | Use Case |
+|----------|------------|----------|
+| No response | Treat PVC like any ventricular event | Default |
+| V-A extension | Extend VA interval after PVC | Prevent atrial pacing on PVC |
+| Atrial pace after PVC | Pace atrium after PVC + delay | Maintain AV synchrony |
+| PVC counter | Count PVCs for diagnostic | Monitoring |
+
+### PVC Response Timing
+
+```
+  Normal Beat              PVC              Response
+  │                        │                │
+  A-sense    V-sense       V-sense          A-pace
+  │           │             │                │
+  ▼           ▼             ▼                ▼
+  ─────┬──────┬─────────────┬────────────────┬─────
+  │    │      │             │                │
+  │    │← AV →│             │                │
+  │    │      │             │                │
+  │    │      │             │← VA Extension→│
+  │    │      │             │  (extended)    │
+```
+
+---
+
+## 2.8.9 Summary
+
+Multi-chamber pacing encompasses a comprehensive set of timing cycles,
+mode logic, and rate-adaptive algorithms:
+
+1. **DDD mode**: The most complex pacing mode, providing sensing and pacing
+   in both chambers with inhibited and triggered responses.
+
+2. **Upper rate behavior**: Rate limiting mechanisms (MTR, Wenckebach,
+   fixed-ratio block) prevent excessive ventricular pacing during atrial
+   tachyarrhythmias.
+
+3. **Mode switching**: Automatic detection and switching to non-tracking
+   modes during atrial tachyarrhythmias, with stable switch-back when
+   sinus rhythm resumes.
+
+4. **Biventricular pacing (CRT)**: Simultaneous or offset RV/LV pacing
+   for cardiac resynchronization in heart failure patients.
+
+5. **Rate adaptation**: Sensor-driven rate increase to match metabolic
+   demand, using accelerometers, minute ventilation, or QT interval
+   sensing.
+
+6. **Advanced features**: Rate smoothing, rate hysteresis, post-exercise
+   response, and PVC detection/response optimize patient comfort and
+   hemodynamic function.
+
+These algorithms are implemented in the digital controller firmware and
+are highly configurable through the programming interface, allowing
+clinicians to tailor the pacemaker behavior to each patient's specific
+needs.

@@ -1,641 +1,576 @@
 # Lead Interface Design
 
-## 2.2.3 Lead Interface Design
+## 2.2.3 Electrode-Tissue Interface and Lead System
 
-### 2.2.3.1 Lead System Overview
-
-The lead system provides the electrical connection between the pacemaker pulse
-generator and the cardiac tissue. It is a critical component that must maintain
-reliable electrical contact over decades of implantation.
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    LEAD SYSTEM OVERVIEW                                      │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  LEAD COMPONENTS:                                                    │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │  ┌─────────┐  ┌─────────────┐  ┌──────────┐  ┌──────────┐ │   │  │
-│  │  │  │ CONNECTOR│  │   CONDUCTOR │  │INSULATION│  │   TIP    │ │   │  │
-│  │  │  │ (Pin/   │  │   (Wire/    │  │ (Polyure-│  │ELECTRODE │ │   │  │
-│  │  │  │  Can-   │  │    Cable)   │  │  thane/  │  │(Platinum │ │   │  │
-│  │  │  │  nector)│  │             │  │  Silicone)│  │  or Ir)  │ │   │  │
-│  │  │  └─────────┘  └─────────────┘  └──────────┘  └──────────┘ │   │  │
-│  │  │                                                              │   │  │
-│  │  │  ◄─────────────── Lead Length: 40-60 cm ──────────────────► │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  │                                                                      │  │
-│  │  LEAD TYPES:                                                        │  │
-│  │  ────────────                                                       │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │  UNIPOLAR LEAD                                                │   │  │
-│  │  │  ┌──────────────────────────────────────────────────────┐   │   │  │
-│  │  │  │  Pin ──── Conductor ──── Tip Electrode              │   │   │  │
-│  │  │  │                     (single wire)                    │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Return path: Can (pulse generator case)            │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Advantages:                                         │   │   │  │
-│  │  │  │  • Simpler construction                              │   │   │  │
-│  │  │  │  • Smaller diameter                                  │   │   │  │
-│  │  │  │  • Lower cost                                        │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Disadvantages:                                      │   │   │  │
-│  │  │  │  • Larger sensing field (more far-field)            │   │   │  │
-│  │  │  │  • More susceptible to EMI                           │   │   │  │
-│  │  │  │  • Cannot measure true lead impedance               │   │   │  │
-│  │  │  └──────────────────────────────────────────────────────┘   │   │  │
-│  │  │                                                              │   │  │
-│  │  │  BIPOLAR LEAD (Recommended)                                 │   │  │
-│  │  │  ┌──────────────────────────────────────────────────────┐   │   │  │
-│  │  │  │  Tip Pin ──── Conductor 1 ──── Tip Electrode        │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Ring Pin ── Conductor 2 ──── Ring Electrode        │   │   │  │
-│  │  │  │  (2mm from tip)                                      │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Advantages:                                         │   │   │  │
-│  │  │  │  • Localized sensing (less far-field)               │   │   │  │
-│  │  │  │  • Better EMI rejection                              │   │   │  │
-│  │  │  │  • Accurate impedance measurement                   │   │   │  │
-│  │  │  │  • Industry standard for modern pacemakers           │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Disadvantages:                                      │   │   │  │
-│  │  │  │  • Slightly larger diameter                          │   │   │  │
-│  │  │  │  • Higher cost                                       │   │   │  │
-│  │  │  └──────────────────────────────────────────────────────┘   │   │  │
-│  │  │                                                              │  │
-│  │  └──────────────────────────────────────────────────────────────┘  │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.3.2 Lead Impedance Characteristics
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    LEAD IMPEDANCE CHARACTERISTICS                            │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  IMPEDANCE COMPONENTS:                                               │  │
-│  │                                                                      │  │
-│  │  Z_lead = R_conductor + R_electrode + Z_interface + R_tissue       │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │  1. CONDUCTOR RESISTANCE (R_conductor)                      │   │  │
-│  │  │     • Source: Resistance of lead wire/cable                 │   │  │
-│  │  │     • Value: 20-100 Ω (depends on length and gauge)        │   │  │
-│  │  │     • Material: MP35N (Ni-Co-Cr-Mo) or silver              │   │  │
-│  │  │     • Increases with lead length (longer = higher R)        │   │  │
-│  │  │                                                              │   │  │
-│  │  │  2. ELECTRODE RESISTANCE (R_electrode)                      │   │  │
-│  │  │     • Source: Contact resistance at electrode tip           │   │  │
-│  │  │     • Value: 10-50 Ω (depends on surface area)             │   │  │
-│  │  │     • Material: Pt/Ir (90/10) or Pt coating                │   │  │
-│  │  │     • Surface area: 4-12 mm² (tip electrode)               │   │  │
-│  │  │                                                              │   │  │
-│  │  │  3. ELECTRODE-TISSUE INTERFACE (Z_interface)                │   │  │
-│  │  │     • Source: Electrochemical double layer                  │   │  │
-│  │  │     • Value: 100-500 Ω (frequency dependent)               │   │  │
-│  │  │     • Behaves as parallel RC (charge transfer + capacitive)│   │  │
-│  │  │     • R_ct: 200-1000 Ω (charge transfer resistance)       │   │  │
-│  │  │     • C_dl: 1-10 µF (double-layer capacitance)            │   │  │
-│  │  │     • Varies with: heart rate, tissue health, drugs        │   │  │
-│  │  │                                                              │   │  │
-│  │  │  4. TISSUE RESISTANCE (R_tissue)                            │   │  │
-│  │  │     • Source: Myocardial tissue resistivity                 │   │  │
-│  │  │     • Value: 50-200 Ω                                      │   │  │
-│  │  │     • Varies with: tissue hydration, fibrosis             │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  │                                                                      │  │
-│  │  IMPEDANCE FREQUENCY RESPONSE:                                      │  │
-│  │                                                                      │  │
-│  │  |Z| (Ω)                                                            │  │
-│  │    │                                                                 │  │
-│  │  800┤                                                               │  │
-│  │     │                                                               │  │
-│  │  600┤  ╲                                                            │  │
-│  │     │   ╲                                                           │  │
-│  │  500┤    ╲────────────────────────────── DC impedance              │  │
-│  │     │     ╲                    ═══════════════════════             │  │
-│  │  400┤      ╲                                                          │  │
-│  │     │       ╲                                                        │  │
-│  │  300┤        ╲                                                       │  │
-│  │     │         ╲────────────────────────── AC impedance (1kHz)       │  │
-│  │  200┤          ╲       ═══════════════════════════════             │  │
-│  │     │           ╲                                                    │  │
-│  │  100┤            ╲────────────────────────── High-freq limit       │  │
-│  │     │             ╲       ═══════════════════════════════          │  │
-│  │    0┤──────────────┼──────────────┼──────────────┼──────▶          │  │
-│  │     0.1            1             10            100      f(kHz)    │  │
-│  │                                                                      │  │
-│  │  Note: Impedance decreases with frequency due to C_dl shunting     │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  IMPEDANCE RANGES BY LEAD TYPE:                                      │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────┬──────────┬──────────┬────────────────┐   │  │
-│  │  │ Lead Type            │ DC (Ω)   │ 1kHz (Ω) │ Notes          │   │  │
-│  │  ├──────────────────────┼──────────┼──────────┼────────────────┤   │  │
-│  │  │ Active-fixation     │ 300-800  │ 200-500  │ Helix tip      │   │  │
-│  │  │ (screw-in)          │          │          │                │   │  │
-│  │  │ Passive-fixation    │ 300-800  │ 200-500  │ Tined tip      │   │  │
-│  │  │ (tined)             │          │          │                │   │  │
-│  │  │ Steroid-eluting     │ 300-800  │ 200-400  │ Lower chronic  │   │  │
-│  │  │                      │          │          │ thresholds     │   │  │
-│  │  │ LV lead (CRT)       │ 400-1000 │ 300-600  │ Longer, more   │   │  │
-│  │  │                      │          │          │ resistance     │   │  │
-│  │  └──────────────────────┴──────────┴──────────┴────────────────┘   │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.3.3 Lead Failure Modes
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    LEAD FAILURE MODES                                        │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  FAILURE MODE 1: CONDUCTOR FRACTURE                                  │  │
-│  │  ──────────────────────────────────                                  │  │
-│  │                                                                      │  │
-│  │  Cause: Mechanical stress (flexion at rib-clavicle junction)       │  │
-│  │  Frequency: ~0.5% per year (varies by lead model)                  │  │
-│  │                                                                      │  │
-│  │  Lead: ═══════════╗  ╔══════════                                    │  │
-│  │                    ║  ║                                              │  │
-│  │                    ╚══╝                                              │  │
-│  │                   (fracture point)                                  │  │
-│  │                                                                      │  │
-│  │  Electrical effect:                                                 │  │
-│  │  • Open circuit: Z → ∞ (no pacing, no sensing)                    │  │
-│  │  • Intermittent: Z fluctuates (noise on sensing channel)           │  │
-│  │  • Detection: Impedance >2000 Ω or erratic measurements           │  │
-│  │                                                                      │  │
-│  │  Detection algorithm:                                               │  │
-│  │  • If Z > 2000 Ω for >5 minutes → Lead fracture alert            │  │
-│  │  • If Z fluctuates >50% within 1 minute → Intermittent alert     │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  FAILURE MODE 2: INSULATION BREACH                                   │  │
-│  │  ────────────────────────────────                                    │  │
-│  │                                                                      │  │
-│  │  Cause: Mechanical wear, chemical degradation, manufacturing defect│  │
-│  │  Frequency: ~0.1-0.3% per year                                     │  │
-│  │                                                                      │  │
-│  │  Lead: ═══════════════════════════                                  │  │
-│  │                    ╲                                                 │  │
-│  │                     ╲──── (insulation breach)                       │  │
-│  │                                                                      │  │
-│  │  Electrical effect:                                                 │  │
-│  │  • Current leak to adjacent conductor or tissue                    │  │
-│  │  • Impedance decreases: Z < 200 Ω                                 │  │
-│  │  • Cross-talk between channels                                     │  │
-│  │                                                                      │  │
-│  │  Detection: Z < 200 Ω for >5 minutes → Insulation breach alert  │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  FAILURE MODE 3: ELECTRODE DISLODGING                               │  │
-│  │  ────────────────────────────────────                                │  │
-│  │                                                                      │  │
-│  │  Cause: Lead tip migration from implantation site                   │  │
-│  │  Frequency: ~2-5% in first month (acute), <0.5% thereafter        │  │
-│  │                                                                      │  │
-│  │  Electrical effect:                                                 │  │
-│  │  • Capture threshold increases dramatically                        │  │
-│  │  • Sensing amplitude decreases                                     │  │
-│  │  • Impedance may increase (if tip contacts non-conductive tissue) │  │
-│  │                                                                      │  │
-│  │  Detection:                                                        │  │
-│  │  • Capture threshold >5V @ 0.5ms (acute)                          │  │
-│  │  • R-wave amplitude <2mV sustained                                │  │
-│  │  • Both conditions persisting >24 hours                           │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  FAILURE MODE 4: LEAD-DEVICE CONNECTION ISSUE                       │  │
-│  │  ─────────────────────────────────────────────                       │  │
-│  │                                                                      │  │
-│  │  Cause: Loose set screw, corrosion at connector, wrong lead type   │  │
-│  │                                                                      │  │
-│  │  Electrical effect:                                                 │  │
-│  │  • High impedance at connector interface                           │  │
-│  │  • Intermittent high impedance (motion-dependent)                  │  │
-│  │  • Noise artifacts on sensing channel                              │  │
-│  │                                                                      │  │
-│  │  Detection:                                                        │  │
-│  │  • Impedance >1000 Ω intermittent                                 │  │
-│  │  • Noise rate >10 events/minute                                   │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  FAILURE MODE SUMMARY:                                                     │
-│  ┌─────────────────────┬───────────┬───────────┬───────────┬────────────┐ │
-│  │ Failure Mode        │ Impedance │ Sensing   │ Capture   │ Detection  │ │
-│  │                     │ Change    │ Effect    │ Effect    │ Method     │ │
-│  ├─────────────────────┼───────────┼───────────┼───────────┼────────────┤ │
-│  │ Conductor fracture  │ ↑↑↑ (>2k)│ None/Noise│ No capture│ Z > 2kΩ   │ │
-│  │ Insulation breach   │ ↓↓ (<200) │ Cross-talk│ May work  │ Z < 200Ω  │ │
-│  │ Electrode dislodge  │ ↑ (mod)  │ ↓ Amplitude│ ↑ Thresh │ Dual check│ │
-│  │ Connector issue     │ ↑↑ (int) │ Noise      │ Intermitt│ Z erratic │ │
-│  │ Lead infection      │ Variable │ Variable  │ Variable  │ Clinical  │ │
-│  │ Twiddler's syndrome │ Variable │ ↓ Amp     │ ↑ Thresh  │ Imaging   │ │
-│  └─────────────────────┴───────────┴───────────┴───────────┴────────────┘ │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.3.4 Polarization Effects
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    ELECTRODE POLARIZATION                                    │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  POLARIZATION MECHANISM:                                             │  │
-│  │                                                                      │  │
-│  │  During pacing, ions accumulate at the electrode-tissue interface,  │  │
-│  │  creating a voltage (afterpotential) that opposes the pacing pulse. │  │
-│  │                                                                      │  │
-│  │  Voltage                                                             │  │
-│  │  at electrode:                                                       │  │
-│  │    │                                                                 │  │
-│  │    │    Pace pulse                                                   │  │
-│  │    │    ┌──────┐                                                    │  │
-│  │    │    │      │                                                    │  │
-│  │  0 ┤────┘      ├──────┬────────────────────────────               │  │
-│  │    │           │      │                                             │  │
-│  │    │           │      │  Afterpotential (polarization)              │  │
-│  │    │           │      │  (exponential decay)                        │  │
-│  │    │           │      │                                             │  │
-│  │    │           │      └─────────────────────────────               │  │
-│  │    │           │                                                    │  │
-│  │    │           │  ◄──── Afterpotential ────►                       │  │
-│  │    │           │      (typically 200-500mV)                        │  │
-│  │    │           │                                                    │  │
-│  │    │  ◄─ Vp ─►│                                                    │  │
-│  │    │           │                                                    │  │
-│  │    └───────────┼────────────────────────────────────▶              │  │
-│  │                0                    Time                            │  │
-│  │                                                                      │  │
-│  │  The afterpotential obscures the intrinsic cardiac signal during    │  │
-│  │  the post-pace blanking period, limiting sensing sensitivity.      │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  POLARIZATION REDUCTION TECHNIQUES:                                  │  │
-│  │                                                                      │  │
-│  │  1. SMALL ELECTRODE SURFACE AREA                                    │  │
-│  │     • Smaller electrodes → lower polarization                       │  │
-│  │     • But: Higher current density → more tissue damage             │  │
-│  │     • Balance: 4-8 mm² tip area                                    │  │
-│  │                                                                      │  │
-│  │  2. POROUS ELECTRODE SURFACE                                        │  │
-│  │     • Micro/macro porous surface increases effective area           │  │
-│  │     • Reduces effective current density                             │  │
-│  │     • Reduces polarization by 30-50%                               │  │
-│  │                                                                      │  │
-│  │  3. STEROID ELUTION                                                  │  │
-│  │     • Dexamethasone sodium phosphate eluted from tip                │  │
-│  │     • Reduces inflammation at electrode-tissue interface            │  │
-│  │     • Maintains low chronic thresholds (1-2V vs 3-5V)            │  │
-│  │     • Reduces polarization afterpotential by 40-60%                │  │
-│  │                                                                      │  │
-│  │  4. CHARGE BALANCING                                                 │  │
-│  │     • Active charge balance after each pace pulse                   │  │
-│  │     • Removes residual charge from interface                       │  │
-│  │     • Reduces DC polarization component                            │  │
-│  │                                                                      │  │
-│  │  5. BIPHASIC PULSES (research)                                      │  │
-│  │     • Positive phase followed by equal negative phase              │  │
-│  │     • Perfectly charge-balanced inherently                          │  │
-│  │     • Not commonly used in pacemakers (more complex)               │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  POLARIZATION MEASUREMENT:                                           │  │
-│  │                                                                      │  │
-│  │  Measured immediately after pace pulse:                              │  │
-│  │                                                                      │  │
-│  │  Vpol = V_pace × (R_interface / (R_interface + R_lead))           │  │
-│  │                                                                      │  │
-│  │  Typical values:                                                    │  │
-│  │  • Platinum electrode: 300-500 mV (after 0.5ms pulse)             │  │
-│  │  • Porous Pt electrode: 150-300 mV                                │  │
-│  │  • Steroid-eluting: 100-200 mV                                    │  │
-│  │  • Carbon electrode: 100-250 mV                                   │  │
-│  │                                                                      │  │
-│  │  Measurement circuit:                                               │  │
-│  │  • High-impedance buffer (>1 GΩ)                                  │  │
-│  │  • Sample-and-hold after pace                                       │  │
-│  │  • ADC conversion (10-bit sufficient)                              │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.3.5 Tip Electrode Materials and Design
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    TIP ELECTRODE MATERIALS AND DESIGN                        │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  ELECTRODE MATERIALS COMPARISON:                                     │  │
-│  │                                                                      │  │
-│  │  ┌───────────────┬────────────┬────────────┬────────────┬────────┐ │  │
-│  │  │ Material      │ Surface    │ Polarizat. │ Chronic    │ Cost   │ │  │
-│  │  │               │ Area (mm²) │ (mV)       │ Threshold  │        │ │  │
-│  │  ├───────────────┼────────────┼────────────┼────────────┼────────┤ │  │
-│  │  │ Pt/Ir (90/10) │ 4-12       │ 300-500    │ 1.5-3.0V   │ $$$$   │ │  │
-│  │  │ Platinum      │ 4-12       │ 250-450    │ 1.5-2.5V   │ $$$    │ │  │
-│  │  │ Elgiloy       │ 6-15       │ 350-550    │ 2.0-4.0V   │ $$     │ │  │
-│  │  │ Titanium      │ 6-15       │ 400-600    │ 2.5-5.0V   │ $      │ │  │
-│  │  │ Carbon        │ 4-10       │ 100-250    │ 1.0-2.0V   │ $$$    │ │  │
-│  │  │ Iridium oxide│ 4-8        │ 80-200     │ 0.5-1.5V   │ $$$$   │ │  │
-│  │  └───────────────┴────────────┴────────────┴────────────┴────────┘ │  │
-│  │                                                                      │  │
-│  │  RECOMMENDED: Pt/Ir (90/10) with porous surface coating           │  │
-│  │  (Industry standard, proven long-term reliability)                  │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  ELECTRODE GEOMETRY:                                                 │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │  ACTIVE-FIXATION (SCREW-IN):                                 │   │  │
-│  │  │                                                              │   │  │
-│  │  │       ┌───┐                                                  │   │  │
-│  │  │       │   │  Helix (active screw)                           │   │  │
-│  │  │       │   │  Material: Pt/Ir or Elgiloy                     │   │  │
-│  │  │       │   │  Diameter: 1.0-1.5 mm                           │   │  │
-│  │  │       │   │  Length: 1.0-2.0 mm                             │   │  │
-│  │  │       │   │  Turns: 2-4                                     │   │  │
-│  │  │       └───┘                                                  │   │  │
-│  │  │       ┌───┐                                                  │   │  │
-│  │  │       │   │  Ring electrode                                 │   │  │
-│  │  │       │   │  2-5 mm from tip                                │   │  │
-│  │  │       │   │  Material: Pt/Ir                                │   │  │
-│  │  │       │   │  Width: 1-2 mm                                  │   │  │
-│  │  │       └───┘                                                  │   │  │
-│  │  │                                                              │   │  │
-│  │  │  Advantages:                                                 │   │  │
-│  │  │  • Secure fixation (less dislodgement)                      │   │  │
-│  │  │  • Can be placed anywhere (not dependent on trabeculae)     │   │  │
-│  │  │  • Lower acute dislodgement rate (<1%)                      │   │  │
-│  │  │                                                              │   │  │
-│  │  │  Passive-FIXATION (TINED):                                   │   │  │
-│  │  │                                                              │   │  │
-│  │  │       ┌───┐                                                  │   │  │
-│  │  │       │   │  Tip electrode                                  │   │  │
-│  │  │       │   │  Material: Pt/Ir                                │   │  │
-│  │  │       └───┘                                                  │   │  │
-│  │  │      ╱│╲                                                     │   │  │
-│  │  │     ╱ │ ╲  Silicone tines                                  │   │  │
-│  │  │        │     (4 tines, 90° apart)                           │   │  │
-│  │  │                                                              │   │  │
-│  │  │  Advantages:                                                 │   │  │
-│  │  │  • Simpler design                                            │   │  │
-│  │  │  • Less trauma during placement                             │   │  │
-│  │  │  • Self-tenting in trabeculae                               │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  SURFACE TREATMENTS:                                                 │  │
-│  │                                                                      │  │
-│  │  1. MACROPOROUS COATING                                              │  │
-│  │     • Sintered platinum powder                                      │  │
-│  │     • Surface area: 10-100× geometric area                          │  │
-│  │     • Reduces effective current density                             │  │
-│  │     • Reduces polarization by 40-60%                               │  │
-│  │                                                                      │  │
-│  │  2. MICROPOROUS COATING                                              │  │
-│  │     • Electrochemical deposition                                   │  │
-│  │     • Surface area: 5-20× geometric area                           │  │
-│  │     • More uniform coating                                          │  │
-│  │                                                                      │  │
-│  │  3. IRIDIUM OXIDE COATING (IrOx)                                   │  │
-│  │     • Electrochemically deposited                                   │  │
-│  │     • Very high surface area                                        │  │
-│  │     • Lowest polarization (<100 mV)                                │  │
-│  │     • Higher cost                                                   │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.3.6 Lead Impedance Measurement Circuit
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    LEAD IMPEDANCE MEASUREMENT CIRCUIT                        │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  MEASUREMENT METHOD: DC PULSE TECHNIQUE                             │  │
-│  │                                                                      │  │
-│  │  A known current pulse is applied to the lead, and the resulting    │  │
-│  │  voltage is measured. Impedance = V/I (Ohm's law).                 │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │  Vdd                                                         │   │  │
-│  │  │   │                                                          │   │  │
-│  │  │   ├──────┐                                                  │   │  │
-│  │  │   │      │                                                  │   │  │
-│  │  │   │  ┌───┴───┐                                             │   │  │
-│  │  │   │  │ Current│                                            │   │  │
-│  │  │   │  │ Source │  I = 10µA (typical)                       │   │  │
-│  │  │   │  │        │  Duration: 10µs                           │   │  │
-│  │  │   │  └───┬───┘                                             │   │  │
-│  │  │   │      │                                                  │   │  │
-│  │  │   │      ├──────┬──────────────────┐                      │   │  │
-│  │  │   │      │      │                  │                      │   │  │
-│  │  │   │      │   ┌──┴──┐           ┌──┴──┐                   │   │  │
-│  │  │   │      │   │ V-  │           │Tip  │                   │   │  │
-│  │  │   │      │   │     │           │(Lead)│                   │   │  │
-│  │  │   │      │   │ ADC │           └──┬──┘                   │   │  │
-│  │  │   │      │   │(10b)│              │                      │   │  │
-│  │  │   │      │   └──┬──┘           ┌──┴──┐                   │   │  │
-│  │  │   │      │      │              │Ring/│                   │   │  │
-│  │  │   │      │      │              │ Can │                   │   │  │
-│  │  │   │      │      │              └─────┘                   │   │  │
-│  │  │   │      │      │                                         │   │  │
-│  │  │   │      │      └────── Return path                       │   │  │
-│  │  │   │      │                                                  │   │  │
-│  │  │   │      └──── Sense point (high-impedance buffer)        │   │  │
-│  │  │   │                                                         │   │  │
-│  │  │   └──── Supply                                               │   │  │
-│  │  │                                                              │   │  │
-│  │  │  MEASUREMENT SEQUENCE:                                       │   │  │
-│  │  │  1. Apply current pulse (10µA, 10µs)                       │   │  │
-│  │  │  2. Wait for settling (5µs)                                 │   │  │
-│  │  │  3. Sample voltage (ADC: 10-bit)                            │   │  │
-│  │  │  4. Compute Z = V_meas / I_source                           │   │  │
-│  │  │  5. Repeat 4 times, average result                          │   │  │
-│  │  │                                                              │   │  │
-│  │  │  ACCURACY: ±5% (0-2000 Ω range)                           │   │  │
-│  │  │  RESOLUTION: 2 Ω (10-bit ADC, 10µA source)                │   │  │
-│  │  │  MEASUREMENT RATE: 1× per 8 seconds (low power)           │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  IMPEDANCE MONITORING ALGORITHM:                                          │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  1. Measure impedance every 8 seconds                               │  │
-│  │  2. Compare to baseline (stored in EEPROM)                         │  │
-│  │  3. Trend analysis over 24-hour window                             │  │
-│  │  4. Alert conditions:                                              │  │
-│  │     • Z > 2000 Ω for >5 minutes → Lead fracture warning        │  │
-│  │     • Z < 200 Ω for >5 minutes → Insulation breach warning    │  │
-│  │     • Z changes >50% from baseline → Lead integrity alert      │  │
-│  │  5. Store trending data in EEPROM (64 points × 8 bytes)          │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.3.7 Steroid-Eluting Leads
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    STEROID-ELUTING LEADS                                     │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                                                                      │  │
-│  │  MECHANISM:                                                          │  │
-│  │                                                                      │  │
-│  │  Dexamethasone sodium phosphate (DEX) is embedded in the tip       │  │
-│  │  electrode and slowly elutes into surrounding tissue.              │  │
-│  │                                                                      │  │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │  │
-│  │  │                                                              │   │  │
-│  │  │  WITHOUT STEROID:                                            │   │  │
-│  │  │  ┌──────────────────────────────────────────────────────┐   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Threshold (V)                                        │   │   │  │
-│  │  │  │    │                                                   │   │   │  │
-│  │  │  │  5 ┤         ╱──────────────── Chronic               │   │   │  │
-│  │  │  │    │        ╱                                           │   │   │  │
-│  │  │  │  4 ┤       ╱                                            │   │   │  │
-│  │  │  │    │      ╱                                             │   │   │  │
-│  │  │  │  3 ┤     ╱                                              │   │   │  │
-│  │  │  │    │    ╱                                               │   │   │  │
-│  │  │  │  2 ┤   ╱                                                │   │   │  │
-│  │  │  │    │──╱─── Acute threshold                             │   │   │  │
-│  │  │  │  1 ┤ ╱                                                   │   │   │  │
-│  │  │  │    │╱                                                    │   │   │  │
-│  │  │  │  0 ┤──────────────────────────────────────────────────  │   │   │  │
-│  │  │  │    └──┬────┬────┬────┬────┬────┬────┬────┬────▶        │   │   │  │
-│  │  │  │       1    3    6    12   24   36   48   60     Months  │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Note: Significant rise in chronic threshold         │   │   │  │
-│  │  │  │  (2-5× acute value due to fibrotic tissue growth)   │   │   │  │
-│  │  │  └──────────────────────────────────────────────────────┘   │   │  │
-│  │  │                                                              │   │  │
-│  │  │  WITH STEROID:                                               │   │  │
-│  │  │  ┌──────────────────────────────────────────────────────┐   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Threshold (V)                                        │   │   │  │
-│  │  │  │    │                                                   │   │   │  │
-│  │  │  │  5 ┤                                                   │   │   │  │
-│  │  │  │    │                                                   │   │   │  │
-│  │  │  │  4 ┤                                                   │   │   │  │
-│  │  │  │    │                                                   │   │   │  │
-│  │  │  │  3 ┤                                                   │   │   │  │
-│  │  │  │    │                                                   │   │   │  │
-│  │  │  │  2 ┤───────┬──────────────── Chronic (stable)       │   │   │  │
-│  │  │  │    │       └─────────────────────────────────         │   │   │  │
-│  │  │  │  1 ┤─── Acute threshold                               │   │   │  │
-│  │  │  │    │                                                    │   │   │  │
-│  │  │  │  0 ┤──────────────────────────────────────────────────  │   │   │  │
-│  │  │  │    └──┬────┬────┬────┬────┬────┬────┬────┬────▶        │   │   │  │
-│  │  │  │       1    3    6    12   24   36   48   60     Months  │   │   │  │
-│  │  │  │                                                      │   │   │  │
-│  │  │  │  Note: Minimal rise in chronic threshold             │   │   │  │
-│  │  │  │  (1.2-1.5× acute value - much better!)              │   │   │  │
-│  │  │  └──────────────────────────────────────────────────────┘   │   │  │
-│  │  │                                                              │   │  │
-│  │  └──────────────────────────────────────────────────────────────┘   │  │
-│  │                                                                      │  │
-│  │  BENEFITS:                                                          │  │
-│  │  • Chronic threshold reduction: 40-60% (vs. non-steroid leads)    │  │
-│  │  • Pacing energy savings: 50-70% (extending battery life)         │  │
-│  │  • Lower polarization afterpotential (better sensing)             │  │
-│  │  • Reduced inflammation at electrode-tissue interface             │  │
-│  │  • Industry standard for modern pacemaker leads                   │  │
-│  │                                                                      │  │
-│  │  ELUTION RATE:                                                      │  │
-│  │  • Dose: 1.0 mg dexamethasone sodium phosphate                   │  │
-│  │  • Elution duration: 12-18 months                                 │  │
-│  │  • Elution rate: ~0.05 µg/day (exponential decay)                │  │
-│  │  • Therapeutic level maintained for >12 months                     │  │
-│  │                                                                      │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2.3.8 Lead Interface Specifications Summary
-
-| Parameter                    | Atrial Lead | Ventricular Lead | LV Lead (CRT) | Unit   |
-|------------------------------|-------------|------------------|---------------|--------|
-| Lead length                  | 45–55       | 55–65            | 75–95         | cm     |
-| Lead diameter                | 4.0–6.0     | 4.0–6.0          | 5.0–7.0       | Fr     |
-| Tip electrode area           | 4–8         | 4–12             | 4–8           | mm²    |
-| Tip material                 | Pt/Ir       | Pt/Ir            | Pt/Ir         | —      |
-| Tip surface                  | Porous      | Porous           | Porous        | —      |
-| Steroid-eluting              | Yes         | Yes              | Yes           | —      |
-| Fixation type                | Active/Passive | Active/Passive | Active/Passive | —     |
-| Ring electrode area          | 6–12        | 6–12             | 6–12          | mm²    |
-| Conductor material           | MP35N       | MP35N            | MP35N         | —      |
-| Insulation material          | Silicone/PU | Silicone/PU      | Silicone/PU   | —      |
-| DC impedance range           | 200–1000    | 200–1000         | 300–1200      | Ω      |
-| 1kHz impedance               | 200–500     | 200–500          | 300–600       | Ω      |
-| Fracture rate                | <0.5%/yr    | <0.5%/yr         | <1%/yr        | —      |
-| Insulation breach rate       | <0.2%/yr    | <0.2%/yr         | <0.3%/yr      | —      |
-| Dislodgement rate (acute)    | <2%         | <2%              | <5%           | —      |
-| Chronic threshold (steroid)  | 0.5–1.5V    | 0.5–2.0V         | 1.0–3.0V      | V      |
-| R-wave amplitude (chronic)  | 2–10mV      | 5–20mV           | 2–10mV        | mV     |
-| Steroid dose                 | 1.0mg DEX   | 1.0mg DEX        | 1.0mg DEX     | —      |
-| Steroid duration             | >12 months  | >12 months       | >12 months    | —      |
-| Connector type               | IS-1        | IS-1             | IS-1          | —      |
+The lead interface connects the pacemaker pulse generator to the intracardiac
+electrodes that sense cardiac signals and deliver pacing pulses. This chapter
+covers the electrode-tissue interface physics, lead construction, impedance
+characteristics, failure modes, and the circuit design of the lead interface
+in the pacemaker IC.
 
 ---
 
-*Section 2.2.3 — Lead Interface Design*
-*Previous: Section 2.2.2 — Pacing Pulse Generation | Next: Section 2.2.4 — Multi-Chamber Pacing*
+## 2.7.1 Electrode-Tissue Interface Physics
+
+### Equivalent Circuit Model
+
+The electrode-tissue interface can be modeled as an equivalent electrical
+circuit consisting of several impedance components:
+
+```
+                    ELECTRODE-TISSUE INTERFACE MODEL
+
+  Pacemaker IC                                Cardiac Tissue
+      │                                            │
+      │    ┌─────────────────────────────────────┐ │
+      │    │                                     │ │
+      │    │   R_s      C_dl      R_ct          │ │
+      │    │  ┌───┐   ┌───┐   ┌───┐            │ │
+      │    ├──┤   ├───┤   ├───┤   ├────────────┤ │
+      │    │  └───┘   └───┘   └───┘            │ │
+      │    │                                     │ │
+      │    │   R_p                               │ │
+      │    │  ┌───┐                              │ │
+      │    ├──┤   ├──────────────────────────────┤ │
+      │    │  └───┘                              │ │
+      │    │                                     │ │
+      │    └─────────────────────────────────────┘ │
+      │                                            │
+      │  R_s  = Solution resistance (5-50 Ω)      │
+      │  C_dl = Double-layer capacitance           │
+      │       (10-100 µF/cm²)                      │
+      │  R_ct = Charge-transfer resistance         │
+      │       (10-100 kΩ·cm²)                      │
+      │  R_p  = Polarization resistance            │
+      │       (100 kΩ-1 MΩ)                        │
+      │                                            │
+```
+
+### Component Descriptions
+
+**Solution Resistance (R_s):**
+- Resistance of the body fluid (blood, myocardium) between the electrode
+  and the tissue
+- Typical value: 5-50 Ω
+- Depends on: electrode size, tissue proximity, fluid conductivity
+- Frequency-independent (resistive)
+
+**Double-Layer Capacitance (C_dl):**
+- Capacitance formed by the charge separation at the electrode-tissue
+  interface (Helmholtz double layer)
+- Typical value: 10-100 µF/cm² (high surface area electrodes)
+- For a 1 mm² tip electrode: C_dl ≈ 10-100 nF
+- Frequency-dependent (capacitive)
+- Dominates the interface impedance at low frequencies
+
+**Charge-Transfer Resistance (R_ct):**
+- Resistance to faradaic (electrochemical) charge transfer at the interface
+- Typical value: 10-100 kΩ·cm²
+- Depends on: electrode material, tissue type, polarization state
+- Modelled in parallel with C_dl
+
+**Polarization Resistance (R_p):**
+- Resistance representing the slow polarization processes at the interface
+- Typical value: 100 kΩ-1 MΩ
+- Dominates the interface impedance at very low frequencies (DC)
+- Increases with time after pacing (polarization buildup)
+
+### Interface Impedance vs. Frequency
+
+```
+  Impedance
+  (log scale)
+    │
+  10k├──────╲
+    │        ╲
+   1k├────────╲──────────────────────
+    │          ╲
+  100├──────────╲──────────────────────
+    │            ╲
+   10├────────────╲────────────────────
+    │              ╲
+    1├──────────────╲──────────────────
+    │
+  0.1├─────────────────────────────────
+    │
+  0.01├─────────────────────────────────
+    │
+    1    10    100   1k   10k  100k  1M
+              Frequency (Hz)
+
+  At DC:      Z ≈ R_p + R_ct (100 kΩ - 1 MΩ)
+  At 1 kHz:   Z ≈ R_s (10-50 Ω)  ← Pacing impedance
+  At 100 kHz: Z ≈ R_s (10-50 Ω)
+```
+
+---
+
+## 2.7.2 Lead Construction
+
+### Lead Components
+
+| Component | Material | Function | Typical Dimensions |
+|-----------|----------|----------|-------------------|
+| Tip electrode | Pt/Ir (90/10) | Pacing/sensing | 0.5-1.5 mm² surface |
+| Ring electrode | Pt/Ir or MP3N | Bipolar return | 5-10 mm² surface |
+| Coil conductor | MP35N (Co-Cr-Ni-Mo) | Signal conduction | 0.2-0.5 mm diameter |
+| Outer conductor | MP35N | Shield/return | 0.3-0.6 mm diameter |
+| Insulation | Silicone or polyurethane | Electrical isolation | 0.1-0.3 mm wall |
+| Connector pin | Pt/Ir or stainless steel | IC connection | 1-2 mm diameter |
+| Steroid elutor | Dexamethasone sodium phosphate | Reduce inflammation | 1 mg equivalent |
+
+### Lead Types
+
+| Type | Conductors | Electrodes | Use Case |
+|------|-----------|-----------|----------|
+| Unipolar | 1 | Tip only | Rare (legacy) |
+| Bipolar | 2 | Tip + Ring | Most common |
+| Quadripolar | 4 | Tip + 3 Rings | CRT (LV pacing) |
+| Steroid-eluting | 2+ | Tip with steroid | Reduce chronic threshold |
+| Active-fixation | 2 | Screw-in helix | Secure placement |
+| Passive-fixation | 2 | Tines/fins | Secure placement |
+
+### Tip Electrode Design
+
+The tip electrode is the most critical component for stimulation and sensing:
+
+**Surface area:**
+- Small (0.5-1.0 mm²): Lower pacing threshold, better sensing, higher impedance
+- Large (1.5-3.0 mm²): Lower impedance, more stable, higher threshold
+- Optimal: 0.8-1.2 mm² for ventricular, 0.5-1.0 mm² for atrial
+
+**Material properties:**
+- Platinum/Iridium (90/10): Most common, excellent biocompatibility
+- Titanium Nitride (TiN): High surface area, low polarization
+- IrOx (Iridium Oxide): Very high surface area, lowest polarization
+- Porous platinum: High surface area, good long-term stability
+
+**Surface treatment:**
+- Smooth: Low surface area, higher polarization
+- Porous: High surface area, lower polarization
+- Platinized: Very high surface area, lowest polarization
+- Roughened: Moderate surface area, moderate polarization
+
+---
+
+## 2.7.3 Lead Impedance Characteristics
+
+### Acute vs. Chronic Impedance
+
+| Parameter | Acute (Implant) | Chronic (6 months+) | Unit |
+|-----------|----------------|-------------------|------|
+| Tip impedance (bipolar) | 300-600 | 400-1000 | Ω |
+| Ring impedance (bipolar) | 20-50 | 20-50 | Ω |
+| Pacing impedance | 300-600 | 400-1000 | Ω |
+| Sensing impedance | 500-1500 | 800-2000 | Ω |
+
+### Impedance Changes Over Time
+
+```
+  Impedance
+  (Ω)
+    │
+  1200├──────────────────────────────────
+    │                              ╱
+  1000├────────────────────────────╱──────
+    │                          ╱
+   800├──────────────────────╱─────────────
+    │                    ╱
+   600├────────────────╱───────────────────
+    │              ╱
+   400├──────────╱─────────────────────────
+    │        ╱
+   200├────╱───────────────────────────────
+    │
+     0├────┬────┬────┬────┬────┬────┬────
+    0   1wk  1mo  3mo  6mo  1yr  2yr  5yr
+
+  Acute phase (0-3 months): Impedance rises as
+  fibrotic capsule forms around the electrode
+  Chronic phase (3+ months): Impedance stabilizes
+```
+
+### Factors Affecting Impedance
+
+1. **Electrode size**: Smaller electrodes → higher impedance
+2. **Electrode material**: TiN/IrOx → lower polarization impedance
+3. **Tissue proximity**: Closer contact → lower impedance
+4. **Fibrotic capsule**: Increases impedance over time (3-6 months)
+5. **Steroid elution**: Reduces fibrosis, limits impedance rise
+6. **Lead position**: Endocardial vs. epicardial affects impedance
+7. **Blood flow**: Convective effects reduce concentration polarization
+
+---
+
+## 2.7.4 Lead Failure Modes
+
+### Failure Mode Classification
+
+| Failure Mode | Probability | Severity | Detection | Mitigation |
+|-------------|------------|----------|-----------|------------|
+| Conductor fracture | 1-5% at 10 yr | High | Impedance spike | Redundant conductors |
+| Insulation breach | 2-5% at 10 yr | Medium | Impedance drop | Dual insulation |
+| Connector failure | 1-2% at 10 yr | High | Impedance spike | Redundant connections |
+| Electrode dislodgement | 2-5% at 1 yr | High | Impedance change | Active fixation |
+| Threshold rise | 5-10% at 10 yr | Medium | Capture threshold | Steroid elution |
+| Lead migration | 1-3% at 5 yr | Medium | Impedance/ECG | Active fixation |
+| Twiddler's syndrome | < 1% | High | X-ray, impedance | Surgical revision |
+
+### Conductor Fracture
+
+Conductor fracture is the most common lead failure mode, occurring due to:
+- Mechanical stress from cardiac motion (100,000+ flex cycles/day)
+- Manufacturing defects in the conductor coil
+- Stress corrosion at the connector pin
+- Compression between the clavicle and first rib (subclavian crush)
+
+**Detection:**
+- Sudden impedance spike (> 2× baseline)
+- Loss of capture or sensing
+- Pacing artifact present but no cardiac response
+
+**Circuit response:**
+- Impedance monitoring circuit detects out-of-range impedance
+- Alert transmitted via telemetry
+- Automatic mode switch to backup (unipolar if bipolar fails)
+
+### Insulation Breach
+
+Insulation breach allows current leakage between conductors or to body
+fluid, causing:
+- Reduced pacing efficiency (current shunted through breach)
+- Increased risk of inappropriate sensing (noise pickup)
+- Potential for tissue damage (leakage current)
+
+**Detection:**
+- Sudden impedance drop (< 50% of baseline)
+- Increased noise on sensing channel
+- Erratic sensing or oversensing
+
+### Connector Failure
+
+Connector failure at the lead-header interface causes:
+- Intermittent contact (noisy signals)
+- Complete disconnection (no pacing/sensing)
+- Increased impedance at the connection point
+
+**Detection:**
+- Intermittent impedance spikes
+- Motion-dependent sensing artifacts
+- Pacing threshold changes with body position
+
+---
+
+## 2.7.5 Lead Impedance Measurement
+
+### Measurement Techniques
+
+**Technique 1: Voltage-Current Method**
+
+Apply a known current pulse and measure the resulting voltage:
+
+```
+  V_measured = I_applied × R_lead
+
+  I_applied = 10-100 µA (constant current source)
+  V_measured = ADC measurement
+  R_lead = V_measured / I_applied
+
+  Measurement accuracy: ±5%
+  Measurement time: 10-100 µs
+  Power consumption: < 1 µJ per measurement
+```
+
+**Technique 2: Voltage Divider Method**
+
+Use the known output capacitor and measure the discharge rate:
+
+```
+  V(t) = V₀ × e^(-t/(R×C))
+
+  Measure V(t) at two time points
+  Calculate R = (t₂ - t₁) / (C × ln(V₁/V₂))
+
+  Accuracy: ±10%
+  Simpler circuit, no current source needed
+```
+
+### Impedance Monitoring Circuit
+
+```
+                    IMPEDANCE MEASUREMENT CIRCUIT
+
+  From Tip ────────────┬────────────────────────────
+                       │                            │
+                       ▼                            ▼
+                  ┌────────┐                  ┌────────┐
+                  │  ADC   │                  │  ADC   │
+                  │ (V_meas)│                  │ (I_meas)│
+                  └───┬────┘                  └───┬────┘
+                      │                           │
+                      ▼                           ▼
+                  ┌────────────────────────────────┐
+                  │         DIGITAL PROCESSOR       │
+                  │                                 │
+                  │   R = V_meas / I_meas           │
+                  │                                 │
+                  │   If (R < R_min) → Alert        │
+                  │   If (R > R_max) → Alert        │
+                  │   Store R in diagnostic log     │
+                  └────────────────────────────────┘
+
+  I_applied = 10-100 µA (from constant current source)
+  Measurement interval: 8-24 hours (programmable)
+```
+
+### Impedance Limits
+
+| Parameter | Minimum | Nominal | Maximum | Unit |
+|-----------|---------|---------|---------|------|
+| Low impedance threshold | 100 | 300 | 500 | Ω |
+| High impedance threshold | 1000 | 1500 | 2000 | Ω |
+| Impedance spike threshold | — | 2× baseline | — | Ω |
+| Measurement accuracy | — | ±5 | — | % |
+| Measurement interval | 1 | 8 | 24 | hours |
+
+---
+
+## 2.7.6 Lead Polarization
+
+### Polarization Mechanism
+
+When a pacing pulse is delivered through the electrode, charge accumulates
+at the electrode-tissue interface, creating a polarization voltage that
+opposes the pacing pulse. This polarization voltage:
+
+1. Reduces the effective voltage across the tissue
+2. Increases the energy required for stimulation
+3. Creates a large artifact that can mask the evoked response
+4. Takes seconds to minutes to dissipate naturally
+
+### Polarization Voltage
+
+```
+  V_polarization(t) = V_max × (1 - e^(-t/τ_pol))
+
+  where:
+    V_max = maximum polarization voltage (typically 0.5-2.0 V)
+    τ_pol = polarization time constant (typically 0.5-2.0 s)
+    t = time after pacing pulse
+```
+
+### Polarization Reduction Techniques
+
+1. **Small electrode area**: Reduces C_dl, which reduces polarization
+   (but increases impedance).
+
+2. **High surface area materials**: TiN, IrOx, and platinized surfaces
+   increase the effective surface area, reducing polarization.
+
+3. **Steroid elution**: Dexamethasone reduces fibrosis, which reduces
+   the polarization resistance.
+
+4. **Charge balancing**: Active charge removal after the pacing pulse
+   reduces residual polarization.
+
+5. **Biphasic pulses**: The second phase actively removes the charge
+   deposited by the first phase.
+
+### Polarization Measurement
+
+The polarization voltage can be measured immediately after the pacing pulse
+to verify charge balance:
+
+```
+  V_pol = V_electrode(t=0+) - V_baseline
+
+  If (V_pol > V_pol_max) → Charge balance error
+  If (V_pol < -V_pol_max) → Charge balance error
+
+  V_pol_max = 50-100 mV (programmable)
+```
+
+---
+
+## 2.7.7 Lead Interface Circuit in Pacemaker IC
+
+### Input Protection
+
+The lead interface includes protection circuits to prevent damage from
+high-voltage events:
+
+```
+                    LEAD INTERFACE PROTECTION
+
+  From Tip ────────┬────────────────────────────
+                   │
+                   ▼
+              ┌────────┐
+              │  ESD   │
+              │  Clamp │ (Diode to VDD/VSS)
+              │  (±4kV │
+              │   HBM) │
+              └───┬────┘
+                  │
+                  ▼
+              ┌────────┐
+              │ Series │
+              │ Resistor│ (50-200 kΩ)
+              │        │
+              └───┬────┘
+                  │
+                  ▼
+              ┌────────┐
+              │ Input  │
+              │ Protection│ (Active clamp)
+              │ Switch  │ (Bypasses R_s during
+              │        │  pacing)
+              └───┬────┘
+                  │
+                  ▼
+              ┌────────┐
+              │ SENSE  │
+              │ AMP    │
+              │ INPUT  │
+              └────────┘
+```
+
+### Switching Network
+
+The lead interface includes a switching network that routes the lead
+connection to the appropriate circuit block:
+
+```
+                    LEAD SWITCHING NETWORK
+
+  From Tip ────────┬────────────────────────────
+                   │
+            ┌──────┴──────┐
+            │             │
+            ▼             ▼
+      ┌──────────┐  ┌──────────┐
+      │  SENSE   │  │  PACE    │
+      │  PATH    │  │  PATH    │
+      │          │  │          │
+      └────┬─────┘  └────┬─────┘
+           │             │
+           ▼             ▼
+      ┌──────────┐  ┌──────────┐
+      │  AFE     │  │  OUTPUT  │
+      │  INPUT   │  │  STAGE   │
+      │          │  │          │
+      └──────────┘  └──────────┘
+
+  S1 = Sense/Pace switch (break-before-make)
+  Break time: 10-50 µs (prevents simultaneous
+  connection of sense amp and output stage)
+```
+
+### Break-Before-Make Switching
+
+The break-before-make switching ensures that the sensitive sense amplifier
+is never connected to the high-voltage pacing output:
+
+```
+  Timing Diagram:
+  
+  Pace Command
+  │
+  ▼
+  ┌───────────────────────────────────────
+  │   │← Break →│← Pace →│← Make →│
+  │   │   10µs   │  0.4ms │  10µs  │
+  │   │          │        │        │
+  │   │ S1 opens │ S2 closes│ S1 closes│
+  │   │ (sense   │ (pace   │ (sense │
+  │   │  path    │  path   │  path  │
+  │   │  open)   │  active)│  restored)│
+  └───────────────────────────────────────
+```
+
+---
+
+## 2.7.8 Steroid-Eluting Leads
+
+### Mechanism
+
+Steroid-eluting leads contain a small reservoir of dexamethasone sodium
+phosphate (typically 1 mg) at the tip electrode. The steroid slowly elutes
+into the surrounding tissue, reducing the inflammatory response and
+fibrotic capsule formation.
+
+### Benefits
+
+| Parameter | Non-Steroid Lead | Steroid-Eluting Lead | Unit |
+|-----------|-----------------|---------------------|------|
+| Acute threshold | 0.5-1.0 | 0.3-0.7 | V @ 0.4ms |
+| Chronic threshold (1 yr) | 1.0-2.5 | 0.5-1.0 | V @ 0.4ms |
+| Threshold rise (acute→chronic) | 50-200% | 10-50% | % |
+| Chronic impedance | 500-1000 | 400-800 | Ω |
+| Sensing amplitude (R-wave) | 5-15 | 8-20 | mV |
+| Long-term stability | Moderate | Excellent | — |
+
+### Steroid Elution Rate
+
+```
+  C_steroid(t) = C₀ × e^(-t/τ_elute)
+
+  where:
+    C₀ = initial concentration (1 mg equivalent)
+    τ_elute = elution time constant (6-12 months)
+    t = time since implant
+
+  Effective steroid delivery: 6-12 months
+  After elution: Threshold may slowly rise (but remains
+  lower than non-steroid leads due to reduced fibrosis)
+```
+
+---
+
+## 2.7.9 Lead Compatibility Standards
+
+| Standard | Description | Key Requirements |
+|----------|------------|-----------------|
+| ISO 5841-1 | Pacemaker leads - General | Biocompatibility, electrical |
+| ISO 5841-2 | Pacemaker leads - Electrodes | Material, surface, coating |
+| ISO 5841-3 | Pacemaker leads - Connectors | IS-1, DF-1, LS-1 connectors |
+| IEC 60601-1 | Medical electrical equipment | Safety, EMC |
+| AAMI/ANSI NS15 | Pacemaker lead testing | Mechanical, electrical, environmental |
+
+### Connector Standards
+
+| Standard | Connector Type | Application |
+|----------|---------------|------------|
+| IS-1 | Single-pass, bipolar | Standard pacing leads |
+| DF-1 | Dual-pass, bipolar | ICD leads |
+| DF-4 | Triple-pass, quadripolar | CRT leads |
+| IS-4 | Quadripolar | LV pacing leads |
+
+---
+
+## 2.7.10 Summary
+
+The lead interface design is critical for reliable pacing and sensing:
+
+1. **Electrode-tissue interface**: The complex impedance of the interface
+   affects both pacing threshold and sensing quality. Understanding the
+   interface physics is essential for optimizing both functions.
+
+2. **Lead impedance**: Typical chronic bipolar impedance is 400-1000 Ω,
+   with monitoring accuracy of ±5%. Impedance trends provide early warning
+   of lead failure.
+
+3. **Failure modes**: Conductor fracture and insulation breach are the most
+   common failure modes, detectable by impedance monitoring.
+
+4. **Polarization**: Electrode polarization after pacing reduces stimulation
+   efficiency and masks evoked response. Mitigation techniques include
+   charge balancing, biphasic pulses, and high-surface-area electrodes.
+
+5. **Steroid elution**: Steroid-eluting leads significantly reduce chronic
+   pacing thresholds and improve long-term stability.
+
+The lead interface circuit in the pacemaker IC must provide high-impedance
+sensing (> 10 MΩ), high-voltage pacing (up to 8V, 25 mA), accurate
+impedance measurement (±5%), and robust protection against ESD and
+high-voltage events.

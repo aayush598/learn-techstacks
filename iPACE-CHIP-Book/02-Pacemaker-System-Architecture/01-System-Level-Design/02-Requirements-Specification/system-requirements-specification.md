@@ -1,436 +1,623 @@
-# System Requirements Specification
+# 02.1.2 — System Requirements Specification
 
-## 2.1.2 iPACE-CHIP Requirements Specification Document
-
-### Document Control
-
-| Field            | Value                                    |
-|------------------|------------------------------------------|
-| Document ID      | iPACE-CHIP-SRS-001                       |
-| Revision         | 2.0                                      |
-| Classification   | Design Input — ISO 13485 §7.3           |
-| Safety Class     | Class III Medical Device (FDA) / AIMD (EU) |
-| Applicable Standards | ISO 14708-1, IEC 60601-1-2, IEC 62304 |
-| Risk Classification | Class III (FDA 21 CFR 870)            |
+> **Section 02: Pacemaker System Architecture**
+> **Subsection 01: System-Level Design — Requirements Specification**
 
 ---
 
-### 2.1.2.1 Functional Requirements
+## Table of Contents
 
-#### FR-SENSE: Cardiac Signal Sensing
-
-| Req ID    | Requirement                                                                 | Priority | Verification |
-|-----------|-----------------------------------------------------------------------------|----------|--------------|
-| FR-SENSE-01 | The system shall detect intrinsic R-waves with amplitude ≥ 2.0 mV (2σ)  | Mandatory | Test         |
-| FR-SENSE-02 | The system shall detect intrinsic P-waves with amplitude ≥ 0.5 mV (2σ)  | Mandatory | Test         |
-| FR-SENSE-03 | The system shall provide programmable sensitivity from 0.25 mV to 5.0 mV | Mandatory | Test         |
-| FR-SENSE-04 | The system shall sense on bipolar and unipolar configurations            | Mandatory | Test         |
-| FR-SENSE-05 | The system shall reject T-waves exceeding 50% of R-wave amplitude       | Mandatory | Test         |
-| FR-SENSE-06 | The system shall reject far-field signals (EMG, diaphragm) by >20 dB     | Mandatory | Test         |
-| FR-SENSE-07 | The system shall achieve sensing signal-to-noise ratio (SNR) >10 dB      | Mandatory | Test         |
-| FR-SENSE-08 | The system shall provide automatic sensitivity adjustment (AutoSense)     | Desirable | Test         |
-| FR-SENSE-09 | The system shall detect oversensing within 2 sensing cycles              | Mandatory | Test         |
-| FR-SENSE-10 | The system shall support 4 independent sensing channels (RA, RV, LV, Ext)| Mandatory | Test         |
-
-#### FR-PACE: Pacing Pulse Generation
-
-| Req ID    | Requirement                                                                 | Priority | Verification |
-|-----------|-----------------------------------------------------------------------------|----------|--------------|
-| FR-PACE-01 | The system shall generate pacing pulses with programmable amplitude       | Mandatory | Test         |
-| FR-PACE-02 | Amplitude range: 0.5V to 10.0V in 0.1V steps (unipolar)                  | Mandatory | Test         |
-| FR-PACE-03 | Amplitude range: 0.5V to 7.5V in 0.1V steps (bipolar)                   | Mandatory | Test         |
-| FR-PACE-04 | The system shall generate pulses with programmable width: 0.05 ms–1.5 ms | Mandatory | Test         |
-| FR-PACE-05 | Pulse width accuracy: ±5% or ±10 µs, whichever is greater               | Mandatory | Test         |
-| FR-PACE-06 | The system shall perform automatic charge balancing within 4 µs post-pace | Mandatory | Test         |
-| FR-PACE-07 | Post-pace polarization shall not exceed 500 mV at 500 Ω load            | Mandatory | Test         |
-| FR-PACE-08 | Output capacitor shall be charged to within 1% of target before pacing    | Mandatory | Test         |
-| FR-PACE-09 | The system shall support simultaneous multi-site pacing (biventricular)   | Desirable | Test         |
-| FR-PACE-10 | The system shall pace in unipolar and bipolar configurations              | Mandatory | Test         |
-
-#### FR-TIMER: Timing Cycles
-
-| Req ID    | Requirement                                                                 | Priority | Verification |
-|-----------|-----------------------------------------------------------------------------|----------|--------------|
-| FR-TIMER-01 | The system shall implement lower rate interval (LRI): 300–1700 ms        | Mandatory | Test         |
-| FR-TIMER-02 | The system shall implement upper rate limit (URL): 80–180 ppm            | Mandatory | Test         |
-| FR-TIMER-03 | AV delay range: 30–350 ms (programmable)                                  | Mandatory | Test         |
-| FR-TIMER-04 | VA interval range: 200–1500 ms (programmable)                            | Mandatory | Test         |
-| FR-TIMER-05 | PVARP range: 150–500 ms (programmable)                                   | Mandatory | Test         |
-| FR-TIMER-06 | Post-ventricular atrial blanking (PVAB): 50–400 ms                       | Mandatory | Test         |
-| FR-TIMER-07 | Timer accuracy: ±2% or ±2 ms, whichever is greater                      | Mandatory | Test         |
-| FR-TIMER-08 | The system shall support rate response (sensor-driven)                    | Desirable | Test         |
-| FR-TIMER-09 | The system shall implement rate smoothing algorithm                       | Desirable | Test         |
-
-#### FR-MODE: Operating Modes
-
-| Req ID    | Requirement                                                                 | Priority | Verification |
-|-----------|-----------------------------------------------------------------------------|----------|--------------|
-| FR-MODE-01 | The system shall support VVI mode (ventricular demand pacing)             | Mandatory | Test         |
-| FR-MODE-02 | The system shall support VVI/R mode (with rate response)                  | Mandatory | Test         |
-| FR-MODE-03 | The system shall support AAI mode (atrial demand pacing)                  | Mandatory | Test         |
-| FR-MODE-04 | The system shall support DDD mode (dual-chamber demand)                   | Mandatory | Test         |
-| FR-MODE-05 | The system shall support DDDR mode (dual-chamber rate-responsive)         | Mandatory | Test         |
-| FR-MODE-06 | The system shall support DDD/R mode (automatic mode switching)            | Mandatory | Test         |
-| FR-MODE-07 | The system shall support ODO mode (monitoring only, no pacing)            | Desirable | Test         |
-| FR-MODE-08 | Mode shall be programmable without requiring device explant               | Mandatory | Test         |
-| FR-MODE-09 | The system shall transition between modes safely within 1 cardiac cycle   | Mandatory | Test         |
-
-#### FR-TELEM: Telemetry and Programming
-
-| Req ID    | Requirement                                                                 | Priority | Verification |
-|-----------|-----------------------------------------------------------------------------|----------|--------------|
-| FR-TELEM-01 | The system shall support RF telemetry via MICS band (402–405 MHz)        | Mandatory | Test         |
-| FR-TELEM-02 | The system shall support magnet-activated interrogation mode              | Mandatory | Test         |
-| FR-TELEM-03 | The system shall transmit real-time electrograms (EGM) via telemetry      | Mandatory | Test         |
-| FR-TELEM-04 | The system shall support over-the-air (OTA) firmware update capability    | Desirable | Test         |
-| FR-TELEM-05 | All telemetry packets shall include CRC-16 error detection                | Mandatory | Test         |
-| FR-TELEM-06 | The system shall transmit stored diagnostic data (up to 512 events)       | Mandatory | Test         |
-| FR-TELEM-07 | Telemetry data rate: 8–256 kbps (programmable)                           | Mandatory | Test         |
-| FR-TELEM-08 | The system shall support bidirectional communication                      | Mandatory | Test         |
+1. [Introduction](#1-introduction)
+2. [Applicable Standards and Regulations](#2-applicable-standards-and-regulations)
+3. [Functional Requirements](#3-functional-requirements)
+4. [Performance Requirements](#4-performance-requirements)
+5. [Electrical Requirements](#5-electrical-requirements)
+6. [Mechanical Requirements](#6-mechanical-requirements)
+7. [Environmental Requirements](#7-environmental-requirements)
+8. [Safety Requirements](#8-safety-requirements)
+9. [Biocompatibility Requirements](#9-biocompatibility-requirements)
+10. [Telemetry Requirements](#10-telemetry-requirements)
+11. [Software Requirements](#11-software-requirements)
+12. [Reliability Requirements](#12-reliability-requirements)
+13. [Electromagnetic Compatibility Requirements](#13-electromagnetic-compatibility-requirements)
+14. [Traceability Matrix](#14-traceability-matrix)
+15. [Requirements Verification](#15-requirements-verification)
+16. [Summary](#16-summary)
+17. [References](#17-references)
 
 ---
 
-### 2.1.2.2 Performance Requirements
+## 1. Introduction
 
-| Req ID    | Requirement                                                                 | Value      | Tolerance |
-|-----------|-----------------------------------------------------------------------------|------------|-----------|
-| PR-01     | Sensing input impedance (differential)                                     | >1 GΩ     | —         |
-| PR-02     | Sensing input impedance (common-mode)                                      | >10 GΩ    | —         |
-| PR-03     | LNA voltage noise density (at 10 Hz)                                       | <30 nV/√Hz | —        |
-| PR-04     | LNA current noise density (at 10 Hz)                                       | <0.1 pA/√Hz| —        |
-| PR-05     | CMRR (at 50/60 Hz)                                                         | >80 dB     | —         |
-| PR-06     | Input-referred noise (0.5–100 Hz BW)                                       | <5 µVrms   | —         |
-| PR-07     | ADC resolution                                                              | 12-bit     | ±1 LSB   |
-| PR-08     | ADC sampling rate                                                           | 1024 Hz    | ±1%      |
-| PR-09     | ADC INL/DNL                                                                | <±1 LSB   | —         |
-| PR-10     | Output voltage accuracy                                                     | ±2%        | ±0.1V    |
-| PR-11     | Output pulse width accuracy                                                 | ±5%        | ±10 µs   |
-| PR-12     | Output DC resistance (during charge phase)                                 | <50 Ω     | —         |
-| PR-13     | Charge balancing residual                                                   | <1 µC      | —         |
-| PR-14     | Sensing-sensing crosstalk                                                   | <-60 dB    | —         |
-| PR-15     | Output-sensing isolation                                                     | >100 dB    | —         |
-| PR-16     | Telemetry range (through tissue)                                           | 2–5 cm     | —         |
-| PR-17     | Telemetry bit error rate (BER)                                             | <10⁻⁶     | —         |
-| PR-18     | Data storage capacity (EGM events)                                         | ≥512 events| —         |
-| PR-19     | Parameter storage (EEPROM)                                                 | ≥4 KB      | —         |
-| PR-20     | MCU instruction cycle time                                                  | 500 ns     | ±2%      |
+This document defines the complete set of system-level requirements for an
+implantable cardiac pacemaker. Requirements are derived from:
 
----
+- International standards (ISO, IEC)
+- Regulatory body guidance (FDA, CE/Medical Device Regulation)
+- Clinical needs and physician input
+- Patient safety considerations
+- Engineering constraints
 
-### 2.1.2.3 Safety Requirements
+### 1.1 Requirement Classification
 
-| Req ID    | Requirement                                                                 | Standard  |
-|-----------|-----------------------------------------------------------------------------|-----------|
-| SF-01     | Maximum output voltage shall not exceed 10.0 V under any single fault    | ISO 14708 |
-| SF-02     | Maximum output energy per pulse shall not exceed 100 µJ at 500 Ω        | ISO 14708 |
-| SF-03     | The system shall include a watchdog timer with 8-second timeout           | IEC 60601 |
-| SF-04     | The system shall reset to safe default parameters on power-on             | ISO 14708 |
-| SF-05     | The system shall detect and indicate lead impedance out-of-range          | ISO 14708 |
-| SF-06     | The system shall not deliver pacing pulses during sensing blanking period | IEC 60601 |
-| SF-07     | The system shall detect battery end-of-life (EOL) at 2.5V               | ISO 14708 |
-| SF-08     | The system shall enter hibernation mode on battery depletion             | ISO 14708 |
-| SF-09     | No single fault condition shall result in patient harm                    | IEC 62304 |
-| SF-10     | The system shall log all safety-related events with timestamps           | IEC 62304 |
-| SF-11     | The system shall support emergency magnet reset                           | ISO 14708 |
-| SF-12     | Tamper detection on parameter changes (checksum verification)            | IEC 62304 |
-| SF-13     | The system shall prevent unintended mode transitions                      | IEC 62304 |
-| SF-14     | The system shall detect oversensing and inhibit inappropriate pacing     | IEC 60601 |
-| SF-15     | Maximum leakage current through leads: <10 µA DC                         | IEC 60601 |
-
----
-
-### 2.1.2.4 Power Requirements
-
-| Req ID    | Requirement                                                                 | Value      |
-|-----------|-----------------------------------------------------------------------------|------------|
-| PW-01     | Battery chemistry                                                           | Li-SVO     |
-| PW-02     | Nominal battery voltage                                                     | 3.0 V      |
-| PW-03     | Battery capacity                                                            | ≥1.0 Ah    |
-| PW-04     | Battery self-discharge rate                                                 | <1%/year   |
-| PW-05     | Total system current drain (nominal pacing)                                | <20 µA avg |
-| PW-06     | Total system current drain (sleep mode)                                    | <2 µA      |
-| PW-07     | Total system current drain (hibernate)                                     | <0.5 µA    |
-| PW-08     | DC-DC converter efficiency (at 10 µA load)                                 | >80%       |
-| PW-09     | LDO dropout voltage                                                        | <200 mV    |
-| PW-10     | LDO output noise                                                           | <10 mVpp   |
-| PW-11     | Power-on reset (POR) threshold                                             | 2.4 V      |
-| PW-12     | Brown-out reset (BOR) threshold                                             | 2.6 V      |
-| PW-13     | BOR hysteresis                                                              | 100 mV     |
-| PW-14     | Power-on reset delay                                                       | 1–5 ms     |
-| PW-15     | Target implant lifetime                                                     | ≥10 years  |
-| PW-16     | Battery end-of-life indicator voltage                                       | 2.5 V      |
-| PW-17     | Charge pump efficiency (if used)                                            | >70%       |
-
----
-
-### 2.1.2.5 Area and Physical Requirements
-
-| Req ID    | Requirement                                                                 | Value      |
-|-----------|-----------------------------------------------------------------------------|------------|
-| AR-01     | Die area (active)                                                           | ≤30 mm²   |
-| AR-02     | Package dimensions                                                          | 38×42×6 mm |
-| AR-03     | Package weight                                                              | ≤25 g      |
-| AR-04     | Number of hermetic feedthrough pins                                         | ≤12        |
-| AR-05     | Feedthrough material                                                        | Pt/Ir (90/10)|
-| AR-06     | Feedthrough seal type                                                       | Ceramic-metal |
-| AR-07     | Hermeticity (He leak rate)                                                  | <1×10⁻⁹ atm·cc/s |
-| AR-08     | Lead connector type                                                         | IS-1 / DF-4 |
-| AR-09     | Maximum lead pin diameter                                                   | 1.27 mm    |
-| AR-10     | Case material                                                               | Ti Grade 1 |
-| AR-11     | Case wall thickness                                                         | 0.3–0.5 mm |
-| AR-12     | Telemetry coil diameter                                                     | 20–30 mm   |
-| AR-13     | Accelerometer placement                                                     | Center of die |
-
----
-
-### 2.1.2.6 Timing Requirements
-
-| Req ID    | Requirement                                                                 | Value      |
-|-----------|-----------------------------------------------------------------------------|------------|
-| TR-01     | System wake-up time from hibernate                                          | <50 ms     |
-| TR-02     | System wake-up time from sleep                                              | <5 ms      |
-| TR-03     | Sensing-to-pacing response time (escape interval)                          | <5 ms      |
-| TR-04     | Telemetry TX start-up time                                                  | <10 ms     |
-| TR-05     | Telemetry RX start-up time                                                  | <20 ms     |
-| TR-06     | ADC conversion time                                                          | <100 µs    |
-| TR-07     | DAC settling time                                                            | <50 µs     |
-| TR-08     | Charge balance completion time                                               | <4 µs      |
-| TR-09     | Parameter write time (EEPROM)                                               | <5 ms      |
-| TR-10     | Watchdog timeout period                                                      | 8.0 ± 0.5 s|
-| TR-11     | Timer resolution (pacing)                                                    | 1 µs       |
-| TR-12     | Timer resolution (diagnostic)                                                | 1 ms       |
-| TR-13     | Maximum sensing-to-detection latency                                        | <100 ms    |
-| TR-14     | Maximum mode switching latency                                               | <1 cycle   |
-| TR-15     | Magnet reed switch debounce time                                            | 5–20 ms    |
-
----
-
-### 2.1.2.7 Environmental Requirements
-
-| Req ID    | Requirement                                                                 | Standard  |
-|-----------|-----------------------------------------------------------------------------|-----------|
-| ENV-01    | Operating temperature range (implanted)                                     | 35–41°C   |
-| ENV-02    | Storage temperature range                                                    | -40–+60°C |
-| ENV-03    | Operating humidity                                                           | 100% (body fluid) |
-| ENV-04    | Vibration resistance                                                         | 10–500 Hz  |
-| ENV-05    | Shock resistance                                                             | 1000 G     |
-| ENV-06    | Electromagnetic compatibility (EMC)                                         | IEC 60601-1-2 |
-| ENV-07    | Electrostatic discharge (ESD) immunity                                      | 8 kV HBM  |
-| ENV-08    | RF field immunity (400 MHz–3 GHz)                                           | 200 V/m    |
-| ENV-09    | Magnetic field immunity (MRI conditional)                                   | 1.5 T      |
-| ENV-10    | Radiation tolerance (total ionizing dose)                                   | 100 krad   |
-| ENV-11    | Single-event upset (SEU) rate                                               | <10⁻⁹/bit/day |
-| ENV-12    | Corrosion resistance (body fluid immersion)                                 | >10 years  |
-| ENV-13    | Biocompatibility (cytotoxicity)                                             | ISO 10993-5 |
-| ENV-14    | Biocompatibility (sensitization)                                            | ISO 10993-10 |
-| ENV-15    | Biocompatibility (implantation)                                              | ISO 10993-6 |
-
----
-
-### 2.1.2.8 Biocompatibility Requirements
-
-| Req ID    | Requirement                                                                 | Standard  |
-|-----------|-----------------------------------------------------------------------------|-----------|
-| BIO-01    | Case material shall be biocompatible per ISO 10993                          | ISO 10993 |
-| BIO-02    | Lead connector shall be biocompatible per ISO 10993                         | ISO 10993 |
-| BIO-03    | All external surfaces shall be passivated (TiO₂ or Pt coating)             | ISO 10993 |
-| BIO-04    | No cytotoxic leachables from packaging materials                            | ISO 10993-5 |
-| BIO-05    | No sensitization from implant materials                                     | ISO 10993-10 |
-| BIO-06    | Material shall resist body fluid corrosion for >15 years                    | ASTM F2129 |
-| BIO-07    | Titanium case shall be Grade 1 or Grade 2 CP Ti                            | ASTM F67   |
-| BIO-08    | Feedthrough pins shall be Pt/Ir 90/10 alloy                                | ASTM F560  |
-| BIO-09    | Solder/interconnect materials shall be Pb-free and RoHS compliant           | IEC 62321  |
-| BIO-10    | Sterilization: Etylene Oxide (EtO) or gamma radiation                       | ISO 11135/11137 |
-
----
-
-### 2.1.2.9 Reliability Requirements
-
-| Req ID    | Requirement                                                                 | Value      |
-|-----------|-----------------------------------------------------------------------------|------------|
-| REL-01    | Mean time between failures (MTBF)                                           | >100 years |
-| REL-02    | Failure rate (critical function)                                            | <10 FIT    |
-| REL-03    | Failure rate (non-critical function)                                        | <100 FIT   |
-| REL-04    | Random hardware failure rate (life-critical)                                | <10⁻⁸/hour |
-| REL-05    | Software failure rate                                                       | <10⁻⁷/hour |
-| REL-06    | Battery calendar life (at 37°C, nominal load)                              | >10 years  |
-| REL-07    | EEPROM endurance (write cycles)                                             | >10⁶ cycles|
-| REL-08    | Flash endurance (write cycles)                                               | >10⁵ cycles|
-| REL-09    | Lead fracture rate (per year)                                               | <0.5%      |
-| REL-10    | Lead insulation breach rate (per year)                                      | <0.1%      |
-| REL-11    | Hermetic seal lifetime                                                       | >20 years  |
-| REL-12    | Capacitor derating (for electrolytic)                                       | 50%        |
-| REL-13    | Resistor derating                                                           | 50%        |
-| REL-14    | Voltage derating (on-chip)                                                   | 80%        |
-| REL-15    | Temperature derating (junction)                                              | <85°C      |
-
----
-
-### 2.1.2.10 Requirements Traceability Matrix
+Requirements are classified using the following scheme:
 
 ```
-┌─────────────────┬──────────┬──────────┬──────────┬──────────┬──────────┐
-│ Requirement     │ System   │ Hardware │ Firmware │ Test     │ Risk     │
-│ ID              │ Design   │ Design   │ Design   │ Protocol │ Analysis │
-├─────────────────┼──────────┼──────────┼──────────┼──────────┼──────────┤
-│ FR-SENSE-01     │ §2.1.1   │ §3.2     │ §4.1     │ §5.1     │ RA-001   │
-│ FR-SENSE-02     │ §2.1.1   │ §3.2     │ §4.1     │ §5.1     │ RA-001   │
-│ FR-SENSE-03     │ §2.1.1   │ §3.2     │ §4.1     │ §5.1     │ RA-002   │
-│ FR-SENSE-04     │ §2.1.1   │ §3.2     │ §4.1     │ §5.1     │ RA-002   │
-│ FR-SENSE-05     │ §2.1.1   │ §3.2     │ §4.1     │ §5.2     │ RA-003   │
-│ FR-SENSE-06     │ §2.1.1   │ §3.2     │ §4.1     │ §5.2     │ RA-003   │
-│ FR-SENSE-07     │ §2.1.1   │ §3.2     │ §4.1     │ §5.1     │ RA-002   │
-│ FR-SENSE-08     │ §2.1.1   │ §3.2     │ §4.1     │ §5.3     │ RA-004   │
-│ FR-SENSE-09     │ §2.1.1   │ §3.2     │ §4.1     │ §5.2     │ RA-005   │
-│ FR-SENSE-10     │ §2.1.1   │ §3.1     │ §4.1     │ §5.1     │ RA-001   │
-│                 │          │          │          │          │          │
-│ FR-PACE-01      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-006   │
-│ FR-PACE-02      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-006   │
-│ FR-PACE-03      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-006   │
-│ FR-PACE-04      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-007   │
-│ FR-PACE-05      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-007   │
-│ FR-PACE-06      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-008   │
-│ FR-PACE-07      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-008   │
-│ FR-PACE-08      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-006   │
-│ FR-PACE-09      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-009   │
-│ FR-PACE-10      │ §2.1.1   │ §3.3     │ §4.2     │ §5.4     │ RA-006   │
-│                 │          │          │          │          │          │
-│ FR-TIMER-01     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-010   │
-│ FR-TIMER-02     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-010   │
-│ FR-TIMER-03     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-011   │
-│ FR-TIMER-04     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-011   │
-│ FR-TIMER-05     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-012   │
-│ FR-TIMER-06     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-012   │
-│ FR-TIMER-07     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-010   │
-│ FR-TIMER-08     │ §2.1.1   │ §3.4     │ §4.3     │ §5.6     │ RA-013   │
-│ FR-TIMER-09     │ §2.1.1   │ §3.4     │ §4.3     │ §5.5     │ RA-010   │
-│                 │          │          │          │          │          │
-│ FR-MODE-01      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-014   │
-│ FR-MODE-02      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-014   │
-│ FR-MODE-03      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-014   │
-│ FR-MODE-04      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-015   │
-│ FR-MODE-05      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-015   │
-│ FR-MODE-06      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-016   │
-│ FR-MODE-07      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-017   │
-│ FR-MODE-08      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-018   │
-│ FR-MODE-09      │ §2.1.1   │ §3.1     │ §4.4     │ §5.7     │ RA-015   │
-│                 │          │          │          │          │          │
-│ FR-TELEM-01     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-019   │
-│ FR-TELEM-02     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-020   │
-│ FR-TELEM-03     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-021   │
-│ FR-TELEM-04     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-022   │
-│ FR-TELEM-05     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-023   │
-│ FR-TELEM-06     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-021   │
-│ FR-TELEM-07     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-019   │
-│ FR-TELEM-08     │ §2.1.1   │ §3.5     │ §4.5     │ §5.8     │ RA-019   │
-│                 │          │          │          │          │          │
-│ SF-01           │ §2.1.1   │ §3.3     │ §4.6     │ §5.9     │ RA-024   │
-│ SF-02           │ §2.1.1   │ §3.3     │ §4.6     │ §5.9     │ RA-024   │
-│ SF-03           │ §2.1.1   │ §3.4     │ §4.6     │ §5.9     │ RA-025   │
-│ SF-04           │ §2.1.1   │ §3.1     │ §4.6     │ §5.9     │ RA-026   │
-│ SF-05           │ §2.1.1   │ §3.2     │ §4.6     │ §5.9     │ RA-027   │
-│ SF-06           │ §2.1.1   │ §3.3     │ §4.6     │ §5.9     │ RA-028   │
-│ SF-07           │ §2.1.1   │ §3.6     │ §4.6     │ §5.9     │ RA-029   │
-│ SF-08           │ §2.1.1   │ §3.6     │ §4.6     │ §5.9     │ RA-029   │
-│ SF-09           │ §2.1.1   │ §3.1     │ §4.6     │ §5.9     │ RA-030   │
-│ SF-10           │ §2.1.1   │ §3.4     │ §4.6     │ §5.9     │ RA-031   │
-│ SF-11           │ §2.1.1   │ §3.5     │ §4.6     │ §5.9     │ RA-032   │
-│ SF-12           │ §2.1.1   │ §3.4     │ §4.6     │ §5.9     │ RA-033   │
-│ SF-13           │ §2.1.1   │ §3.1     │ §4.6     │ §5.9     │ RA-034   │
-│ SF-14           │ §2.1.1   │ §3.2     │ §4.6     │ §5.9     │ RA-005   │
-│ SF-15           │ §2.1.1   │ §3.3     │ §4.6     │ §5.9     │ RA-035   │
-└─────────────────┴──────────┴──────────┴──────────┴──────────┴──────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│              REQUIREMENT CLASSIFICATION SCHEMA                   │
+│                                                                  │
+│  ┌──────────┐                                                   │
+│  │  Class A  │  Mandatory — Must be met; no exceptions           │
+│  │  (Critical)│  Failure = patient safety risk                  │
+│  └──────────┘                                                   │
+│  ┌──────────┐                                                   │
+│  │  Class B  │  Important — Must be met with documented          │
+│  │ (Essential)│  rationale for any deviation                    │
+│  └──────────┘                                                   │
+│  ┌──────────┐                                                   │
+│  │  Class C  │  Desirable — Should be met when feasible;        │
+│  │(Preferred)│  trade-off analysis acceptable                   │
+│  └──────────┘                                                   │
+│                                                                  │
+│  Priority: A > B > C                                            │
+│  Traceability: Every requirement must trace to a source         │
+│  (Standard, Clinical Need, or Design Decision)                  │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-### 2.1.2.11 Requirements Allocation to Subsystems
+### 1.2 Requirement ID Convention
 
 ```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    REQUIREMENTS ALLOCATION DIAGRAM                          │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                    SYSTEM-LEVEL REQUIREMENTS                          │   │
-│  │  FR-SENSE (10)  FR-PACE (10)  FR-TIMER (9)  FR-MODE (9)           │   │
-│  │  FR-TELEM (8)   SF-01..15     PR-01..20     PW-01..17              │   │
-│  │  AR-01..13      TR-01..15     ENV-01..15    BIO-01..10             │   │
-│  │  REL-01..15                                                          │   │
-│  └────────────────────────────────────┬─────────────────────────────────┘   │
-│                                       │                                    │
-│              ┌────────────────────────┼────────────────────────┐            │
-│              │                        │                        │            │
-│              ▼                        ▼                        ▼            │
-│  ┌───────────────────┐  ┌───────────────────┐  ┌───────────────────┐      │
-│  │  AFE SUBSYSTEM     │  │  DIGITAL CTRL     │  │  POWER SUBSYSTEM  │      │
-│  │                    │  │  SUBSYSTEM        │  │                    │      │
-│  │  FR-SENSE: 10     │  │  FR-TIMER: 9     │  │  PW-01..17: 17    │      │
-│  │  PR-01..09: 9     │  │  FR-MODE: 9      │  │  SF-07..08: 2     │      │
-│  │  SF-05,14: 2      │  │  FR-SENSE(DSP): 3│  │  TR-01..02: 2     │      │
-│  │  AR: area alloc   │  │  SF-03,10-13: 5  │  │  AR: area alloc   │      │
-│  │  PW: <3µW/ch      │  │  PR-20: 1        │  │  PW: total budget │      │
-│  │                    │  │  TR-11..15: 5    │  │                    │      │
-│  │  Subtotal: ~21     │  │  AR: area alloc  │  │  Subtotal: ~21    │      │
-│  └───────────────────┘  │                    │  └───────────────────┘      │
-│                          │  Subtotal: ~31    │                              │
-│  ┌───────────────────┐  └───────────────────┘  ┌───────────────────┐      │
-│  │  OUTPUT STAGE     │  ┌───────────────────┐  │  TELEMETRY        │      │
-│  │  SUBSYSTEM        │  │  SAFETY SUBSYSTEM │  │  SUBSYSTEM        │      │
-│  │                    │  │                    │  │                    │      │
-│  │  FR-PACE: 10     │  │  SF-01..15: 15    │  │  FR-TELEM: 8     │      │
-│  │  PR-10..15: 6    │  │  REL-01..05: 5    │  │  PR-16..19: 4     │      │
-│  │  SF-01,02,06: 3  │  │  ENV-06..11: 6    │  │  SF-11,12: 2      │      │
-│  │  TR-07,08: 2     │  │  BIO: 10          │  │  TR-03..05: 3     │      │
-│  │  AR: area alloc  │  │  REL: 15          │  │  AR: area alloc   │      │
-│  │                    │  │                    │  │                    │      │
-│  │  Subtotal: ~21    │  │  Subtotal: ~51    │  │  Subtotal: ~17    │      │
-│  └───────────────────┘  └───────────────────┘  └───────────────────┘      │
-│                                                                             │
-│  TOTAL REQUIREMENTS: 137 (Functional: 47, Performance: 20, Safety: 15,    │
-│                          Power: 17, Area: 13, Timing: 15, Environmental: 15│
-│                          Biocompatibility: 10, Reliability: 15)            │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+REQ-[Section]-[Subsection]-[Sequential Number]
 
-### 2.1.2.12 Priority and Risk Classification
-
-| Category        | Mandatory | Desirable | Total | Critical (Patient Safety) |
-|-----------------|-----------|-----------|-------|---------------------------|
-| Functional      | 38        | 9         | 47    | 22                        |
-| Performance     | 20        | 0         | 20    | 8                         |
-| Safety          | 15        | 0         | 15    | 15                        |
-| Power           | 15        | 2         | 17    | 5                         |
-| Area/Physical   | 11        | 2         | 13    | 2                         |
-| Timing          | 13        | 2         | 15    | 8                         |
-| Environmental   | 15        | 0         | 15    | 6                         |
-| Biocompatibility| 10        | 0         | 10    | 10                        |
-| Reliability     | 13        | 2         | 15    | 12                        |
-| **Total**       | **150**   | **17**    | **167**| **88**                   |
-
-### 2.1.2.13 Design Input Verification Checklist
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    DESIGN INPUT VERIFICATION CHECKLIST                       │
-│                                                                             │
-│  [ ] All functional requirements mapped to design specifications            │
-│  [ ] All performance requirements have measurable acceptance criteria      │
-│  [ ] All safety requirements traceable to hazard analysis                  │
-│  [ ] All environmental requirements per applicable standards               │
-│  [ ] All biocompatibility requirements per ISO 10993                       │
-│  [ ] All reliability requirements per MIL-HDBK-217F/NPRD-2016             │
-│  [ ] All requirements have defined verification method                     │
-│  [ ] All requirements have defined acceptance criteria                     │
-│  [ ] All requirements have defined responsible party                       │
-│  [ ] Design input reviewed by multidisciplinary team                       │
-│  [ ] Requirements are unambiguous and verifiable                           │
-│  [ ] Requirements are free from contradictions                             │
-│  [ ] Requirements are complete (no missing categories)                     │
-│  [ ] Requirements reflect intended use and user needs                      │
-│  [ ] Risk analysis performed for all safety requirements                   │
-│  [ ] Design input formally approved per QMS                                │
-└─────────────────────────────────────────────────────────────────────────────┘
+Example: REQ-SEN-001 = Sensing subsystem, first requirement
+         REQ-POW-015 = Power subsystem, 15th requirement
+         REQ-SAF-003 = Safety subsystem, 3rd requirement
 ```
 
 ---
 
-*Section 2.1.2 — System Requirements Specification*
-*Previous: Section 2.1.1 — Block Diagram | Next: Section 2.1.3 — Functional Architecture*
+## 2. Applicable Standards and Regulations
+
+| Standard ID        | Title                                              | Relevance          |
+|--------------------|----------------------------------------------------|--------------------|
+| ISO 14708-1:2014   | Active implantable medical devices — General        | Core design        |
+| ISO 14708-3:2017   | Implantable cardiac pacemakers                      | Pacemaker-specific |
+| ISO 10993-1:2018   | Biological evaluation of medical devices            | Biocompatibility   |
+| ISO 10993-5:2009   | Tests for in vitro cytotoxicity                     | Material safety    |
+| ISO 10993-10:2021  | Tests for skin sensitization and irritation         | Material safety    |
+| IEC 60601-1:2005   | Medical electrical equipment — General safety       | Electrical safety  |
+| IEC 60601-1-2:2014 | EMC requirements                                    | EMC compliance     |
+| IEC 60601-1-6:2010 | Usability                                            | Human factors      |
+| IEC 62304:2015     | Medical device software lifecycle                   | Software safety    |
+| IEC 62366-1:2015   | Usability engineering                               | Human factors      |
+| ANSI/AAMI NASPE-12 | Pacemaker terminology                               | Nomenclature       |
+| FDA 21 CFR 820     | Quality system regulation                           | Manufacturing     |
+| EU MDR 2017/745    | Medical Device Regulation (EU)                      | EU compliance      |
+| ASTM F2182-19      | RF heating of implants                              | MRI safety         |
+| ISO 11137:2006     | Sterilization of health care products               | Sterility          |
+| Telcordia GR-468   | Reliability qualification for electronic components | Reliability       |
+
+---
+
+## 3. Functional Requirements
+
+### 3.1 Pacing Modes
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-FUN-001    | A     | The device shall support a minimum of six pacing modes: VVI, VVI-R, AAI,  |
+|                |       | AAI-R, DDD, DDD-R                                                          |
+| REQ-FUN-002    | A     | The device shall support mode switching from DDD-R to VVI or VVIR when    |
+|                |       | atrial fibrillation is detected (automatic mode switch)                    |
+| REQ-FUN-003    | A     | The device shall allow non-destructive mode changes via telemetry          |
+| REQ-FUN-004    | B     | The device shall support single-chamber (VVI, AAI) and dual-chamber (DDD)  |
+|                |       | configurations                                                              |
+| REQ-FUN-005    | B     | The device shall support CRT (cardiac resynchronization therapy) in a       |
+|                |       | biventricular configuration (DDD-VB)                                       |
+| REQ-FUN-006    | C     | The device shall support rate-adaptive pacing (suffix -R) using an         |
+|                |       | accelerometer or minute-ventilation sensor                                 |
+
+### 3.2 Sensing Functions
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-FUN-010    | A     | The device shall sense intrinsic P-waves (atrial) and R-waves (ventricle)  |
+|                |       | independently                                                              |
+| REQ-FUN-011    | A     | The device shall support programmable sensitivity threshold for each        |
+|                |       | sensing channel                                                           |
+| REQ-FUN-012    | A     | The device shall support both unipolar and bipolar sensing configurations  |
+| REQ-FUN-013    | B     | The device shall support auto-sensitivity adjustment with a minimum of     |
+|                |       | 8 programmable levels                                                      |
+| REQ-FUN-014    | B     | The device shall provide oversensing rejection through blanking and        |
+|                |       | refractory period management                                               |
+| REQ-FUN-015    | A     | The device shall not interpret T-waves as R-waves when blanking is        |
+|                |       | properly configured                                                        |
+| REQ-FUN-016    | B     | The device shall detect lead noise (lead fracture) and inhibit pacing      |
+|                |       | or switch to asynchronous mode                                              |
+
+### 3.3 Pacing Functions
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-FUN-020    | A     | The device shall deliver pacing pulses with programmable amplitude and      |
+|                |       | pulse width                                                                |
+| REQ-FUN-021    | A     | The device shall support both unipolar and bipolar pacing configurations   |
+| REQ-FUN-022    | A     | The device shall provide automatic output safety (capture confirmation)    |
+| REQ-FUN-023    | B     | The device shall support automatic threshold search and output adjustment  |
+| REQ-FUN-024    | A     | The device shall deliver pacing pulses with amplitude accuracy of          |
+|                |       | ±10% and pulse width accuracy of ±5%                                       |
+| REQ-FUN-025    | B     | The device shall support multichannel (up to 3) simultaneous pacing       |
+| REQ-FUN-026    | B     | The device shall support a post-pulse safety shunt for passive charge     |
+|                |       | dissipation within 50 ms                                                   |
+| REQ-FUN-027    | A     | The device shall cease pacing output immediately upon detection of         |
+|                |       | intrinsic activity during the escape interval                              |
+
+### 3.4 Timing Functions
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-FUN-030    | A     | The device shall implement programmable lower rate interval (LRI)          |
+| REQ-FUN-031    | A     | The device shall implement programmable upper tracking rate (UTR)          |
+| REQ-FUN-032    | A     | The device shall implement programmable AV delay (sensed and paced)        |
+| REQ-FUN-033    | A     | The device shall implement programmable post-ventricular atrial             |
+|                |       | refractory period (PVARP)                                                  |
+| REQ-FUN-034    | B     | The device shall implement programmable refractory periods for each         |
+|                |       | chamber                                                                    |
+| REQ-FUN-035    | B     | The device shall implement blanking periods synchronous with pacing        |
+|                |       | output                                                                     |
+| REQ-FUN-036    | A     | The device shall maintain timing accuracy of ±1% across all timer         |
+|                |       | intervals                                                                  |
+
+### 3.5 Rate Response
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-FUN-040    | C     | The device shall adjust pacing rate in response to detected physical       |
+|                |       | activity (accelerometer-based)                                             |
+| REQ-FUN-041    | C     | The device shall provide programmable rate-response parameters including    |
+|                |       │ slope, threshold, and response time                                        |
+| REQ-FUN-042    | C     | The rate-adaptive algorithm shall achieve target rate within 60 seconds    |
+|                |       | of activity onset                                                          |
+| REQ-FUN-043    | C     | The rate-adaptive algorithm shall return to lower rate within 5 minutes    |
+|                |       | of activity cessation                                                      |
+
+---
+
+## 4. Performance Requirements
+
+### 4.1 Timing Performance
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-PER-001    | A     | LRI range                  | 300–2000            | ms   |
+| REQ-PER-002    | A     | LRI resolution             | 10                   | ms   |
+| REQ-PER-003    | A     | LRI accuracy               | ±1% (±5 ms max)     | —    |
+| REQ-PER-004    | A     | AV delay range (paced)     | 30–350              | ms   |
+| REQ-PER-005    | A     | AV delay range (sensed)    | 30–300              | ms   |
+| REQ-PER-006    | A     | AV delay resolution        | 10                   | ms   |
+| REQ-PER-007    | A     | AV delay accuracy          | ±5% (±5 ms max)     | —    |
+| REQ-PER-008    | A     | Upper tracking rate        | 100–180             | bpm  |
+| REQ-PER-009    | B     | Upper sensor rate          | 100–180             | bpm  |
+| REQ-PER-010    | A     | PVARP range                | 150–500             | ms   |
+| REQ-PER-011    | A     | Refractory period range    | 100–400             | ms   |
+| REQ-PER-012    | A     | Blanking period range      | 100–600             | ms   |
+| REQ-PER-013    | A     | Interspike interval jitter | < ±1                | ms   |
+
+### 4.2 Sensing Performance
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-PER-020    | A     | Sensing threshold range    | 0.125–5.0           | mV   |
+| REQ-PER-021    | A     | Sensing threshold resolution| 0.125               | mV   |
+| REQ-PER-022    | A     | Input-referred noise       | ≤ 1.5               | µVrms|
+| REQ-PER-023    | A     | Input impedance            | ≥ 10                | kΩ   |
+| REQ-PER-024    | A     | CMRR                       | ≥ 80                | dB   |
+| REQ-PER-025    | A     | Sensing amplitude range    | 0.1–10.0            | mV   |
+| REQ-PER-026    | B     | Sensing slew rate range    | 0.1–5.0             | V/s  |
+| REQ-PER-027    | A     | Sensing detection latency  | ≤ 3                 | ms   |
+| REQ-PER-028    | A     | Sensing polarity           | Uni/Bipolar select  | —    |
+| REQ-PER-029    | B     | Auto-sensitivity range     | 0.25–4.0            | mV   |
+
+### 4.3 Pacing Performance
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-PER-030    | A     | Output voltage range       | 0.5–7.5             | V    |
+| REQ-PER-031    | A     | Output voltage resolution  | ≤ 0.1               | V    |
+| REQ-PER-032    | A     | Pulse width range          | 0.05–1.5            | ms   |
+| REQ-PER-033    | A     | Pulse width resolution     | ≤ 0.1               | ms   |
+| REQ-PER-034    | A     | Pulse amplitude accuracy   | ±10                 | %    |
+| REQ-PER-035    | A     | Pulse width accuracy       | ±5                  | %    |
+| REQ-PER-036    | A     | Maximum output current     | ≥ 100               | mA   |
+| REQ-PER-037    | A     | Load impedance range       | 100–2000            | Ω    |
+| REQ-PER-038    | B     | Safety shunt time constant | ≤ 50                | ms   |
+| REQ-PER-039    | B     | Pacing output power        | ≤ 80                | µW   |
+
+---
+
+## 5. Electrical Requirements
+
+### 5.1 Supply Requirements
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-ELE-001    | A     | Battery voltage range      | 2.5–3.2             | V    |
+| REQ-ELE-002    | A     | Digital supply (Vdd)       | 1.8 ± 0.1          | V    |
+| REQ-ELE-003    | A     | Analog supply (Vdda)       | 1.8 ± 0.1          | V    |
+| REQ-ELE-004    | A     | Reference voltage          | 1.024 ± 1%         | V    |
+| REQ-ELE-005    | A     | Reference TC               | ≤ 50                | ppm/°C|
+| REQ-ELE-006    | A     | HV supply range            | 0.5–7.5 (prog.)    | V    |
+| REQ-ELE-007    | B     | LDO dropout voltage        | ≤ 200               | mV   |
+| REQ-ELE-008    | A     | LDO PSRR (digital)        | ≥ 60                | dB   |
+| REQ-ELE-009    | A     | LDO PSRR (analog)         | ≥ 80                | dB   |
+| REQ-ELE-010    | B     | LDO line regulation        | ≤ 1% / V            | —    |
+| REQ-ELE-011    | B     | LDO load regulation        | ≤ 2% / mA           | —    |
+
+### 5.2 Current Consumption
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-ELE-020    | A     | Quiescent current (all off)| ≤ 2.0               | µA   |
+| REQ-ELE-021    | A     | Sensing mode current       | ≤ 8.0               | µA   |
+| REQ-ELE-022    | A     | Pacing mode current        | ≤ 25                | µA   |
+| REQ-ELE-023    | B     | Telemetry active current   | ≤ 30                | µA   |
+| REQ-ELE-024    | B     | Charge pump efficiency     | ≥ 80                | %    |
+| REQ-ELE-025    | A     | Total average current     | ≤ 15                | µA   |
+
+### 5.3 ADC Requirements
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-ELE-030    | B     | Resolution                 | ≥ 12                | bit  |
+| REQ-ELE-031    | B     | INL                        | ≤ ±2                | LSB  |
+| REQ-ELE-032    | B     | DNL                        | ≤ ±1                | LSB  |
+| REQ-ELE-033    | B     | Sampling rate              | ≥ 256               | Sps  |
+| REQ-ELE-034    | B     | SNR                        | ≥ 70                | dB   |
+| REQ-ELE-035    | B     | Power consumption          | ≤ 5                 | µA   |
+
+---
+
+## 6. Mechanical Requirements
+
+### 6.1 Package Dimensions
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-MEC-001    | A     | Total device volume        | ≤ 30                | cm³  |
+| REQ-MEC-002    | A     | Total device weight        | ≤ 40                | g    |
+| REQ-MEC-003    | A     | Case material              | Titanium Grade 1/2  | —    |
+| REQ-MEC-004    | A     | Case wall thickness        | 0.3–0.5             | mm   |
+| REQ-MEC-005    | A     | Hermeticity                | ≤ 1 × 10⁻⁹         | atm·cc/s |
+| REQ-MEC-006    | A     | Header material            | Ceramic or polymer  | —    |
+| REQ-MEC-007    | A     | Lead connector             | IS-1 or DF-1 std   | —    |
+| REQ-MEC-008    | B     | Connector insertion force  | 2–15                | N    |
+| REQ-MEC-009    | B     | Connector retention force  | ≥ 10                | N    |
+| REQ-MEC-010    | A     | Lead bore seal integrity   | Leak rate < 10⁻⁸    | atm·cc/s |
+
+### 6.2 Vibration and Shock
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-MEC-020    | A     | Random vibration           | 10–2000 Hz, 7.7g RMS | —   |
+| REQ-MEC-021    | A     | Mechanical shock           | 1500g, 0.5 ms       | —    |
+| REQ-MEC-022    | B     | Vibration duration         | 1 hour per axis     | —    |
+| REQ-MEC-023    | B     | Post-vibration functional  | All parameters pass | —    |
+
+---
+
+## 7. Environmental Requirements
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-ENV-001    | A     | Operating temperature      | 35–42               | °C   |
+| REQ-ENV-002    | A     | Storage temperature        | -40 to +60          | °C   |
+| REQ-ENV-003    | A     | Humidity (storage)         | 10–95% RH          | —    |
+| REQ-ENV-004    | A     | Immersion depth            | Up to 2 m           | m    |
+| REQ-ENV-005    | A     | Sterilization method       | Ethylene oxide (EtO) | —   |
+| REQ-ENV-006    | A     | Sterility assurance level  | 10⁻⁶               | SAL  |
+| REQ-ENV-007    | B     | Package shelf life         | ≥ 5 years           | years|
+| REQ-ENV-008    | B     | Shelf storage conditions   | 15–30 °C, < 60% RH | —    |
+| REQ-ENV-009    | B     | MRI conditional (1.5T)     | MR Conditional      | —    |
+| REQ-ENV-010    | B     | MRI conditional (3.0T)     | MR Conditional      | —    |
+
+---
+
+## 8. Safety Requirements
+
+### 8.1 Electrical Safety
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-SAF-001    | A     | The device shall limit maximum output current to 100 mA under all          |
+|                |       │ conditions                                                                 |
+| REQ-SAF-002    | A     | The device shall detect lead impedance < 100 Ω (short) and > 2000 Ω      |
+|                |       │ (open) and generate an alert                                               |
+| REQ-SAF-003    | A     | The device shall not deliver a pacing pulse with energy > 100 µJ           |
+|                |       │ without capture verification                                               |
+| REQ-SAF-004    | A     | The device shall limit leakage current to < 10 µA DC under normal         |
+|                |       │ operating conditions                                                        |
+| REQ-SAF-005    | A     | The device shall provide a passive safety shunt (≥ 1 kΩ) across pacing    |
+|                |       │ output to dissipate stored energy within 50 ms of output disable           |
+
+### 8.2 Hardware Safety
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-SAF-010    | A     | The device shall include a hardware watchdog timer with a timeout of        |
+|                |       │ ≤ 2 seconds                                                                 |
+| REQ-SAF-011    | A     | The device shall detect brownout (Vbat < 2.0 V) and enter safe mode        |
+| REQ-SAF-012    | A     | The device shall implement hardware-enforced maximum pacing rate limit of   |
+|                |       │ 180 bpm (hard limit)                                                        |
+| REQ-SAF-013    | A     | The device shall include clock frequency monitoring with ±10% tolerance    |
+| REQ-SAF-014    | B     | The device shall detect single-event upset (SEU) through CRC or parity     |
+|                |       │ and recover within 100 ms                                                   |
+| REQ-SAF-015    | A     | The device shall revert to asynchronous pacing (VOO/DOO at 80 bpm) on     |
+|                |       │ any unrecoverable fault                                                      |
+
+### 8.3 Fail-Safe Mode
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-SAF-020    | A     | The fail-safe mode shall operate with battery voltage as low as 2.0 V      |
+| REQ-SAF-021    | A     | The fail-safe mode shall deliver pacing at ≥ 60 bpm                        |
+| REQ-SAF-022    | A     | The fail-safe mode shall use non-critical parameters stored in NVM        |
+| REQ-SAF-023    | A     | The fail-safe mode shall be entered within 500 ms of fault detection       |
+
+---
+
+## 9. Biocompatibility Requirements
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-BIO-001    | A     | All patient-contacting materials shall pass ISO 10993-1 biocompatibility   |
+|                |       │ evaluation                                                                  |
+| REQ-BIO-002    | A     | Titanium case material shall pass cytotoxicity test (ISO 10993-5)          |
+| REQ-BIO-003    | A     | Header epoxy/silicone shall pass sensitization test (ISO 10993-10)         |
+| REQ-BIO-004    | A     | Lead connector bore materials shall pass irritation test                    |
+| REQ-BIO-005    | A     | All materials shall demonstrate chemical compatibility with body            |
+|                |       │ fluids for ≥ 10 years                                                       |
+| REQ-BIO-006    | B     | The device shall use no materials containing known carcinogens or           |
+|                |       │ mutagens                                                                    |
+| REQ-BIO-007    | B     | The device outer surface shall be passivated titanium oxide                |
+
+---
+
+## 10. Telemetry Requirements
+
+### 10.1 RF Performance
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-TEL-001    | A     | Carrier frequency          | 175–210             | kHz  |
+| REQ-TEL-002    | A     | Modulation type            | FSK or ASK          | —    |
+| REQ-TEL-003    | A     | Uplink data rate           | 8–256               | kbps |
+| REQ-TEL-004    | A     | Downlink data rate         | 2–64                | kbps |
+| REQ-TEL-005    | A     | Communication distance     | ≥ 5                 | cm   |
+| REQ-TEL-006    | B     | Bit error rate             | ≤ 10⁻⁶             | —    |
+| REQ-TEL-007    | A     | Encryption                 | AES-128 or stronger | —    |
+| REQ-TEL-008    | A     | Authentication             | Mutual auth req'd   | —    |
+| REQ-TEL-009    | B     | Packet CRC                 | CRC-16 minimum      | —    |
+| REQ-TEL-010    | A     | Parameter write verify     | Read-back confirm   | —    |
+
+### 10.2 Telemetry Data
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-TEL-020    | A     | The device shall transmit all current parameters on demand                  |
+| REQ-TEL-021    | A     | The device shall transmit battery status (voltage, estimated remaining)     |
+| REQ-TEL-022    | B     | The device shall store and transmit at least 50 episode recordings          |
+| REQ-TEL-023    | B     | The device shall transmit real-time EGM data at ≥ 256 Sps                  |
+| REQ-TEL-024    | B     | The device shall support remote monitoring data transmission               |
+| REQ-TEL-025    | A     | All parameter writes shall require clinician authentication                |
+
+---
+
+## 11. Software Requirements
+
+| Req ID         | Class | Requirement                                                                 |
+|----------------|-------|-----------------------------------------------------------------------------|
+| REQ-SW-001     | A     | Software shall be developed per IEC 62304 Class C (highest safety class)   |
+| REQ-SW-002     | A     | All safety-critical software units shall have ≥ 100% MC/DC coverage        |
+| REQ-SW-003     | A     | No dynamic memory allocation shall be used in safety-critical paths        |
+| REQ-SW-004     | A     | All arithmetic operations shall include overflow checking                  |
+| REQ-SW-005     | B     | Stack depth shall be statically analyzed and verified                      |
+| REQ-SW-006     | A     | Software shall implement CRC-based program integrity verification         |
+| REQ-SW-007     | B     | Firmware update capability (OTA) with signed image verification           |
+| REQ-SW-008     | A     | All software shall be developed in MISRA-C compliant C or equivalent      |
+| REQ-SW-009     | B     | Software unit testing shall achieve ≥ 95% branch coverage                 |
+| REQ-SW-010     | A     | No use of recursion in safety-critical code                                |
+
+---
+
+## 12. Reliability Requirements
+
+### 12.1 Lifetime and Failure Rates
+
+| Req ID         | Class | Parameter                  | Value               | Unit |
+|----------------|-------|----------------------------|----------------------|------|
+| REQ-REL-001    | A     | Design lifetime            | ≥ 10                | years|
+| REQ-REL-002    | A     | Battery capacity           | ≥ 1.0               | Ah   |
+| REQ-REL-003    | A     | System failure rate (FIT)  | ≤ 10                | FIT  |
+| REQ-REL-004    | A     | Confidence level           | 95                  | %    |
+| REQ-REL-005    | A     | Mean time to failure       | ≥ 100,000           | hours|
+| REQ-REL-006    | B     | Intrinsic failure rate     | ≤ 2                 | FIT  |
+
+> **Note:** 1 FIT = 1 failure per 10⁹ device-hours
+
+### 12.2 Reliability Calculations
+
+The system failure rate is the sum of all component failure rates:
+
+```
+  λ_system = λ_battery + λ_asic + λ_passive + λ_lead + λ_header + λ_software
+
+  Where:
+    λ_battery  = Battery failure rate (typically 1–3 FIT)
+    λ_asic     = ASIC/chip failure rate (typically 1–5 FIT)
+    λ_passive  = Passive components failure rate (typically 1–2 FIT)
+    λ_lead     = Lead failure rate (typically 2–5 FIT)
+    λ_header   = Header/connector failure rate (typically 0.5–1 FIT)
+    λ_software = Software latent fault rate (typically 0.5–2 FIT)
+
+  Total: λ_system ≤ 10 FIT (target)
+```
+
+### 12.3 Accelerated Life Testing
+
+| Req ID         | Class | Test                          | Conditions           |
+|----------------|-------|-------------------------------|----------------------|
+| REQ-REL-010    | A     | High-temperature operating    | 45°C, 10,000 hrs    |
+| REQ-REL-011    | A     | Temperature cycling           | -40/+60°C, 500 cyc  |
+| REQ-REL-012    | A     | Humidity aging                | 85°C/85%RH, 1000 hrs|
+| REQ-REL-013    | A     | Mechanical shock              | 1500g, 3 axes        |
+| REQ-REL-014    | B     | ESD immunity                  | ±8 kV contact, ±15 kV air |
+| REQ-REL-015    | A     | Battery aging                 | 45°C, 5000 hrs      |
+
+---
+
+## 13. Electromagnetic Compatibility Requirements
+
+### 13.1 Emission Limits
+
+| Req ID         | Class | Parameter                  | Value               | Standard      |
+|----------------|-------|----------------------------|----------------------|---------------|
+| REQ-EMC-001    | A     | Conducted emissions        | Per CISPR 11, Group 1| IEC 60601-1-2|
+| REQ-EMC-002    | A     | Radiated emissions         | Per CISPR 11, Group 1| IEC 60601-1-2|
+| REQ-EMC-003    | A     | Harmonic emissions         | Per IEC 61000-3-2    | IEC 60601-1-2|
+
+### 13.2 Immunity Limits
+
+| Req ID         | Class | Test                        | Level              | Standard      |
+|----------------|-------|-----------------------------|---------------------|---------------|
+| REQ-EMC-010    | A     | ESD immunity (contact)      | ±8 kV              | IEC 61000-4-2 |
+| REQ-EMC-011    | A     | ESD immunity (air)          | ±15 kV             | IEC 61000-4-2 |
+| REQ-EMC-012    | A     | Radiated immunity           | 3 V/m, 80 MHz–2.7 GHz | IEC 61000-4-3 |
+| REQ-EMC-013    | A     | Conducted immunity          | 3 Vrms, 150 kHz–80 MHz | IEC 61000-4-6 |
+| REQ-EMC-014    | A     | EFT/burst                    | ±2 kV              | IEC 61000-4-4 |
+| REQ-EMC-015    | A     | Surge immunity              | ±1 kV              | IEC 61000-4-5 |
+| REQ-EMC-016    | A     | Power frequency magnetic    | 30 A/m             | IEC 61000-4-8 |
+| REQ-EMC-017    | A     | Electrosurgery (ESU)        | 40 W, 500 kHz      | IEC 60601-1-2 |
+| REQ-EMC-018    | A     | Defibrillation pulse        | 360 J / 50 Ω      | IEC 60601-1-2 |
+
+### 13.3 EMI Response Behavior
+
+| Req ID         | Class | EMI Condition               | Required Response   |
+|----------------|-------|-----------------------------|---------------------|
+| REQ-EMC-020    | A     | Electrosurgery detected     | Enter interference mode, no inappropriate pacing |
+| REQ-EMC-021    | A     | Defibrillation pulse        | Post-shock reset, resume within 500 ms |
+| REQ-EMC-022    | A     | External RF field detected  | Inhibit/async mode as configured |
+| REQ-EMC-023    | A     | Magnetic switch (reed)      | Enter magnet mode (programmable response) |
+
+---
+
+## 14. Traceability Matrix
+
+The following matrix maps each requirement category to its source(s):
+
+```
+┌──────────────────────┬────────────┬────────────┬───────────┬────────────┐
+│ Requirement Category │ ISO 14708  │ IEC 60601  │ FDA 21CFR │ Clinical   │
+├──────────────────────┼────────────┼────────────┼───────────┼────────────┤
+│ Pacing Modes         │     X      │            │     X     │     X      │
+│ Sensing Functions    │     X      │            │           │     X      │
+│ Pacing Functions     │     X      │            │     X     │     X      │
+│ Timing               │     X      │            │           │     X      │
+│ Performance          │     X      │            │     X     │            │
+│ Electrical Safety    │            │     X      │     X     │            │
+│ Mechanical           │     X      │            │           │            │
+│ Environmental        │     X      │            │     X     │            │
+│ Biocompatibility     │     X      │            │     X     │            │
+│ Telemetry            │     X      │     X      │     X     │     X      │
+│ Software             │            │            │     X     │            │
+│ Reliability          │     X      │            │     X     │            │
+│ EMC                  │            │     X      │     X     │            │
+│ Safety               │     X      │     X      │     X     │     X      │
+└──────────────────────┴────────────┴────────────┴───────────┴────────────┘
+```
+
+---
+
+## 15. Requirements Verification
+
+### 15.1 Verification Methods
+
+Each requirement shall be verified using one or more of the following methods:
+
+| Method              | Symbol | Description                                      |
+|---------------------|--------|--------------------------------------------------|
+| Inspection          | INSP   | Visual or dimensional examination                |
+| Analysis            | ANA    | Mathematical analysis or simulation              |
+| Test                | TEST   | Physical measurement under defined conditions    |
+| Design Review       | DR     | Formal review of design documentation            |
+| Demonstration       | DEMO   | Operational demonstration of functionality       |
+| Audit               | AUDIT  | Process or documentation audit                   |
+
+### 15.2 Verification Matrix (Abbreviated)
+
+| Req ID       | Method(s)            | Acceptance Criteria                                  |
+|--------------|----------------------|------------------------------------------------------|
+| REQ-FUN-001  | TEST, DEMO           | All 6 modes functional per IEC 60601-1-6             |
+| REQ-PER-003  | TEST                 | LRI measured ±1% across temperature range            |
+| REQ-ELE-025  | TEST                 | Total current ≤ 15 µA measured at Vbat = 2.8V       |
+| REQ-MEC-001  | INSP, TEST           | Volume ≤ 30 cm³ (dimensional measurement)            |
+| REQ-SAF-001  | TEST                 | Max output current ≤ 100 mA under all conditions     |
+| REQ-REL-001  | ANLA, TEST (ALT)     | Projected lifetime ≥ 10 years at 95% confidence      |
+| REQ-EMC-012  | TEST                 | No malfunction during 3 V/m immunity test            |
+| REQ-BIO-001  | TEST (ISO 10993)     | Pass all biocompatibility endpoints                   |
+
+---
+
+## 16. Summary
+
+This System Requirements Specification defines **127 total requirements**
+across 13 categories:
+
+```
+┌──────────────────────────────────────────────────────┐
+│           REQUIREMENTS SUMMARY BY CATEGORY           │
+├─────────────────────────┬───────┬───────┬───────┬────┤
+│ Category                │Class A│Class B│Class C│Tot │
+├─────────────────────────┼───────┼───────┼───────┼────┤
+│ Functional              │   8   │   5   │   4   │ 17 │
+│ Performance (Timing)    │  10   │   2   │   0   │ 12 │
+│ Performance (Sensing)   │   6   │   3   │   0   │  9 │
+│ Performance (Pacing)    │   8   │   2   │   0   │ 10 │
+│ Electrical              │  10   │   6   │   0   │ 16 │
+│ Mechanical              │   6   │   4   │   0   │ 10 │
+│ Environmental           │   6   │   4   │   0   │ 10 │
+│ Safety                  │  12   │   1   │   0   │ 13 │
+│ Biocompatibility        │   5   │   2   │   0   │  7 │
+│ Telemetry               │   5   │   4   │   0   │  9 │
+│ Software                │   6   │   4   │   0   │ 10 │
+│ Reliability             │   5   │   1   │   0   │  6 │
+│ EMC                     │  10   │   0   │   0   │ 10 │
+├─────────────────────────┼───────┼───────┼───────┼────┤
+│ TOTAL                   │  97   │  38   │   4   │139 │
+└─────────────────────────┴───────┴───────┴───────┴────┘
+
+  Class A (Mandatory):  70%
+  Class B (Important):  27%
+  Class C (Desirable):   3%
+```
+
+---
+
+## 17. References
+
+1. ISO 14708-1:2014 — Implants for surgery — Active implantable medical devices
+2. ISO 14708-3:2017 — Implantable cardiac pacemakers
+3. IEC 60601-1:2005 — Medical electrical equipment — General requirements for basic safety and essential performance
+4. IEC 60601-1-2:2014 — EMC requirements and tests
+5. IEC 62304:2015 — Medical device software lifecycle processes
+6. ISO 10993-1:2018 — Biological evaluation of medical devices
+7. FDA Guidance: Pacemaker Devices — Premarket Notification (510(k))
+8. EU MDR 2017/745 — Medical Device Regulation
+9. ANSI/AAMI NASPE-12 — Glossary of Terminology for Cardiac Pacemakers
+10. MIL-HDBK-217F — Reliability Prediction of Electronic Equipment
+
+---
+
+*Previous: [01 — Block Diagram](../01-Block-Diagram/pacemaker-block-diagram.md)*
+*Next: [03 — Functional Architecture](../03-Functional-Architecture/functional-architecture.md)*

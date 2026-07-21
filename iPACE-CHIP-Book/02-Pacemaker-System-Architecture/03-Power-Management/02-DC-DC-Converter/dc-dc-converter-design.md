@@ -1,664 +1,712 @@
-# Chapter: DC-DC Converter Design for the iPACE-CHIP
+# DC-DC Converter Design for Pacemaker SoC
 
-## Table of Contents
+## 2.3.2 Power Supply Architecture and Regulator Design
 
-1. [Introduction](#1-introduction)
-2. [Power Rail Architecture](#2-power-rail-architecture)
-3. [Buck Converter for Low-Voltage Digital Rail](#3-buck-converter-for-low-voltage-digital-rail)
-4. [LDO Regulator for Analog Rail](#4-ldo-regulator-for-analog-rail)
-5. [Charge Pump for High-Voltage Telemetry Rail](#5-charge-pump-for-high-voltage-telemetry-rail)
-6. [Efficiency Targets](#6-efficiency-targets)
-7. [Output Noise Requirements](#7-output-noise-requirements)
-8. [Start-Up Sequencing](#8-start-up-sequencing)
-9. [Power-On Reset (POR)](#9-power-on-reset-por)
-10. [Brown-Out Detection (BOD)](#10-brown-out-detection-bod)
-11. [Summary](#11-summary)
+The DC-DC converter and voltage regulators form the backbone of the pacemaker's
+power management system, converting the battery voltage to the multiple supply
+rails required by the analog and digital subsystems. This chapter covers the
+design of buck converters, charge pumps, LDO regulators, and the power-on
+reset (POR) and brown-out detection (BOD) circuits.
 
 ---
 
-## 1. Introduction
+## 2.10.1 Power Supply Requirements
 
-The Power Management Unit (PMU) of the iPACE-CHIP must efficiently convert the battery voltage (2.4–3.6V from a LiI₂ cell) into the multiple supply rails required by the analog, digital, and telemetry subsystems. The PMU is the most critical subsystem for maximizing battery life — every milliwatt saved in the PMU directly extends the implant lifetime.
+### Supply Rails
 
-The iPACE-CHIP requires the following supply rails:
+| Rail | Voltage | Current | Noise | Load | Application |
+|------|---------|---------|-------|------|------------|
+| V_ANA | 2.8 V | 1-5 µA | < 10 µV RMS | AFE, DAC, references |
+| V_DIG | 1.2 V | 2-10 µA | < 50 mV p-p | Digital logic, timers |
+| V_PACE | 3-8 V | 0-25 mA | < 50 mV | Pacing output stage |
+| V_RF | 1.8 V | 0-5 mA | < 1 mV RMS | RF transceiver |
+| VREF | 1.25 V | 10 µA | < 5 µV RMS | Bandgap reference |
 
-| Rail | Voltage | Consumer | Requirement |
-|------|---------|----------|-------------|
-| VBAT | 2.4–3.6V | Battery directly | Pacing output, charge pump input |
-| VDDD | 1.2V | Digital core, SRAM, Flash | Low power, fast switching |
-| VDDA | 1.8V | Analog front-end, ADC, DAC | Ultra-low noise, high PSRR |
-| VDDRF | 3.3V | Telemetry RF (PA, LNA) | Low noise, burst-mode capable |
-| VDDH | 5–10V | Pacing output stage (boosted) | High efficiency, charge pump |
+### Converter Requirements
 
----
-
-## 2. Power Rail Architecture
-
-### 2.1 Complete Power Architecture
-
-```
-┌────────────────────────────────────────────────────────────────────┐
-│                    PMU POWER RAIL ARCHITECTURE                      │
-│                                                                     │
-│  ┌──────────┐                                                      │
-│  │  LiI₂    │                                                      │
-│  │  Battery │ VBAT (2.4-3.6V)                                     │
-│  │  2.8V    │                                                      │
-│  └────┬─────┘                                                      │
-│       │                                                            │
-│       ├──────────────────────┬───────────────────────┐             │
-│       │                      │                       │             │
-│  ┌────▼─────┐          ┌────▼─────┐          ┌─────▼────┐       │
-│  │  Buck    │          │  LDO     │          │  Charge  │       │
-│  │Converter │          │  1.8V    │          │  Pump    │       │
-│  │  1.2V    │          │ (Analog) │          │  3.3V    │       │
-│  │(Digital) │          │          │          │ (Telem.) │       │
-│  └────┬─────┘          └────┬─────┘          └─────┬────┘       │
-│       │                      │                      │             │
-│       ▼                      ▼                      ▼             │
-│  ┌──────────┐          ┌──────────┐          ┌──────────┐       │
-│  │  VDDD    │          │  VDDA    │          │  VDDRF   │       │
-│  │  1.2V    │          │  1.8V    │          │  3.3V    │       │
-│  │ Digital  │          │  Analog  │          │   RF     │       │
-│  │ Core     │          │  F.E.    │          │  Telem.  │       │
-│  └──────────┘          └──────────┘          └──────────┘       │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────┐     │
-│  │  MONITORING & CONTROL                                      │     │
-│  │                                                            │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐               │     │
-│  │  │ Brown-   │  │ Power-On │  │ Voltage  │               │     │
-│  │  │ Out      │  │ Reset    │  │ Monitor  │               │     │
-│  │  │ Detector │  │ (POR)    │  │ (ADC)    │               │     │
-│  │  └──────────┘  └──────────┘  └──────────┘               │     │
-│  │                                                            │     │
-│  │  ┌──────────┐  ┌──────────┐  ┌──────────┐               │     │
-│  │  │ Current  │  │ Temp.    │  │ Sequence │               │     │
-│  │  │ Monitor  │  │ Sensor   │  │ Control  │               │     │
-│  │  │          │  │          │  │ Logic    │               │     │
-│  │  └──────────┘  └──────────┘  └──────────┘               │     │
-│  └──────────────────────────────────────────────────────────┘     │
-└────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.2 Power Distribution Summary
-
-| Rail | Source | Input Range | Output | Max Load | Target η |
-|------|--------|-------------|--------|----------|----------|
-| VDDD | Buck converter | 2.4–3.6V | 1.2V ±3% | 200 µA | > 85% |
-| VDDA | LDO | 2.4–3.6V | 1.8V ±2% | 20 µA | > 60% |
-| VDDRF | Charge pump/LDO | 2.4–3.6V | 3.3V ±2% | 15 mA (burst) | > 75% |
-| VDDH | Charge pump | 2.4–3.6V | 5–10V (prog.) | 25 mA (burst) | > 70% |
+| Parameter | Specification | Unit |
+|-----------|--------------|------|
+| Input voltage range | 2.4-3.2 | V |
+| Output voltage accuracy | ±2% | — |
+| Line regulation | < 1% | for 2.4-3.2 V input |
+| Load regulation | < 2% | for 0-100% load |
+| Output noise | < 10 µV RMS | (10 Hz - 100 kHz) |
+| PSRR | > 60 dB | @ 100 kHz |
+| Efficiency | ≥ 80% | — |
+| Quiescent current | < 2 | µA |
+| Start-up time | < 1 | ms |
+| Output capacitance | 1-10 | µF |
+| Ripple voltage | < 10 | mV |
 
 ---
 
-## 3. Buck Converter for Low-Voltage Digital Rail
+## 2.10.2 Buck Converter Design
 
-### 3.1 Buck Converter Specifications
+### Topology
 
-| Parameter | Specification | Notes |
-|-----------|--------------|-------|
-| Input voltage | 2.4–3.6V | LiI₂ battery range |
-| Output voltage | 1.2V ±3% | Digital core supply |
-| Output current | 0–200 µA | Typical: 50 µA |
-| Switching frequency | 500 kHz | Low frequency for low noise |
-| Efficiency target | > 85% at 50–200 µA | Critical for battery life |
-| Output ripple | < 50 mVpp | Tolerable for digital |
-| Load regulation | ±2% | No-load to full-load |
-| Line regulation | ±1% | Over VBAT range |
-| Quiescent current | < 2 µA | During operation |
-| Sleep current | < 100 nA | When disabled |
-| Start-up time | < 5 ms | From enable to regulated output |
-| Output capacitance | 100 nF (external) | Ceramic, X5R |
-
-### 3.2 Buck Converter Architecture
+The buck converter steps down the battery voltage (2.5-3.2 V) to the
+digital supply voltage (1.2 V) with high efficiency.
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              INTEGRATED BUCK CONVERTER                     │
-│                                                            │
-│  VBAT ────┐                                               │
-│           │                                               │
-│      ┌────▼────┐    ┌──────────┐    ┌──────────┐        │
-│      │ High-   │    │  Inductor│    │ Output   │        │
-│      │ Side    │───→│  L=4.7µH │───→│ Capacitor│──→ VDDD│
-│      │ Switch  │    │          │    │ C=100nF  │  (1.2V)│
-│      │ (PMOS)  │    └──────────┘    └──────────┘        │
-│      └────┬────┘         │                               │
-│      ┌────▼────┐         │                               │
-│      │ Low-    │         │                               │
-│      │ Side    │         │                               │
-│      │ Switch  │←────────┘                               │
-│      │ (NMOS)  │    Current sense                        │
-│      └────┬────┘                                         │
-│      ┌────▼────┐    ┌──────────┐    ┌──────────┐        │
-│      │ PWM     │←───│ Error    │←───│ Feedback │←── VDDD│
-│      │ Modulator│   │ Amplifier│    │ Divider  │        │
-│      │         │    │          │    │ (R1,R2)  │        │
-│      └─────────┘    └──────────┘    └──────────┘        │
-│                                                            │
-│  Control: PFM (Pulse Frequency Modulation) at light load │
-│           PWM at heavy load                               │
-│           Auto-transition at ~50 µA load                  │
-└──────────────────────────────────────────────────────────┘
+                    BUCK CONVERTER TOPOLOGY
+
+  V_BAT (2.5-3.2V)
+     │
+     ▼
+  ┌────────┐     ┌────────┐     ┌────────┐     ┌────────┐
+  │  Q1    │     │  L     │     │  C_out │     │  Load  │
+  │ (PMOS) │────▶│ (1-10µH)│────▶│ (1-10µF)│────▶│        │
+  └───┬────┘     └────────┘     └────────┘     └────────┘
+      │
+      ▼
+  ┌────────┐
+  │  Q2    │
+  │ (NMOS) │
+  └───┬────┘
+      │
+     GND
+
+  Control: PWM or PFM
+  Switching frequency: 100 kHz - 1 MHz
+  Output voltage: V_OUT = V_BAT × D
+  where D = duty cycle (0.4-0.5 for 1.2V output from 2.8V input)
 ```
 
-### 3.3 PFM vs. PWM Operation
+### Operating Modes
 
-| Mode | Load Range | Efficiency | Ripple | Quiescent Current |
-|------|-----------|------------|--------|-------------------|
-| PFM (Pulse Frequency Modulation) | 0–50 µA | > 85% | Higher (< 100 mVpp) | < 1 µA |
-| PWM (Pulse Width Modulation) | 50–200 µA | > 80% | Lower (< 30 mVpp) | 2–5 µA |
-| Sleep (output enabled) | 0 µA load | N/A | N/A | < 100 nA |
+**PWM (Pulse Width Modulation) Mode:**
+- Fixed switching frequency
+- Constant output ripple
+- Higher efficiency at medium-to-heavy loads
+- Used during active pacing and telemetry
+
+**PFM (Pulse Frequency Modulation) Mode:**
+- Variable switching frequency
+- Lower quiescent current
+- Higher efficiency at light loads
+- Used during sleep and idle modes
+
+### PWM Control Loop
 
 ```
-PFM Operation (Light Load):
+                    PWM CONTROL LOOP
 
-  Each pulse delivers a fixed packet of energy:
+  V_OUT ──▶┌──────────┐    ┌──────────┐    ┌──────────┐
+           │  Error   │    │  PWM     │    │  Power   │
+  V_REF ──▶│  Amp     │───▶│  Comp.   │───▶│  Stage   │──▶ V_OUT
+           │          │    │          │    │  (Q1,Q2) │
+           └──────────┘    └──────────┘    └──────────┘
+                │                              │
+                │         ┌──────────┐         │
+                └─────────│  Slope   │◀────────┘
+                          │  Comp.   │
+                          └──────────┘
+```
+
+### Inductor Selection
+
+```
+  L = (V_BAT - V_OUT) × D / (f_sw × ΔI_L)
+
+  where:
+    V_BAT = 2.8 V (nominal)
+    V_OUT = 1.2 V
+    D = V_OUT / V_BAT = 0.43
+    f_sw = 500 kHz (switching frequency)
+    ΔI_L = 0.5 × I_OUT (ripple current, 50% of load)
+
+  For I_OUT = 5 µA:
+    ΔI_L = 2.5 µA
+    L = (2.8 - 1.2) × 0.43 / (500e3 × 2.5e-6)
+    L = 0.688 / 1.25
+    L = 0.55 H → Too large for light load
+
+  Practical approach: Use PFM mode for light loads (< 10 µA)
+  and PWM mode for heavier loads (> 10 µA)
+```
+
+### Output Capacitor Selection
+
+```
+  C_out = ΔI_L / (8 × f_sw × ΔV_OUT)
+
+  where:
+    ΔI_L = inductor ripple current
+    ΔV_OUT = output voltage ripple
+
+  For ΔI_L = 0.5 mA (PWM mode), ΔV_OUT = 5 mV, f_sw = 500 kHz:
+    C_out = 0.5e-3 / (8 × 500e3 × 5e-3)
+    C_out = 0.5e-3 / 20
+    C_out = 25 µF → Use 22 µF standard value
+
+  ESR requirement:
+    ESR < ΔV_OUT / ΔI_L = 5e-3 / 0.5e-3 = 10 Ω
+    Practical: ESR < 100 mΩ (ceramic capacitor)
+```
+
+---
+
+## 2.10.3 Charge Pump Design
+
+### Dickson Charge Pump (Voltage Doubler)
+
+The Dickson charge pump is used to generate the analog supply voltage
+(2.8 V) from the battery (2.5-3.2 V) without an inductor:
+
+```
+                    DICKSON CHARGE PUMP
+
+  V_BAT ──┬──▶|├──┬──▶|├──┬──▶|├──┬──▶ V_OUT
+          │   C1    │   C2    │   C3    │
+          │   │     │   │     │   │     │
+         GND  │    GND  │    GND  │    GND
+              │         │         │
+           φ1▼       φ2▼       φ1▼
+           (CLK)    (CLK)    (CLK)
+
+  V_OUT = (N + 1) × V_BAT × η
+
+  where:
+    N = number of stages (2-3)
+    η = charge transfer efficiency (0.85-0.95)
+    f_CLK = clock frequency (100-500 kHz)
+
+  For N = 2, V_BAT = 2.8V, η = 0.9:
+    V_OUT = 3 × 2.8 × 0.9 = 7.56V → Too high for analog supply
+```
+
+### LDO Post-Regulator
+
+A low-dropout (LDO) regulator is used after the charge pump to provide
+a low-noise, well-regulated analog supply:
+
+```
+                    LDO POST-REGULATOR
+
+  V_CP (charge pump output)
+     │
+     ▼
+  ┌────────────────────────────────────┐
+  │  LDO REGULATOR                     │
+  │                                    │
+  │  V_CP ──▶┌────────┐               │
+  │          │ PMOS   │               │
+  │          │ Pass   │               │
+  │          │ Trans. │               │
+  │          └───┬────┘               │
+  │              │                     │
+  │              ▼                     │
+  │  V_REF ──▶┌────────┐──▶ V_OUT     │
+  │           │ Error  │    (2.8V)     │
+  │           │ Amp    │               │
+  │           └────────┘               │
+  │                                    │
+  │  Dropout voltage: < 200 mV         │
+  │  PSRR: > 60 dB @ 100 kHz          │
+  │  Output noise: < 10 µV RMS         │
+  │  Quiescent current: < 1 µA         │
+  └────────────────────────────────────┘
+```
+
+---
+
+## 2.10.4 LDO Regulator Design
+
+### LDO Architecture
+
+```
+                    LDO REGULATOR DETAILED
+
+  V_IN ────────────────┬────────────────────────────
+                       │
+                       ▼
+                  ┌─────────┐
+                  │  PMOS   │
+                  │  Pass   │
+                  │  Trans. │
+                  │  (W/L)  │
+                  └────┬────┘
+                       │
+                       ├──────────────────────────── V_OUT
+                       │
+                       ▼
+                  ┌─────────┐
+                  │  C_out  │ (1-10 µF)
+                  │         │
+                  └────┬────┘
+                       │
+                      GND
+
+  Control Loop:
   
-  Energy per pulse = ½ × L × Ipeak²
-  
-  At light loads, pulses are infrequent:
-  
-  VBAT ──→ Pulse → VBAT → Pulse → VBAT → Pulse → VBAT
-           │                    │                    │
-  VDDD ──→─── ─── ─── ─── ─── ─── ─── ─── ─── ────→ Regulated
-           
-  Frequency of pulses is proportional to load current
-  Between pulses: all switches off, very low quiescent current
+  V_OUT ──▶┌──────────┐    ┌──────────┐
+           │  Voltage │    │  Error   │
+  V_REF ──▶│  Divider │───▶│  Amp    │──▶ Gate of PMOS
+           │  (R1/R2) │    │          │
+           └──────────┘    └──────────┘
 ```
 
-### 3.4 Buck Converter Efficiency Analysis
+### LDO Specifications
+
+| Parameter | Specification | Unit |
+|-----------|--------------|------|
+| Input voltage | 2.5-3.2 | V |
+| Output voltage | 2.8 | V |
+| Dropout voltage | < 200 | mV |
+| Output current | 0-50 | µA |
+| Line regulation | < 0.1% | /V |
+| Load regulation | < 0.5% | /mA |
+| PSRR (100 kHz) | > 60 | dB |
+| Output noise | < 10 | µV RMS |
+| Quiescent current | < 1 | µA |
+| Load transient response | < 50 | µs settling |
+| Stability (phase margin) | > 60 | degrees |
+
+### Pass Transistor Sizing
+
+The PMOS pass transistor must be sized to handle the maximum load current
+with the minimum dropout voltage:
 
 ```
-Efficiency vs. Load Current:
+  R_on = 1 / (µ_p × C_ox × (W/L) × (V_GS - V_th))
 
-Efficiency
-(%)
-  90 ─│              ╱╲
-       │            ╱  ╲
-  85 ─│───────────╱────╲────────────────── Target
-       │          ╱      ╲
-  80 ─│         ╱        ╲──────────────
-       │        ╱          ╲
-  75 ─│       ╱            ╲
-       │      ╱              ╲
-  70 ─│     ╱                ╲
-       │    ╱                  ╲
-  60 ─│   ╱                    ╲
-       │  ╱
-  50 ─│─╱
-       │
-       └──────────────────────────────────→ Load Current
-       0.1µA  1µA   10µA  50µA  100µA  200µA
+  For: V_dropout = 200 mV, I_load = 50 µA
+  R_on_max = V_dropout / I_load = 200 mV / 50 µA = 4 kΩ
 
-  Key observations:
-  - PFM mode dominates at < 50 µA (better efficiency)
-  - PWM mode takes over at > 50 µA (lower ripple)
-  - Peak efficiency at 50-100 µA load
-  - Efficiency drops at very light loads (quiescent current dominates)
-  - Efficiency drops at heavy loads (switching/conduction losses)
+  For: µ_p × C_ox = 50 µA/V², V_th = -0.4V, V_GS = -2.8V
+  (W/L) = 1 / (µ_p × C_ox × R_on × (|V_GS| - |V_th|))
+        = 1 / (50e-6 × 4000 × (2.8 - 0.4))
+        = 1 / (50e-6 × 4000 × 2.4)
+        = 1 / 0.48
+        = 2.08
+
+  Use W/L = 10/1 (conservative sizing for process variation)
 ```
 
----
+### Compensation Network
 
-## 4. LDO Regulator for Analog Rail
-
-### 4.1 LDO Specifications
-
-| Parameter | Specification | Notes |
-|-----------|--------------|-------|
-| Input voltage | 2.4–3.6V | VBAT range |
-| Output voltage | 1.8V ±2% | Analog front-end supply |
-| Output current | 0–20 µA | Typical: 10 µA |
-| Dropout voltage | < 200 mV at 20 µA | At minimum VBAT |
-| Output noise | < 10 µVrms (0.1–100 Hz) | Critical for sensing |
-| PSRR | > 60 dB at 1 kHz | Reject battery noise |
-| Load regulation | ±1% | No-load to full-load |
-| Line regulation | ±0.5% | Over VBAT range |
-| Quiescent current | < 3 µA | During operation |
-| Sleep current | < 10 nA | When disabled |
-| Start-up time | < 1 ms | From enable to regulated |
-| Output capacitance | 1 µF (external) | Ceramic, X5R, low ESR |
-
-### 4.2 LDO Architecture
+The LDO requires frequency compensation to ensure stability:
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              LOW-DROPOUT REGULATOR (LDO)                  │
-│                                                            │
-│  VBAT ────┬───────────────────────────────┐              │
-│           │                               │              │
-│      ┌────▼────────────────────┐    ┌────▼────┐        │
-│      │  Pass Transistor        │    │         │        │
-│      │  (PMOS, W/L = 100/1)   │────│  Output │──→ VDDA│
-│      │                         │    │  Cap    │  (1.8V)│
-│      └────────┬────────────────┘    │  1 µF   │        │
-│               │                      └─────────┘        │
-│      ┌────────▼────────┐                                │
-│      │  Error Amplifier │                                │
-│      │  (OTA, gm=1mS)  │←── Feedback voltage             │
-│      │                  │    (from output divider or     │
-│      └─────────────────┘     from output directly)      │
-│                                                            │
-│  Frequency compensation:                                  │
-│  - Internal dominant pole at error amplifier output       │
-│  - External capacitor provides second pole               │
-│  - Miller compensation for stability                      │
-│  - Phase margin > 60° for all load conditions            │
-│                                                            │
-│  Noise reduction:                                         │
-│  - Low-noise error amplifier design                       │
-│  - PSRR > 60 dB at LDO ripple frequency                  │
-│  - Internal low-pass filter on reference                  │
-│  - External output capacitor filters high-frequency noise │
-└──────────────────────────────────────────────────────────┘
+  Compensation components:
+
+  C_out: Main output capacitor (1-10 µF)
+    - Provides the dominant pole
+    - Must be ceramic (low ESR) for stability
+
+  C_c: Compensation capacitor (10-100 pF)
+    - Provides the second pole
+    - Connected from output to error amp input
+
+  R_c: Compensation resistor (10-100 kΩ)
+    - Provides the zero
+    - Compensates the ESR zero of C_out
+
+  Phase margin: > 60° (target: 70-80°)
+  Gain margin: > 10 dB
+  Unity-gain bandwidth: > 100 kHz
 ```
 
-### 4.3 LDO Noise Budget
+### PSRR Analysis
+
+Power Supply Rejection Ratio (PSRR) is critical for the analog supply:
 
 ```
-LDO Output Noise Budget (VDDA = 1.8V):
+  PSRR(f) = 20 × log₁₀(ΔV_IN / ΔV_OUT)
 
-  Total noise requirement: < 10 µVrms (0.1–100 Hz)
-  
-  Noise sources:
-    1. Error amplifier (thermal): 3 µVrms (30%)
-    2. Error amplifier (1/f):     4 µVrms (40%)
-    3. Reference voltage noise:   2 µVrms (20%)
-    4. PSRR-limited input noise:  1 µVrms (10%)
-    
-  Total (RSS): √(3² + 4² + 2² + 1²) = √(9+16+4+1) = √30 ≈ 5.5 µVrms
-  
-  Margin: 10 / 5.5 = 1.8× (adequate)
-  
-  Note: The LDO must reject battery noise (from switching converter
-  and telemetry TX) with PSRR > 60 dB at frequencies up to 10 kHz.
+  At DC: PSRR = A_OL × β (open-loop gain × feedback factor)
+  At high frequency: PSRR limited by output capacitor ESR
+
+  Target: PSRR > 60 dB at 100 kHz
+  This requires:
+    - High open-loop gain (> 60 dB)
+    - High unity-gain bandwidth (> 1 MHz)
+    - Low ESR output capacitor (< 100 mΩ)
+    - Proper compensation (phase margin > 60°)
 ```
 
 ---
 
-## 5. Charge Pump for High-Voltage Telemetry Rail
+## 2.10.5 Power-On Reset (POR) Circuit
 
-### 5.1 Charge Pump Specifications
+### POR Requirements
 
-| Parameter | Specification | Notes |
-|-----------|--------------|-------|
-| Input voltage | 2.4–3.6V | VBAT range |
-| Output voltage | 3.3V ±2% | Telemetry RF supply |
-| Output current | 0–15 mA | Burst mode (during TX) |
-| Efficiency target | > 75% at 5 mA | For telemetry efficiency |
-| Output ripple | < 5 mVpp | Low noise for RF |
-| Quiescent current | < 1 µA | When not transmitting |
-| Start-up time | < 10 ms | Before telemetry TX |
-| Output capacitance | 10 µF (external) | Ceramic, low ESR |
+| Parameter | Specification | Unit |
+|-----------|--------------|------|
+| Rising threshold | 2.1-2.3 | V |
+| Hysteresis | 50-100 | mV |
+| Propagation delay | < 10 | µs |
+| Reset pulse width | 1-10 | ms |
+| Glitch rejection | < 1 | µs |
+| Quiescent current | < 100 | nA |
+| Operating voltage | 1.5-3.5 | V |
 
-### 5.2 Charge Pump Architecture (Regulated 3.3V Output)
-
-```
-┌──────────────────────────────────────────────────────────┐
-│              REGULATED CHARGE PUMP                         │
-│                                                            │
-│  VBAT ────┬───────────────────────────────┐              │
-│           │                               │              │
-│      ┌────▼────┐   ┌──────────┐   ┌─────▼────┐        │
-│      │ Flying  │──→│ Output   │──→│ LDO      │──→ VDDRF│
-│      │ Capac.  │   │ Capac.   │   │ (3.3V)   │  (3.3V)│
-│      │ Cfly    │   │ Cout     │   │          │        │
-│      └────┬────┘   └──────────┘   └──────────┘        │
-│           │                                              │
-│      ┌────▼────┐                                        │
-│      │ Charge  │                                        │
-│      │ Pump    │←── Regulator feedback                  │
-│      │ Controller│   (adjusts pump frequency            │
-│      │         │    to regulate output)                 │
-│      └─────────┘                                        │
-│                                                            │
-│  Topology: 1:2 step-up charge pump                       │
-│  VOUT = 2 × VBAT - losses                                │
-│  Regulation: Frequency modulation (reduce f at light load)│
-│                                                            │
-│  At VBAT = 2.8V: VOUT = 2 × 2.8 = 5.6V (unregulated)   │
-│  LDO regulates to 3.3V (efficient, Vdropout = 5.6-3.3=   │
-│  2.3V × 15mA = 34.5 mW, η_LDO = 3.3/5.6 = 59%)         │
-│                                                            │
-│  Better approach: Direct regulated charge pump             │
-│  (skip LDO, regulate by controlling pump clock)           │
-└──────────────────────────────────────────────────────────┘
-```
-
-### 5.3 Charge Pump Output Ripple
+### POR Circuit Design
 
 ```
-Charge Pump Output Ripple:
+                    POR CIRCUIT
 
-  Vout
-  │
-  │    ╭─╮     ╭─╮     ╭─╮     ╭─╮
-  │───╯  ╰────╯  ╰────╯  ╰────╯  ╰──
-  │  │←─→│
-  │   Ripple (< 5 mVpp)
-  │
-  └────────────────────────────────────→ Time
-
-  Ripple reduction techniques:
-  1. Increase output capacitance (10 µF)
-  2. Increase switching frequency (1 MHz)
-  3. Add post-regulator LDO (if power budget allows)
-  4. Use overlapping clock phases (reduce charge sharing)
+  V_BAT ────────┬────────────────────────────────
+                │
+                ▼
+           ┌─────────┐
+           │  Voltage │
+           │  Detect  │ (Comparator with hysteresis)
+           │  (V_th = │
+           │   2.2V)  │
+           └────┬─────┘
+                │
+                ▼
+           ┌─────────┐
+           │  Delay  │ (RC delay for glitch rejection)
+           │  Filter │
+           │  (1-10µs)│
+           └────┬─────┘
+                │
+                ▼
+           ┌─────────┐
+           │  One-   │ (Generates clean reset pulse)
+           │  Shot   │
+           │  (1-10ms)│
+           └────┬─────┘
+                │
+                ▼
+           ┌─────────┐
+           │  RESET  │ (Active-high reset signal)
+           │  OUTPUT │
+           └─────────┘
 ```
 
----
-
-## 6. Efficiency Targets
-
-### 6.1 Overall PMU Efficiency
+### POR Timing Diagram
 
 ```
-PMU Efficiency = (Power delivered to loads) / (Power from battery)
-
-  P_VDDD = 1.2V × 50 µA = 60 µW
-  P_VDDA = 1.8V × 10 µA = 18 µW
-  P_VDDRF = 3.3V × 15 mA × 0.003 (duty cycle) = 148.5 µW (average)
-  
-  Total load power = 60 + 18 + 148.5 = 226.5 µW
-
-  P_VBAT (at 2.8V, 10 µA average):
-    P_battery = 2.8V × 10 µA = 28 µW (during non-telemetry)
-    During telemetry: 2.8V × 15 mA = 42 mW (peak)
-
-  Quiescent power of PMU regulators:
-    Buck: 1.2V × 1 µA = 1.2 µW
-    LDO: 1.8V × 3 µA = 5.4 µW
-    Charge pump: 3.3V × 1 µA = 3.3 µW
-    Total quiescent: ~10 µW
-
-  Overall efficiency (during normal operation, no telemetry):
-    η = 78 µW / (78 + 10) µW = 88.6% (excellent!)
-```
-
-### 6.2 Efficiency by Load Condition
-
-| Condition | VDDD η | VDDA η | VDDRF η | Overall η |
-|-----------|--------|--------|---------|-----------|
-| Idle (sensing only) | 88% | 60% | N/A (off) | 82% |
-| Active (pacing) | 86% | 60% | N/A (off) | 80% |
-| Telemetry TX | N/A | 60% | 78% | 75% |
-| Deep sleep | N/A | N/A | N/A | N/A (PMU off) |
-| **Weighted average** | **87%** | **60%** | **78%** | **81%** |
-
----
-
-## 7. Output Noise Requirements
-
-### 7.1 Noise Specifications by Rail
-
-| Rail | Noise Requirement | Frequency Band | Rationale |
-|------|-------------------|----------------|-----------|
-| VDDD (1.2V) | < 50 mVpp | DC–10 MHz | Digital logic tolerates noise |
-| VDDA (1.8V) | < 10 mVpp | DC–100 Hz | Critical for sensing amplifier |
-| VDDA (1.8V) | < 100 µVrms | 0.1–100 Hz | Input-referred noise floor |
-| VDDRF (3.3V) | < 5 mVpp | DC–1 MHz | RF performance |
-| VDDRF (3.3V) | < 100 µVrms | 10 kHz–100 MHz | Phase noise for modulation |
-
-### 7.2 Noise Source Analysis
-
-```
-Noise Sources in PMU:
-
-  1. Buck Converter (VDDD):
-     - Switching ripple: ~50 mVpp at 500 kHz
-     - Spread-spectrum modulation for EMI reduction
-     - Does NOT directly affect analog circuits (separate rail)
-
-  2. LDO (VDDA):
-     - Error amplifier noise: 3–5 µVrms (0.1–100 Hz)
-     - Reference noise: 2–3 µVrms (0.1–100 Hz)
-     - PSRR: Must reject VBAT noise (from buck switching)
-     - Key metric: PSRR at buck switching frequency (500 kHz)
-       → PSRR > 60 dB at 500 kHz
-
-  3. Charge Pump (VDDRF):
-     - Switching ripple: 5–20 mVpp (depends on f and Cout)
-     - Clock feedthrough: Harmonics of switching frequency
-     - Mitigated by post-LDO or increased output capacitance
-
-  4. Battery noise:
-     - Internal resistance noise: Vnoise = √(4kTR × BW)
-     - At R = 200Ω, BW = 100 kHz: Vnoise = √(4 × 1.38e-23 × 310 × 200 × 1e5) = 18.6 µVrms
-     - This is very small and does not significantly impact performance
-```
-
-### 7.3 Noise Filtering Techniques
-
-| Technique | Applied To | Effectiveness | Complexity |
-|-----------|-----------|--------------|------------|
-| Post-LDO (additional regulator) | VDDRF | High | Medium |
-| Increase output capacitance | All rails | Moderate | Low |
-| Ferrite bead (if external) | VDDA input | High | Low (external) |
-| Internal low-pass filter | Reference voltage | Moderate | Low |
-| Spread-spectrum clocking | Buck converter | Moderate (EMI) | Low |
-| Shielding (layout) | Analog circuits | High | Medium |
-| Separate supply domains | All rails | Essential | Medium |
-
----
-
-## 8. Start-Up Sequencing
-
-### 8.1 Start-Up Sequence
-
-```
-Power-On Start-Up Sequence:
-
-Time ─────────────────────────────────────────────────────────→
-
-VBAT      ████████████████████████████████████████████████████
-          (Battery connected to chip)
-
-POR       ░░░░░░░░░███████████████████████████████████████████
-          (Released after VBAT > 2.3V for 10ms)
-
-VDDA      ░░░░░░░░░░░░░░░░██████████████████████████████████
-          (LDO starts, stabilizes after 1ms)
-
-VDDD      ░░░░░░░░░░░░░░░░░░░░░░░░██████████████████████████
-          (Buck starts, stable after 5ms, PFM mode)
-
-CPU       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██████████████
-          (Boot ROM executes, configures peripherals)
-
-AFE       ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██████████████
-          (AFE registers configured, sensing enabled)
-
-Timer     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██████████████
-          (Timing cycles begin)
-
-Ready     ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░██████████
-          (Full operation begins, first pace/sense possible)
-
-Total start-up time: ~15 ms from VBAT connection to ready state
-```
-
-### 8.2 Start-Up Sequencing Logic
-
-```
-Start-Up State Machine:
-
-  State: POWER_OFF
+  V_BAT
     │
-    │ VBAT > 2.3V (POR threshold)
-    ▼
-  State: POR_ACTIVE (10 ms delay)
+  2.5├────────────────────────────────────────
+    │         ┌──────────────────────────────
+  2.3├─────────┤
+    │         │ ← Rising threshold
+  2.1├─────────┤
+    │         │
+  1.5├─────────┤
+    │         │
+    0├─────────┤
+    │         │
+    │         │     RESET
+    │         │     │
+    │         │     ▼
+    │         │     ┌──────────────────────────
+    │         │     │
+    │         │     │ ← Reset active (low)
+    │         │     │
+    │         │     └─────────────────────────
+    │         │         ↑
+    │         │         Reset released
+    │         │         (after delay)
     │
-    │ POR timer expires
-    ▼
-  State: VDDA_START (LDO enable)
-    │
-    │ LDO output stable (> 1.7V)
-    ▼
-  State: VDDD_START (Buck enable)
-    │
-    │ Buck output stable (> 1.1V)
-    ▼
-  State: CLOCK_START (oscillator enable)
-    │
-    │ Clock stable (XTAL lock or RC stable)
-    ▼
-  State: CPU_START (processor boot)
-    │
-    │ Boot ROM execution complete
-    ▼
-  State: SYSTEM_CONFIG (peripheral configuration)
-    │
-    │ AFE configured, timer loaded, PMU monitoring enabled
-    ▼
-  State: READY (full operation)
-
-  If any step fails → State: SAFE_MODE (retry or hold safe state)
+    0├────┬────┬────┬────┬────┬────┬────
+         t0   t1   t2   t3   t4
+         │    │    │    │    │
+         │    │    │    │    System operational
+         │    │    │    Reset released
+         │    │    Delay expires
+         │    Threshold crossed
+         Power applied
 ```
 
 ---
 
-## 9. Power-On Reset (POR)
+## 2.10.6 Brown-Out Detection (BOD) Circuit
 
-### 9.1 POR Specifications
+### BOD Requirements
 
-| Parameter | Specification | Notes |
-|-----------|--------------|-------|
-| POR threshold (rising) | 2.3V | VBAT must exceed this to release POR |
-| POR threshold (falling) | 2.1V | Hysteresis to prevent chatter |
-| POR delay | 10 ms | After threshold crossed |
-| POR output | Active-low reset to CPU | Directly to CPU reset pin |
-| POR accuracy | ±100 mV | Threshold tolerance |
-| POR current | < 100 nA | Quiescent |
+| Parameter | Specification | Unit |
+|-----------|--------------|------|
+| Low threshold | 2.4-2.5 | V |
+| High threshold | 2.5-2.6 | V |
+| Hysteresis | 50-100 | mV |
+| Propagation delay | < 10 | µs |
+| Quiescent current | < 100 | nA |
+| Alert generation | Yes | — |
+| Safe mode entry | Yes | — |
 
-### 9.2 POR Circuit
-
-```
-Power-On Reset Circuit:
-
-  VBAT ──→ Voltage Detector ──→ Delay Circuit ──→ POR_bar (to CPU)
-              │                      │
-              │ Threshold: 2.3V      │ 10 ms RC delay
-              │ (bandgap-referenced) │ (deglitch)
-              │                      │
-              └── Hysteresis ────────┘
-                  (200 mV)
-
-  Behavior:
-  - VBAT < 2.1V: POR_bar = 0 (CPU held in reset)
-  - VBAT crosses 2.3V: Start 10 ms delay
-  - After 10 ms: POR_bar = 1 (CPU released from reset)
-  - VBAT drops below 2.1V: POR_bar = 0 (immediate reset, no delay)
-  - Hysteresis prevents oscillation at threshold
-```
-
----
-
-## 10. Brown-Out Detection (BOD)
-
-### 10.1 BOD Specifications
-
-| Parameter | Specification | Notes |
-|-----------|--------------|-------|
-| BOD threshold (warning) | 2.5V | Early warning |
-| BOD threshold (critical) | 2.3V | Enter safe mode |
-| BOD threshold (failure) | 2.0V | Maximum power conservation |
-| Hysteresis | 100 mV | Per threshold |
-| Response time | < 100 µs | From detection to action |
-| BOD current | < 500 nA | Quiescent (always-on comparator) |
-
-### 10.2 BOD Response Actions
+### BOD Circuit Design
 
 ```
-BOD Response Hierarchy:
+                    BROWN-OUT DETECTION
 
-  VBAT Level    │ Action
-  ──────────────┼────────────────────────────────────────
-  > 2.6V        │ Normal operation
-  2.5–2.6V      │ Log warning, increase monitoring frequency
-  2.4–2.5V      │ Disable non-essential features
-  2.3–2.4V      │ Enter safe mode (VOO at LRL)
-                │ Disable telemetry, auto-capture, diagnostics
-  2.0–2.3V      │ Maximum power conservation
-                │ Disable all non-essential circuits
-                │ Only basic pacing continues
-  < 2.0V        │ System may not function reliably
-                │ Log last state before failure
-                │ Hardware watchdog continues (separate oscillator)
+  V_BAT ────────┬────────────────────────────────
+                │
+                ▼
+           ┌─────────┐
+           │  Voltage │
+           │  Detect  │ (Comparator with hysteresis)
+           │  (V_low = │
+           │   2.4V,  │
+           │   V_high =│
+           │   2.5V)  │
+           └────┬─────┘
+                │
+                ├──▶ BOD_ALERT (to digital controller)
+                │
+                └──▶ SAFE_MODE_ENTRY (to power management)
 ```
 
-### 10.3 BOD Circuit Architecture
+### BOD Timing Diagram
 
 ```
-┌──────────────────────────────────────────────────────────┐
-│              BROWN-OUT DETECTOR                            │
-│                                                            │
-│  VBAT ──→ Voltage ──→ Comparator ──→ Logic ──→ Actions  │
-│           Dividers     │                        │         │
-│           (for each    │                        │         │
-│            threshold)  ▼                        ▼         │
-│                    ┌──────────┐          ┌──────────┐   │
-│                    │Bandgap   │          │Warning   │   │
-│                    │Reference │          │flag      │   │
-│                    │(1.2V)    │          │          │   │
-│                    └──────────┘          │Critical  │   │
-│                                          │flag      │   │
-│                                          │          │   │
-│                                          │Safe mode │   │
-│                                          │request   │   │
-│                                          └──────────┘   │
-│                                                            │
-│  Power: < 500 nA (always-on comparators)                  │
-│  Response: < 100 µs from crossing to flag/assert          │
-└──────────────────────────────────────────────────────────┘
+  V_BAT
+    │
+  2.8├────────────────────────────────────────
+    │
+  2.6├────────────────────────────────────────
+    │
+  2.5├──────┐           ┌───────────────────── Hysteresis high
+    │       │           │
+  2.4├──────┘           └───────────────────── Hysteresis low
+    │       │           │
+  2.2├──────┤           ├─────────────────────
+    │       │           │
+  2.0├──────┤           ├─────────────────────
+    │       │           │
+    0├──────┤           ├─────────────────────
+    │       │           │
+    │       │ BOD_ALERT │
+    │       │ │         │
+    │       ▼ │         ▼
+    │    ┌────┤     ┌────┤
+    │    │ ON │     │OFF │
+    │    └────┘     └────┘
 ```
 
 ---
 
-## 11. Summary
+## 2.10.7 High-Voltage Charge Pump for Pacing
 
-### 11.1 PMU Design Summary
+### Requirements
 
-| Block | Topology | Input | Output | Efficiency | Noise |
-|-------|----------|-------|--------|------------|-------|
-| Digital supply | Buck converter | 2.4–3.6V | 1.2V ±3% | > 85% | < 50 mVpp |
-| Analog supply | LDO | 2.4–3.6V | 1.8V ±2% | > 60% | < 10 µVrms |
-| Telemetry supply | Charge pump | 2.4–3.6V | 3.3V ±2% | > 75% | < 5 mVpp |
-| Pacing boost | Charge pump | 2.4–3.6V | 5–10V | > 70% | N/A (pulsed) |
+The pacing output stage requires a programmable high voltage (3-8 V) from
+the low-voltage battery (2.5-3.2 V):
 
-### 11.2 Key PMU Specifications
+| Parameter | Specification | Unit |
+|-----------|--------------|------|
+| Input voltage | 2.4-3.2 | V |
+| Output voltage | 3.0-8.0 | V (programmable) |
+| Output current | 0-25 | mA |
+| Output ripple | < 50 | mV |
+| Efficiency | ≥ 80 | % |
+| Start-up time | < 50 | µs |
+| Output capacitance | 10-33 | µF |
+| Quiescent current | < 5 | µA |
 
-| Parameter | Specification |
-|-----------|--------------|
-| Input voltage range | 2.4–3.6V (LiI₂) |
-| Number of regulated outputs | 3 (+ 1 boosted) |
-| Total quiescent current (all regulators) | < 8 µA |
-| Buck converter frequency | 500 kHz (PFM/PWM) |
-| LDO dropout voltage | < 200 mV at 20 µA |
-| Output noise (analog rail) | < 10 µVrms (0.1–100 Hz) |
-| PSRR (analog LDO) | > 60 dB at 1 kHz |
-| Start-up time | < 15 ms (total sequence) |
-| POR threshold | 2.3V ±100 mV |
-| BOD thresholds | 2.5V / 2.3V / 2.0V |
-| Sleep current (all regulators off) | < 100 nA |
-| Overall weighted efficiency | > 81% |
+### Topology Selection
 
-### 11.3 Power Budget Allocation
+For the pacing output stage, a Dickson charge pump is preferred over an
+inductive boost converter because:
 
-| Consumer | Power (µW) | % of Total |
-|----------|-----------|------------|
-| AFE (sensing) | 30 | 15% |
-| Digital controller | 60 | 30% |
-| Timer engine | 5 | 3% |
-| PMU quiescent | 10 | 5% |
-| Telemetry (wake-up RX) | 0.3 | <1% |
-| Telemetry (TX, averaged) | 80 | 40% |
-| Pacing (averaged) | 12 | 6% |
-| **Total** | **~197** | **100%** |
+1. **No external inductor**: The charge pump uses only capacitors, which
+   are smaller and cheaper than inductors.
+2. **Lower EMI**: No magnetic switching noise that could interfere with
+   sensitive sensing circuits.
+3. **Simpler layout**: No need for magnetic component placement and
+   shielding.
+4. **Sufficient current**: 25 mA is achievable with a multi-stage charge
+   pump.
 
-The PMU is designed to deliver all supply rails with the required voltage accuracy, noise performance, and efficiency while consuming minimal quiescent current. The combination of a buck converter (for the digital rail), an LDO (for the analog rail), and charge pumps (for the telemetry and pacing rails) provides the optimal balance of efficiency and performance for the iPACE-CHIP.
+### Dickson Charge Pump Design
+
+```
+                    DICKSON CHARGE PUMP (6-Stage)
+
+  V_BAT ──┬──▶|├──┬──▶|├──┬──▶|├──┬──▶|├──┬──▶|├──┬──▶|├──┬──▶ V_PACE
+          │   C1    │   C2    │   C3    │   C4    │   C5    │   C6
+          │   │     │   │     │   │     │   │     │   │     │
+         GND  │    GND  │    GND  │    GND  │    GND  │    GND
+              │         │         │         │         │
+           φ1▼       φ2▼       φ1▼       φ2▼       φ1▼       φ2▼
+           (CLK1)   (CLK2)   (CLK1)   (CLK2)   (CLK1)   (CLK2)
+
+  V_PACE = V_BAT × (N + 1) × η
+
+  For N = 6, V_BAT = 2.8V, η = 0.85:
+    V_PACE = 7 × 2.8 × 0.85 = 16.66V → Too high!
+
+  Practical design: N = 2-3 stages with regulation
+  V_PACE = 3-8V (programmable via clock duty cycle)
+```
+
+### Output Voltage Regulation
+
+The output voltage is regulated by adjusting the clock duty cycle or
+frequency:
+
+```
+  Regulation methods:
+
+  1. Duty cycle modulation:
+     V_OUT = V_BAT × (N + 1) × D × η
+     where D = duty cycle (0.3-0.8)
+
+  2. Frequency modulation:
+     Higher frequency → higher output voltage
+     Lower frequency → lower output voltage
+
+  3. Stage bypassing:
+     Connect/disconnect charge pump stages
+     Fewer stages → lower output voltage
+
+  4. Post-regulation:
+     LDO after charge pump for fine regulation
+     Less efficient but simpler control
+```
 
 ---
 
-*Next Chapter: [Power Mode Management](../03-Power-Modes/power-mode-management.md)*
+## 2.10.8 Power Sequencing
+
+### Start-Up Sequence
+
+```
+                    POWER SEQUENCING
+
+  Step 1: Battery Connected
+    │
+    ▼
+  Step 2: POR detects V_BAT > V_threshold
+    │
+    ▼
+  Step 3: Enable bandgap reference
+    │
+    ▼
+  Step 4: Enable LDO regulators (V_ANA, V_DIG)
+    │
+    ▼
+  Step 5: Wait for regulators to settle (< 1 ms)
+    │
+    ▼
+  Step 6: Enable clock oscillator
+    │
+    ▼
+  Step 7: Release digital reset
+    │
+    ▼
+  Step 8: Execute Power-On Self-Test (POST)
+    │
+    ▼
+  Step 9: Load parameters from EEPROM
+    │
+    ▼
+  Step 10: Enter normal operation mode
+    │
+    ▼
+  Step 11: Begin sensing and pacing
+```
+
+### Shutdown Sequence
+
+```
+  Step 1: Low-battery detected (V_BAT < 2.4V)
+    │
+    ▼
+  Step 2: Reduce pacing output to minimum
+    │
+    ▼
+  Step 3: Disable telemetry
+    │
+    ▼
+  Step 4: Disable non-essential functions
+    │
+    ▼
+  Step 5: Enter minimum-power pacing mode (VOO at 60 bpm)
+    │
+    ▼
+  Step 6: Critical battery (V_BAT < 2.2V)
+    │
+    ▼
+  Step 7: Enter hibernate mode (timer-only operation)
+    │
+    ▼
+  Step 8: Device end-of-life (V_BAT < 2.0V)
+    │
+    ▼
+  Step 9: Device ceases operation
+```
+
+---
+
+## 2.10.9 Efficiency Analysis
+
+### Converter Efficiency
+
+```
+  Efficiency = P_OUT / P_IN = (V_OUT × I_OUT) / (V_BAT × I_BAT)
+
+  Buck converter losses:
+    P_loss = P_switching + P_conduction + P_gate + P_quiescent
+
+  P_switching = 0.5 × C_oss × V² × f_sw (output capacitance loss)
+  P_conduction = I² × R_on × D (conduction loss)
+  P_gate = Q_g × V_GS × f_sw (gate drive loss)
+  P_quiescent = V_BAT × I_quiescent (quiescent loss)
+```
+
+### Efficiency vs. Load Current
+
+```
+  Efficiency
+  (%)
+    │
+  100├──────────────────────────────────────
+    │
+   90├─────────────╲    ╱──────────────────
+    │               ╲  ╱
+   80├────────────────╲╱──────────────────── PWM mode
+    │                 ╳
+   70├────────────────╱╲────────────────────
+    │               ╱  ╲
+   60├─────────────╱    ╲──────────────────
+    │            ╱      ╲
+   50├──────────╱        ╲─────────────────
+    │         ╱
+   40├────────╱──────────────────────────── PFM mode
+    │       ╱
+   30├──────╱───────────────────────────────
+    │     ╱
+   20├────╱─────────────────────────────────
+    │
+   10├───╱──────────────────────────────────
+    │
+    0├───┬────┬────┬────┬────┬────┬────
+    0  0.1µA 1µA  10µA 100µA 1mA  10mA
+              Load Current
+
+    PFM mode: Higher efficiency at light loads
+    PWM mode: Higher efficiency at heavy loads
+    Crossover: ~10-50 µA (programmable)
+```
+
+---
+
+## 2.10.10 Summary
+
+The DC-DC converter and voltage regulator design is critical for:
+
+1. **Efficiency**: High converter efficiency (> 80%) directly extends
+   battery life by reducing wasted energy.
+
+2. **Noise**: Low-noise analog supply (V_ANA) with < 10 µV RMS noise
+   and > 60 dB PSRR is essential for sensitive cardiac signal detection.
+
+3. **Regulation**: Tight voltage regulation (±2%) ensures consistent
+   pacing output and accurate threshold detection.
+
+4. **Power sequencing**: Proper start-up and shutdown sequences prevent
+   latch-up, ensure safe operation, and protect patient safety.
+
+5. **Safety**: POR and BOD circuits provide fail-safe operation under
+   all power conditions, including brown-out and battery depletion.
+
+The combination of a buck converter (for digital supply), charge pump with
+LDO (for analog supply), and high-voltage charge pump (for pacing output)
+provides an efficient, low-noise, and reliable power management system for
+the implantable pacemaker.

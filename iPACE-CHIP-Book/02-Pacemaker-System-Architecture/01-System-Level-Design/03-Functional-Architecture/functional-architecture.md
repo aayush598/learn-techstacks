@@ -1,784 +1,900 @@
-# Functional Architecture
+# Pacemaker Functional Architecture
 
-## 2.1.3 iPACE-CHIP Functional Architecture
+## 2.1.3 Functional Decomposition and State Machine
 
-### 2.1.3.1 Functional Decomposition Hierarchy
+The functional architecture of the implantable cardiac pacemaker defines the
+hierarchical decomposition of system functions, the state machine governing
+mode transitions, and the firmware architecture that orchestrates all
+real-time operations. This chapter provides a complete specification of the
+functional behavior, from the top-level system states down to the
+interrupt-driven firmware service routines.
 
-The iPACE-CHIP functional architecture is decomposed into five major subsystems,
-each with clearly defined interfaces and responsibilities. The decomposition follows
-a top-down approach from system level to leaf-level functions.
+---
+
+## 2.3.1 Functional Decomposition Tree
+
+The pacemaker system can be decomposed into a hierarchy of functions, each
+responsible for a specific aspect of device operation. The decomposition
+follows a top-down approach, with the system function at the root and
+leaf-level functions mapping to specific hardware blocks or firmware modules.
+
+```
+PACEMAKER SYSTEM
+│
+├── 1. SENSING SUBSYSTEM
+│   ├── 1.1 Atrial Sensing
+│   │   ├── 1.1.1 P-wave detection
+│   │   ├── 1.1.2 Far-field R-wave rejection
+│   │   ├── 1.1.3 Noise discrimination
+│   │   └── 1.1.4 Auto-sensitivity adjustment
+│   ├── 1.2 Ventricular Sensing
+│   │   ├── 1.2.1 R-wave detection
+│   │   ├── 1.2.2 T-wave discrimination
+│   │   ├── 1.2.3 Noise discrimination
+│   │   └── 1.2.4 Auto-sensitivity adjustment
+│   └── 1.3 Sensor Input (Rate Adaptation)
+│       ├── 1.3.1 Accelerometer signal processing
+│       ├── 1.3.2 Minute ventilation sensing
+│       ├── 1.3.3 QT interval measurement
+│       └── 1.3.4 Sensor-indicated rate calculation
+│
+├── 2. PACING SUBSYSTEM
+│   ├── 2.1 Atrial Pacing
+│   │   ├── 2.1.1 Pulse amplitude control
+│   │   ├── 2.1.2 Pulse width control
+│   │   ├── 2.1.3 Polarity control
+│   │   └── 2.1.4 Charge balancing
+│   ├── 2.2 Ventricular Pacing
+│   │   ├── 2.2.1 Pulse amplitude control
+│   │   ├── 2.2.2 Pulse width control
+│   │   ├── 2.2.3 Polarity control
+│   │   └── 2.2.4 Charge balancing
+│   ├── 2.3 Left Ventricular Pacing (CRT)
+│   │   ├── 2.3.1 LV offset timing
+│   │   ├── 2.3.2 V-V delay programming
+│   │   └── 2.3.3 Multi-site pacing
+│   └── 2.4 Output Safety
+│       ├── 2.4.1 Maximum output limiting
+│       ├── 2.4.2 Impedance monitoring
+│       └── 2.4.3 Threshold search
+│
+├── 3. TIMING AND CONTROL SUBSYSTEM
+│   ├── 3.1 Timing Cycle Management
+│   │   ├── 3.1.1 Lower rate limit timing
+│   │   ├── 3.1.2 Upper rate limit timing
+│   │   ├── 3.1.3 AV interval timing
+│   │   ├── 3.1.4 VA interval timing
+│   │   ├── 3.1.5 Refractory period management
+│   │   └── 3.1.6 Blanking period management
+│   ├── 3.2 Mode Logic
+│   │   ├── 3.2.1 Mode state machine
+│   │   ├── 3.2.2 Mode switch detection
+│   │   ├── 3.2.3 Mode switch back
+│   │   └── 3.2.4 Mode override (magnet)
+│   ├── 3.3 Rate Adaptation
+│   │   ├── 3.3.1 Sensor-indicated rate calculation
+│   │   ├── 3.3.2 Rate response slope
+│   │   ├── 3.3.3 Rate acceleration/deceleration
+│   │   └── 3.3.4 Rate smoothing
+│   └── 3.4 Safety Monitor
+│       ├── 3.4.1 Watchdog timer
+│       ├── 3.4.2 Maximum rate enforcement
+│       ├── 3.4.3 Minimum rate enforcement
+│       ├── 3.4.4 Runaway pacing prevention
+│       └── 3.4.5 Fault detection and recovery
+│
+├── 4. COMMUNICATION SUBSYSTEM
+│   ├── 4.1 RF Telemetry
+│   │   ├── 4.1.1 Data modulation/demodulation
+│   │   ├── 4.1.2 Packet framing
+│   │   ├── 4.1.3 Error detection/correction
+│   │   └── 4.1.4 Encryption (optional)
+│   ├── 4.2 Programming Interface
+│   │   ├── 4.2.1 Parameter read/write
+│   │   ├── 4.2.2 Firmware update (if supported)
+│   │   ├── 4.2.3 Diagnostic data retrieval
+│   │   └── 4.2.4 Event log download
+│   └── 4.3 Magnet Interface
+│       ├── 4.3.1 Magnet detection
+│       ├── 4.3.2 Mode switch to async
+│       ├── 4.3.3 Telemetry activation
+│       └── 4.3.4 Rate response to magnet
+│
+├── 5. POWER MANAGEMENT SUBSYSTEM
+│   ├── 5.1 Battery Management
+│   │   ├── 5.1.1 Battery voltage monitoring
+│   │   ├── 5.1.2 Battery current monitoring
+│   │   ├── 5.1.3 End-of-life detection
+│   │   └── 5.1.4 Low-battery alert
+│   ├── 5.2 Power Mode Control
+│   │   ├── 5.2.1 Active mode management
+│   │   ├── 5.2.2 Sleep mode management
+│   │   ├── 5.2.3 Deep sleep management
+│   │   └── 5.2.4 Hibernate mode management
+│   └── 5.3 Clock Management
+│       ├── 5.3.1 System clock generation
+│       ├── 5.3.2 Clock gating
+│       ├── 5.3.3 Clock scaling
+│       └── 5.3.4 Clock accuracy monitoring
+│
+├── 6. DIAGNOSTICS SUBSYSTEM
+│   ├── 6.1 Data Collection
+│   │   ├── 6.1.1 Electrogram recording
+│   │   ├── 6.1.2 Event logging
+│   │   ├── 6.1.3 Histogram collection
+│   │   └── 6.1.4 Trend data collection
+│   ├── 6.2 Data Storage
+│   │   ├── 6.2.1 SRAM management
+│   │   ├── 6.2.2 EEPROM management
+│   │   ├── 6.2.3 Data compression
+│   │   └── 6.2.4 Data integrity checking
+│   └── 6.3 Data Retrieval
+│       ├── 6.3.1 On-demand download
+│       ├── 6.3.2 Streaming mode
+│       └── 6.3.3 Summary statistics
+│
+└── 7. SELF-TEST AND CALIBRATION
+    ├── 7.1 Power-On Self-Test (POST)
+    │   ├── 7.1.1 Memory test (SRAM/EEPROM)
+    │   ├── 7.1.2 ADC self-test
+    │   ├── 7.1.3 DAC self-test
+    │   ├── 7.1.4 Timer verification
+    │   └── 7.1.5 Communication test
+    ├── 7.2 Periodic Self-Test
+    │   ├── 7.2.1 Impedance measurement
+    │   ├── 7.2.2 Battery voltage check
+    │   ├── 7.2.3 Lead integrity check
+    │   └── 7.2.4 Memory integrity check
+    └── 7.3 Calibration
+        ├── 7.3.1 ADC calibration
+        ├── 7.3.2 DAC calibration
+        ├── 7.3.3 Reference voltage calibration
+        └── 7.3.4 Oscillator frequency calibration
+```
+
+---
+
+## 2.3.2 Top-Level State Machine
+
+The pacemaker operates as a finite state machine (FSM) with the following
+top-level states. The state transitions are driven by sensing events,
+timer expirations, external commands (magnet, RF programming), and safety
+conditions.
+
+```
+                    ┌──────────────────────┐
+                    │                      │
+        ┌──────────│   POWER-ON RESET     │
+        │          │   (POR)              │
+        │          │                      │
+        │          └──────────┬───────────┘
+        │                     │
+        │                     ▼
+        │          ┌──────────────────────┐
+        │          │                      │
+        │          │   POST               │
+        │          │   (Power-On          │
+        │          │    Self-Test)        │
+        │          │                      │
+        │          └──────────┬───────────┘
+        │                     │ POST pass
+        │                     ▼
+        │          ┌──────────────────────┐
+        │          │                      │
+        │          │   INITIALIZATION     │
+        │          │   (Load parameters   │
+        │          │    from EEPROM)      │
+        │          │                      │
+        │          └──────────┬───────────┘
+        │                     │
+        │                     ▼
+┌───────┴────────┐   ┌──────────────────────┐   ┌──────────────────────┐
+│                │   │                      │   │                      │
+│   SLEEP MODE   │◀──│   ACTIVE MODE        │──▶│   TELEM MODE         │
+│                │   │   (Sensing/Pacing)   │   │   (Programming/      │
+│   (Ultra-low   │   │                      │   │    Data Transfer)    │
+│    power)      │   │   ┌──────────────┐   │   │                      │
+│                │   │   │              │   │   │                      │
+│                │   │   │  ┌────────┐  │   │   │                      │
+│                │   │   │  │ SENSE  │  │   │   │                      │
+│                │   │   │  │ SUB-   │  │   │   │                      │
+│                │   │   │  │ STATE  │  │   │   │                      │
+│                │   │   │  └────────┘  │   │   │                      │
+│                │   │   │  ┌────────┐  │   │   │                      │
+│                │   │   │  │ DECIDE │  │   │   │                      │
+│                │   │   │  │ SUB-   │  │   │   │                      │
+│                │   │   │  │ STATE  │  │   │   │                      │
+│                │   │   │  └────────┘  │   │   │                      │
+│                │   │   │  ┌────────┐  │   │   │                      │
+│                │   │   │  │ PACE   │  │   │   │                      │
+│                │   │   │  │ SUB-   │  │   │   │                      │
+│                │   │   │  │ STATE  │  │   │   │                      │
+│                │   │   │  └────────┘  │   │   │                      │
+│                │   │   │              │   │   │                      │
+│                │   │   └──────────────┘   │   │                      │
+│                │   │                      │   │                      │
+└───────┬────────┘   └──────────┬───────────┘   └──────────┬───────────┘
+        │                       │                          │
+        │                       ▼                          │
+        │          ┌──────────────────────┐                │
+        │          │                      │                │
+        │          │   SAFE MODE          │◀───────────────┘
+        │          │   (VOO/VVI at        │  (fault detected
+        │          │    backup rate)      │   during telemetry)
+        │          │                      │
+        │          └──────────┬───────────┘
+        │                     │
+        │                     ▼
+        │          ┌──────────────────────┐
+        └────────▶│   HIBERNATE MODE     │
+                  │   (Minimum power,    │
+                  │    timer only)       │
+                  │                      │
+                  └──────────────────────┘
+```
+
+---
+
+## 2.3.3 Detailed Active Mode State Machine
+
+The active mode is the primary operating state of the pacemaker, where it
+continuously senses cardiac signals and delivers pacing pulses as needed.
+The active mode contains a nested state machine that implements the sense-decide-pace
+cycle.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    iPACE-CHIP FUNCTIONAL DECOMPOSITION                       │
+│                         ACTIVE MODE STATE MACHINE                           │
 │                                                                             │
-│                         ┌─────────────────────┐                             │
-│                         │   iPACE-CHIP        │                             │
-│                         │   SYSTEM            │                             │
-│                         └──────────┬──────────┘                             │
-│                                    │                                        │
-│          ┌────────────┬────────────┼────────────┬────────────┐             │
-│          │            │            │            │            │             │
-│          ▼            ▼            ▼            ▼            ▼             │
-│  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐       │
-│  │ F1:      │ │ F2:      │ │ F3:      │ │ F4:      │ │ F5:      │       │
-│  │ SENSING  │ │ PACING   │ │ POWER    │ │ TELEMETRY│ │ CONTROL  │       │
-│  │          │ │          │ │ MGMT     │ │          │ │ & TIMING │       │
-│  └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘ └────┬─────┘       │
-│       │            │            │            │            │               │
-│   ┌───┴───┐    ┌───┴───┐    ┌───┴───┐    ┌───┴───┐    ┌───┴───┐         │
-│   │       │    │       │    │       │    │       │    │       │         │
-│   ▼       ▼    ▼       ▼    ▼       ▼    ▼       ▼    ▼       ▼         │
-│ ┌────┐ ┌────┐┌────┐ ┌────┐┌────┐ ┌────┐┌────┐ ┌────┐┌────┐ ┌────┐     │
-│ │F1.1│ │F1.2││F2.1│ │F2.2││F3.1│ │F3.2││F4.1│ │F4.2││F5.1│ │F5.2│     │
-│ │    │ │    ││    │ │    ││    │ │    ││    │ │    ││    │ │    │     │
-│ └────┘ └────┘└────┘ └────┘└────┘ └────┘└────┘ └────┘└────┘ └────┘     │
-│   │       │    │       │    │       │    │       │    │       │         │
-│   ▼       ▼    ▼       ▼    ▼       ▼    ▼       ▼    ▼       ▼         │
-│ ┌────┐ ┌────┐┌────┐ ┌────┐┌────┐ ┌────┐┌────┐ ┌────┐┌────┐ ┌────┐     │
-│ │F1.1│ │F1.2││F2.1│ │F2.2││F3.1│ │F3.2││F4.1│ │F4.2││F5.1│ │F5.2│     │
-│ │.1  │ │.1  ││.1  │ │.1  ││.1  │ │.1  ││.1  │ │.1  ││.1  │ │.1  │     │
-│ └────┘ └────┘└────┘ └────┘└────┘ └────┘└────┘ └────┘└────┘ └────┘     │
+│                                                                             │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                     SENSE-DECIDE-PACE CYCLE                         │   │
+│  │                                                                      │   │
+│  │                                                                      │   │
+│  │         ┌──────────┐    Event     ┌──────────┐    Decision          │   │
+│  │         │          │   Detected   │          │   Made                │   │
+│  │  ┌─────▶│  SENSE   │────────────▶│  DECIDE  │─────────────┐       │   │
+│  │  │      │  (AFE     │             │  (Timer  │             │       │   │
+│  │  │      │  Active)  │             │  Check)  │             │       │   │
+│  │  │      │          │             │          │             │       │   │
+│  │  │      └──────────┘             └──────────┘             │       │   │
+│  │  │           │                         │                   │       │   │
+│  │  │           │ No event                │ No pace needed   │       │   │
+│  │  │           │ (timer expired)         │ (event sensed)   │       │   │
+│  │  │           │                         │                   │       │   │
+│  │  │           ▼                         ▼                   │       │   │
+│  │  │      ┌──────────┐             ┌──────────┐             │       │   │
+│  │  │      │  TIMER   │             │  INHIBIT │             │       │   │
+│  │  │      │  EXPIRED │             │  (No     │             │       │   │
+│  │  │      │          │             │   Pace)  │             │       │   │
+│  │  │      └─────┬────┘             └─────┬────┘             │       │   │
+│  │  │            │                         │                  │       │   │
+│  │  │            │ Pace needed            │ Reset timer      │       │   │
+│  │  │            │                        │                  │       │   │
+│  │  │            │      ┌─────────────────┘                  │       │   │
+│  │  │            │      │                                    │       │   │
+│  │  │            │      ▼                                    │       │   │
+│  │  │            │  ┌──────────┐                             │       │   │
+│  │  │            │  │  RESET   │                             │       │   │
+│  │  │            │  │  TIMER   │◀────────────────────────────┘       │   │
+│  │  │            │  │          │                                     │   │
+│  │  │            │  └──────────┘                                     │   │
+│  │  │            │                                                    │   │
+│  │  │            ▼                                                    │   │
+│  │  │      ┌──────────┐                                              │   │
+│  │  └──────│  PACE    │                                              │   │
+│  │         │  (Output │                                              │   │
+│  │         │  Stage)  │                                              │   │
+│  │         │          │                                              │   │
+│  │         └──────────┘                                              │   │
+│  │                                                                    │   │
+│  └────────────────────────────────────────────────────────────────────┘   │
+│                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-#### Detailed Function Tree
+### Sense Sub-State
+
+The sense sub-state is the default active state. In this state:
+
+1. The AFE is powered on and actively monitoring the intracardiac signal.
+2. The digital threshold comparator is continuously comparing the filtered
+   signal against the adaptive threshold.
+3. The refractory period timers are running, enforcing blanking intervals.
+4. The auto-sensitivity algorithm is tracking peak amplitudes.
+
+When a valid sensing event is detected (signal exceeds threshold AND not
+in refractory period AND passes morphology check), the sense sub-state
+transitions to the decide sub-state.
+
+When the sensing timeout expires (lower rate interval elapsed without a
+sense event), the sense sub-state transitions to the pace sub-state.
+
+### Decide Sub-State
+
+The decide sub-state evaluates the timing cycle state and determines whether
+a pacing pulse is required. The decision logic considers:
+
+1. **Lower rate limit**: If the lower rate timer has expired, a pacing pulse
+   is mandatory (asynchronous backup).
+2. **AV interval**: If an atrial event was sensed/paced and the AV interval
+   has elapsed without a ventricular event, ventricular pacing is triggered.
+3. **VA interval**: If a ventricular event was sensed/paced and the VA
+   interval has elapsed without an atrial event, atrial pacing is triggered.
+4. **Upper rate limit**: If pacing would exceed the upper rate limit, the
+   pulse is deferred (post-ventricular atral refractory period extends).
+5. **Sensor rate**: If rate adaptation is enabled, the sensor-indicated rate
+   may modify the timing intervals.
+
+If the decision is to pace, the state transitions to the pace sub-state.
+If the decision is to inhibit (a valid event was sensed in time), the state
+transitions to the reset sub-state, which resets the timing counters and
+returns to the sense sub-state.
+
+### Pace Sub-State
+
+The pace sub-state activates the pacing output stage:
+
+1. Loads the programmed amplitude and pulse width parameters.
+2. Activates the charge pump to generate the pacing voltage.
+3. Enables the output switch to deliver the pulse to the lead.
+4. After the programmed pulse width, opens the output switch.
+5. Activates the charge balancing circuit.
+6. Starts the post-pace blanking timer.
+7. Transitions back to the sense sub-state after blanking expires.
+
+---
+
+## 2.3.4 NBG Pacemaker Mode Definitions
+
+The NBG (NASPE/BPEG Generic) code is a standardized notation for describing
+pacemaker modes. The code consists of three letters: the first letter
+indicates the chamber(s) paced, the second indicates the chamber(s) sensed,
+and the third indicates the response to sensing.
+
+### Mode Definitions
+
+| Mode | Paced | Sensed | Response | Description |
+|------|-------|--------|----------|-------------|
+| OOO | None | None | None | Asynchronous, no pacing or sensing |
+| AOO | Atrium | None | None | Asynchronous atrial pacing |
+| VOO | Ventricle | None | None | Asynchronous ventricular pacing |
+| DOO | Both | None | None | Asynchronous dual-chamber pacing |
+| AAI | Atrium | Atrium | Inhibited | Atrial demand pacing |
+| VVI | Ventricle | Ventricle | Inhibited | Ventricular demand pacing |
+| DDD | Both | Both | Inhibited/Triggered | Dual-chamber demand pacing |
+| AAIR | Atrium | Atrium | Inhibited + Rate | Atrial demand with rate adaptation |
+| VVIR | Ventricle | Ventricle | Inhibited + Rate | Ventricular demand with rate adaptation |
+| DDDR | Both | Both | Inhibited/Triggered + Rate | Dual-chamber with rate adaptation |
+| DDI | Both | Both | Inhibited | Dual-chamber inhibited (no triggered) |
+| DDIR | Both | Both | Inhibited + Rate | Dual-chamber inhibited with rate adaptation |
+| VDD | None | Both | Inhibited/Triggered | Single-lead VDD pacing |
+
+### Extended Mode Notation
+
+The NBG code can be extended with additional modifiers:
+
+| Suffix | Meaning | Example |
+|--------|---------|---------|
+| R | Rate-adaptive (sensor-driven) | DDDR |
+| O | Open (asynchronous) | DOO |
+| T | Triggered (atrial-synchronous) | DDT |
+| I | Inhibited | DDI |
+
+---
+
+## 2.3.5 DDD Mode Timing Cycle — Complete State Diagram
+
+The DDD mode is the most complex pacing mode, managing both atrial and
+ventricular sensing and pacing with full timing cycle interaction. This
+section presents the complete timing cycle state diagram.
 
 ```
-F1: SENSING SUBSYSTEM
-├── F1.1: Intrinsic Signal Detection
-│   ├── F1.1.1: P-wave detection (atrial)
-│   │   ├── F1.1.1.1: Bandpass filtering (0.5–50 Hz)
-│   │   ├── F1.1.1.2: Amplification (40–80 dB)
-│   │   ├── F1.1.1.3: Threshold comparison
-│   │   └── F1.1.1.4: Sensitivity auto-adjustment
-│   ├── F1.1.2: R-wave detection (ventricular)
-│   │   ├── F1.1.2.1: Bandpass filtering (10–100 Hz)
-│   │   ├── F1.1.2.2: Amplification (40–80 dB)
-│   │   ├── F1.1.2.3: Threshold comparison
-│   │   └── F1.1.2.4: Dynamic threshold tracking
-│   ├── F1.1.3: T-wave discrimination
-│   │   ├── F1.1.3.1: T-wave morphology analysis
-│   │   ├── F1.1.3.2: T-wave amplitude criterion
-│   │   └── F1.1.3.3: T-wave timing criterion
-│   └── F1.1.4: Far-field rejection
-│       ├── F1.1.4.1: Common-mode rejection (CMRR)
-│       ├── F1.1.4.2: Notch filtering (50/60 Hz)
-│       └── F1.1.4.3: Morphology-based rejection
-├── F1.2: Signal Conditioning
-│   ├── F1.2.1: Impedance measurement
-│   │   ├── F1.2.1.1: Lead impedance (DC pulse method)
-│   │   ├── F1.2.1.2: Contact impedance monitoring
-│   │   └── F1.2.1.3: Impedance trending
-│   ├── F1.2.2: Electrogram (EGM) processing
-│   │   ├── F1.2.2.1: Near-field EGM
-│   │   ├── F1.2.2.2: Far-field EGM
-│   │   └── F1.2.2.3: EGM storage/compression
-│   └── F1.2.3: Noise detection
-│       ├── F1.2.3.1: Muscle noise (EMG)
-│       ├── F1.2.3.2: Lead noise (discontinuity)
-│       ├── F1.2.3.3: Electromagnetic interference (EMI)
-│       └── F1.2.3.4: Noise response algorithm
+                        DDD MODE TIMING CYCLE
+                    (Dual-Chamber Sensing/Pacing)
 
-F2: PACING SUBSYSTEM
-├── F2.1: Pulse Generation
-│   ├── F2.1.1: Voltage-controlled current source
-│   │   ├── F2.1.1.1: Output DAC (8-bit)
-│   │   ├── F2.1.1.2: Compliance voltage limiter
-│   │   └── F2.1.1.3: Output switch matrix
-│   ├── F2.1.2: Pulse timing control
-│   │   ├── F2.1.2.1: Pulse width control (50µs–1.5ms)
-│   │   ├── F2.1.2.2: Pulse amplitude control (0.5–10V)
-│   │   └── F2.1.2.3: Simultaneous/b sequential pacing
-│   └── F2.1.3: Charge balancing
-│       ├── F2.1.3.1: Automatic charge balance
-│       ├── F2.1.3.2: Post-pace polarization removal
-│       └── F2.1.3.3: Charge balance verification
-├── F2.2: Output Safety
-│   ├── F2.2.1: Overvoltage protection
-│   │   ├── F2.2.1.1: Output voltage limiter
-│   │   └── F2.2.1.2: Back-EMF clamp
-│   ├── F2.2.2: Output energy limiting
-│   │   ├── F2.2.2.1: Maximum energy per pulse
-│   │   └── F2.2.2.2: Maximum average power
-│   └── F2.2.3: Lead protection
-│       ├── F2.2.3.1: DC current blocking
-│       └── F2.2.3.2: ESD protection (8kV)
-
-F3: POWER MANAGEMENT SUBSYSTEM
-├── F3.1: Battery Management
-│   ├── F3.1.1: Voltage monitoring
-│   │   ├── F3.1.1.1: Real-time voltage sensing
-│   │   ├── F3.1.1.2: End-of-life detection
-│   │   └── F3.1.1.3: Low-battery warning
-│   ├── F3.1.2: Current monitoring
-│   │   ├── F3.1.2.1: Average current measurement
-│   │   └── F3.1.2.2: Peak current detection
-│   └── F3.1.3: Temperature monitoring
-│       ├── F3.1.3.1: Die temperature sensing
-│       └── F3.1.3.2: Thermal shutdown (>45°C)
-├── F3.2: Voltage Regulation
-│   ├── F3.2.1: DC-DC converter
-│   │   ├── F3.2.1.1: Buck converter (3.0V → 1.8V)
-│   │   ├── F3.2.1.2: Efficiency optimization
-│   │   └── F3.2.1.3: Output filtering
-│   ├── F3.2.2: LDO regulators
-│   │   ├── F3.2.2.1: Analog supply (1.8V)
-│   │   ├── F3.2.2.2: Digital core (1.2V)
-│   │   ├── F3.2.2.3: I/O supply (1.8V/3.0V)
-│   │   └── F3.2.2.4: RF supply (1.8V)
-│   └── F3.2.3: Power sequencing
-│       ├── F3.2.3.1: Start-up sequence
-│       ├── F3.2.3.2: Power-on reset (POR)
-│       └── F3.2.3.3: Brown-out detection (BOR)
-
-F4: TELEMETRY SUBSYSTEM
-├── F4.1: RF Communication
-│   ├── F4.1.1: Transmitter
-│   │   ├── F4.1.1.1: MICS band TX (402–405 MHz)
-│   │   ├── F4.1.1.2: ISM band TX (2.4 GHz)
-│   │   ├── F4.1.1.3: FSK/ASK modulation
-│   │   └── F4.1.1.4: Power amplifier (PA)
-│   ├── F4.1.2: Receiver
-│   │   ├── F4.1.2.1: MICS band RX
-│   │   ├── F4.1.2.2: ISM band RX
-│   │   ├── F4.1.2.3: Low-noise amplifier (LNA)
-│   │   └── F4.1.2.4: FSK/ASK demodulation
-│   └── F4.1.3: Wake-up receiver
-│       ├── F4.1.3.1: Low-power always-on detector
-│       └── F4.1.3.2: Wake-up signal recognition
-├── F4.2: Protocol Layer
-│   ├── F4.2.1: Packet management
-│   │   ├── F4.2.1.1: Packet framing
-│   │   ├── F4.2.1.2: CRC-16 generation/check
-│   │   └── F4.2.1.3: Retransmission logic
-│   ├── F4.2.2: Data encoding
-│   │   ├── F4.2.2.1: Manchester encoding
-│   │   └── F4.2.2.2: Bi-phase encoding
-│   └── F4.2.3: Command processing
-│       ├── F4.2.3.1: Command decoder
-│       ├── F4.2.3.2: Response formatter
-│       └── F4.2.3.3: Error handling
-
-F5: CONTROL & TIMING SUBSYSTEM
-├── F5.1: Timing Engine
-│   ├── F5.1.1: Interval counters
-│   │   ├── F5.1.1.1: Lower rate interval (LRI)
-│   │   ├── F5.1.1.2: AV delay timer
-│   │   ├── F5.1.1.3: VA interval timer
-│   │   ├── F5.1.1.4: PVARP timer
-│   │   ├── F5.1.1.5: Refractory period timer
-│   │   └── F5.1.1.6: Blanking period timer
-│   ├── F5.1.2: Rate management
-│   │   ├── F5.1.2.1: Lower rate limit (LRL)
-│   │   ├── F5.1.2.2: Upper rate limit (URL)
-│   │   ├── F5.1.2.3: Sensor-indicated rate (SIR)
-│   │   └── F5.1.2.4: Rate smoothing algorithm
-│   └── F5.1.3: Sensor processing
-│       ├── F5.1.3.1: Activity sensor (accelerometer)
-│       ├── F5.1.3.2: Sensor signal filtering
-│       ├── F5.1.3.3: Sensor rate response curve
-│       └── F5.1.3.4: Sensor rate blending
-├── F5.2: Mode State Machine
-│   ├── F5.2.1: Mode definition
-│   │   ├── F5.2.1.1: ODO (monitoring only)
-│   │   ├── F5.2.1.2: AAI (atrial demand)
-│   │   ├── F5.2.1.3: VVI (ventricular demand)
-│   │   ├── F5.2.1.4: DDD (dual demand)
-│   │   ├── F5.2.1.5: DDDR (dual demand + rate response)
-│   │   └── F5.2.1.6: VVIR (ventricular + rate response)
-│   ├── F5.2.2: Mode transitions
-│   │   ├── F5.2.2.1: Safe mode fallback
-│   │   ├── F5.2.2.2: Mode switch (AF response)
-│   │   └── F5.2.2.3: Magnet mode
-│   └── F5.2.3: Safety monitoring
-│       ├── F5.2.3.1: Watchdog timer
-│       ├── F5.2.3.2: Escape interval monitoring
-│       ├── F5.2.3.3: Fault detection
-│       └── F5.2.3.4: Emergency reset
+    ┌─────────────────────────────────────────────────────────────────────┐
+    │                                                                     │
+    │  VENTRICULAR EVENT (Sensed or Paced)                               │
+    │         │                                                           │
+    │         ▼                                                           │
+    │  ┌─────────────┐                                                   │
+    │  │ START       │                                                   │
+    │  │ VA INTERVAL │ ◄── VA Interval = 60000/LRL (ms)                  │
+    │  │ TIMER       │     LRL = Lower Rate Limit (bpm)                  │
+    │  └──────┬──────┘                                                   │
+    │         │                                                           │
+    │         │ VA Timer running                                         │
+    │         │                                                           │
+    │         ▼                                                           │
+    │  ┌─────────────┐                                                   │
+    │  │ SENSE       │                                                   │
+    │  │ ATRIAL?     │──── YES ───▶ ATRIAL EVENT SENSED                 │
+    │  │ (During VA) │              │                                     │
+    │  └──────┬──────┘              │                                     │
+    │         │ NO                   │                                     │
+    │         │                      ▼                                     │
+    │         ▼               ┌─────────────┐                            │
+    │  ┌─────────────┐        │ START       │                            │
+    │  │ VA TIMER    │        │ AV INTERVAL │ ◄── AV Delay (programmed) │
+    │  │ EXPIRED?    │        │ TIMER       │                            │
+    │  └──────┬──────┘        └──────┬──────┘                            │
+    │         │ YES                   │                                    │
+    │         │                      │ AV Timer running                   │
+    │         ▼                      │                                    │
+    │  ┌─────────────┐               ▼                                    │
+    │  │ PACE        │        ┌─────────────┐                            │
+    │  │ ATRIUM      │        │ SENSE       │                            │
+    │  │ (Atrial     │        │ VENTRICLE?  │──── YES ───▶ VENTRICULAR   │
+    │  │  Pacing)    │        │ (During AV) │              EVENT SENSED  │
+    │  └──────┬──────┘        └──────┬──────┘              │             │
+    │         │                      │ NO                   │             │
+    │         │                      │                      │             │
+    │         │                      ▼                      │             │
+    │         │               ┌─────────────┐              │             │
+    │         │               │ AV TIMER    │              │             │
+    │         │               │ EXPIRED?    │              │             │
+    │         │               └──────┬──────┘              │             │
+    │         │                      │ YES                  │             │
+    │         │                      │                      │             │
+    │         │                      ▼                      │             │
+    │         │               ┌─────────────┐              │             │
+    │         │               │ PACE        │              │             │
+    │         │               │ VENTRICLE   │              │             │
+    │         │               │ (Ventricular│              │             │
+    │         │               │  Pacing)    │              │             │
+    │         │               └──────┬──────┘              │             │
+    │         │                      │                      │             │
+    │         │                      └──────────┬───────────┘             │
+    │         │                                 │                         │
+    │         │                                 ▼                         │
+    │         │                          ┌─────────────┐                 │
+    │         │                          │ START       │                 │
+    │         └─────────────────────────▶│ PVARP       │                 │
+    │                                    │ TIMER       │                 │
+    │                                    │ (Post-Vent  │                 │
+    │                                    │  Atrial     │                 │
+    │                                    │  Refractory │                 │
+    │                                    │  Period)    │                 │
+    │                                    └──────┬──────┘                 │
+    │                                           │                         │
+    │                                           │ PVARP expires          │
+    │                                           │                         │
+    │                                           ▼                         │
+    │                                    ┌─────────────┐                 │
+    │                                    │ ATRIAL      │                 │
+    │                                    │ CHANNEL     │                 │
+    │                                    │ RE-ENABLED  │                 │
+    │                                    │ (Sense      │                 │
+    │                                    │  Ready)     │                 │
+    │                                    └─────────────┘                 │
+    │                                                                     │
+    └─────────────────────────────────────────────────────────────────────┘
 ```
 
-### 2.1.3.2 System State Machine
+### DDD Timing Parameters
 
-The iPACE-CHIP operates in five primary states with well-defined transitions
-triggered by clinical events, timer expirations, or programmer commands.
+| Parameter | Symbol | Range | Default | Resolution |
+|-----------|--------|-------|---------|-----------|
+| Lower Rate Limit | LRL | 30-120 bpm | 60 bpm | 1 bpm |
+| Upper Rate Limit | URL | 100-200 bpm | 120 bpm | 1 bpm |
+| AV Delay | AVD | 30-350 ms | 200 ms | 10 ms |
+| Rate-Adaptive AV | RA-AVD | 150-250 ms | 200 ms | 10 ms |
+| PVARP | PVARP | 150-500 ms | 300 ms | 10 ms |
+| Post-Ventricular Atrial Blanking | PVAB | 50-400 ms | 300 ms | 10 ms |
+| Atrial Refractory | AREF | 150-500 ms | 300 ms | 10 ms |
+| Ventricular Refractory | VREF | 200-400 ms | 250 ms | 10 ms |
+| Atrial Sensitivity | ASENS | 0.1-5.0 mV | 0.5 mV | 0.1 mV |
+| Ventricular Sensitivity | VSENS | 0.1-5.0 mV | 2.0 mV | 0.1 mV |
+| Atrial Pulse Amplitude | APAMP | 0.5-7.5 V | 3.5 V | 0.5 V |
+| Atrial Pulse Width | APW | 0.05-2.0 ms | 0.4 ms | 0.05 ms |
+| Ventricular Pulse Amplitude | VPAMP | 0.5-7.5 V | 3.5 V | 0.5 V |
+| Ventricular Pulse Width | VPW | 0.05-2.0 ms | 0.4 ms | 0.05 ms |
+| Maximum Tracking Rate | MTR | URL+10 to 200 bpm | 120 bpm | 1 bpm |
+| Maximum Sensor Rate | MSR | URL+10 to 200 bpm | 120 bpm | 1 bpm |
+
+### DDD Timing Cycle Calculations
+
+```
+VA Interval (ms) = 60000 / LRL
+Example: LRL = 60 bpm → VA Interval = 1000 ms
+
+AV Delay (effective) = AVD × (1 - k × (Rate - LRL) / (URL - LRL))
+where k = rate-adaptive AV shortening factor (0.5-1.0)
+
+Lower Rate Interval = 60000 / LRL (ms)
+Upper Rate Interval = 60000 / URL (ms)
+
+PVARP = Post-Ventricular Atrial Refractory Period
+PVAB = PVARP - VREF (atrial blanking after ventricular event)
+
+Maximum Tracking Interval = 60000 / MTR (ms)
+```
+
+---
+
+## 2.3.6 Mode Switch State Machine
+
+Mode switching is a critical safety and therapeutic function that
+automatically changes the pacing mode in response to atrial tachyarrhythmias.
+The mode switch state machine is implemented independently for the atrial
+and ventricular channels.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    SYSTEM STATE MACHINE — Top Level                          │
+│                         MODE SWITCH STATE MACHINE                           │
+│                                                                             │
+│                                                                             │
+│   ┌──────────────┐                                                         │
+│   │              │                                                         │
+│   │  DDD/DDDR    │◀────────────────────────────────────┐                 │
+│   │  MODE        │                                      │                 │
+│   │  (Tracking)  │                                      │                 │
+│   │              │                                      │                 │
+│   └──────┬───────┘                                      │                 │
+│          │                                               │                 │
+│          │ Atrial rate > MS Rate                         │                 │
+│          │ for N consecutive beats                       │                 │
+│          │                                               │                 │
+│          ▼                                               │                 │
+│   ┌──────────────┐                                      │                 │
+│   │              │                                      │                 │
+│   │  MODE        │                                      │                 │
+│   │  SWITCH      │                                      │                 │
+│   │  DETECTED    │                                      │                 │
+│   │              │                                      │                 │
+│   └──────┬───────┘                                      │                 │
+│          │                                               │                 │
+│          │ Transition to non-tracking mode               │                 │
+│          │                                               │                 │
+│          ▼                                               │                 │
+│   ┌──────────────┐                                      │                 │
+│   │              │                                      │                 │
+│   │  VVI/VVIR    │                                      │                 │
+│   │  MODE        │                                      │                 │
+│   │  (Inhibited) │                                      │                 │
+│   │              │                                      │                 │
+│   └──────┬───────┘                                      │                 │
+│          │                                               │                 │
+│          │ Atrial rate < MS Rate                         │                 │
+│          │ for M consecutive beats                       │                 │
+│          │                                               │                 │
+│          ▼                                               │                 │
+│   ┌──────────────┐                                      │                 │
+│   │              │                                      │                 │
+│   │  MODE        │                                      │                 │
+│   │  SWITCH      │──────────────────────────────────────┘                 │
+│   │  BACK        │  Return to DDD/DDDR after                                │
+│   │              │  stable sinus rhythm detected                           │
+│   └──────────────┘                                                         │
+│                                                                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Mode Switch Parameters
+
+| Parameter | Symbol | Range | Default | Unit |
+|-----------|--------|-------|---------|------|
+| Mode Switch Rate | MS Rate | 100-250 | 150 | bpm |
+| Detection Count | N | 3-20 | 10 | beats |
+| Switch-Back Rate | SB Rate | 80-200 | 120 | bpm |
+| Switch-Back Count | M | 3-20 | 10 | beats |
+| Mode Switch Duration | MSD | 1-300 | 60 | minutes |
+| High Rate Duration | HRD | 3-30 | 10 | minutes |
+
+### Detection Algorithm
+
+```
+Detection = (Atrial Rate > MS Rate) for N consecutive atrial events
+
+Where:
+  Atrial Rate = 60000 / Mean Atrial Interval (bpm)
+  Mean Atrial Interval = (1/K) × Σ Atrial Interval[i], i = 1..K
+  K = detection window size (typically 5-10 beats)
+
+Switch-Back = (Atrial Rate < SB Rate) for M consecutive beats
+```
+
+---
+
+## 2.3.7 Firmware Architecture
+
+The pacemaker firmware is organized as a real-time operating system (RTOS)
+with interrupt-driven task scheduling. The firmware architecture is designed
+for:
+
+1. **Deterministic timing**: All timing-critical operations are implemented
+   in hardware timers with interrupt service routines (ISRs) that execute
+   in bounded time.
+
+2. **Power efficiency**: The firmware supports multiple power modes, with
+   aggressive clock gating and peripheral shutdown during idle periods.
+
+3. **Safety**: A hardware watchdog timer monitors firmware execution and
+   triggers a safe mode reset if the firmware fails to service the watchdog
+   within the timeout period.
+
+4. **Testability**: All firmware modules support built-in self-test (BIST)
+   and diagnostic modes for production testing and field troubleshooting.
+
+### Firmware Layer Diagram
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         FIRMWARE ARCHITECTURE                               │
 │                                                                             │
 │  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                     APPLICATION LAYER                                │   │
 │  │                                                                      │   │
-│  │         ┌──────────────┐                                            │   │
-│  │   ┌─────│   HIBERNATE   │◄──── Battery < 2.5V                      │   │
-│  │   │     │   (SRAM off,  │◄──── Programmer command                   │   │
-│  │   │     │    RTC on)    │◄──── Inactivity > 24h                     │   │
-│  │   │     └──────┬────────┘                                            │   │
-│  │   │            │ Magnet / RF wake-up / Timer                         │   │
-│  │   │            ▼                                                      │   │
-│  │   │     ┌──────────────┐                                            │   │
-│  │   │     │    SLEEP      │◄──── No sensed/paced event                │   │
-│  │   │     │   (Low-power  │◄──── Sensor rate < LRL                    │   │
-│  │   │     │    mode)      │                                            │   │
-│  │   │     └──────┬────────┘                                            │   │
-│  │   │            │ Sensed event / Timer expiry / Wake-up               │   │
-│  │   │            ▼                                                      │   │
-│  │   │     ┌──────────────┐                                            │   │
-│  │   │     │   ACTIVE      │◄──── Normal operation                     │   │
-│  │   │     │  (Sensing +   │◄──── Intrinsic rhythm detected            │   │
-│  │   │     │   Pacing)     │                                            │   │
-│  │   │     └──┬───────┬────┘                                            │   │
-│  │   │        │       │                                                  │   │
-│  │   │        │       │ Arrhythmia detected                             │   │
-│  │   │        │       ▼                                                  │   │
-│  │   │        │  ┌──────────────┐                                       │   │
-│  │   │        │  │  THERAPY     │                                       │   │
-│  │   │        │  │  (Anti-tachy │                                       │   │
-│  │   │        │  │   pacing /   │                                       │   │
-│  │   │        │  │   shock)     │                                       │   │
-│  │   │        │  └──────┬───────┘                                       │   │
-│  │   │        │         │ Therapy complete / Abort                      │   │
-│  │   │        │         ▼                                                │   │
-│  │   │        │    ┌──────────────┐                                     │   │
-│  │   │        └───▶│   RECOVERY    │                                     │   │
-│  │   │             │  (Post-       │                                     │   │
-│  │   │             │   therapy)    │                                     │   │
-│  │   │             └──────┬────────┘                                     │   │
-│  │   │                    │ Stable rhythm confirmed                      │   │
-│  │   │                    └──────────┐                                   │   │
-│  │   │                               │                                   │   │
-│  │   └───────────────────────────────┘                                   │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │   │
+│  │  │ Pacing   │ │ Sensing  │ │ Mode     │ │ Rate     │ │ Safety   │  │   │
+│  │  │ Algorithm│ │ Algorithm│ │ Logic    │ │ Adapt    │ │ Monitor  │  │   │
+│  │  │          │ │          │ │          │ │          │ │          │  │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │   │
 │  │                                                                      │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │   │
+│  │  │ Telemetry│ │ Diag-    │ │ Power    │ │ Self-    │ │ Parameter│  │   │
+│  │  │ Protocol │ │ nostics  │ │ Mgmt     │ │ Test     │ │ Manager  │  │   │
+│  │  │          │ │          │ │          │ │          │ │          │  │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                          │                                 │
+│                                          ▼                                 │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                     MIDDLEWARE LAYER                                 │   │
+│  │                                                                      │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │   │
+│  │  │ Timer    │ │ Event    │ │ Register │ │ Data     │ │ Clock    │  │   │
+│  │  │ Manager  │ │ Queue    │ │ File     │ │ Storage  │ │ Manager  │  │   │
+│  │  │          │ │          │ │ Manager  │ │ Manager  │ │          │  │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                          │                                 │
+│                                          ▼                                 │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                     HARDWARE ABSTRACTION LAYER (HAL)                 │   │
+│  │                                                                      │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │   │
+│  │  │ GPIO     │ │ Timer    │ │ ADC/DAC  │ │ SPI/I2C  │ │ UART/    │  │   │
+│  │  │ Driver   │ │ Driver   │ │ Driver   │ │ Driver   │ │ RF Driver│  │   │
+│  │  │          │ │          │ │          │ │          │ │          │  │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │   │
+│  │                                                                      │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐               │   │
+│  │  │ Clock    │ │ Power    │ │ Interrupt│ │ Watchdog │               │   │
+│  │  │ Driver   │ │ Mode     │ │ Manager  │ │ Driver   │               │   │
+│  │  │          │ │ Driver   │ │          │ │          │               │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘               │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                          │                                 │
+│                                          ▼                                 │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                     HARDWARE LAYER                                   │   │
+│  │                                                                      │   │
+│  │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐  │   │
+│  │  │ AFE      │ │ Output   │ │ Timer    │ │ RF       │ │ PMU      │  │   │
+│  │  │ (Analog  │ │ Stage    │ │ Counter  │ │ Trans-   │ │ (Power   │  │   │
+│  │  │  Front   │ │ (Pacing) │ │ (Timer0) │ │ ceiver   │ │  Mgmt)   │  │   │
+│  │  │  End)    │ │          │ │          │ │          │ │          │  │   │
+│  │  └──────────┘ └──────────┘ └──────────┘ └──────────┘ └──────────┘  │   │
 │  └──────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
-│  TRANSITIONS:                                                              │
-│  ─────────────                                                             │
-│  HIBERNATE → SLEEP:     Magnet event, RF wake-up signal, RTC alarm        │
-│  SLEEP → ACTIVE:        Sensed cardiac event, escape interval timeout,    │
-│                         sensor threshold crossed, RF command              │
-│  ACTIVE → SLEEP:        No events for N cycles, sensor rate < LRL        │
-│  ACTIVE → THERAPY:      VT/VF detected (3/8 or 4/8 criterion)           │
-│  THERAPY → RECOVERY:    Therapy delivered (ATP/shock) or aborted          │
-│  RECOVERY → ACTIVE:     Stable rhythm for M consecutive cycles           │
-│  Any → HIBERNATE:       Battery < 2.5V, programmer command, fault        │
-│  Any → FAULT:           Hardware/software fault detected                  │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
-### 2.1.3.3 Pacing Mode State Machine (DDD Mode)
+### Interrupt Structure
 
-The DDD mode state machine is the most complex operating mode, managing both
-atrial and ventricular sensing/pacing with AV synchronization.
+The firmware uses a priority-based interrupt structure. Higher-priority
+interrupts can preempt lower-priority ISRs, ensuring that time-critical
+operations (sensing, pacing) are never delayed by non-critical operations
+(telemetry, diagnostics).
 
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    DDD MODE STATE MACHINE                                    │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                                                                      │   │
-│  │                    ┌────────────────────┐                            │   │
-│  │    ┌──────────────▶│    IDLE            │◀──────────────────┐       │   │
-│  │    │               │  (Waiting for VA   │                   │       │   │
-│  │    │               │   interval)        │                   │       │   │
-│  │    │               └───────┬────────────┘                   │       │   │
-│  │    │                       │                                │       │   │
-│  │    │              VA interval expires                       │       │   │
-│  │    │              OR Atrial sensed                          │       │   │
-│  │    │                       │                                │       │   │
-│  │    │                       ▼                                │       │   │
-│  │    │               ┌────────────────────┐                   │       │   │
-│  │    │               │  ATRIAL            │                   │       │   │
-│  │    │               │  PACING / SENSING  │                   │       │   │
-│  │    │               │  (AV delay running)│                   │       │   │
-│  │    │               └───────┬────────────┘                   │       │   │
-│  │    │                       │                                │       │   │
-│  │    │         ┌─────────────┼─────────────┐                  │       │   │
-│  │    │         │             │             │                  │       │   │
-│  │    │    AV delay      Ventricular   Atrial                 │       │   │
-│  │    │    expires       sensed        sensed                 │       │   │
-│  │    │         │        (intrinsic)  (during                 │       │   │
-│  │    │         │             │        AV delay)              │       │   │
-│  │    │         │             │             │                  │       │   │
-│  │    │         ▼             ▼             ▼                  │       │   │
-│  │    │  ┌────────────┐┌────────────┐┌────────────┐           │       │   │
-│  │    │  │ VENTRICULAR││ VENTRICULAR││ VENTRICULAR│           │       │   │
-│  │    │  │ PACING     ││ INHIBIT    ││ PACING     │           │       │   │
-│  │    │  │ (No intrinsic││ (Sense    ││ (Non-      │           │       │   │
-│  │    │  │  detected) ││  event)    ││  physiolog)│           │       │   │
-│  │    │  └──────┬─────┘└──────┬─────┘└──────┬─────┘           │       │   │
-│  │    │         │             │             │                  │       │   │
-│  │    │         └─────────────┼─────────────┘                  │       │   │
-│  │    │                       │                                │       │   │
-│  │    │                       ▼                                │       │   │
-│  │    │               ┌────────────────────┐                   │       │   │
-│  │    │               │  VENTRICULAR       │                   │       │   │
-│  │    │               │  EVENT             │                   │       │   │
-│  │    │               │  (PVARP running)   │                   │       │   │
-│  │    │               └───────┬────────────┘                   │       │   │
-│  │    │                       │                                │       │   │
-│  │    │              PVARP expires                             │       │   │
-│  │    │              (then VA interval)                        │       │   │
-│  │    │                       │                                │       │   │
-│  │    └───────────────────────┘                                │       │   │
-│  │                                                              │       │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-│  SPECIAL CONDITIONS:                                                       │
-│  ──────────────────                                                        │
-│  • If Atrial sensed during PVARP: Counted as far-field (not tracked)      │
-│  • If Ventricular sensed during AV delay: AV delay reset, pace inhibited   │
-│  • If Atrial sensed during AV delay (non-physiologic): Trigger VP         │
-│  • Mode switching: If AF detected, switch to VVI/R at URL                 │
-│  • Safety pacing: If no sensed event within LRI, deliver pace pulse       │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
+| Priority | ISR | Latency | Duration | Trigger |
+|----------|-----|---------|----------|---------|
+| 1 (Highest) | NMI (Safety) | < 1 µs | < 5 µs | Hardware fault |
+| 2 | Timer0 (Pacing) | < 2 µs | < 10 µs | Timer match |
+| 3 | Comparator (Sense) | < 5 µs | < 20 µs | Threshold crossing |
+| 4 | Timer1 (Watchdog) | < 5 µs | < 5 µs | Watchdog timeout |
+| 5 | SPI (Telemetry) | < 10 µs | < 50 µs | SPI transfer complete |
+| 6 | ADC (Battery) | < 10 µs | < 100 µs | ADC conversion complete |
+| 7 | GPIO (Magnet) | < 20 µs | < 10 µs | Hall sensor change |
+| 8 (Lowest) | Timer2 (Diagnostics) | < 50 µs | < 500 µs | Diagnostic timer |
 
-### 2.1.3.4 Timing Cycle Diagram (DDD Mode)
+### Task Scheduling
+
+The firmware uses a cooperative scheduling model with the following tasks:
+
+| Task | Period | Priority | State | Description |
+|------|--------|----------|-------|-------------|
+| Sense Task | 1 ms | High | Running/Sleeping | Processes sense events |
+| Pace Task | On-demand | High | Running/Sleeping | Executes pacing output |
+| Timing Task | 1 ms | High | Running/Sleeping | Updates timing counters |
+| Mode Task | On-demand | High | Running/Sleeping | Evaluates mode transitions |
+| Sensor Task | 100 ms | Medium | Running/Sleeping | Processes sensor inputs |
+| Telemetry Task | 10 ms | Medium | Running/Sleeping | Handles RF communication |
+| Diagnostics Task | 1 s | Low | Running/Sleeping | Collects diagnostic data |
+| Self-Test Task | 60 s | Low | Running/Sleeping | Periodic self-test |
+| Power Task | 10 s | Low | Running/Sleeping | Manages power modes |
+| Safety Task | 100 ms | High | Always running | Monitors safety parameters |
+
+---
+
+## 2.3.8 Data Flow Architecture
+
+The data flow architecture defines how data moves between the various
+subsystems of the pacemaker. Data flows are categorized as:
+
+1. **Sensing data flow**: Intracardiac signals from electrodes to the
+   digital controller for event detection.
+2. **Pacing data flow**: Pacing parameters from the register file to the
+   output stage for pulse delivery.
+3. **Timing data flow**: Timer counter values exchanged between the timer
+   block and the mode logic.
+4. **Telemetry data flow**: Bidirectional data transfer between the digital
+   controller and the RF transceiver.
+5. **Diagnostic data flow**: Event data from all subsystems to the data
+   storage block.
+6. **Power data flow**: Battery status information from the PMU to the
+   digital controller.
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                    DDD MODE TIMING CYCLES                                    │
+│                         DATA FLOW ARCHITECTURE                              │
 │                                                                             │
-│  Intrinsic Atrial ────┐                                                    │
-│  (P-wave)             │                                                    │
-│                       ▼                                                    │
-│  Atrial ────────┐    ┌──┐    ┌──┐    ┌──┐    ┌──┐    ┌──┐               │
-│  Channel:       └────┤AS│────┤AP│────┤AP│────┤AS│────┤AP│────            │
-│                      └──┘    └──┘    └──┘    └──┘    └──┘               │
-│                       │     │     │     │     │                           │
-│                       │  ┌──┴──┐  │  ┌──┴──┐  │                         │
-│                       │  │AV   │  │  │AV   │  │                         │
-│                       │  │Delay│  │  │Delay│  │                         │
-│                       │  └──┬──┘  │  └──┬──┘  │                         │
-│                       │     │     │     │     │                         │
-│  Intrinsic Vent. ─────┼─────┼─┐   │  ┌──┼─────┼─┐                       │
-│  (R-wave)             │     │ │   │  │  │     │ │                       │
-│                       │     │ │   │  │  │     │ │                       │
-│  Ventricular ────┐    │  ┌──┘ │   │  │  │  ┌──┘ │   ┌──┐               │
-│  Channel:       └────┤  │VS  │   ├──┘  │  │VS  │   │VP│               │
-│                      │  └──┬──┘   │     │  └──┬──┘   └──┘               │
-│                       │     │     │     │     │                           │
-│                       │  ┌──┴──┐  │  ┌──┴──┐  │                         │
-│                       │  │PVARP│  │  │PVARP│  │                         │
-│                       │  └──┬──┘  │  └──┬──┘  │                         │
-│                       │     │     │     │     │                         │
-│  Atrial ──────────────┼─────┼─────┼─────┼─────┼────────────             │
-│  Refractory:         │     │     │     │     │                         │
-│                      └─────┴─────┴─────┴─────┴────────────             │
 │                                                                             │
-│  LEGEND:                                                                   │
-│  AS = Atrial Sense    AP = Atrial Pace    VS = Ventricular Sense         │
-│  VP = Ventricular Pace                                                   │
+│  ELECTRODE ───▶ AFE ───▶ SENSE DATA ───▶ DIGITAL ───▶ EVENT DATA          │
+│  (Tip/Ring)    (Analog)   (Filtered)     CONTROLLER   (Timestamped)        │
+│                                           (DFC)                            │
+│                                             │                              │
+│                                             │ PACE COMMAND                  │
+│                                             ▼                              │
+│  ELECTRODE ◀── OUTPUT ◀── PACE DATA ◀────── DFC                           │
+│  (Tip/Ring)    STAGE      (Amplitude,      (Controller)                    │
+│               (Analog)     Width)                                         │
 │                                                                             │
-│  CRITICAL TIMING INTERVALS:                                                │
-│  ┌──────────────────────────────────────────────────────────────────┐     │
-│  │  Lower Rate Interval (LRI):  860ms (70 ppm)                    │     │
-│  │  AV Delay:                   200ms (programmable 30–350ms)      │     │
-│  │  VA Interval:                LRI - AV Delay = 660ms            │     │
-│  │  PVARP:                      300ms (programmable 150–500ms)    │     │
-│  │  Post-Vent. Atrial Blanking: 100ms (programmable 50–400ms)     │     │
-│  │  Upper Rate Limit:           120 bpm (500ms interval)          │     │
-│  │  Sensor Indicated Rate:      60–120 bpm (sensor driven)        │     │
-│  │  Total Cycle:                LRI = 860ms                        │     │
-│  └──────────────────────────────────────────────────────────────────┘     │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.1.3.5 Firmware Architecture
-
-The firmware is organized into a layered architecture with real-time scheduling,
-ensuring deterministic behavior for safety-critical pacing functions.
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    FIRMWARE ARCHITECTURE — Layered Model                      │
+│  TIMER ───────▶ DFC ───────▶ MODE LOGIC ───▶ DFC ───────▶ PACE/INHIBIT   │
+│  BLOCK         (Counter)    (State Machine)  (Decision)                    │
 │                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  LAYER 5: APPLICATION LOGIC                                         │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ Pacing     │ │ Sensing    │ │ Arrhythmia │ │ Diagnostics│      │   │
-│  │  │ Algorithm  │ │ Algorithm  │ │ Detection  │ │ & Logging  │      │   │
-│  │  │ (DDD/VVI/  │ │ (Auto-     │ │ (VT/VF/    │ │ (EGM store,│      │   │
-│  │  │  AAI)      │ │  Sense)    │ │  AF)       │ │  counters) │      │   │
-│  │  └────────────┘ └────────────┘ └────────────┘ └────────────┘      │   │
-│  └───────────────────────────────┬──────────────────────────────────────┘   │
-│                                  │                                          │
-│  ┌───────────────────────────────▼──────────────────────────────────────┐   │
-│  │  LAYER 4: MIDDLEWARE                                                 │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ Parameter  │ │ State      │ │ Timer      │ │ Safety     │      │   │
-│  │  │ Manager    │ │ Manager    │ │ Service    │ │ Monitor    │      │   │
-│  │  │ (EEPROM    │ │ (Mode      │ │ (Interval  │ │ (Watchdog, │      │   │
-│  │  │  read/write)│ │ transitions│ │  counting) │ │  BOR)      │      │   │
-│  │  └────────────┘ └────────────┘ └────────────┘ └────────────┘      │   │
-│  └───────────────────────────────┬──────────────────────────────────────┘   │
-│                                  │                                          │
-│  ┌───────────────────────────────▼──────────────────────────────────────┐   │
-│  │  LAYER 3: OS / SCHEDULER                                             │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ Task       │ │ Interrupt  │ │ Power      │ │ Clock      │      │   │
-│  │  │ Scheduler  │ │ Controller │ │ Manager    │ │ Manager    │      │   │
-│  │  │ (Priority  │ │ (NVIC)     │ │ (Sleep/    │ │ (Clock     │      │   │
-│  │  │  based)    │ │            │ │  Hibernate)│ │  gating)   │      │   │
-│  │  └────────────┘ └────────────┘ └────────────┘ └────────────┘      │   │
-│  └───────────────────────────────┬──────────────────────────────────────┘   │
-│                                  │                                          │
-│  ┌───────────────────────────────▼──────────────────────────────────────┐   │
-│  │  LAYER 2: HAL (Hardware Abstraction Layer)                           │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ AFE HAL    │ │ Output HAL │ │ Telemetry  │ │ Power HAL  │      │   │
-│  │  │ (ADC, LNA, │ │ (DAC, PWM, │ │ HAL (RF,   │ │ (DC-DC,    │      │   │
-│  │  │  Filter)   │ │  Switch)   │ │  Coil)     │ │  LDO, POR) │      │   │
-│  │  └────────────┘ └────────────┘ └────────────┘ └────────────┘      │   │
-│  └───────────────────────────────┬──────────────────────────────────────┘   │
-│                                  │                                          │
-│  ┌───────────────────────────────▼──────────────────────────────────────┐   │
-│  │  LAYER 1: DRIVERS                                                    │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ SPI Driver │ │ I2C Driver │ │ UART Driver│ │ Timer Drv  │      │   │
-│  │  │            │ │            │ │            │ │            │      │   │
-│  │  └────────────┘ └────────────┘ └────────────┘ └────────────┘      │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ GPIO Driver│ │ ADC Driver │ │ Watchdog   │ │ Flash/     │      │   │
-│  │  │            │ │            │ │ Driver     │ │ EEPROM Drv │      │   │
-│  │  └────────────┘ └────────────┘ └────────────┘ └────────────┘      │   │
-│  └───────────────────────────────┬──────────────────────────────────────┘   │
-│                                  │                                          │
-│  ┌───────────────────────────────▼──────────────────────────────────────┐   │
-│  │  LAYER 0: BSP (Board Support Package)                                │   │
-│  │  ┌──────────────────────────────────────────────────────────────┐   │   │
-│  │  │  Register definitions, memory maps, interrupt vectors,      │   │   │
-│  │  │  startup code, vector table, linker scripts                 │   │   │
-│  │  └──────────────────────────────────────────────────────────────┘   │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
+│  RF TRANSCEIVER ◀──▶ DFC ◀──▶ EEPROM ◀──▶ SRAM                           │
+│  (Telemetry)     (Protocol)  (Persistent)  (Working)                       │
 │                                                                             │
-│  STACK SIZE: 256 bytes (main) / 128 bytes (interrupt)                      │
-│  HEAP SIZE: 0 bytes (static allocation only)                               │
-│  TOTAL CODE: <32 KB (Flash)                                                │
-│  TOTAL RAM: <4 KB (SRAM)                                                   │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.1.3.6 Task Scheduling and Priority
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    REAL-TIME TASK SCHEDULE                                   │
+│  PMU ────────▶ DFC ────────▶ TELEM ◀────── EXTERNAL                       │
+│  (Battery)     (Monitor)    (Alert)        PROGRAMMER                      │
 │                                                                             │
-│  INTERRUPT PRIORITY LEVELS (NVIC — 4 bits, 0=highest)                     │
-│  ┌──────┬────────────────────────┬──────────┬────────────────────┐        │
-│  │ PRI  │ Source                 │ Latency  │ Handler            │        │
-│  ├──────┼────────────────────────┼──────────┼────────────────────┤        │
-│  │  0   │ Hardware Reset         │ 0 cycles │ Reset_Handler      │        │
-│  │  1   │ NMI (Non-Maskable)     │ 2 cycles │ NMI_Handler        │        │
-│  │  2   │ Hard Fault             │ 3 cycles │ HardFault_Handler  │        │
-│  │  3   │ Timer (Pacing)         │ 4 cycles │ TIMER0_IRQHandler  │        │
-│  │  4   │ ADC (Sensing)          │ 4 cycles │ ADC_IRQHandler     │        │
-│  │  5   │ Telemetry RX           │ 6 cycles │ UART_IRQHandler    │        │
-│  │  6   │ Telemetry TX           │ 6 cycles │ UART_IRQHandler    │        │
-│  │  7   │ Watchdog                │ 8 cycles │ WDT_IRQHandler     │        │
-│  │  8   │ Brown-out              │ 8 cycles │ BOR_IRQHandler     │        │
-│  │  9   │ SPI (EEPROM)           │ 10 cycles│ SPI_IRQHandler     │        │
-│  │ 10   │ GPIO (Magnet)          │ 10 cycles│ GPIO_IRQHandler    │        │
-│  │ 11   │ Timer (General)        │ 12 cycles│ TIMER1_IRQHandler  │        │
-│  │ 12   │ Sensor (Accel)         │ 12 cycles│ ADC1_IRQHandler    │        │
-│  │ 13   │ Telemetry Wake-up      │ 14 cycles│ EXT_INT_IRQHandler │        │
-│  │ 14   │ Software Trigger       │ 16 cycles│ SVC_Handler        │        │
-│  │ 15   │ SysTick                │ 16 cycles│ SysTick_Handler    │        │
-│  └──────┴────────────────────────┴──────────┴────────────────────┘        │
-│                                                                             │
-│  TASK EXECUTION TIMELINE (1ms time slice)                                  │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │ 0ms       1ms       2ms       3ms       4ms       5ms       6ms   │  │
-│  │ │         │         │         │         │         │         │     │  │
-│  │ ├─Sense──▶├─Sense──▶├─Sense──▶├─Sense──▶├─Sense──▶├─Sense──▶│     │  │
-│  │ │         │         │         │         │         │         │     │  │
-│  │ ├──Pace──▶├─────────├──Pace──▶├─────────├──Pace──▶├─────────│     │  │
-│  │ │         │         │         │         │         │         │     │  │
-│  │ ├──TLM──▶├─────────├─────────├──TLM──▶├─────────├─────────│     │  │
-│  │ │         │         │         │         │         │         │     │  │
-│  │ ├──Diag─▶├─────────├─────────├─────────├──Diag─▶├─────────│     │  │
-│  │ │         │         │         │         │         │         │     │  │
-│  │ ├──PM──▶ ├──────────├─────────├─────────├─────────├──PM────▶│     │  │
-│  │ │         │         │         │         │         │         │     │  │
-│  │ ├─Sleep──├─Sleep──▶├─Sleep──▶├─Sleep──▶├─Sleep──▶├─Sleep─▶│     │  │
-│  │ │         │         │         │         │         │         │     │  │
-│  └──────────────────────────────────────────────────────────────────────┘  │
-│                                                                             │
-│  SENSE: ADC sampling + digital filtering + threshold comparison            │
-│  PACE:  Output pulse generation (when required)                           │
-│  TLM:   Telemetry packet processing (when active)                         │
-│  DIAG:  Diagnostic data collection (periodic)                             │
-│  PM:    Power mode management (periodic check)                            │
-│  SLEEP: Low-power idle (clock gating active)                              │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.1.3.7 Data Flow Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    DATA FLOW DIAGRAM — Level 0                              │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                                                                      │   │
-│  │  ┌─────────┐    ┌─────────────────────────────────────────────┐     │   │
-│  │  │EXTERNAL │    │              iPACE-CHIP                      │     │   │
-│  │  │SOURCES  │    │                                              │     │   │
-│  │  │         │    │  ┌──────────┐      ┌──────────────────┐    │     │   │
-│  │  │Cardiac  │───▶│  │ SENSING  │─────▶│  DIGITAL         │    │     │   │
-│  │  │Tissue   │    │  │ FRONT-END│      │  CONTROLLER      │    │     │   │
-│  │  │         │    │  └──────────┘      └────────┬─────────┘    │     │   │
-│  │  │         │    │       ▲                      │              │     │   │
-│  │  │         │    │       │               ┌──────▼──────┐      │     │   │
-│  │  │Program- │───▶│  ┌────┴────┐         │  PACING      │      │     │   │
-│  │  │mer RF   │    │  │TELEMETRY│         │  OUTPUT      │      │     │   │
-│  │  │         │    │  │SUBSYSTEM│         │  STAGE       │      │     │   │
-│  │  │         │◀───│  └─────────┘         └──────┬───────┘      │     │   │
-│  │  │         │    │                             │              │     │   │
-│  │  │Magnet   │───▶│  ┌──────────┐      ┌───────▼──────┐      │     │   │
-│  │  │         │    │  │ ACCELERO-│      │  LEAD        │      │     │   │
-│  │  │         │    │  │ METER    │      │  INTERFACE   │      │     │   │
-│  │  └─────────┘    │  └──────────┘      └───────┬──────┘      │     │   │
-│  │                  │                           │              │     │   │
-│  │                  │  ┌──────────┐      ┌───────▼──────┐      │     │   │
-│  │                  │  │ BATTERY  │      │  CARDIAC     │      │     │   │
-│  │                  │  │ & PMU    │─────▶│  TISSUE      │      │     │   │
-│  │                  │  └──────────┘      └──────────────┘      │     │   │
-│  │                  │                                           │     │   │
-│  │                  └───────────────────────────────────────────┘     │   │
-│  │                                                                      │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-│  DATA TYPES AND SIZES:                                                    │
-│  ┌────────────────────┬──────────────┬──────────────┬──────────────┐      │
-│  │ Data Flow          │ Width        │ Rate         │ Priority     │      │
-│  ├────────────────────┼──────────────┼──────────────┼──────────────┤      │
-│  │ EGM Raw (per ch)   │ 12-bit       │ 1024 sps     │ Real-time    │      │
-│  │ EGM Processed      │ 8-bit        │ 128 sps      │ Real-time    │      │
-│  │ Pace Command       │ 16-bit       │ <100 sps     │ Real-time    │      │
-│  │ Pace Output        │ 8-bit DAC    │ <100 sps     │ Real-time    │      │
-│  │ Sensor Data        │ 10-bit       │ 32 sps       │ Background   │      │
-│  │ Telemetry TX       │ 8-bit        │ 8-256 kbps   │ Background   │      │
-│  │ Telemetry RX       │ 8-bit        │ 8-256 kbps   │ Background   │      │
-│  │ Parameters (EEPROM)│ 8/16-bit     │ On demand    │ Non-RT       │      │
-│  │ Diagnostics        │ 16-bit       │ 1 sps        │ Background   │      │
-│  │ Battery Voltage    │ 10-bit       │ 0.1 sps      │ Background   │      │
-│  │ Lead Impedance     │ 16-bit       │ 1/8 Hz       │ Background   │      │
-│  │ Temperature        │ 10-bit       │ 0.01 sps     │ Background   │      │
-│  └────────────────────┴──────────────┴──────────────┴──────────────┘      │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.1.3.8 Error Handling Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    ERROR HANDLING ARCHITECTURE                               │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  ERROR DETECTION LAYERS                                              │   │
-│  │                                                                      │   │
-│  │  LAYER 1: Hardware                                                   │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ Watchdog   │ │ Brown-out  │ │ Parity     │ │ CRC        │      │   │
-│  │  │ Timer      │ │ Detector   │ │ Check      │ │ Generator  │      │   │
-│  │  └──────┬─────┘ └──────┬─────┘ └──────┬─────┘ └──────┬─────┘      │   │
-│  │         │              │              │              │              │   │
-│  │  LAYER 2: Firmware                                                  │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ Stack      │ │ Timer      │ │ Range      │ │ Timing     │      │   │
-│  │  │ Overflow   │ │ Overflow   │ │ Check      │ │ Monitor    │      │   │
-│  │  └──────┬─────┘ └──────┬─────┘ └──────┬─────┘ └──────┬─────┘      │   │
-│  │         │              │              │              │              │   │
-│  │  LAYER 3: System                                                    │   │
-│  │  ┌────────────┐ ┌────────────┐ ┌────────────┐ ┌────────────┐      │   │
-│  │  │ Lead       │ │ Battery    │ │ Memory     │ │ Clock      │      │   │
-│  │  │ Integrity  │ │ EOL        │ │ Integrity  │ │ Integrity  │      │   │
-│  │  └──────┬─────┘ └──────┬─────┘ └──────┬─────┘ └──────┬─────┘      │   │
-│  └─────────│──────────────│──────────────│──────────────│──────────────┘   │
-│            │              │              │              │                   │
-│            └──────────────┴──────┬───────┴──────────────┘                   │
-│                                  │                                          │
-│                                  ▼                                          │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │  ERROR RESPONSE ACTIONS                                              │   │
-│  │                                                                      │   │
-│  │  ┌────────────────────────────────────────────────────────────────┐ │   │
-│  │  │ SEVERITY: CRITICAL (Patient Safety)                           │ │   │
-│  │  │ Actions:                                                      │ │   │
-│  │  │  • Log error with timestamp                                   │ │   │
-│  │  │  • Switch to safe pacing mode (VOO/AOO)                       │ │   │
-│  │  │  • Set maximum output parameters                              │ │   │
-│  │  │  • Store event in EEPROM                                      │ │   │
-│  │  │  • Set ERI flag                                               │ │   │
-│  │  │  • Attempt device reset (if software fault)                   │ │   │
-│  │  └────────────────────────────────────────────────────────────────┘ │   │
-│  │                                                                      │   │
-│  │  ┌────────────────────────────────────────────────────────────────┐ │   │
-│  │  │ SEVERITY: HIGH (Function Degradation)                         │ │   │
-│  │  │ Actions:                                                      │ │   │
-│  │  │  • Log error with timestamp                                   │ │   │
-│  │  │  • Disable affected feature                                   │ │   │
-│  │  │  • Continue operation in degraded mode                        │ │   │
-│  │  │  • Store event in EEPROM                                      │ │   │
-│  │  └────────────────────────────────────────────────────────────────┘ │   │
-│  │                                                                      │   │
-│  │  ┌────────────────────────────────────────────────────────────────┐ │   │
-│  │  │ SEVERITY: MEDIUM (Performance Issue)                          │ │   │
-│  │  │ Actions:                                                      │ │   │
-│  │  │  • Log error with timestamp                                   │ │   │
-│  │  │  • Adjust parameters (if possible)                            │ │   │
-│  │  │  • Continue normal operation                                  │ │   │
-│  │  └────────────────────────────────────────────────────────────────┘ │   │
-│  │                                                                      │   │
-│  │  ┌────────────────────────────────────────────────────────────────┐ │   │
-│  │  │ SEVERITY: LOW (Informational)                                 │ │   │
-│  │  │ Actions:                                                      │ │   │
-│  │  │  • Log error with timestamp                                   │ │   │
-│  │  │  • Continue normal operation                                  │ │   │
-│  │  └────────────────────────────────────────────────────────────────┘ │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.1.3.9 Safety Monitoring State Machine
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    SAFETY MONITORING STATE MACHINE                           │
-│                                                                             │
-│  ┌──────────────────────────────────────────────────────────────────────┐   │
-│  │                                                                      │   │
-│  │           ┌──────────────────┐                                       │   │
-│  │     ┌─────│   NORMAL         │◀──── All checks pass                 │   │
-│  │     │     │   OPERATION      │                                       │   │
-│  │     │     └────────┬─────────┘                                       │   │
-│  │     │              │                                                  │   │
-│  │     │         Anomaly detected                                       │   │
-│  │     │              │                                                  │   │
-│  │     │              ▼                                                  │   │
-│  │     │     ┌──────────────────┐                                       │   │
-│  │     │     │   VERIFICATION   │                                       │   │
-│  │     │     │   (Confirm       │                                       │   │
-│  │     │     │    anomaly)      │                                       │   │
-│  │     │     └────────┬─────────┘                                       │   │
-│  │     │              │                                                  │   │
-│  │     │     ┌────────┴────────┐                                        │   │
-│  │     │     │                 │                                         │   │
-│  │     │  Confirmed        False alarm                                  │   │
-│  │     │     │                 │                                         │   │
-│  │     │     ▼                 └──────────┐                             │   │
-│  │     │     ┌──────────────────┐         │                             │   │
-│  │     │     │   ASSESSMENT     │         │                             │   │
-│  │     │     │   (Classify      │         │                             │   │
-│  │     │     │    severity)     │         │                             │   │
-│  │     │     └────────┬─────────┘         │                             │   │
-│  │     │              │                   │                             │   │
-│  │     │     ┌────────┴────────┐          │                             │   │
-│  │     │     │                 │          │                             │   │
-│  │     │  CRITICAL        NON-CRITICAL    │                             │   │
-│  │     │     │                 │          │                             │   │
-│  │     │     ▼                 ▼          │                             │   │
-│  │     │  ┌──────────────┐ ┌──────────┐  │                             │   │
-│  │     │  │ SAFE MODE    │ │ DEGRADED │  │                             │   │
-│  │     │  │ (VOO/AOO)    │ │ MODE     │  │                             │   │
-│  │     │  └──────┬───────┘ └────┬─────┘  │                             │   │
-│  │     │         │              │        │                             │   │
-│  │     │         │         Resolved     │                             │   │
-│  │     │         │              │        │                             │   │
-│  │     │         │              └────────┘                             │   │
-│  │     │         │                                                     │   │
-│  │     │    ┌────┴────────────────────┐                               │   │
-│  │     │    │                         │                                │   │
-│  │     │  Resolved              Not resolved                           │   │
-│  │     │    │                         │                                │   │
-│  │     │    │                         ▼                                │   │
-│  │     │    │                 ┌──────────────────┐                    │   │
-│  │     │    │                 │   LOCKOUT         │                    │   │
-│  │     │    │                 │   (Requires       │                    │   │
-│  │     │    │                 │    programmer     │                    │   │
-│  │     │    │                 │    reset)         │                    │   │
-│  │     │    │                 └──────────────────┘                    │   │
-│  │     │    │                                                          │   │
-│  │     └────┘                                                          │   │
-│  │                                                                      │   │
-│  └──────────────────────────────────────────────────────────────────────┘   │
-│                                                                             │
-│  MONITORED PARAMETERS:                                                     │
-│  ┌────────────────────────────┬────────────────┬──────────────────────┐   │
-│  │ Parameter                  │ Threshold      │ Response             │   │
-│  ├────────────────────────────┼────────────────┼──────────────────────┤   │
-│  │ Lead impedance             │ <200Ω or >2kΩ │ Alert, mode change   │   │
-│  │ Battery voltage            │ <2.5V         │ ERI indication       │   │
-│  │ Battery voltage            │ <2.2V         │ EOL, hibernate       │   │
-│  │ Die temperature            │ >45°C         │ Thermal shutdown     │   │
-│  │ Pacing capture threshold   │ >5.0V @ 0.5ms│ Alert, adjust output │   │
-│  │ Sense amplitude            │ <0.5mV        │ Alert, check leads   │   │
-│  │ Timer accuracy             │ >±5%          │ Safe mode            │   │
-│  │ Memory integrity           │ CRC fail      │ Safe mode            │   │
-│  │ Clock frequency            │ >±10%         │ Safe mode            │   │
-│  │ Telemetry BER              │ >10⁻³        │ Retry, then disable  │   │
-│  │ Watchdog timeout           │ 8 seconds     │ Hard reset           │   │
-│  │ Stack pointer              │ Out of bounds │ Hard reset           │   │
-│  └────────────────────────────┴────────────────┴──────────────────────┘   │
-└─────────────────────────────────────────────────────────────────────────────┘
-```
-
-### 2.1.3.10 Interface Specification Summary
-
-| Interface                | Protocol    | Data Width | Clock      | Direction |
-|---------------------------|-------------|------------|------------|-----------|
-| AFE to Digital (EGM)     | SPI         | 12-bit     | 1 MHz      | AFE → MCU |
-| MCU to Output Stage       | SPI         | 8-bit      | 1 MHz      | MCU → OUT |
-| MCU to Telemetry          | UART        | 8-bit      | 115.2 kbps | Bidir     |
-| MCU to EEPROM             | I2C         | 8-bit      | 400 kHz    | Bidir     |
-| MCU to Accelometer        | SPI/I2C     | 16-bit     | 1 MHz      | ACCEL → MCU|
-| MCU to PMU                | GPIO/SPI    | 8-bit      | 1 MHz      | Bidir     |
-| MCU to Watchdog            | Dedicated   | 1-bit      | 32 kHz     | MCU → WDT |
-| External to Coil          | Inductive   | Analog     | 402 MHz    | Bidir     |
-| Magnet to MCU             | Reed switch | 1-bit      | N/A        | Mag → MCU |
-| Battery to PMU            | Analog      | 2-wire     | DC         | BATT → PMU|
-
-### 2.1.3.11 Memory Map
-
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                    MEMORY MAP                                                │
-│                                                                             │
-│  ADDRESS RANGE        SIZE     ACCESS    DESCRIPTION                       │
-│  ──────────────────────────────────────────────────────────────────────     │
-│  0x00000000-0x00007FFF  32KB    R/X       Flash (Code)                     │
-│  0x00000000-0x000000FF  256B    R/X       Interrupt Vector Table           │
-│  0x00000100-0x00001FFF  ~8KB    R/X       Firmware Code                   │
-│  0x00002000-0x00007FFF  ~24KB   R/X       Reserved / OTA Update           │
-│                                          ─────────────────────────         │
-│  0x20000000-0x20001FFF  8KB     R/W       SRAM (Data)                     │
-│  0x20000000-0x200003FF  1KB     R/W       Stack (grows down)              │
-│  0x20000400-0x20000BFF  2KB     R/W       Heap (if used, static alloc)    │
-│  0x20000C00-0x200017FF  3KB     R/W       Global/Static Variables         │
-│  0x20001800-0x20001BFF  1KB     R/W       EGM Buffer (circular)           │
-│  0x20001C00-0x20001FFF  1KB     R/W       Diagnostic Buffer               │
-│                                          ─────────────────────────         │
-│  0x40000000-0x40000FFF  4KB     R/W       EEPROM (Parameters)             │
-│  0x40000000-0x400003FF  1KB     R/W       Pacing Parameters               │
-│  0x40000400-0x400007FF  1KB     R/W       Sensing Parameters              │
-│  0x40000800-0x40000BFF  1KB     R/W       Telemetry Parameters            │
-│  0x40000C00-0x40000FFF  1KB     R/W       Diagnostic Log                  │
-│                                          ─────────────────────────         │
-│  0x40010000-0x40010FFF  4KB     R/W       Peripheral Registers            │
-│  0x40010000-0x400100FF  256B    R/W       AFE Registers                   │
-│  0x40010100-0x400101FF  256B    R/W       Output Stage Registers          │
-│  0x40010200-0x400102FF  256B    R/W       Telemetry Registers             │
-│  0x40010300-0x400103FF  256B    R/W       Timer Registers                 │
-│  0x40010400-0x400104FF  256B    R/W       PMU Registers                   │
-│  0x40010500-0x400105FF  256B    R/W       GPIO Registers                  │
-│  0x40010600-0x400106FF  256B    R/W       Watchdog Registers              │
-│  0x40010700-0x400107FF  256B    R/W       Reserved                        │
 └─────────────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-*Section 2.1.3 — Functional Architecture*
-*Previous: Section 2.1.2 — Requirements Specification | Next: Section 2.1.4 — Technology Node Selection*
+## 2.3.9 Hierarchical Interrupt Model
+
+The interrupt model ensures that all time-critical operations are handled
+with deterministic latency. The model is organized in three tiers:
+
+### Tier 1: Hardware Interrupts (Deterministic, < 10 µs)
+
+These interrupts are handled directly by the hardware without firmware
+intervention:
+
+- **Comparator edge**: The AFE comparator generates a digital edge when a
+  cardiac event is detected. This edge directly triggers the sense indicator
+  output to the digital timer block.
+- **Timer match**: Hardware timer match events generate pacing trigger signals
+  directly to the output stage, bypassing firmware for minimum latency.
+- **Watchdog timeout**: The hardware watchdog generates a non-maskable
+  interrupt (NMI) that forces a system reset.
+
+### Tier 2: Fast ISRs (Bounded, < 50 µs)
+
+These interrupts are handled by short firmware ISRs:
+
+- **Sense ISR**: Processes the sense indicator, updates the timing state,
+  and generates a pace command if needed.
+- **Timer ISR**: Updates the timing counters, checks for interval expiry,
+  and schedules the next pacing event.
+- **Telemetry ISR**: Handles the RF transceiver data transfer, buffering
+  incoming and outgoing data.
+
+### Tier 3: Deferred Tasks (Unbounded, < 10 ms)
+
+These tasks are processed in the main firmware loop:
+
+- **Diagnostics task**: Collects and stores diagnostic data.
+- **Self-test task**: Runs periodic integrity checks.
+- **Power management task**: Evaluates power mode transitions.
+- **Parameter update task**: Applies parameter changes from the register file.
+
+---
+
+## 2.3.10 Safety Architecture
+
+The safety architecture implements defense-in-depth principles, with
+independent hardware and software safety monitors that can each independently
+place the pacemaker into a safe mode.
+
+### Hardware Safety Monitor
+
+The hardware safety monitor is implemented as a dedicated digital block
+that operates independently of the firmware. It monitors:
+
+1. **Pacing rate**: If the pacing rate exceeds the programmed upper rate
+   limit for more than 3 consecutive beats, the hardware monitor forces
+   asynchronous pacing at the backup rate.
+
+2. **Maximum pulse width**: If the pacing pulse width exceeds the maximum
+   allowed value (programmable, typically 2.0 ms), the hardware monitor
+   truncates the pulse and generates an alert.
+
+3. **Maximum pulse amplitude**: If the pacing voltage exceeds the maximum
+   allowed value (programmable, typically 7.5 V), the hardware monitor
+   limits the output and generates an alert.
+
+4. **Lead impedance**: If the measured lead impedance is outside the
+   acceptable range (< 100 Ω or > 2000 Ω), the hardware monitor generates
+   an alert and optionally disables pacing on the affected channel.
+
+5. **Battery voltage**: If the battery voltage falls below the critical
+   threshold (2.2 V), the hardware monitor disables telemetry and reduces
+   pacing output to minimum to extend battery life.
+
+### Firmware Safety Monitor
+
+The firmware safety monitor runs as a high-priority task and monitors:
+
+1. **Timing integrity**: Verifies that all timing counters are incrementing
+   correctly and that the pacing intervals are within acceptable bounds.
+
+2. **Memory integrity**: Periodically checks SRAM and EEPROM checksums to
+   detect data corruption.
+
+3. **Register file integrity**: Verifies that all programmable parameters
+   have valid values and have not been corrupted.
+
+4. **Sensor integrity**: Checks that sensor readings are within expected
+   ranges and that the sensor data is consistent with expected physiological
+   behavior.
+
+5. **Communication integrity**: Verifies that all telemetry transactions
+   complete successfully and that no data corruption has occurred.
+
+### Safe Mode Behavior
+
+When either safety monitor detects a fault, the pacemaker enters safe mode:
+
+1. Mode is set to VVI (ventricular demand pacing).
+2. Pacing rate is set to 60 bpm (asynchronous backup).
+3. Pacing output is set to maximum amplitude and pulse width (to ensure
+   capture despite unknown lead conditions).
+4. Telemetry is disabled (to prevent interference with pacing).
+5. Diagnostics are suspended (to minimize power and processing).
+6. A fault code is stored in non-volatile memory for later retrieval.
+7. The device remains in safe mode until a programmer re-enables normal
+   operation or the fault condition is cleared.
+
+---
+
+## 2.3.11 Summary
+
+The functional architecture of the implantable cardiac pacemaker is a
+hierarchical, interrupt-driven system designed for:
+
+1. **Real-time deterministic operation**: All timing-critical functions are
+   implemented in hardware or fast ISRs with bounded execution times.
+
+2. **Power efficiency**: The firmware supports multiple power modes with
+   aggressive clock gating and peripheral shutdown.
+
+3. **Safety**: Dual safety monitors (hardware and firmware) ensure that the
+   pacemaker always operates in a safe state, even under fault conditions.
+
+4. **Flexibility**: The firmware architecture supports multiple pacing modes,
+   rate adaptation algorithms, and diagnostic features through a modular
+   design.
+
+5. **Testability**: Built-in self-test and diagnostic capabilities enable
+   comprehensive production testing and field troubleshooting.
+
+The state machine models presented in this chapter provide the complete
+specification for the pacemaker's functional behavior, from the top-level
+system states down to the interrupt-driven firmware service routines. These
+models serve as the reference for firmware implementation and verification.
