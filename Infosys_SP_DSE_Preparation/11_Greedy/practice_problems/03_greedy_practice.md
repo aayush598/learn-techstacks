@@ -1,10 +1,80 @@
 # Greedy Practice Problems - Complete Guide
 
+## Problem Category Map
+
+```
+  ┌─────────────────────────────────────────────────────────────────┐
+  │                GREEDY PROBLEMS PATTERN MAP                       │
+  ├─────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  SORT-BASED GREEDY:                                             │
+  │  ├── Maximum Units on a Truck (sort by units)                   │
+  │  ├── Maximum Product (sort, check extremes)                     │
+  │  ├── Queue Reconstruction (sort by height desc)                 │
+  │  └── Hand of Straights (sort + min-heap)                        │
+  │                                                                  │
+  │  TRACKING/MONITORING GREEDY:                                    │
+  │  ├── Best Time to Buy/Sell Stock (track min)                    │
+  │  ├── Jump Game (track max reachable)                            │
+  │  ├── Jump Game II (BFS-like greedy)                             │
+  │  └── Gas Station (track tank balance)                           │
+  │                                                                  │
+  │  HEAP-BASED GREEDY:                                             │
+  │  ├── Task Scheduler (max-heap + cooldown)                       │
+  │  ├── IPO (max-heap of affordable projects)                      │
+  │  └── Min Cost K Workers (sort by ratio + max-heap)              │
+  │                                                                  │
+  │  LINE SWEEP:                                                    │
+  │  ├── Car Pooling (event-based)                                  │
+  │  └── Meeting Rooms II (concurrent intervals)                    │
+  │                                                                  │
+  │  TWO-PASS / TWO-POINTER:                                        │
+  │  ├── Candy (left pass + right pass)                             │
+  │  └── Valid Triangle Number (sort + two pointers)                │
+  │                                                                  │
+  └─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## Easy Problems
 
 ### 1. Maximum Units on a Truck
 
 **Problem**: You have `n` boxes, each with `boxTypes[i] = [numberOfBoxesi, numberOfUnitsPerBox]`. Return maximum units that can be put on a truck with capacity `boxCapacity`.
+
+### Visual Walkthrough
+
+```
+  INPUT: boxTypes = [[1, 3], [2, 2], [3, 1]], truck_size = 4
+  
+  STEP 1: Sort by units per box (descending):
+  ┌────────────┬───────────────────┐
+  │ Units/Box  │  Number of Boxes  │
+  ├────────────┼───────────────────┤
+  │     3      │        1          │ ◄── highest value first
+  │     2      │        2          │
+  │     1      │        3          │
+  └────────────┴───────────────────┘
+  
+  STEP 2: Fill truck greedily:
+  ┌──────────────────────────────────────────────────────┐
+  │ Truck capacity remaining: 4                          │
+  │                                                      │
+  │ Take 1 box of 3 units → 1 × 3 = 3 units             │
+  │   Truck remaining: 4 - 1 = 3                         │
+  │                                                      │
+  │ Take 2 boxes of 2 units → 2 × 2 = 4 units           │
+  │   Truck remaining: 3 - 2 = 1                         │
+  │                                                      │
+  │ Take 1 box of 1 unit → 1 × 1 = 1 unit               │
+  │   Truck remaining: 1 - 1 = 0  (FULL!)                │
+  └──────────────────────────────────────────────────────┘
+  
+  TRUCK: [3][2][2][1] → Total units = 3+2+2+1 = 8
+  
+  OUTPUT: 8
+```
 
 ```python
 def maximum_units(box_types, truck_size):
@@ -74,6 +144,42 @@ print(maximum_product(nums))  # 24
 
 **Problem**: Find maximum profit from buying and selling a stock once.
 
+### Visual Walkthrough
+
+```
+  INPUT: prices = [7, 1, 5, 3, 6, 4]
+  
+  PRICE CHART:
+  Price
+  7 │ ●
+  6 │                 ●
+  5 │     ●
+  4 │                         ●
+  3 │           ●
+  2 │
+  1 │       ●
+  0 └───┬───┬───┬───┬───┬───┬───
+        0   1   2   3   4   5
+              Day
+  
+  GREEDY SCAN (track minimum price):
+  ┌─────────────────────────────────────────────────────┐
+  │ Day 0: price=7, min_price=7, profit=0              │
+  │ Day 1: price=1, min_price=1, profit=0              │
+  │ Day 2: price=5, min_price=1, profit=5-1=4          │
+  │ Day 3: price=3, min_price=1, profit=3-1=2          │
+  │ Day 4: price=6, min_price=1, profit=6-1=5  ← MAX  │
+  │ Day 5: price=4, min_price=1, profit=4-1=3          │
+  └─────────────────────────────────────────────────────┘
+  
+  RESULT: Buy at day 1 (price=1), sell at day 4 (price=6)
+  Maximum profit = 5
+  
+  KEY INSIGHT: At each day, the best profit is:
+  current_price - minimum_price_so_far
+  We track the running minimum as we scan left to right.
+```
+
 ```python
 def max_profit(prices):
     """Find maximum profit from single buy-sell."""
@@ -111,6 +217,48 @@ print(max_profit(prices))  # 0 (no profit possible)
 
 **Problem**: Determine if you can reach the last index.
 
+### Visual Walkthrough
+
+```
+  INPUT: nums = [2, 3, 1, 1, 4]
+  
+  INDEX:  0   1   2   3   4
+  VALUE:  2   3   1   1   4
+          ▲
+          │
+  Start here
+  
+  GREEDY SCAN (track max reachable):
+  ┌────────────────────────────────────────────────────────┐
+  │ i=0: max_reach = max(0, 0+2) = 2                      │
+  │   Can reach indices 0, 1, 2                            │
+  │                                                        │
+  │ i=1: max_reach = max(2, 1+3) = 4                      │
+  │   Can reach indices 0, 1, 2, 3, 4  ← REACHED END!     │
+  │                                                        │
+  │ i=2: max_reach = max(4, 2+1) = 4                      │
+  │ i=3: max_reach = max(4, 3+1) = 4                      │
+  └────────────────────────────────────────────────────────┘
+  
+  INPUT: nums = [3, 2, 1, 0, 4]
+  
+  INDEX:  0   1   2   3   4
+  VALUE:  3   2   1   0   4
+          ▲
+          │
+  
+  GREEDY SCAN:
+  ┌────────────────────────────────────────────────────────┐
+  │ i=0: max_reach = max(0, 0+3) = 3                      │
+  │ i=1: max_reach = max(3, 1+2) = 3                      │
+  │ i=2: max_reach = max(3, 2+1) = 3                      │
+  │ i=3: max_reach = max(3, 3+0) = 3                      │
+  │ i=4: i=4 > max_reach=3 → CAN'T REACH! return False    │
+  └────────────────────────────────────────────────────────┘
+  
+  OUTPUT: False (index 4 is unreachable, stuck at index 3)
+```
+
 ```python
 def can_jump(nums):
     """Check if you can reach the last index."""
@@ -142,6 +290,48 @@ print(can_jump(nums))  # False
 ### 5. Jump Game II
 
 **Problem**: Find minimum number of jumps to reach the last index.
+
+### Visual Walkthrough
+
+```
+  INPUT: nums = [2, 3, 1, 1, 4]
+  
+  INDEX:  0   1   2   3   4
+  VALUE:  2   3   1   1   4
+  
+  BFS-LIKE GREEDY APPROACH:
+  ┌──────────────────────────────────────────────────────────┐
+  │                                                          │
+  │  Jump 0 (starting zone): indices [0, 0]                 │
+  │    From index 0 (value=2), can reach indices 1-2         │
+  │    farthest = max(0, 0+2) = 2                           │
+  │                                                          │
+  │  Jump 1 (zone): indices [1, 2]                           │
+  │    From index 1 (value=3), can reach up to index 4       │
+  │    From index 2 (value=1), can reach up to index 3       │
+  │    farthest = max(2, 1+3, 2+1) = 4  ← REACHED END!     │
+  │                                                          │
+  │  jumps = 2                                               │
+  └──────────────────────────────────────────────────────────┘
+  
+  VISUAL OF JUMPS:
+  
+  Jump 1          Jump 2
+  ─────►          ─────►
+  [0]───►[1]───►[4]  END!
+    │       │
+    └──►[2]─┘
+  
+  KEY VARIABLES:
+  ┌────────────────────────────────────────────────┐
+  │ current_end:  boundary of current jump zone     │
+  │ farthest:     farthest reachable from current  │
+  │ jumps:        number of jumps taken             │
+  │                                                 │
+  │ When i reaches current_end, we MUST jump:      │
+  │   jumps++, current_end = farthest              │
+  └────────────────────────────────────────────────┘
+```
 
 ```python
 def jump(nums):
@@ -182,6 +372,57 @@ print(jump(nums))  # 2
 
 **Problem**: Find starting gas station to complete a circular tour.
 
+### Visual Walkthrough
+
+```
+  INPUT: gas = [1, 2, 3, 4, 5], cost = [3, 4, 5, 1, 2]
+  
+  CIRCULAR TOUR:
+  
+             Station 0 (gas=1, cost=3)
+            ╱                    ╲
+     Station 4                 Station 1
+     (gas=5, cost=2)        (gas=2, cost=4)
+            ╲                    ╱
+             Station 3       Station 2
+             (gas=4, cost=1)  (gas=3, cost=5)
+  
+  NET GAIN AT EACH STATION:
+  Station:  0    1    2    3    4
+  gas:      1    2    3    4    5
+  cost:     3    4    5    1    2
+  net:     -2   -2   -2    3    3
+  
+  GREEDY SCAN:
+  ┌────────────────────────────────────────────────────────┐
+  │ i=0: current_tank = -2, total_tank = -2               │
+  │   current_tank < 0 → restart from station 1           │
+  │                                                        │
+  │ i=1: current_tank = -2, total_tank = -4               │
+  │   current_tank < 0 → restart from station 2           │
+  │                                                        │
+  │ i=2: current_tank = -2, total_tank = -6               │
+  │   current_tank < 0 → restart from station 3           │
+  │                                                        │
+  │ i=3: current_tank = 3, total_tank = -3                │
+  │                                                        │
+  │ i=4: current_tank = 6, total_tank = 0                 │
+  │   total_tank >= 0 → solution exists!                  │
+  └────────────────────────────────────────────────────────┘
+  
+  Verify starting at station 3:
+  Station 3: arrive with 0, +4 gas, -1 cost → 3 remaining
+  Station 4: arrive with 3, +5 gas, -2 cost → 6 remaining
+  Station 0: arrive with 6, +1 gas, -3 cost → 4 remaining
+  Station 1: arrive with 4, +2 gas, -4 cost → 2 remaining
+  Station 2: arrive with 2, +3 gas, -5 cost → 0 remaining  ✓
+  
+  OUTPUT: Start at station 3
+  
+  KEY INSIGHT: If total gas >= total cost, a solution
+  ALWAYS exists. The greedy scan finds the valid start.
+```
+
 ```python
 def can_complete_circuit(gas, cost):
     """Find starting gas station for circular tour."""
@@ -220,6 +461,50 @@ print(can_complete_circuit(gas, cost))  # -1
 ### 7. Task Scheduler
 
 **Problem**: Find minimum intervals to complete all tasks with cooldown period.
+
+### Visual Walkthrough
+
+```
+  INPUT: tasks = ["A", "A", "A", "B", "B", "B"], n = 2
+  
+  Task frequencies: A=3, B=3
+  
+  SCHEDULING WITH COOLDOWN n=2:
+  ┌──────────────────────────────────────────────────────────┐
+  │                                                          │
+  │  Interval:  1    2    3    4    5    6    7    8        │
+  │            ───  ───  ───  ───  ───  ───  ───  ───      │
+  │            A    B    idle idle A    B    idle A    B     │
+  │                                                          │
+  │  Time 1: Execute A (most frequent, freq=3)               │
+  │    A enters cooldown until time 1+2+1 = time 4           │
+  │                                                          │
+  │  Time 2: Execute B (most frequent, freq=3)               │
+  │    B enters cooldown until time 2+2+1 = time 5           │
+  │                                                          │
+  │  Time 3: Both A and B in cooldown → idle                 │
+  │                                                          │
+  │  Time 4: A ready (cooldown expired) → Execute A          │
+  │                                                          │
+  │  Time 5: B ready (cooldown expired) → Execute B          │
+  │                                                          │
+  │  Time 6: Both in cooldown → idle                         │
+  │                                                          │
+  │  Time 7: A ready → Execute A (last A)                    │
+  │                                                          │
+  │  Time 8: B ready → Execute B (last B)                    │
+  └──────────────────────────────────────────────────────────┘
+  
+  RESULT: 8 intervals
+  
+  FORMULA (when enough tasks to fill gaps):
+  ┌──────────────────────────────────────────────────────┐
+  │  max_freq = 3 (count of most frequent task)          │
+  │  num_max = 2 (number of tasks with max freq)         │
+  │  result = (max_freq - 1) × (n + 1) + num_max        │
+  │         = (3-1) × (2+1) + 2 = 2×3 + 2 = 8          │
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 import heapq
@@ -270,6 +555,58 @@ print(least_interval(tasks, n))  # 8
 ### 8. Queue Reconstruction by Height
 
 **Problem**: Reconstruct queue where people[i] = [hi, ki] (height, people in front).
+
+### Visual Walkthrough
+
+```
+  INPUT: [[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
+  
+  people[i] = [height, people_in_front]
+  
+  STEP 1: Sort by height DESCENDING, then by k ASCENDING:
+  ┌──────────┬──────────┬─────────────┐
+  │ Original │ Sorted   │ Explanation │
+  ├──────────┼──────────┼─────────────┤
+  │ [7,0]    │ [7,0]    │ tallest     │
+  │ [7,1]    │ [7,1]    │ tallest     │
+  │ [6,1]    │ [6,1]    │ 2nd tallest │
+  │ [5,0]    │ [5,0]    │ 3rd tallest │
+  │ [5,2]    │ [5,2]    │ 3rd tallest │
+  │ [4,4]    │ [4,4]    │ shortest    │
+  └──────────┴──────────┴─────────────┘
+  
+  STEP 2: Insert each person at index k in result:
+  ┌───────────────────────────────────────────────────────┐
+  │ Insert [7,0] at index 0:                              │
+  │   result: [ [7,0] ]                                   │
+  │                                                       │
+  │ Insert [7,1] at index 1:                              │
+  │   result: [ [7,0], [7,1] ]                            │
+  │                                                       │
+  │ Insert [6,1] at index 1:                              │
+  │   result: [ [7,0], [6,1], [7,1] ]                    │
+  │                                                       │
+  │ Insert [5,0] at index 0:                              │
+  │   result: [ [5,0], [7,0], [6,1], [7,1] ]             │
+  │                                                       │
+  │ Insert [5,2] at index 2:                              │
+  │   result: [ [5,0], [7,0], [5,2], [6,1], [7,1] ]     │
+  │                                                       │
+  │ Insert [4,4] at index 4:                              │
+  │   result: [ [5,0], [7,0], [5,2], [6,1], [4,4], [7,1] ]│
+  └───────────────────────────────────────────────────────┘
+  
+  VERIFY:
+  [5,0]: 0 people taller/aqual in front → ✓ (none before)
+  [7,0]: 0 people taller/aqual in front → ✓ (5 is shorter)
+  [5,2]: 2 people taller/aqual in front → ✓ (7,7)
+  [6,1]: 1 person taller/aqual in front → ✓ (7)
+  [4,4]: 4 people taller/aqual in front → ✓ (7,7,6,5)
+  [7,1]: 1 person taller/aqual in front → ✓ (7)
+  
+  KEY INSIGHT: Insert tallest people first. They don't
+  affect shorter people's counts, so insert in height order.
+```
 
 ```python
 def reconstruct_queue(people):
@@ -351,6 +688,53 @@ print(is_straight_hand(hand, group_size))  # False
 
 **Problem**: Distribute candies to children with ratings. Each child gets at least 1 candy, children with higher ratings get more candies than neighbors.
 
+### Visual Walkthrough
+
+```
+  INPUT: ratings = [1, 0, 2]
+  
+  TWO-PASS APPROACH:
+  ┌────────────────────────────────────────────────────────┐
+  │                                                        │
+  │  LEFT-TO-RIGHT PASS (ensure right neighbor rule):      │
+  │  ratings:  1    0    2                                 │
+  │  candies:  1    1    1   (start with all 1s)          │
+  │                                                        │
+  │  i=1: rating[1]=0 < rating[0]=1 → no bump needed      │
+  │  i=2: rating[2]=2 > rating[1]=0 → candies[2] = 2      │
+  │                                                        │
+  │  After L→R: [1, 1, 2]                                 │
+  │                                                        │
+  │  RIGHT-TO-LEFT PASS (ensure left neighbor rule):       │
+  │  i=0: rating[0]=1 > rating[1]=0 → candies[0] = max(1, 2) = 2  │
+  │  i=1: rating[1]=0 < rating[2]=2 → no bump needed      │
+  │                                                        │
+  │  After R→L: [2, 1, 2]                                 │
+  └────────────────────────────────────────────────────────┘
+  
+  RESULT: 2 + 1 + 2 = 5 candies
+  
+  VISUAL:
+  ratings:  1    0    2
+            ▲         ▲
+           2 🍬     2 🍬
+              ▲
+             1 🍬
+  
+  WHY TWO PASSES?
+  ┌────────────────────────────────────────────────────────┐
+  │ One pass handles each direction's constraint:          │
+  │                                                        │
+  │ L→R pass: If rating[i] > rating[i-1],                 │
+  │           candies[i] = candies[i-1] + 1                │
+  │           (ensures ascending sequences)                │
+  │                                                        │
+  │ R→L pass: If rating[i] > rating[i+1],                 │
+  │           candies[i] = max(candies[i], candies[i+1]+1) │
+  │           (ensures descending sequences)               │
+  └────────────────────────────────────────────────────────┘
+```
+
 ```python
 def candy(ratings):
     """Distribute candies based on ratings."""
@@ -389,6 +773,48 @@ print(candy(ratings))  # 4
 ### 11. IPO
 
 **Problem**: Find maximum capital after completing at most k projects.
+
+### Visual Walkthrough
+
+```
+  INPUT: k=2, w=0, profits=[1,2,3], capital=[0,1,1]
+  
+  PROJECTS:
+  ┌──────────┬───────────┬─────────┐
+  │ Project  │  Capital  │ Profit  │
+  ├──────────┼───────────┼─────────┤
+  │    1     │     0     │    1    │
+  │    2     │     1     │    2    │
+  │    3     │     1     │    3    │
+  └──────────┴───────────┴─────────┘
+  
+  GREEDY APPROACH:
+  ┌──────────────────────────────────────────────────────────┐
+  │                                                          │
+  │  Round 1 (k=2 remaining):                                │
+  │    Current capital: 0                                     │
+  │    Affordable projects: [1] (capital 0 <= 0)              │
+  │    Pick most profitable: Project 1 (profit=1)            │
+  │    New capital: 0 + 1 = 1                                │
+  │                                                          │
+  │  Round 2 (k=1 remaining):                                │
+  │    Current capital: 1                                     │
+  │    Affordable projects: [2, 3] (capital 1 <= 1)          │
+  │    Pick most profitable: Project 3 (profit=3)            │
+  │    New capital: 1 + 3 = 4                                │
+  │                                                          │
+  │  RESULT: Maximum capital = 4                             │
+  └──────────────────────────────────────────────────────────┘
+  
+  ALGORITHM:
+  1. Sort projects by capital requirement
+  2. Use max-heap for profits of affordable projects
+  3. Each round: add all affordable projects to heap,
+     pop the most profitable one
+  
+  KEY INSIGHT: Always pick the most profitable project
+  you can currently afford. This maximizes capital growth.
+```
 
 ```python
 import heapq
@@ -479,6 +905,38 @@ print(mincost_to_hire_workers(quality, wage, k))  # 105.0
 ### 13. Car Pooling
 
 **Problem**: Determine if a car can pick up and drop off all passengers without exceeding capacity.
+
+### Visual Walkthrough
+
+```
+  INPUT: trips = [[2, 1, 5], [3, 3, 7]], capacity = 5
+  
+  TRIPS:
+  Trip 1: 2 passengers, from location 1 to 5
+  Trip 2: 3 passengers, from location 3 to 7
+  
+  LINE SWEEP:
+  ┌──────────────────────────────────────────────────────┐
+  │ Events:                                               │
+  │   (1, +2)  - Pick up 2 passengers at location 1      │
+  │   (3, +3)  - Pick up 3 passengers at location 3      │
+  │   (5, -2)  - Drop off 2 passengers at location 5     │
+  │   (7, -3)  - Drop off 3 passengers at location 7     │
+  │                                                       │
+  │ Location: 1    2    3    4    5    6    7             │
+  │ Passengers: 2    2    5    5    3    3    0           │
+  │            ▲         ▲         ▲                     │
+  │         +2 at 1   +3 at 3   -2 at 5                  │
+  │                                                       │
+  │ Max passengers in car: 5 (at locations 3-4)           │
+  │ Capacity: 5 → 5 <= 5 ✓                               │
+  └──────────────────────────────────────────────────────┘
+  
+  OUTPUT: True
+  
+  WITH capacity=4:
+  Max passengers = 5 > 4 → False!
+```
 
 ```python
 def car_pooling(trips, capacity):
@@ -582,3 +1040,63 @@ print(triangle_number(nums))  # 4
 4. **Use heap when needed** - for maintaining top-k or priority
 5. **Consider edge cases** - empty input, single element, all same values
 6. **Check if greedy fails** - some problems need DP instead
+
+### Problem-Solving Checklist
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │              GREEDY PROBLEM SOLVING CHECKLIST                 │
+  ├──────────────────────────────────────────────────────────────┤
+  │                                                              │
+  │  □ 1. Can I make a locally optimal choice at each step?      │
+  │        → If no, consider DP or backtracking                  │
+  │                                                              │
+  │  □ 2. Does the greedy choice property hold?                  │
+  │        → Can I prove swapping doesn't improve the solution?  │
+  │                                                              │
+  │  □ 3. What should I sort by?                                 │
+  │        → Finish time? Profit? Ratio? Height?                 │
+  │                                                              │
+  │  □ 4. Do I need a heap?                                      │
+  │        → Need top-k? Min/max tracking? Priority scheduling?  │
+  │                                                              │
+  │  □ 5. Is this a line sweep problem?                          │
+  │        → Concurrent events? Start/end at same point?         │
+  │                                                              │
+  │  □ 6. Edge cases?                                            │
+  │        → Empty array? Single element? All same values?       │
+  │        → Integer overflow? Negative numbers?                 │
+  │                                                              │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+### Technique Selection Guide
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │  If problem involves...          Use this technique           │
+  ├──────────────────────────────────────────────────────────────┤
+  │  Sorting + scanning              Simple greedy               │
+  │  Tracking best/worst so far      Running min/max             │
+  │  Finding max/min of top-k        Heap (min or max)           │
+  │  Matching two sorted arrays      Two pointers                │
+  │  Concurrent events               Line sweep / min-heap       │
+  │  Decisions with future impact    BFS-like greedy (Jump II)   │
+  │  Constraints on both sides       Two-pass (Candy)            │
+  │  Binary decisions (include/excl) DP with binary search       │
+  └──────────────────────────────────────────────────────────────┘
+```
+
+### When Greedy Fails — Use DP Instead
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │  PROBLEM                      WHY GREEDY FAILS               │
+  ├──────────────────────────────────────────────────────────────┤
+  │  0/1 Knapsack                 High-ratio item wastes space   │
+  │  Coin Change (non-canonical)  Greedy uses more coins         │
+  │  Weighted Job Scheduling      Can't just pick highest profit │
+  │  Longest Common Subsequence   Need to explore all options    │
+  │  Edit Distance                Choices affect future cost     │
+  └──────────────────────────────────────────────────────────────┘
+```

@@ -1,5 +1,80 @@
 # Graph Practice Problems (20 Problems)
 
+## Problem-Solving Strategy Flowchart
+
+```
+ENCOUNTERING A GRAPH PROBLEM? Follow this flowchart:
+
+  ┌──────────────────────────────────────────────┐
+  │ Is the input a GRID/MATRIX?                  │
+  └───────────────────┬──────────────────────────┘
+                 YES  │  NO
+              ┌───────▼────────┐   ┌─────────────────────┐
+              │ Grid Problem   │   │ Is it about          │
+              │ (see below)    │   │ ORDERING/DEPENDENCIES?│
+              └────────────────┘   └──────────┬──────────┘
+                                         YES  │  NO
+                    ┌──────────────────┐  ┌────▼─────────────┐
+                    │ TOPOLOGICAL SORT │  │ Need SHORTEST    │
+                    │ (Kahn's or DFS)  │  │ PATH with        │
+                    └──────────────────┘  │ WEIGHTS?         │
+                                          └────┬─────────────┘
+                                          YES  │  NO
+                              ┌────────────────┤  │
+                              │ Negative      │  │
+                              │ weights?      │  │
+                              └──┬─────────┬──┘  │
+                              YES│      NO │  ┌──▼──────────┐
+                         ┌──────▼───┐ ┌────▼──┐│ SHORTEST   │
+                         │ Bellman- │ │Dijkst-││ PATH in    │
+                         │ Ford     │ │ra     ││ UNWEIGHTED?│
+                         └──────────┘ └───────┘└──┬─────────┘
+                                              YES │  NO
+                                          ┌───────▼──────┐  │
+                                          │ BFS          │  │
+                                          └──────────────┘  │
+                                                            ▼
+                                          ┌──────────────────┐
+                                          │ COMPONENT/CONNECTION problem?
+                                          │ → DFS/BFS/Union-Find
+                                          └──────────────────┘
+
+GRID PROBLEM SUB-FLOWCHART:
+  ┌──────────────────────────────────────────────┐
+  │ Need shortest path (fewest steps)?           │
+  │ YES → BFS on grid (4 directions)             │
+  ├──────────────────────────────────────────────┤
+  │ Count connected components?                   │
+  │ YES → DFS/BFS on grid                        │
+  ├──────────────────────────────────────────────┤
+  │ Path with varying weights?                    │
+  │ YES → Dijkstra on grid                       │
+  ├──────────────────────────────────────────────┤
+  │ Fill/color a region?                          │
+  │ YES → DFS from seed pixel (Flood Fill)       │
+  └──────────────────────────────────────────────┘
+
+PATTERN RECOGNITION — Quick Reference:
+┌────────────────────────────┬──────────────────────────────┐
+│ Keywords in Problem        │ Algorithm to Use             │
+├────────────────────────────┼──────────────────────────────┤
+│ "Shortest path" + unwt.    │ BFS                          │
+│ "Shortest path" + weighted │ Dijkstra                     │
+│ "Level order"              │ BFS                          │
+│ "Connected components"     │ DFS/BFS/Union-Find           │
+│ "Can finish all tasks?"    │ Topological sort (cycle?)    │
+│ "Order of tasks"           │ Topological sort             │
+│ "Minimum spanning tree"    │ Kruskal's/Prim's             │
+│ "Cycle detection"          │ DFS/Union-Find               │
+│ "Bipartite"                │ 2-coloring DFS/BFS           │
+│ "Bridges/Articulation"     │ DFS with disc/low            │
+│ "Flood fill"               │ DFS from seed                │
+│ "Clone graph"              │ BFS/DFS with hash map        │
+│ "Alien dictionary"         │ Topological sort             │
+│ "Word transformation"      │ BFS on word graph            │
+└────────────────────────────┴──────────────────────────────┘
+```
+
 ## Easy Problems
 
 ### 1. Number of Islands
@@ -663,28 +738,96 @@ def accountsMerge(accounts):
 
 ```
 EASY (4):
-1. Number of Islands - DFS/BFS on grid
-2. Flood Fill - DFS/BFS coloring
-3. Valid Tree - Union-Find
-4. Find Center - Star graph property
+┌────┬───────────────────────┬─────────────────────────────────┐
+│ #  │ Problem               │ Algorithm & Key Insight         │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 1  │ Number of Islands     │ DFS/BFS on grid, count          │
+│    │ (LC 200)              │ components. Mark visited by     │
+│    │                       │ changing '1'→'0'.               │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 2  │ Flood Fill            │ DFS from seed pixel, change     │
+│    │ (LC 733)              │ matching neighbors. Check old   │
+│    │                       │ color == new color edge case.   │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 3  │ Valid Tree            │ Tree = V-1 edges + connected.   │
+│    │ (LC 261)              │ Use Union-Find or DFS.          │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 4  │ Find Center of Star   │ Center appears in ALL edges.    │
+│    │ (LC 1791)             │ Just check first two edges.     │
+└────┴───────────────────────┴─────────────────────────────────┘
 
 MEDIUM (10):
-5. Course Schedule - Topological sort
-6. Pacific Atlantic - DFS from borders
-7. Rotting Oranges - Multi-source BFS
-8. Clone Graph - BFS/DFS with map
-9. Word Ladder - BFS on word graph
-10. Graph Valid Tree - Union-Find
-11. Number of Provinces - DFS
-12. Redundant Connection - Union-Find
-13. Max Area of Island - DFS returning area
-14. Surrounded Regions - DFS from borders
+┌────┬───────────────────────┬─────────────────────────────────┐
+│ #  │ Problem               │ Algorithm & Key Insight         │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 5  │ Course Schedule       │ Topological sort via Kahn's.    │
+│    │ (LC 207)              │ If order size < V → cycle.      │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 6  │ Pacific Atlantic      │ DFS from ocean borders inward.  │
+│    │ Water Flow (LC 417)   │ Find intersection of reachable. │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 7  │ Rotting Oranges       │ Multi-source BFS from ALL       │
+│    │ (LC 994)              │ rotten oranges. Process level   │
+│    │                       │ by level = 1 minute per level.  │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 8  │ Clone Graph           │ BFS/DFS with hash map mapping   │
+│    │ (LC 133)              │ original → cloned node.         │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 9  │ Word Ladder           │ BFS on implicit word graph.     │
+│    │ (LC 127)              │ Try all 26 letters per position.│
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 10 │ Graph Valid Tree      │ V-1 edges + no cycles = tree.   │
+│    │ (LC 261)              │ BFS to check connectivity.      │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 11 │ Number of Provinces   │ DFS on adjacency matrix.        │
+│    │ (LC 547)              │ Count DFS calls from unvisited. │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 12 │ Redundant Connection  │ Union-Find: if union returns    │
+│    │ (LC 684)              │ False → that edge creates cycle.│
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 13 │ Max Area of Island    │ DFS returning area (1 + sum of  │
+│    │ (LC 695)              │ recursive calls in 4 dirs).     │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 14 │ Surrounded Regions    │ DFS from BORDER 'O's → mark     │
+│    │ (LC 130)              │ safe. Flip remaining 'O'→'X'.   │
+└────┴───────────────────────┴─────────────────────────────────┘
 
 HARD (6):
-15. Network Delay Time - Dijkstra
-16. Alien Dictionary - Topological sort
-17. Longest Path in DAG - Topo sort + DP
-18. Swim in Rising Water - Dijkstra on grid
-19. Critical Connections - Bridge finding
-20. Accounts Merge - Union-Find
+┌────┬───────────────────────┬─────────────────────────────────┐
+│ #  │ Problem               │ Algorithm & Key Insight         │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 15 │ Network Delay Time    │ Dijkstra from source k. Return  │
+│    │ (LC 743)              │ max distance (last node to      │
+│    │                       │ receive signal).                │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 16 │ Alien Dictionary      │ Build graph from word order     │
+│    │ (LC 269)              │ comparisons. Kahn's topo sort.  │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 17 │ Longest Path in DAG   │ Topological sort + DP. Process  │
+│    │ (varies)              │ in topo order, propagate dist.  │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 18 │ Swim in Rising Water  │ Dijkstra on grid OR binary      │
+│    │ (LC 778)              │ search + BFS.                   │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 19 │ Critical Connections  │ Find bridges using DFS with     │
+│    │ (LC 1192)             │ disc/low values.                │
+├────┼───────────────────────┼─────────────────────────────────┤
+│ 20 │ Accounts Merge        │ Union-Find on email IDs.        │
+│    │ (LC 721)              │ Group emails by root.           │
+└────┴───────────────────────┴─────────────────────────────────┘
+
+STUDY ORDER (recommended):
+  1. Start with Easy (1-4) — build confidence
+  2. Medium problems 5, 7, 11 — core DFS/BFS patterns
+  3. Medium problems 6, 14 — border DFS pattern
+  4. Medium problems 8, 9 — graph cloning/BFS on implicit graph
+  5. Medium problems 10, 12 — Union-Find pattern
+  6. Hard problems 15, 18 — Dijkstra on grid
+  7. Hard problems 16, 17 — Topological sort applications
+  8. Hard problems 19, 20 — Advanced (bridges, Union-Find)
+
+TOTAL TIME ESTIMATE: 6-8 hours for all 20 problems
+  Easy: ~30 min each
+  Medium: ~45 min each
+  Hard: ~60 min each
 ```

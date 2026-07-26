@@ -1,8 +1,50 @@
 # Trie Data Structure Guide
 
-## What is Trie?
+> **Pronounced "try"** — a tree-like data structure for efficient string storage and retrieval. Every node represents a character; paths from root to marked nodes represent complete words.
 
-A Trie (pronounced "try") is a tree-like data structure used for efficient storage and retrieval of strings. Each node represents a character, and paths from root to nodes represent prefixes.
+---
+
+## What is a Trie? (Visual Introduction)
+
+```
+  Inserting: "app", "apple", "application", "bat", "ball"
+
+                              root
+                           /       \
+                          a         b
+                         /         / \
+                        p         a   a
+                       / \       / \   \
+                      p*  p*    l*  l*   l*
+                     /    |     |   |
+                    l*    p*    l*  l*
+                   /      |         |
+                  e*      p*        e*
+                          |
+                         i*
+                          |
+                         o*
+                          |
+                         n*
+                          |
+                         *
+
+  Key observations:
+  ┌────────────────────────────────────────────────────────┐
+  │  * marks end-of-word nodes                              │
+  │  "app" and "apple" share prefix "app"                   │
+  │  "bat" and "ball" share prefix "ba"                     │
+  │  "apple" and "application" share prefix "app"           │
+  │  Common prefix = shared path in the tree                │
+  └────────────────────────────────────────────────────────┘
+
+  Each node stores:
+  ┌────────────────────────────────────────────────────┐
+  │  children: dict/array of child nodes               │
+  │  is_end: bool (is this node the end of a word?)    │
+  │  count: int (number of words with this prefix)     │
+  └────────────────────────────────────────────────────┘
+```
 
 **When to use:**
 - Autocomplete/prefix matching
@@ -29,12 +71,57 @@ A Trie (pronounced "try") is a tree-like data structure used for efficient stora
 
 ## 1. Basic Trie Implementation
 
+### Visual: Insert Operation Step-by-Step
+
+```
+  Inserting "cat" into an empty trie:
+
+  Step 1: Start at root
+          root
+
+  Step 2: Process 'c' — not in root's children, create it
+          root
+          |
+          c
+
+  Step 3: Process 'a' — not in c's children, create it
+          root
+          |
+          c
+          |
+          a
+
+  Step 4: Process 't' — not in a's children, create it
+          root
+          |
+          c
+          |
+          a
+          |
+          t*    ← mark is_end = True
+
+  Now insert "car":
+
+  Step 1: root → 'c' exists, follow
+  Step 2: 'c' → 'a' exists, follow
+  Step 3: 'a' → 'r' not found, create it
+          root
+          |
+          c
+          |
+          a
+         / \
+        t*  r*   ← new node
+
+  Notice: "cat" and "car" share "ca" prefix!
+```
+
 ```python
 class TrieNode:
     def __init__(self):
-        self.children = {}
-        self.is_end = False
-        self.count = 0  # Number of words with this prefix
+        self.children = {}      # char → TrieNode
+        self.is_end = False     # marks end of a complete word
+        self.count = 0          # number of words passing through this node
 
 class Trie:
     def __init__(self):
@@ -51,13 +138,25 @@ class Trie:
         node.is_end = True
     
     def search(self, word):
-        """Check if word exists in trie"""
+        """Check if EXACT word exists in trie.
+        
+        Walk the trie character by character.
+        If we can't find a character → return False.
+        If we reach the end, check is_end flag.
+        
+        Example: search("cat") in trie with ["cat", "car"]
+          root → 'c' ✓ → 'a' ✓ → 't' ✓ → is_end=True ✓ → True!
+        
+        Example: search("ca") in trie with ["cat", "car"]
+          root → 'c' ✓ → 'a' ✓ → is_end=False → False!
+          ("ca" is a prefix but NOT a complete word)
+        """
         node = self.root
         for char in word:
             if char not in node.children:
-                return False
+                return False    # character not found
             node = node.children[char]
-        return node.is_end
+        return node.is_end     # check if it's a complete word
     
     def starts_with(self, prefix):
         """Check if any word starts with given prefix"""
@@ -78,22 +177,38 @@ class Trie:
         return node.count
     
     def delete(self, word):
-        """Delete a word from trie"""
+        """Delete a word from trie.
+        
+        Three cases when deleting:
+        ┌─────────────────────────────────────────────────────┐
+        │  Case 1: Word is unique prefix of other words       │
+        │          → Just unmark is_end                       │
+        │          Example: delete "app" from ["app","apple"] │
+        │                                                     │
+        │  Case 2: Word has unique suffix after shared prefix │
+        │          → Remove nodes in the suffix               │
+        │          Example: delete "apple" from ["app"]       │
+        │                                                     │
+        │  Case 3: Word is completely unique                  │
+        │          → Remove all nodes up to shared prefix     │
+        │          Example: delete "bat" from ["ball"]        │
+        └─────────────────────────────────────────────────────┘
+        """
         def _delete(node, word, depth):
             if depth == len(word):
                 if not node.is_end:
-                    return False
+                    return False    # word doesn't exist
                 node.is_end = False
-                return len(node.children) == 0
+                return len(node.children) == 0  # can delete if leaf
             
             char = word[depth]
             if char not in node.children:
-                return False
+                return False    # word doesn't exist
             
             should_delete = _delete(node.children[char], word, depth + 1)
             
             if should_delete:
-                del node.children[char]
+                del node.children[char]    # remove the empty node
                 return len(node.children) == 0 and not node.is_end
             
             return False
@@ -504,6 +619,39 @@ print(f"Sum 'ap': {ms.sum('ap')}")  # 5
 
 ## 7. Replace Words (LC 648)
 
+### Visual: How Replace Words Works
+
+```
+  Dictionary: ["cat", "bat", "rat"]
+  Sentence: "the cattle was rattled by the battery"
+
+  Build trie from dictionary:
+          root
+        /  |  \
+       c   b   r
+       |   |   |
+       a   a   a
+       |   |   |
+       t*  t*  t*
+
+  Process each word in sentence:
+  ┌────────────┬──────────────────────────┬────────────────┐
+  │  Word      │  Trie Walk               │  Result        │
+  ├────────────┼──────────────────────────┼────────────────┤
+  │  cattle    │  c→a→t* (found!)         │  cat           │
+  │  was       │  w (not in trie)         │  was           │
+  │  rattled   │  r→a→t* (found!)         │  rat           │
+  │  by        │  b (not in trie, yet)    │  by            │
+  │  the       │  t (not in trie)         │  the           │
+  │  battery   │  b→a→t* (found!)         │  bat           │
+  └────────────┴──────────────────────────┴────────────────┘
+
+  Output: "the cat was rat by the bat"
+
+  KEY INSIGHT: We stop as soon as we find ANY end-of-word
+  marker in the trie. This gives us the SHORTEST root.
+```
+
 ```python
 def replace_words(dictionary, sentence):
     """Replace roots in sentence with shortest root"""
@@ -585,6 +733,60 @@ print(f"Replaced: {replace_words(dictionary, sentence)}")
 ---
 
 ## 8. Longest Word in Dictionary (LC 720)
+
+### Visual: How Longest Word DFS Works
+
+```
+  words = ["w", "wo", "wor", "worl", "world"]
+
+  Trie structure:
+          root
+           |
+           w*        ← "w" is a word
+           |
+           o*        ← "wo" is a word
+           |
+           r*        ← "wor" is a word
+           |
+           l*        ← "worl" is a word
+           |
+           d*        ← "world" is a word
+
+  DFS from root:
+  ┌──────────────────────────────────────────────────────┐
+  │  At w*: can continue → check children                │
+  │  At wo*: can continue → check children               │
+  │  At wor*: can continue → check children              │
+  │  At worl*: can continue → check children             │
+  │  At world*: no more children → return "world"        │
+  │                                                      │
+  │  Answer: "world" (length 5)                          │
+  │                                                      │
+  │  IMPORTANT: We can only continue if the node is an   │
+  │  end-of-word! Otherwise, the word can't be built     │
+  │  one character at a time.                            │
+  └──────────────────────────────────────────────────────┘
+
+  words2 = ["a", "app", "appl", "apple", "b", "ba", "ban", "banana"]
+
+  Trie:
+          root
+         /   \
+       a*     b*
+       |      |
+       p*     a*
+       |      |
+       p*     n*
+       |      |
+       l*     a*
+       |      |
+       l*     n*
+       |      |
+       e*     a*
+
+  DFS: "banana" wins (length 6) because each prefix
+  (b, ba, ban, bana, banan, banana) is a word.
+```
 
 ```python
 def longest_word(words):
@@ -859,3 +1061,44 @@ Where m = word length
 3. **Handle edge cases:** Empty strings, single character words
 4. **Optimization:** Mention space optimization using arrays vs dict
 5. **Application:** Connect to real-world use cases
+
+### Common Trie Interview Mistakes to Avoid
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │  ❌ MISTAKE 1: Forgetting is_end flag                    │
+  │  → Searching "app" would return True even if only        │
+  │    "apple" is in the trie                                │
+  │                                                          │
+  │  ❌ MISTAKE 2: Not handling empty strings                │
+  │  → Always check: if word == "" return appropriately      │
+  │                                                          │
+  │  ❌ MISTAKE 3: Confusing search vs startsWith            │
+  │  → search("app"): needs is_end=True at 'p'              │
+  │  → startsWith("app"): just needs to reach 'p'           │
+  │                                                          │
+  │  ❌ MISTAKE 4: Not deleting properly                     │
+  │  → Only delete nodes that aren't part of other words     │
+  │  → Use the return value of _delete to know when to prune │
+  │                                                          │
+  │  ❌ MISTAKE 5: Using array of 26 when not needed        │
+  │  → Dict is more flexible (handles any characters)        │
+  │  → Array of 26 is faster but only for 'a'-'z'           │
+  └──────────────────────────────────────────────────────────┘
+```
+
+### Space Optimization: Array vs Dict
+
+```
+  Dict approach:
+    children = {}  → Only stores existing characters
+    Space: O(sum of word lengths) in practice
+    Pros: Flexible, handles any characters
+    Cons: Slower due to hash table overhead
+
+  Array approach:
+    children = [None] * 26  → Allocates space for all 26 letters
+    Space: O(26 × n) worst case (but most are None)
+    Pros: Faster access (direct indexing)
+    Cons: Fixed to 'a'-'z', wastes space for sparse tries
+```

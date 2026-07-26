@@ -1,27 +1,131 @@
 # Segment Tree Guide
 
-## What is Segment Tree?
+> **What is it?** A binary tree that stores information about array intervals/segments. It enables both range queries AND point/range updates in O(log n) — something neither prefix sums nor raw arrays can do alone.
 
-A Segment Tree is a binary tree data structure used for storing information about intervals/segments. It supports:
-1. **Range queries** (sum, min, max, gcd, etc.) in O(log n)
-2. **Point updates** in O(log n)
-3. **Range updates** with lazy propagation in O(log n)
+---
 
-**When to use:**
-- Multiple range queries on static/dynamic array
-- Need to update values and query ranges efficiently
-- Problems involving intervals
+## Visual: What a Segment Tree Looks Like
 
-**Comparison with other structures:**
-| Operation | Array | Prefix Sum | Segment Tree |
-|-----------|-------|------------|--------------|
-| Point Update | O(1) | O(n) | O(log n) |
-| Range Query | O(n) | O(1) | O(log n) |
-| Range Update | O(n) | O(n) | O(log n) |
+```
+  Array: [1, 3, 5, 7, 9, 11]
+
+  Segment Tree (sum queries):
+                      [36]             ← sum of [0..5]
+                    /      \
+                [9]          [27]      ← sum of [0..2] and [3..5]
+               /    \       /    \
+            [4]    [5]   [16]   [11]   ← sum of [0..1],[2..2],[3..4],[5..5]
+           /  \    |    /  \     |
+         [1]  [3] [5] [7]  [9] [11]   ← leaf nodes = array elements
+
+  Each internal node stores the SUM of its children.
+  To query sum[l..r], we decompose [l..r] into O(log n) segments.
+
+  ┌──────────────────────────────────────────────────────┐
+  │  KEY INSIGHT: The tree has height O(log n)           │
+  │  So query/update only touch O(log n) nodes!          │
+  │                                                      │
+  │  Array size: n = 6                                   │
+  │  Tree size: 4n = 24 nodes (allocated)                │
+  │  Leaf nodes: n = 6                                   │
+  │  Internal nodes: n - 1 = 5                           │
+  └──────────────────────────────────────────────────────┘
+```
+
+### Array Representation of Segment Tree
+
+```
+  We store the tree in an array using indices:
+  
+  For node at index i:
+    Left child  = 2*i + 1
+    Right child = 2*i + 2
+    Parent      = (i - 1) / 2
+
+  Index:  0    1    2    3    4    5    6    7    8    9   10   11
+  Value: [36,   9,  27,   4,   5,  16,  11,   1,   3,   5,   7,   9]
+          ↑
+       root (index 0)
+
+  Mapping:
+  ┌───────┬──────────────┬──────────────┬────────────┐
+  │ Index │  Left Child  │ Right Child  │   Range    │
+  ├───────┼──────────────┼──────────────┼────────────┤
+  │   0   │      1       │      2       │   [0,5]    │
+  │   1   │      3       │      4       │   [0,2]    │
+  │   2   │      5       │      6       │   [3,5]    │
+  │   3   │      7       │      8       │   [0,1]    │
+  │   4   │      -       │      -       │   [2,2]    │
+  │   5   │      9       │     10       │   [3,4]    │
+  │   6   │      -       │      -       │   [5,5]    │
+  └───────┴──────────────┴──────────────┴────────────┘
+  (indices 7-11 are leaves)
+```
+
+---
+
+## When to Use Segment Tree vs Alternatives
+
+```
+  ┌─────────────────┬──────────┬─────────────┬──────────────┐
+  │   Operation     │  Array   │ Prefix Sum  │ Segment Tree │
+  ├─────────────────┼──────────┼─────────────┼──────────────┤
+  │ Point Update    │  O(1)    │  O(n)       │  O(log n)    │
+  │ Range Query     │  O(n)    │  O(1)       │  O(log n)    │
+  │ Range Update    │  O(n)    │  O(n)       │  O(log n)*   │
+  │ Space           │  O(n)    │  O(n)       │  O(4n)       │
+  └─────────────────┴──────────┴─────────────┴──────────────┘
+  * with lazy propagation
+
+  USE SEGMENT TREE WHEN:
+  ✓ Need BOTH range queries AND point updates
+  ✓ Need range updates (with lazy propagation)
+  ✓ Query/update happen frequently (q >> n)
+  ✓ Need min/max AND updates (prefix sums can't do this)
+
+  USE PREFIX SUM WHEN:
+  ✓ Array is STATIC (no updates)
+  ✓ Only need range sum queries
+```
 
 ---
 
 ## 1. Build Segment Tree
+
+### Visual: How Building Works (Recursive)
+
+```
+  Array: [1, 3, 5, 7, 9, 11]
+
+  Build function is called recursively:
+
+  build(data, node=0, start=0, end=5)
+  │
+  ├── start != end, so split:
+  │   mid = (0+5)//2 = 2
+  │
+  ├── build(data, node=1, start=0, end=2)    ← left subtree
+  │   │
+  │   ├── build(data, node=3, start=0, end=1)
+  │   │   ├── build(data, node=7, start=0, end=0) → tree[7] = 1
+  │   │   └── build(data, node=8, start=1, end=1) → tree[8] = 3
+  │   │   tree[3] = 1 + 3 = 4
+  │   │
+  │   └── build(data, node=4, start=2, end=2) → tree[4] = 5
+  │   tree[1] = 4 + 5 = 9
+  │
+  └── build(data, node=2, start=3, end=5)    ← right subtree
+      │
+      ├── build(data, node=5, start=3, end=4)
+      │   ├── build(data, node=9, start=3, end=3) → tree[9] = 7
+      │   └── build(data, node=10, start=4, end=4) → tree[10] = 9
+      │   tree[5] = 7 + 9 = 16
+      │
+      └── build(data, node=6, start=5, end=5) → tree[6] = 11
+      tree[2] = 16 + 11 = 27
+
+  tree[0] = 9 + 27 = 36  ← root = total sum
+```
 
 ```python
 class SegmentTree:
@@ -56,22 +160,55 @@ print(f"Tree array: {seg_tree.tree}")
 
 ## 2. Range Query (Sum)
 
+### Visual: How Range Query Works
+
+```
+  Query: sum[1, 3] (sum of elements at indices 1, 2, 3)
+
+  Starting at root [0,5]:
+
+                     [36]              query(0,5, l=1,r=3)
+                    /      \
+               [9]          [27]
+              /    \       /    \
+           [4]    [5]   [16]   [11]
+          /  \    |    /  \     |
+        [1] [3] [5] [7] [9] [11]
+
+  Step 1: Root covers [0,5], query is [1,3]
+          PARTIAL OVERLAP → recurse both children
+
+  Step 2: Left child [0,2] vs query [1,3]
+          PARTIAL OVERLAP → recurse both children
+          ├── Left child [0,1] vs [1,3]: PARTIAL
+          │   ├── [0,0]: NO OVERLAP → return 0
+          │   └── [1,1]: COMPLETE OVERLAP → return 3
+          └── Right child [2,2] vs [1,3]: COMPLETE → return 5
+
+  Step 3: Right child [3,5] vs query [1,3]
+          PARTIAL OVERLAP → recurse
+          ├── Left child [3,4] vs [1,3]: PARTIAL
+          │   ├── [3,3]: COMPLETE OVERLAP → return 7
+          │   └── [4,4]: NO OVERLAP → return 0
+          └── Right child [5,5]: NO OVERLAP → return 0
+
+  Final: 0 + 3 + 5 + 7 + 0 = 15 ✓
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Three cases in query:                               │
+  │                                                      │
+  │  1. NO OVERLAP (r < start or end < l)                │
+  │     → Return identity (0 for sum, INF for min)       │
+  │                                                      │
+  │  2. COMPLETE OVERLAP (l ≤ start and end ≤ r)         │
+  │     → Return tree[node] (already computed!)          │
+  │                                                      │
+  │  3. PARTIAL OVERLAP                                   │
+  │     → Recurse to both children, combine results      │
+  └──────────────────────────────────────────────────────┘
+```
+
 ```python
-class SegmentTreeSum:
-    def __init__(self, data):
-        self.n = len(data)
-        self.tree = [0] * (4 * self.n)
-        self.build(data, 0, 0, self.n - 1)
-    
-    def build(self, data, node, start, end):
-        if start == end:
-            self.tree[node] = data[start]
-        else:
-            mid = (start + end) // 2
-            self.build(data, 2 * node + 1, start, mid)
-            self.build(data, 2 * node + 2, mid + 1, end)
-            self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]
-    
     def query(self, node, start, end, l, r):
         """Query sum in range [l, r]"""
         # No overlap
@@ -245,6 +382,60 @@ print(f"Max in [3, 5]: {seg_max.range_query(3, 5)}")  # max(9,1,4) = 9
 ## 5. Range Update with Lazy Propagation
 
 When you need to update a range of elements efficiently.
+
+### Visual: How Lazy Propagation Works
+
+```
+  Array: [1, 2, 3, 4, 5]
+  Operation: Add 2 to range [1, 3]
+
+  ┌──────────────────────────────────────────────────────────┐
+  │  WITHOUT lazy propagation:                               │
+  │  Update [1,3] → recurse to each leaf → O(n) time!       │
+  │                                                          │
+  │  WITH lazy propagation:                                  │
+  │  Mark root's children as "needs update later"            │
+  │  Don't recurse further → O(log n) time!                  │
+  └──────────────────────────────────────────────────────────┘
+
+  Step 1: Add 2 to [1,3]
+          Root covers [0,4], partial overlap → recurse
+
+  Step 2: Left child covers [0,2], partial overlap
+          ├── [0,1]: NO overlap with [1,3] → skip
+          │   Wait, [1,1] overlaps! But [0,0] doesn't.
+          │   Recurse to [0,0]: no overlap → skip
+          │   Recurse to [1,1]: complete overlap!
+          │   → LAZY[1,1] += 2, tree[1,1] += 2×1 = 2
+          └── [2,2]: complete overlap
+              → LAZY[2,2] += 2, tree[2,2] += 2×1 = 2
+
+  Step 3: Right child covers [3,4], partial overlap
+          ├── [3,3]: complete overlap → LAZY += 2
+          └── [4,4]: no overlap → skip
+
+  Step 4: Update parent sums up the tree
+          tree[0] = tree[1] + tree[2] after updating
+
+  ┌──────────────────────────────────────────────────────────┐
+  │  The lazy array stores PENDING updates:                  │
+  │                                                          │
+  │  lazy[node] = value to ADD to all elements in node's     │
+  │               range (but haven't been pushed yet)        │
+  │                                                          │
+  │  When do we PUSH?                                        │
+  │  - Before querying a node                               │
+  │  - Before updating children of a node                   │
+  │                                                          │
+  │  push(node, start, end):                                │
+  │    if lazy[node] != 0:                                  │
+  │      tree[node] += lazy[node] × (end - start + 1)       │
+  │      if not leaf:                                       │
+  │        lazy[left_child]  += lazy[node]                  │
+  │        lazy[right_child] += lazy[node]                  │
+  │      lazy[node] = 0                                     │
+  └──────────────────────────────────────────────────────────┘
+```
 
 ```python
 class SegmentTreeLazy:

@@ -1,6 +1,61 @@
 # BFS Complete Guide
 
+## What is BFS? — Visual Intuition
+
+```
+BFS = Breadth-First Search
+Explores ALL neighbors at current depth BEFORE moving to next level.
+
+Think of it as: Ripples spreading from a stone dropped in water.
+
+         START at 0
+            │
+    ┌───────┼───────┐
+    ▼       ▼       ▼
+    1       2       3        ← Level 1: all direct neighbors
+    │       │    ┌──┤
+    ▼       ▼    ▼  ▼
+    4       5    6  7        ← Level 2: neighbors of neighbors
+
+BFS processes: 0 → 1,2,3 → 4,5,6,7
+
+KEY INSIGHT: BFS guarantees SHORTEST PATH in unweighted graphs!
+  Distance from 0 to 5 = 2 (0→2→5) — BFS finds this first!
+```
+
 ## BFS Template
+
+### Step-by-Step Walkthrough
+
+```
+Graph:
+    0 -- 1
+    |    |
+    2 -- 3 -- 4
+
+Adjacency list: {0:[1,2], 1:[0,3], 2:[0,3], 3:[1,2,4], 4:[3]}
+
+BFS from node 0:
+
+Step │ Queue    │ Pop │ Visited Set     │ Result
+─────│──────────│─────│─────────────────│──────────
+  1  │ [0]      │ --  │ {0}             │ []
+  2  │ []       │  0  │ {0}             │ [0]
+  3  │ [1, 2]   │ --  │ {0, 1, 2}      │ [0]
+  4  │ [2]      │  1  │ {0, 1, 2}      │ [0, 1]
+  5  │ [3]      │  2  │ {0, 1, 2, 3}   │ [0, 1, 2]
+  6  │ [4]      │  3  │ {0, 1, 2, 3}   │ [0, 1, 2, 3]
+  7  │ []       │  4  │ {0, 1, 2, 3, 4}│ [0, 1, 2, 3, 4]
+  8  │ DONE     │ --  │ {0, 1, 2, 3, 4}│ [0, 1, 2, 3, 4]
+
+Visual of the queue at each step:
+  Step 1: | 0 |             ← Start: enqueue source
+  Step 3: | 1 | 2 |         ← After popping 0, enqueue its neighbors
+  Step 4: | 2 |             ← After popping 1, enqueue its unvisited neighbor (3)
+  Step 5: | 3 |             ← After popping 2, enqueue its unvisited neighbor (3 already added)
+  Step 6: | 4 |             ← After popping 3, enqueue its unvisited neighbor (4)
+  Step 7: |                 ← After popping 4, no unvisited neighbors
+```
 
 ```python
 from collections import deque
@@ -9,20 +64,27 @@ def bfs_template(graph, start):
     """
     Standard BFS template for graph traversal
     Time: O(V + E) | Space: O(V)
+
+    ALGORITHM:
+    1. Add start node to queue and visited set
+    2. While queue is not empty:
+       a. Dequeue a node
+       b. Process it
+       c. Enqueue all unvisited neighbors (mark visited BEFORE enqueuing!)
     """
     visited = set([start])
     queue = deque([start])
     result = []
-    
+
     while queue:
-        node = queue.popleft()
+        node = queue.popleft()         # FIFO: process oldest first
         result.append(node)
-        
+
         for neighbor in graph[node]:
             if neighbor not in visited:
-                visited.add(neighbor)
+                visited.add(neighbor)  # Mark BEFORE adding to queue!
                 queue.append(neighbor)
-    
+
     return result
 
 
@@ -31,18 +93,21 @@ def bfs_distance(graph, start):
     """
     Returns shortest distance from start to all reachable nodes
     Time: O(V + E) | Space: O(V)
+
+    KEY INSIGHT: When we first visit a node, we've found the
+    shortest path to it (because BFS explores level by level).
     """
-    visited = {start: 0}
+    visited = {start: 0}   # node → distance from start
     queue = deque([start])
-    
+
     while queue:
         node = queue.popleft()
-        
+
         for neighbor in graph[node]:
             if neighbor not in visited:
-                visited[neighbor] = visited[node] + 1
+                visited[neighbor] = visited[node] + 1  # distance = parent's dist + 1
                 queue.append(neighbor)
-    
+
     return visited
 
 
@@ -51,28 +116,55 @@ def bfs_shortest_path(graph, start, end):
     """
     Returns shortest path from start to end
     Time: O(V + E) | Space: O(V)
+
+    We store the PATH alongside each node in the queue.
+    When we find the end, we return the path immediately.
     """
     if start == end:
         return [start]
-    
+
     visited = {start}
-    queue = deque([(start, [start])])
-    
+    queue = deque([(start, [start])])  # (node, path_so_far)
+
     while queue:
         node, path = queue.popleft()
-        
+
         for neighbor in graph[node]:
             if neighbor not in visited:
                 new_path = path + [neighbor]
                 if neighbor == end:
-                    return new_path
+                    return new_path       # Found shortest path!
                 visited.add(neighbor)
                 queue.append((neighbor, new_path))
-    
+
     return []  # No path found
-```
 
 ## BFS on Grid/Matrix
+
+### Visual: Grid BFS Step-by-Step
+
+```
+Grid BFS: Starting from (0,0) in this grid (1=walkable, 0=wall)
+
+  Grid:              BFS Progress (distance from start):
+  ┌───┬───┬───┬───┐  ┌───┬───┬───┬───┐
+  │ 1 │ 1 │ 1 │ 0 │  │ 0 │ 1 │ 2 │ · │  ← Level 0: (0,0)
+  ├───┼───┼───┼───┤  ├───┼───┼───┼───┤  ← Level 1: (0,1),(1,0)
+  │ 1 │ 0 │ 1 │ 1 │  │ 1 │ · │ 3 │ 4 │  ← Level 2: (0,2),(2,0)
+  ├───┼───┼───┼───┤  ├───┼───┼───┼───┤  ← Level 3: (1,2),(2,1)
+  │ 1 │ 1 │ 1 │ 1 │  │ 2 │ 3 │ 4 │ 5 │  ← Level 4: (1,3),(2,2)
+  └───┴───┴───┴───┘  └───┴───┴───┴───┘  ← Level 5: (2,3)
+
+  4-directional moves from (r, c):
+  ┌─────────────────────────────┐
+  │  (r-1, c)  ← UP            │
+  │  (r+1, c)  ← DOWN          │
+  │  (r, c-1)  ← LEFT          │
+  │  (r, c+1)  ← RIGHT         │
+  └─────────────────────────────┘
+
+  Directions array: [(-1,0), (1,0), (0,-1), (0,1)]
+```
 
 ```python
 from collections import deque
@@ -81,46 +173,56 @@ def bfs_grid(grid, start_row, start_col):
     """
     BFS on a 2D grid
     Time: O(M * N) | Space: O(M * N)
+
+    STEP-BY-STEP:
+    1. Initialize queue with start cell
+    2. For each cell, try all 4 directions
+    3. Check bounds, visited, and walkable before enqueuing
     """
     if not grid or not grid[0]:
         return []
-    
+
     rows, cols = len(grid), len(grid[0])
     visited = set([(start_row, start_col)])
     queue = deque([(start_row, start_col)])
     result = []
-    
+
     while queue:
         r, c = queue.popleft()
         result.append((r, c))
-        
-        # 4-directional movement
+
+        # 4-directional movement: up, down, left, right
         for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             nr, nc = r + dr, c + dc
-            if (0 <= nr < rows and 0 <= nc < cols and 
+            # Check: in bounds? Not visited? Walkable?
+            if (0 <= nr < rows and 0 <= nc < cols and
                 (nr, nc) not in visited and grid[nr][nc] == 1):
                 visited.add((nr, nc))
                 queue.append((nr, nc))
-    
+
     return result
 
 
-# 8-directional movement
+# 8-directional movement (includes diagonals)
 def bfs_grid_8(grid, start_row, start_col):
-    """BFS with 8-directional movement"""
+    """
+    BFS with 8-directional movement
+    Useful for: "number of islands" variants where diagonals connect
+    """
     rows, cols = len(grid), len(grid[0])
     visited = set([(start_row, start_col)])
     queue = deque([(start_row, start_col)])
-    
+
     while queue:
         r, c = queue.popleft()
-        
+
+        # 8 directions: all combinations of -1, 0, 1 (except 0,0)
         for dr in [-1, 0, 1]:
             for dc in [-1, 0, 1]:
                 if dr == 0 and dc == 0:
-                    continue
+                    continue  # Skip (0,0) — that's the current cell
                 nr, nc = r + dr, c + dc
-                if (0 <= nr < rows and 0 <= nc < cols and 
+                if (0 <= nr < rows and 0 <= nc < cols and
                     (nr, nc) not in visited):
                     visited.add((nr, nc))
                     queue.append((nr, nc))
@@ -266,6 +368,38 @@ print(shortest_path_unweighted(graph, 0, 5))  # [0, 2, 5]
 
 ## Rotting Oranges (Multi-Source BFS)
 
+### Visual: Multi-Source BFS
+
+```
+MULTI-SOURCE BFS = Start from MULTIPLE nodes simultaneously!
+Instead of 1 source, add ALL sources to queue initially.
+
+  Rotting Oranges (LeetCode 994):
+  0 = empty, 1 = fresh orange, 2 = rotten
+
+  Minute 0:           Minute 1:           Minute 2:
+  ┌───┬───┬───┐       ┌───┬───┬───┐       ┌───┬───┬───┐
+  │ 2 │ 1 │ 0 │       │ 2 │ 2 │ 0 │       │ 2 │ 2 │ 0 │
+  ├───┼───┼───┤       ├───┼───┼───┤       ├───┼───┼───┤
+  │ 0 │ 1 │ 1 │  ──►  │ 0 │ 2 │ 1 │  ──►  │ 0 │ 2 │ 2 │
+  ├───┼───┼───┤       ├───┼───┼───┤       ├───┼───┼───┤
+  │ 1 │ 0 │ 1 │       │ 1 │ 0 │ 1 │       │ 2 │ 0 │ 2 │
+  └───┴───┴───┘       └───┴───┴───┘       └───┴───┴───┘
+
+  Queue starts with ALL rotten oranges: [(0,0)]
+  After minute 1: queue has [(0,1), (1,1)]
+  After minute 2: queue has [(1,2), (2,0), (2,2)]
+  All fresh → return 2 minutes
+
+  KEY PATTERN:
+  ┌──────────────────────────────────────────────────────────┐
+  │ for _ in range(len(queue)):  ← process ONE level = 1 min│
+  │     r, c = queue.popleft()                               │
+  │     for each neighbor:                                   │
+  │         if fresh: rot it, add to queue                   │
+  └──────────────────────────────────────────────────────────┘
+```
+
 ```python
 from collections import deque
 
@@ -277,42 +411,43 @@ def oranges_rotting(grid):
     """
     if not grid or not grid[0]:
         return 0
-    
+
     rows, cols = len(grid), len(grid[0])
     queue = deque()
     fresh = 0
-    
-    # Initialize: find all rotten oranges
+
+    # Initialize: find ALL rotten oranges (multi-source!)
     for r in range(rows):
         for c in range(cols):
             if grid[r][c] == 2:
-                queue.append((r, c))
+                queue.append((r, c))   # Add all rotten to queue
             elif grid[r][c] == 1:
-                fresh += 1
-    
+                fresh += 1             # Count fresh oranges
+
     if fresh == 0:
-        return 0
-    
+        return 0   # Nothing to rot
+
     minutes = 0
     directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
-    
+
     while queue:
         minutes += 1
+        # Process ALL currently rotten oranges (one minute's worth)
         for _ in range(len(queue)):
             r, c = queue.popleft()
-            
+
             for dr, dc in directions:
                 nr, nc = r + dr, c + dc
-                if (0 <= nr < rows and 0 <= nc < cols and 
+                if (0 <= nr < rows and 0 <= nc < cols and
                     grid[nr][nc] == 1):
-                    grid[nr][nc] = 2
+                    grid[nr][nc] = 2       # Rot it
                     fresh -= 1
-                    queue.append((nr, nc))
-        
+                    queue.append((nr, nc))  # It can now rot neighbors
+
         if fresh == 0:
             return minutes
-    
-    return -1  # Some oranges remain fresh
+
+    return -1  # Some oranges remain fresh (impossible)
 ```
 
 ## Walls and Gates
@@ -564,4 +699,37 @@ def bfs_grid_template(grid, start, end=None):
    - Multi-source propagation (rotting oranges)
    - Checking if graph is bipartite
 8. Pattern: visited check BEFORE adding to queue, not after
+
+CRITICAL MISTAKE TO AVOID:
+┌─────────────────────────────────────────────────────────┐
+│  WRONG: Check visited AFTER popping from queue          │
+│  → Node gets added to queue multiple times!             │
+│  → Wastes memory and time                               │
+│                                                         │
+│  RIGHT: Check visited BEFORE adding to queue            │
+│  → Each node enters queue exactly once                  │
+│  → Guarantees O(V + E) time complexity                  │
+└─────────────────────────────────────────────────────────┘
+
+Complexity Analysis:
+┌────────────────────┬──────────────┬──────────────┐
+│ Operation          │ Graph BFS    │ Grid BFS     │
+├────────────────────┼──────────────┼──────────────┤
+│ Time Complexity    │ O(V + E)     │ O(M × N)     │
+│ Space Complexity   │ O(V)         │ O(M × N)     │
+│ Queue Max Size     │ O(V)         │ O(M × N)     │
+│ Visited Set Size   │ O(V)         │ O(M × N)     │
+└────────────────────┴──────────────┴──────────────┘
+
+Common Patterns:
+┌─────────────────────────┬───────────────────────────────┐
+│ Problem Type            │ BFS Variant                   │
+├─────────────────────────┼───────────────────────────────┤
+│ Shortest path (unwt.)   │ Standard BFS with distance    │
+│ Level order (tree)      │ BFS with level size tracking  │
+│ Multi-source spread     │ BFS with multiple start nodes │
+│ Bipartite check         │ BFS with 2-coloring           │
+│ Word transformation     │ BFS on implicit word graph    │
+│ Clone graph             │ BFS with hash map             │
+└─────────────────────────┴───────────────────────────────┘
 ```

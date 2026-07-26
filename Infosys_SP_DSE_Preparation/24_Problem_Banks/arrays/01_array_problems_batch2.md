@@ -34,6 +34,44 @@ print(two_sum([3, 3], 6))           # [0, 1]
 **Time Complexity:** O(n) — single pass through array
 **Space Complexity:** O(n) — hash map stores up to n elements
 
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Array: [2, 7, 11, 15], Target: 9
+
+Step-by-step:
+i=0, num=2: complement=7, seen={2:0}
+i=1, num=7: complement=2, 2 EXISTS in seen! → return [0, 1]
+
+Key Insight: When we reach 7, we've already stored 2's index.
+So 2+7=9 → indices [0,1]
+```
+
+**Brute Force Approach:**
+```python
+def two_sum_brute(nums, target):
+    for i in range(len(nums)):
+        for j in range(i+1, len(nums)):
+            if nums[i] + nums[j] == target:
+                return [i, j]
+    return []
+# Time: O(n²), Space: O(1)
+```
+
+**Why Optimal is Better:** O(n) vs O(n²) — for 10⁵ elements, this is 10⁵ operations vs 10¹⁰ operations.
+
+**Common Mistakes & Edge Cases:**
+- ❌ Using same element twice: `[3,3]` with target=6 → must return `[0,1]`, not `[0,0]`
+- ❌ Not storing index: only storing value loses position info
+- ✅ Edge case: Exactly one solution guaranteed (no need to handle multiple)
+- ✅ Edge case: Negative numbers work fine with this approach
+
+**Pattern Recognition:**
+- 🎯 **Two Sum Pattern**: Hash map for complement lookup
+- 🔑 **Key Idea**: Transform "find pair" to "find complement in seen"
+- 📝 **Variants**: Three Sum (sort + two pointers), Four Sum (nested two sum)
+
 ---
 
 ### Problem 2: Best Time to Buy and Sell Stock III
@@ -66,6 +104,58 @@ print(max_profit_iii([7, 6, 4, 3, 1]))            # 0
 
 **Time Complexity:** O(n) — single pass
 **Space Complexity:** O(1) — only four variables
+
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Prices: [3, 3, 5, 0, 0, 3, 1, 4]
+
+State tracking:
+         first_buy  first_sell  second_buy  second_sell
+Start:   -inf       0           -inf        0
+Day 0(3): -3        0           -inf        0
+Day 1(3): -3        0           -inf        0
+Day 2(5): -3        2           -inf        0
+Day 3(0): -3        2           0           0
+Day 4(0): -3        2           0           0
+Day 5(3): -3        2           0           3
+Day 6(1): -3        2           1           3
+Day 7(4): -3        2           1           6 ← Answer
+
+Optimal: Buy@0, Sell@3, Buy@1, Sell@4 = profit 3+3=6
+```
+
+**Brute Force Approach:**
+```python
+def max_profit_brute(prices):
+    n = len(prices)
+    max_profit = 0
+    for i in range(n):  # first buy
+        for j in range(i+1, n):  # first sell
+            for k in range(j+1, n):  # second buy
+                for l in range(k+1, n):  # second sell
+                    profit = prices[j]-prices[i] + prices[l]-prices[k]
+                    max_profit = max(max_profit, profit)
+    return max_profit
+# Time: O(n⁴), Space: O(1)
+```
+
+**State Machine Insight:**
+- This is a **finite state machine** problem
+- 4 states: `first_buy → first_sell → second_buy → second_sell`
+- Update order matters: process from right to left to avoid using same transaction twice
+
+**Common Mistakes & Edge Cases:**
+- ❌ Wrong update order: updating first_buy before second_buy uses same price twice
+- ❌ Forgetting prices can be all decreasing → profit = 0
+- ✅ Edge case: Less than 2 days → return 0
+- ✅ Edge case: Only 1 transaction profitable → use only first transaction
+
+**Pattern Recognition:**
+- 🎯 **State Machine DP**: Track states with variables
+- 🔑 **Key Insight**: At most k transactions → generalize to k states
+- 📝 **Variants**: Best Time to Buy/Sell Stock I (1 transaction), II (unlimited), III (2 transactions), k (k transactions)
 
 ---
 
@@ -107,6 +197,60 @@ print(duplicate_zeros([1, 2, 3]))                    # [1, 2, 3]
 **Time Complexity:** O(n) — two passes
 **Space Complexity:** O(1) — in-place modification
 
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Array: [1, 0, 2, 3, 0, 4, 5, 0], n=8
+
+Pass 1 - Count how many elements fit:
+i=0: 1 (non-zero) → possible_length=1
+i=1: 0 (zero) → possible_length=3
+i=2: 2 (non-zero) → possible_length=4
+i=3: 3 (non-zero) → possible_length=5
+i=4: 0 (zero) → possible_length=7
+i=5: 4 (non-zero) → possible_length=8 → STOP (≥ n)
+
+last_valid = 4 (index of last element that fits)
+
+Pass 2 - Backwards placement:
+i=4 (val=0): arr[7]=0, arr[6]=0 → [_,_,_,_,_,_,0,0]
+i=3 (val=3): arr[5]=3 → [_,_,_,_,_,3,0,0]
+i=2 (val=2): arr[4]=2 → [_,_,_,_,2,3,0,0]
+i=1 (val=0): arr[3]=0, arr[2]=0 → [_,_,0,0,2,3,0,0]
+i=0 (val=1): arr[1]=1 → [_,1,0,0,2,3,0,0]
+
+Final: [1,0,0,2,3,0,0,4]
+```
+
+**Brute Force Approach:**
+```python
+def duplicate_zeros_brute(arr):
+    i = 0
+    while i < len(arr):
+        if arr[i] == 0:
+            arr.pop()  # make space
+            arr.insert(i+1, 0)
+            i += 2
+        else:
+            i += 1
+    return arr
+# Time: O(n²) due to insert/pop operations, Space: O(1)
+```
+
+**Why Backwards?** Forward insertion shifts all subsequent elements (O(n) each), making total O(n²). Backwards avoids this.
+
+**Common Mistakes & Edge Cases:**
+- ❌ Forward iteration with insertion: causes index shifting issues
+- ❌ Not counting overflow: when zero at end would exceed array size
+- ✅ Edge case: No zeros in array → returns unchanged
+- ✅ Edge case: All zeros → fills with zeros (but truncated at n)
+
+**Pattern Recognition:**
+- 🎯 **Two-Pass In-Place**: Count first, then place backwards
+- 🔑 **Key Insight**: Backwards iteration avoids overwriting unprocessed data
+- 📝 **Variants**: Remove Duplicates in-place, Rotate Array, Move Zeroes
+
 ---
 
 ### Problem 4: Valid Mountain Array
@@ -138,6 +282,78 @@ print(valid_mountain_array([0, 2, 3, 4, 5, 2, 1, 0]))  # True
 
 **Time Complexity:** O(n) — single pass with two pointers
 **Space Complexity:** O(1) — no extra space
+
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Array: [0, 2, 3, 4, 5, 2, 1, 0]
+
+Step 1 - Walk up (strictly increasing):
+i=0: 0<2 ✓ → i=1
+i=1: 2<3 ✓ → i=2
+i=2: 3<4 ✓ → i=3
+i=3: 4<5 ✓ → i=4
+i=4: 5>2 ✗ → STOP at peak=5
+
+Step 2 - Check peak position:
+peak at index 4 (not start, not end) ✓
+
+Step 3 - Walk down (strictly decreasing):
+i=4: 5>2 ✓ → i=5
+i=5: 2>1 ✓ → i=6
+i=6: 1>0 ✓ → i=7
+i=7: reached end → i == n-1 ✓
+
+Result: True (valid mountain)
+```
+
+**Visual Examples:**
+```
+Valid:    [0,2,3,4,5,2,1,0]  ← up then down, peak not at edge
+Invalid:  [3,5,5]            ← flat section (5=5)
+Invalid:  [0,3,2,1,0]        ← wait, this IS valid ✓
+Invalid:  [1,2,3,4,5]        ← only increasing, no decrease
+Invalid:  [5,4,3,2,1]        ← only decreasing, no increase
+```
+
+**Brute Force Approach:**
+```python
+def valid_mountain_brute(arr):
+    n = len(arr)
+    if n < 3:
+        return False
+    
+    peak_idx = arr.index(max(arr))
+    
+    # Check peak not at edges
+    if peak_idx == 0 or peak_idx == n-1:
+        return False
+    
+    # Check strictly increasing to peak
+    for i in range(peak_idx):
+        if arr[i] >= arr[i+1]:
+            return False
+    
+    # Check strictly decreasing from peak
+    for i in range(peak_idx, n-1):
+        if arr[i] <= arr[i+1]:
+            return False
+    
+    return True
+# Time: O(n) but two passes, Space: O(1)
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Allowing flat sections: `[1,2,2,1]` → False (must be strictly increasing/decreasing)
+- ❌ Peak at start or end: `[5,4,3,2]` → False (need both sides)
+- ✅ Edge case: Length < 3 → always False
+- ✅ Edge case: Single peak with equal slopes → check strict inequalities
+
+**Pattern Recognition:**
+- 🎯 **Two-Pointer Walk**: One pass from left, one from right
+- 🔑 **Key Insight**: Find peak, verify both sides independently
+- 📝 **Variants**: Peak Index in Mountain Array, Find Peak Element
 
 ---
 
@@ -172,6 +388,56 @@ print(merge_sorted([1], 1, [], 0))                    # [1]
 
 **Time Complexity:** O(m + n) — each element visited once
 **Space Complexity:** O(1) — in-place merge
+
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+nums1 = [1,2,3,0,0,0]  (m=3)
+nums2 = [2,5,6]        (n=3)
+
+Initial pointers:
+p1=2 (pointing to 3), p2=2 (pointing to 6), write=5
+
+Step-by-step:
+Compare 3 vs 6: 6>3 → nums1[5]=6, p2=1, write=4
+Compare 3 vs 5: 5>3 → nums1[4]=5, p2=0, write=3
+Compare 3 vs 2: 3>2 → nums1[3]=3, p1=1, write=2
+Compare 2 vs 2: 2=2 → nums1[2]=2, p2=-1, write=1
+p2 exhausted → copy remaining nums1: nums1[1]=2, nums1[0]=1
+
+Result: [1,2,2,3,5,6]
+```
+
+**Why Backwards?**
+```
+Forward merge would OVERWRITE nums1 data:
+[1,2,3,_,_,_] + [2,5,6]
+If we write 2 at index 0 → [2,2,3,_,_,_] → LOST the original 1!
+
+Backwards fills from the END where there's empty space:
+[1,2,3,_,_,6] ← safe, no overwrites
+```
+
+**Brute Force Approach:**
+```python
+def merge_sorted_brute(nums1, m, nums2, n):
+    nums1[m:] = nums2
+    nums1.sort()
+    return nums1
+# Time: O((m+n)log(m+n)), Space: O(1) or O(n) depending on sort
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Forward iteration: overwrites unprocessed elements in nums1
+- ❌ Not handling nums2 exhaustion: some elements may remain in nums1
+- ✅ Edge case: nums2 is empty → nums1 unchanged
+- ✅ Edge case: All nums2 elements smaller → nums1 shifts right entirely
+
+**Pattern Recognition:**
+- 🎯 **Three-Pointer Merge**: Read from end, write to end
+- 🔑 **Key Insight**: Merge from backwards to avoid overwrites
+- 📝 **Variants**: Merge Two Sorted Lists, Merge Sorted Array (with extra space)
 
 ---
 
@@ -208,6 +474,51 @@ print(third_max([2, 2, 3, 1]))           # 1
 **Time Complexity:** O(n) — single pass
 **Space Complexity:** O(1) — three variables
 
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Array: [2, 2, 3, 1]
+
+Initialize: first=second=third=-inf
+
+num=2: 2 > -inf → third=-inf, second=-inf, first=2
+num=2: 2 IN (2,-inf,-inf) → skip (duplicate)
+num=3: 3 > 2 → third=-inf, second=2, first=3
+num=1: 1 > -inf → third=1, second=2, first=3
+
+third=1 (not -inf) → return 1 ✓
+```
+
+**Key Insight: Distinct Maximums**
+```
+[5, 5, 5, 5] → first=5, second=-inf, third=-inf
+              → return first=5 (no third distinct exists)
+
+[3, 2, 1] → first=3, second=2, third=1
+           → return 1 (third distinct exists)
+```
+
+**Brute Force Approach:**
+```python
+def third_max_brute(nums):
+    distinct = list(set(nums))
+    distinct.sort(reverse=True)
+    return distinct[2] if len(distinct) >= 3 else distinct[0]
+# Time: O(n log n), Space: O(n) for set
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Not skipping duplicates: `[2,2,3]` would count 2 twice
+- ❌ Not returning maximum when third doesn't exist
+- ✅ Edge case: Less than 3 distinct → return maximum
+- ✅ Edge case: All same values → return that value
+
+**Pattern Recognition:**
+- 🎯 **Track Top-K**: Maintain k variables while scanning
+- 🔑 **Key Idea**: Update variables in order (third ← second ← first ← new)
+- 📝 **Variants**: Kth Largest Element, Third Distinct Number
+
 ---
 
 ### Problem 7: Average Salary Excluding Min and Max
@@ -232,6 +543,48 @@ print(average([1000, 2000, 3000]))         # 2000.0
 
 **Time Complexity:** O(n) — sum, min, max each take O(n)
 **Space Complexity:** O(1) — only scalar variables
+
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Salary: [4000, 3000, 1000, 2000]
+
+Step 1 - Find sum: 4000+3000+1000+2000 = 10000
+Step 2 - Find min: 1000
+Step 3 - Find max: 4000
+Step 4 - Calculate: (10000 - 1000 - 4000) / (4 - 2)
+        = 5000 / 2 = 2500.0 ✓
+```
+
+**Why This Works:**
+```
+Total = 10000 (includes min and max)
+After removing: 10000 - 1000 - 4000 = 5000
+Remaining count: 4 - 2 = 2
+Average: 5000 / 2 = 2500
+
+Alternative: sort and slice [2000, 3000] → avg=2500
+```
+
+**Brute Force (Sort):**
+```python
+def average_sort(salary):
+    salary.sort()
+    return sum(salary[1:-1]) / (len(salary) - 2)
+# Time: O(n log n), Space: O(1) in-place sort
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Dividing by n instead of n-2
+- ❌ Not handling minimum/maximum correctly when they appear multiple times
+- ✅ Edge case: Exactly 3 salaries → returns the middle one
+- ✅ Edge case: Large numbers → use integer arithmetic to avoid float issues
+
+**Pattern Recognition:**
+- 🎯 **Exclude Extremes**: Remove min/max, compute on rest
+- 🔑 **Key Insight**: One pass for sum/min/max is sufficient
+- 📝 **Variants**: Trim Mean, Remove Outliers
 
 ---
 
@@ -265,6 +618,66 @@ print(can_place_flowers([1, 0, 0, 0, 1], 2))  # False
 **Time Complexity:** O(n) — single pass
 **Space Complexity:** O(1) — in-place modification
 
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Flowerbed: [1, 0, 0, 0, 1], n=1
+
+i=0: flowerbed[0]=1 → skip (already planted)
+i=1: flowerbed[1]=0
+     left_ok: flowerbed[0]=1 → False
+     → cannot plant
+i=2: flowerbed[2]=0
+     left_ok: flowerbed[1]=0 ✓
+     right_ok: flowerbed[3]=0 ✓
+     → plant! flowerbed=[1,0,1,0,1], count=1
+     → count >= n → return True ✓
+
+Key: After planting at i=2, neighbors are now blocked
+```
+
+**Edge Case Visualization:**
+```
+[0, 0, 0, 0, 0] n=3
+
+i=0: left=None(ok), right=0(ok) → plant → [1,0,0,0,0]
+i=1: left=1 → cannot plant
+i=2: left=0, right=0 → plant → [1,0,1,0,0]
+i=3: left=1 → cannot plant
+i=4: left=0, right=None(ok) → plant → [1,0,1,0,1]
+
+count=3 ≥ n=3 → True ✓
+Maximum flowers in 5 slots = 3
+```
+
+**Brute Force Approach:**
+```python
+def can_place_brute(flowerbed, n):
+    count = 0
+    for i in range(len(flowerbed)):
+        if flowerbed[i] == 0:
+            # Check if we can plant here
+            left = flowerbed[i-1] if i > 0 else 0
+            right = flowerbed[i+1] if i < len(flowerbed)-1 else 0
+            if left == 0 and right == 0:
+                flowerbed[i] = 1
+                count += 1
+    return count >= n
+# Same complexity, just less clean boundary handling
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Off-by-one: checking i-1 when i=0 or i+1 when i=n-1
+- ❌ Not planting and then checking neighbors (must plant to block future)
+- ✅ Edge case: All zeros → can plant ⌈n/2⌉ flowers
+- ✅ Edge case: n=0 → always True
+
+**Pattern Recognition:**
+- 🎯 **Greedy with Boundary Check**: Plant whenever possible
+- 🔑 **Key Insight**: Early termination when count ≥ n
+- 📝 **Variants**: Paint House, Jump Game
+
 ---
 
 ### Problem 9: Kids With Greatest Candies
@@ -286,6 +699,58 @@ print(kids_with_candies([4, 2, 1, 1, 2], 1))  # [True,False,False,False,False]
 
 **Time Complexity:** O(n) — one pass for max, one for comparison
 **Space Complexity:** O(1) — excluding output array
+
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+Candies: [2, 3, 5, 1, 3], extraCandies = 3
+
+Step 1 - Find max: max = 5
+
+Step 2 - Compare each kid + extras vs max:
+Kid 0: 2+3=5 ≥ 5 → True  (tied for greatest)
+Kid 1: 3+3=6 ≥ 5 → True  (new greatest)
+Kid 2: 5+3=8 ≥ 5 → True  (still greatest)
+Kid 3: 1+3=4 < 5 → False (not enough)
+Kid 4: 3+3=6 ≥ 5 → True  (new greatest)
+
+Result: [True, True, True, False, True]
+```
+
+**Key Insight:**
+```
+We don't need to know WHO is currently greatest.
+Just check: can this kid REACH the current max?
+current + extras ≥ max → yes, can be greatest (or tied)
+```
+
+**Brute Force (Check all pairs):**
+```python
+def kids_brute(candies, extra_candies):
+    result = []
+    for i in range(len(candies)):
+        # Check if kid i would be greatest
+        is_greatest = True
+        for j in range(len(candies)):
+            if i != j and candies[j] > candies[i] + extra_candies:
+                is_greatest = False
+                break
+        result.append(is_greatest)
+    return result
+# Time: O(n²), Space: O(1)
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Comparing against wrong max (e.g., comparing against original kid's value)
+- ❌ Forgetting tied is allowed ("greatest OR TIED")
+- ✅ Edge case: All kids already equal → all True if extras ≥ 0
+- ✅ Edge case: extras = 0 → only current max kid gets True
+
+**Pattern Recognition:**
+- 🎯 **Compare Against Global Max**: One pass to find max, one to compare
+- 🔑 **Key Idea**: Simple threshold comparison, no sorting needed
+- 📝 **Variants**: Kids With Maximum Candies, Find All Elements Greater Than K
 
 ---
 
@@ -315,6 +780,57 @@ print(max_length_between_equal_characters("cbzxy"))    # -1
 
 **Time Complexity:** O(n) — single pass
 **Space Complexity:** O(1) — at most 26 characters in map
+
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+String: "abca"
+
+i=0: 'a' not in {} → store {'a': 0}
+i=1: 'b' not in {'a'} → store {'a':0, 'b':1}
+i=2: 'c' not in {'a','b'} → store {'a':0, 'b':1, 'c':2}
+i=3: 'a' IN map! → max_len = max(-1, 3-0-1) = 2
+
+Answer: 2 (substring "bc" between two 'a's)
+```
+
+**Understanding "Between Two Equal Characters":**
+```
+"a b c a"
+ ↑     ↑
+ first and last 'a'
+ 
+Between them: "bc" → length = 2 (excluding the 'a's themselves)
+
+"aa" → between them: "" → length = 0
+"cbzxy" → no repeated chars → return -1
+```
+
+**Brute Force Approach:**
+```python
+def max_length_brute(s):
+    max_len = -1
+    for i in range(len(s)):
+        for j in range(i+1, len(s)):
+            if s[i] == s[j]:
+                max_len = max(max_len, j - i - 1)
+    return max_len
+# Time: O(n²), Space: O(1)
+```
+
+**Why Hash Map Works:** Only need FIRST occurrence to maximize distance. Later occurrences don't give longer substrings.
+
+**Common Mistakes & Edge Cases:**
+- ❌ Subtracting 1 twice: distance already excludes one endpoint
+- ❌ Not returning -1 when no repeated characters
+- ✅ Edge case: Consecutive repeats "aa" → length 0 (empty between)
+- ✅ Edge case: Single character → return -1
+
+**Pattern Recognition:**
+- 🎯 **First Occurrence Map**: Store index of first seen character
+- 🔑 **Key Idea**: Maximize distance between same characters
+- 📝 **Variants**: Longest Substring Without Repeating, Two Sum (same pattern)
 
 ---
 
@@ -346,6 +862,63 @@ print(min_operations(6))  # 9
 **Time Complexity:** O(1) — direct formula
 **Space Complexity:** O(1) — no extra space
 
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+n = 3 → arr = [1, 3, 5] (2*0+1, 2*1+1, 2*2+1)
+
+Make all equal:
+Target = (1+3+5)/3 = 3
+Operations: |1-3| + |3-3| + |5-3| = 2 + 0 + 2 = 4
+But each operation changes TWO elements → 4/2 = 2 operations
+
+Formula: n²/4 = 9/4 = 2 ✓
+```
+
+**Why n²/4?**
+```
+Array: [1, 3, 5, 7, 9] (n=5)
+Sum = 25, target = 5
+Differences: |1-5|=4, |3-5|=2, |5-5|=0, |7-5|=2, |9-5|=4
+Total diff = 12
+Operations = 12/2 = 6
+
+Formula: 5²/4 = 25/4 = 6 (integer division) ✓
+```
+
+**Mathematical Insight:**
+```
+arr[i] = 2i + 1 (odd numbers)
+To equalize: each operation transfers 1 from one element to another
+Total "imbalance" = sum of |arr[i] - target| for all i
+Each operation reduces imbalance by 2 (one +1, one -1)
+Answer = total_imbalance / 2
+```
+
+**Brute Force Approach:**
+```python
+def min_operations_brute(n):
+    arr = [2*i + 1 for i in range(n)]
+    target = sum(arr) // n
+    operations = 0
+    for num in arr:
+        operations += abs(num - target)
+    return operations // 2
+# Time: O(n), Space: O(n)
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Forgetting integer division (n² might be odd)
+- ❌ Using wrong formula (n*(n-1)/2 is for different problem)
+- ✅ Edge case: n=1 → 0 operations (already equal)
+- ✅ Edge case: n=2 → 1 operation (transfer 1 from 3 to 1)
+
+**Pattern Recognition:**
+- 🎯 **Mathematical Formula**: Derive O(1) solution from pattern
+- 🔑 **Key Insight**: Odd numbers array has predictable imbalance
+- 📝 **Variants**: Minimum Moves to Equal Array Elements, Array Transformation
+
 ---
 
 ### Problem 12: Convert 1D Array to 2D
@@ -369,6 +942,68 @@ print(construct_2d_array([1, 2], 1, 1))          # []
 
 **Time Complexity:** O(m * n) — iterate through all elements
 **Space Complexity:** O(m * n) — for the 2D array output
+
+#### Detailed Explanation
+
+**Visual Walkthrough:**
+```
+original = [1, 2, 3, 4], m=2, n=2
+
+Check: m*n = 2*2 = 4 = len(original) ✓
+
+Slicing:
+Row 0: original[0:2] = [1, 2]
+Row 1: original[2:4] = [3, 4]
+
+Result: [[1, 2], [3, 4]]
+```
+
+**Alternative Example:**
+```
+original = [1, 2, 3], m=1, n=3
+
+Check: 1*3 = 3 = len(original) ✓
+
+Row 0: original[0:3] = [1, 2, 3]
+
+Result: [[1, 2, 3]]
+```
+
+**Why Return Empty?**
+```
+original = [1, 2], m=1, n=1
+Check: 1*1 = 1 ≠ 2 → return []
+Cannot fit 2 elements into 1x1 grid
+```
+
+**Brute Force Approach:**
+```python
+def construct_brute(original, m, n):
+    if m * n != len(original):
+        return []
+    
+    result = []
+    idx = 0
+    for i in range(m):
+        row = []
+        for j in range(n):
+            row.append(original[idx])
+            idx += 1
+        result.append(row)
+    return result
+# Time: O(m*n), Space: O(m*n)
+```
+
+**Common Mistakes & Edge Cases:**
+- ❌ Not checking if m*n equals length → IndexError
+- ❌ Wrong slicing: [i*n : i*n+n] vs [i*n : (i+1)*n]
+- ✅ Edge case: Empty original → return []
+- ✅ Edge case: m or n is 0 → return []
+
+**Pattern Recognition:**
+- 🎯 **Array Reshape**: Convert 1D to 2D with row-major order
+- 🔑 **Key Insight**: Index mapping: row=i, col=j → idx = i*n + j
+- 📝 **Variants**: Reshape Matrix, Spiral Matrix, ZigZag Conversion
 
 ---
 

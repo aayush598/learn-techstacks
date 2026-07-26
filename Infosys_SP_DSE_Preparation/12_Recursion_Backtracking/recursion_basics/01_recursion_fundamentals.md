@@ -29,6 +29,47 @@ Every recursive solution has two parts:
 1. **Base case** — the condition that stops the recursion
 2. **Recursive case** — the part where the function calls itself with a smaller/simpler input
 
+### Visual: The Two Ingredients of Recursion
+
+```
+  RECURSIVE PROBLEM SOLVING
+  =========================
+
+  Original Problem          Smaller Problem          Even Smaller
+  ┌──────────────┐          ┌──────────────┐          ┌──────────────┐
+  │  factorial(5)│ ──────►  │  factorial(4)│ ──────►  │  factorial(3)│ ──► ...
+  │              │ calls    │              │ calls    │              │
+  └──────────────┘ itself   └──────────────┘ itself   └──────────────┘
+                              (smaller input)
+
+  ... ──► ┌──────────────┐   ┌──────────────┐
+          │  factorial(1)│   │  factorial(0)│ ← BASE CASE: stops here!
+          │              │   │  returns 1   │
+          └──────────────┘   └──────────────┘
+
+  KEY RULE: Every recursive call MUST move toward the base case.
+            Otherwise → infinite recursion → stack overflow!
+```
+
+### Real-World Analogy
+
+```
+  Think of Russian Nesting Dolls (Matryoshka):
+  ┌─────────────────────────────────────┐
+  │  ┌─────────────────────────────┐    │
+  │  │  ┌─────────────────────┐    │    │
+  │  │  │  ┌─────────────┐    │    │    │
+  │  │  │  │  ┌───────┐   │    │    │    │
+  │  │  │  │  │  🪆    │   │    │    │    │  ← base case (smallest)
+  │  │  │  │  └───────┘   │    │    │    │
+  │  │  │  └─────────────┘    │    │    │
+  │  │  └─────────────────────┘    │    │
+  │  └─────────────────────────────┘    │
+  └─────────────────────────────────────┘
+  Open a doll → find a smaller one → repeat until smallest.
+  Then put them back together (return values).
+```
+
 ---
 
 ## Base Case and Recursive Case
@@ -47,6 +88,15 @@ def good(n):
 
 **Rule**: Every recursive call must move the problem **closer** to the base case.
 
+```
+  DECISION CHECKLIST — Every recursive function:
+  ┌─────────────────────────────────────────────────────────┐
+  │ 1. Do I have a base case?          (stops recursion)   │
+  │ 2. Does every call move toward it? (prevents infinite)  │
+  │ 3. Will I eventually reach it?     (guarantees halting)  │
+  └─────────────────────────────────────────────────────────┘
+```
+
 ```python
 # Moving toward base case
 def power(base, exp):
@@ -59,6 +109,22 @@ def bad_power(base, exp):
     if exp == 0:
         return 1
     return base * bad_power(base, exp)  # exp never changes!
+```
+
+```python
+# COMMON BASE CASES to memorize:
+# ┌──────────────────────┬─────────────────────────────────────┐
+# │ Pattern              │ Base Case                           │
+# ├──────────────────────┼─────────────────────────────────────┤
+# │ Count down           │ if n == 0: return / print           │
+# │ Factorial            │ if n == 0: return 1                 │
+# │ Fibonacci            │ if n <= 1: return n                 │
+# │ Tree traversal       │ if node is None: return             │
+# │ String processing    │ if len(s) == 0: return              │
+# │ Array processing     │ if len(arr) == 0 or idx == len:     │
+# │ Power                │ if exp == 0: return 1               │
+# │ GCD                  │ if b == 0: return a                 │
+# └──────────────────────┴─────────────────────────────────────┘
 ```
 
 ---
@@ -121,51 +187,195 @@ factorial_verbose(4)
 #   factorial(4) = 4 * factorial(3) = 24
 ```
 
+### Recursion Tree for Fibonacci(5)
+
+```
+                          fib(5)
+                         /      \
+                    fib(4)        fib(3)
+                   /      \      /      \
+              fib(3)    fib(2) fib(2)   fib(1)=1
+             /    \    /    \   /    \
+         fib(2) fib(1) fib(1) fib(0) fib(1) fib(0)
+        /    \    |      |     |       |       |
+    fib(1) fib(0) 1      1     1       1       1
+      |      |
+      1      0
+
+  TOTAL NODES: 15    Unique subproblems: only 5!
+  This is WHY we need memoization — without it, O(2^n) redundant work.
+
+  Memoization table:
+  ┌─────┬───────┬────────────────────┐
+  │  n  │ fib(n)│ Times Computed     │
+  ├─────┼───────┼────────────────────┤
+  │  0  │   0   │ 5x → cache after 1 │
+  │  1  │   1   │ 3x → cache after 1 │
+  │  2  │   1   │ 3x → cache after 1 │
+  │  3  │   2   │ 2x → cache after 1 │
+  │  4  │   3   │ 1x                  │
+  │  5  │   5   │ 1x                  │
+  └─────┴───────┴────────────────────┘
+  With memoization: O(n) time, O(n) space
+```
+
+### Recursion Tree for Merge Sort — Divide and Conquer
+
+```
+                    merge_sort([38, 27, 43, 3])
+                    /                            \
+          merge_sort([38, 27])          merge_sort([43, 3])
+          /              \              /              \
+   merge_sort([38])  merge_sort([27]) merge_sort([43]) merge_sort([3])
+        |                  |               |                |
+      [38]              [27]             [43]             [3]
+          \              /                   \            /
+           merge([38,27])                   merge([43,3])
+           [27, 38]                          [3, 43]
+                    \                        /
+                      merge([27,38,3,43])
+                      [3, 27, 38, 43]  ← sorted!
+
+  DEPTH: log₂(4) = 2 levels of merging
+  WORK PER LEVEL: O(n) for merging
+  TOTAL: O(n log n)
+```
+
 ---
 
 ## Head Recursion vs Tail Recursion
 
-### Tail Recursion
-The recursive call is the **last operation** in the function. The current frame is not needed after the call returns.
+### Visual Comparison
 
-```python
-# TAIL RECURSION — recursive call is the LAST thing done
-def factorial_tail(n, accumulator=1):
-    if n == 0:
-        return accumulator
-    return factorial_tail(n - 1, n * accumulator)  # nothing after this
+```
+  HEAD RECURSION:  Work AFTER recursive call
+  ═══════════════════════════════════════════
+  def f(n):
+      if base: return
+      f(n-1)      ← recurse FIRST
+      <work>      ← then do work  (must remember to do this!)
+
+  Call stack frame must STAY alive to do work after return.
+  Stack:  ┌──────────┐
+          │ f(3):    │
+          │  f(2)    │ ← waiting for f(2) to return
+          │  <work>  │ ← work pending after f(2) returns
+          └──────────┘
+
+  TAIL RECURSION:  Work BEFORE recursive call (call is last op)
+  ═══════════════════════════════════════════════════════════
+  def f(n, acc):
+      if base: return acc
+      <work>      ← do work first
+      f(n-1, acc) ← recurse LAST  (nothing left to do!)
+
+  Stack frame NOT needed after call — some languages optimize this away.
+  Stack:  ┌──────────┐
+          │ f(3, 6): │
+          │  <work>   │ ← already done
+          │  f(2,6)   │ ← no pending work, can reuse frame!
+          └──────────┘
+
+  MIDDLE RECURSION: Work on BOTH sides
+  ══════════════════════════════════════
+  def traverse(node):
+      print(node.val)       ← work BEFORE
+      traverse(node.left)   ← recurse
+      traverse(node.right)  ← recurse
+      # Both sides need the frame alive
 ```
 
-### Head Recursion
-The recursive call is **not the last operation**. Work remains after the call returns.
+### Side-by-Side Factorial Examples
 
 ```python
-# HEAD RECURSION — work done AFTER recursive call returns
+# HEAD RECURSION — must multiply AFTER the recursive call returns
 def factorial_head(n):
     if n == 0:
         return 1
-    result = factorial_head(n - 1)  # recursive call first
-    return n * result               # work done after
+    result = factorial_head(n - 1)  # go all the way down first
+    return n * result               # then multiply on the way back up
+    # Frame must be kept alive to compute n * result
+
+# TAIL RECURSION — accumulator carries the result, no work after call
+def factorial_tail(n, accumulator=1):
+    if n == 0:
+        return accumulator
+    return factorial_tail(n - 1, n * accumulator)  # LAST operation
+    # No pending work → frame can be reused (in languages that optimize)
+
+# Both produce: factorial(5) = 120
+# factorial_head(5)  → 5 * (4 * (3 * (2 * (1 * 1)))) = 120
+# factorial_tail(5)  → f(4, 5) → f(3, 20) → f(2, 60) → f(1, 120) → f(0, 120) = 120
 ```
 
-### Middle Recursion
-Work done both before and after the recursive call.
-
-```python
-# MIDDLE RECURSION — work on both sides
-def print_tree(node):
-    if node is None:
-        return
-    print(node.val)              # work before
-    print_tree(node.left)        # recursive call
-    print_tree(node.right)       # recursive call
 ```
+  FACTORIAL HEAD vs TAIL — Step-by-step:
 
-**Key insight**: Tail recursion can be optimized by some languages (not Python) into a loop. In Python, tail recursion still uses stack frames.
+  HEAD (build-up on return):        TAIL (carry forward):
+  ═════════════════════════          ═══════════════════════
+  factorial_head(5):                 factorial_tail(5, 1):
+    → call f_h(4)                      → call f_t(4, 5)
+      → call f_h(3)                      → call f_t(3, 20)
+        → call f_h(2)                      → call f_t(2, 60)
+          → call f_h(1)                      → call f_t(1, 120)
+            → call f_h(0) → return 1          → call f_t(0, 120) → return 120
+            ← return 1*1 = 1                ← return 120
+          ← return 2*1 = 2                ← return 120
+        ← return 3*2 = 6                ← return 120
+      ← return 4*6 = 24               ← return 120
+    ← return 5*24 = 120               ← return 120
+
+  Work happens on THE WAY BACK       Result accumulated on THE WAY DOWN
+```
 
 ---
 
 ## Direct vs Indirect Recursion
+
+### Visual Comparison
+
+```
+  DIRECT RECURSION: Function calls ITSELF
+  ═══════════════════════════════════════════
+
+       ┌───────────┐
+       │           │
+       ▼           │
+    ┌──────┐       │
+    │ f(n) │───────┘
+    └──────┘
+    calls itself
+
+  def countdown(n):
+      if n == 0: return
+      print(n)
+      countdown(n - 1)  # calls countdown → direct recursion
+
+  ═══════════════════════════════════════════════════════════
+
+  INDIRECT RECURSION: A calls B, B calls A (cycle)
+  ═══════════════════════════════════════════════════════════
+
+    ┌──────┐     ┌──────┐
+    │  A   │────▶│  B   │
+    │      │◀────│      │
+    └──────┘     └──────┘
+    calls B       calls A
+
+  def is_even(n):
+      if n == 0: return True
+      return is_odd(n - 1)   # A calls B
+
+  def is_odd(n):
+      if n == 0: return False
+      return is_even(n - 1)  # B calls A
+
+  Call chain for is_even(4):
+  is_even(4) → is_odd(3) → is_even(2) → is_odd(1) → is_even(0) → True
+
+  WARNING: Indirect recursion is harder to debug!
+  Always ensure BOTH functions have base cases.
+```
 
 ### Direct Recursion
 Function calls **itself**.
@@ -322,6 +532,29 @@ def merge_sort(arr):
 
 Python's default recursion limit is **1000**. For deeper recursion, increase it.
 
+```
+  RECURSION LIMIT VISUALIZATION:
+  ═══════════════════════════════
+
+  Stack Frame 1000:  ┌──────────┐  ← RecursionError if you go deeper!
+  Stack Frame  999:  │          │
+  Stack Frame  998:  │          │
+       ...            │          │
+  Stack Frame    2:  │          │
+  Stack Frame    1:  │          │
+  Stack Frame    0:  │  MAIN    │  ← First call
+                     └──────────┘
+
+  Python default: max 1000 frames
+  sys.setrecursionlimit(10000): max 10000 frames
+  sys.setrecursionlimit(1 << 25): ~33 million frames (use with caution!)
+
+  ⚠️  WARNING: Setting too high can cause:
+  - Segmentation fault (crashes Python entirely)
+  - System instability
+  - Use iterative approach instead for very deep recursion
+```
+
 ```python
 import sys
 
@@ -383,6 +616,49 @@ def fib(n):
 
 print(fib(100))  # Instant! Without memoization: would take forever
 print(fib.cache_info())  # Shows hits, misses, size
+```
+
+### Without vs With Memoization — Visual Impact
+
+```
+  WITHOUT MEMOIZATION: fib(5) — O(2^n) = O(32) calls, most are repeats!
+
+                          fib(5)
+                         /       \
+                    fib(4)         fib(3)
+                   /     \        /     \
+              fib(3)   fib(2)  fib(2)  fib(1)
+             /   \     /   \    /   \
+        fib(2) fib(1) fib(1) fib(0) fib(1) fib(0)
+        /   \
+    fib(1) fib(0)
+
+  Redundant: fib(3) computed 2x, fib(2) computed 3x, fib(1) computed 5x!
+
+  ═══════════════════════════════════════════════════════════════════
+
+  WITH MEMOIZATION: fib(5) — O(n) = O(5) unique calls!
+
+                          fib(5) → computed, STORED
+                         /       \
+                    fib(4)         fib(3)
+                   /     \        /     \
+              fib(3)→CACHED  fib(2)→CACHED  fib(1)→BASE
+             /   \
+        fib(2)→CACHED  fib(1)→BASE
+
+  Memo Table After:
+  ┌────┬──────┬──────────────────────────────────────┐
+  │ n  │ fib(n)│ Status                              │
+  ├────┼──────┼──────────────────────────────────────┤
+  │  0 │   0  │ computed (base case)                 │
+  │  1 │   1  │ computed (base case)                 │
+  │  2 │   1  │ computed once, cached                │
+  │  3 │   2  │ computed once, cached                │
+  │  4 │   3  │ computed once, cached                │
+  │  5 │   5  │ computed once, cached                │
+  └────┴──────┴──────────────────────────────────────┘
+  Speedup for fib(40): ~1 second vs ~30 MINUTES (O(2^40) vs O(40))
 ```
 
 ### Using `@cache` (Python 3.9+)
@@ -594,16 +870,149 @@ def solve_n_queens(n):
 
 ---
 
+## Common Recursion Mistakes & How to Fix Them
+
+```
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #1: Missing Base Case                                         │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  def countdown(n):            def countdown(n):                          │
+  │      print(n)                    if n == 0:  # ✓ FIXED                  │
+  │      countdown(n - 1)            print(n)                               │
+  │      # NO BASE CASE!           countdown(n - 1)                          │
+  │      # → RecursionError!                                                    │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #2: Not Moving Toward Base Case                               │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  def power(b, e):              def power(b, e):                          │
+  │      if e == 0: return 1           if e == 0: return 1                  │
+  │      return b * power(b, e)  # ←   return b * power(b, e - 1) # ✓      │
+  │      # e never changes!             # e decreases → reaches 0           │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #3: Forgetting to Undo State (in backtracking)                 │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  def backtrack(path, remaining):                                        │
+  │      for choice in choices:                                             │
+  │          path.append(choice)                                            │
+  │          backtrack(path, remaining - choice)                            │
+  │          path.pop()  # ← MUST undo! Otherwise path keeps growing       │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #4: Off-by-One in Base Case                                    │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  def factorial(n):                                                      │
+  │      if n == 1: return 1  # ← Should be n == 0 for factorial!          │
+  │                           # factorial(0) should return 1, not recurse   │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #5: Returning None When You Should Return a Value              │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  def find_max(node):                                                    │
+  │      if not node: return None  # ← Should return -inf or min_value     │
+  │      left = find_max(node.left)  # left could be None → crash!          │
+  │                                                                         │
+  │  def find_max(node):                  # ✓ FIXED                        │
+  │      if not node: return float('-inf')                                  │
+  │      return max(node.val, find_max(node.left), find_max(node.right))   │
+  └─────────────────────────────────────────────────────────────────────────┘
+```
+
+### Debugging Recursive Functions — A Systematic Approach
+
+```python
+# TIP 1: Add indentation to trace the call stack
+def fib_debug(n, depth=0):
+    indent = "  " * depth
+    print(f"{indent}fib({n}) called")
+    if n <= 1:
+        print(f"{indent}  → base case, returning {n}")
+        return n
+    result = fib_debug(n - 1, depth + 1) + fib_debug(n - 2, depth + 1)
+    print(f"{indent}  → fib({n}) = {result}")
+    return result
+
+# fib_debug(4) produces:
+# fib(4) called
+#   fib(3) called
+#     fib(2) called
+#       fib(1) called
+#         → base case, returning 1
+#       fib(0) called
+#         → base case, returning 0
+#     → fib(2) = 1
+#     fib(1) called
+#       → base case, returning 1
+#   → fib(3) = 2
+#   fib(2) called
+#     fib(1) called
+#       → base case, returning 1
+#     fib(0) called
+#       → base case, returning 0
+#   → fib(2) = 1
+# → fib(4) = 3
+
+# TIP 2: For small inputs, manually trace the call stack on paper
+# TIP 3: Add assertions at key points
+def factorial_safe(n):
+    assert n >= 0, f"n must be non-negative, got {n}"
+    if n == 0:
+        return 1
+    result = n * factorial_safe(n - 1)
+    assert result > 0, f"factorial overflow at n={n}"
+    return result
+```
+
+---
+
 ## Quick Reference — When to Use What
 
-| Problem Type | Pattern | Example |
-|-------------|---------|---------|
-| Split into subproblems | Divide & Conquer | Merge sort, BST validation |
-| Reduce to one subproblem | Decrease & Conquer | Binary search, power |
-| Explore all solutions | Backtracking | Permutations, N-Queens |
-| Overlapping subproblems | Memoization/DP | Fibonacci, knapsack |
-| Tree traversal | Recursion (DFS) | Inorder, preorder, postorder |
-| Graph traversal | Recursion or Iterative | DFS, topological sort |
+| Problem Type | Pattern | Example | Recurrence |
+|-------------|---------|---------|------------|
+| Split into subproblems | Divide & Conquer | Merge sort, BST validation | T(n) = aT(n/b) + O(n^d) |
+| Reduce to one subproblem | Decrease & Conquer | Binary search, power | T(n) = T(n/b) + O(1) |
+| Explore all solutions | Backtracking | Permutations, N-Queens | O(branches^depth) |
+| Overlapping subproblems | Memoization/DP | Fibonacci, knapsack | Depends on subproblems |
+| Tree traversal | Recursion (DFS) | Inorder, preorder, postorder | O(n) |
+| Graph traversal | Recursion or Iterative | DFS, topological sort | O(V + E) |
+
+### Complexity Cheat Sheet
+
+```
+  Common Recursion Complexities:
+  ╔══════════════════════════════╦════════════════╦════════════════╗
+  ║ Recurrence                   ║ Time           ║ Example        ║
+  ╠══════════════════════════════╬════════════════╬════════════════╣
+  ║ T(n) = T(n-1) + O(1)       ║ O(n)           ║ Factorial      ║
+  ║ T(n) = T(n-1) + O(n)       ║ O(n²)          ║ Selection Sort ║
+  ║ T(n) = T(n-1) + O(n²)     ║ O(n³)          ║ Naive matrix   ║
+  ║ T(n) = 2T(n-1) + O(1)     ║ O(2^n)         ║ Tower of Hanoi ║
+  ║ T(n) = T(n-1) + T(n-2)    ║ O(2^n)         ║ Naive Fib      ║
+  ║ T(n) = T(n/2) + O(1)       ║ O(log n)       ║ Binary search  ║
+  ║ T(n) = 2T(n/2) + O(1)     ║ O(n)           ║ Tree traversal ║
+  ║ T(n) = 2T(n/2) + O(n)     ║ O(n log n)     ║ Merge sort     ║
+  ║ T(n) = aT(n/b) + O(n^d)   ║ See Master Th. ║ General D&C    ║
+  ╚══════════════════════════════╩════════════════╩════════════════╝
+
+  Master Theorem: T(n) = aT(n/b) + O(n^d)
+  ┌──────────┬───────────────────────┐
+  │ Compare  │ Result                │
+  ├──────────┼───────────────────────┤
+  │ d < log(a)/log(b) │ O(n^log_b(a)) │
+  │ d = log(a)/log(b) │ O(n^d · log n) │
+  │ d > log(a)/log(b) │ O(n^d)         │
+  └──────────┴───────────────────────┘
+```
 
 ---
 

@@ -1,5 +1,31 @@
 # Combinatorics Guide for Infosys SP DSE
 
+> **Quick Overview — When to Use What:**
+> ```
+> ┌─────────────────────────────────────────────────────────────────┐
+> │                  COMBINATORICS DECISION TREE                    │
+> ├─────────────────────────────────────────────────────────────────┤
+> │                                                                 │
+> │  Need to COUNT something?                                       │
+> │       │                                                         │
+> │       ├── Order matters? ──────── YES ──▶ Permutations (nPr)    │
+> │       │                                                         │
+> │       └── Order doesn't matter? ── YES ──▶ Combinations (nCr)  │
+> │                   │                                             │
+> │                   ├── Items identical? ──▶ Stars & Bars         │
+> │                   │                                             │
+> │                   ├── With repetition? ──▶ C(n+r-1, r)         │
+> │                   │                                             │
+> │                   └── Distribute items? ─▶ Stars & Bars         │
+> │                                                                 │
+> │  Special patterns:                                              │
+> │    • Valid brackets ──▶ Catalan Numbers                         │
+> │    • No element in place ──▶ Derangements                       │
+> │    • Count subsets with property ──▶ Inclusion-Exclusion        │
+> │    • Multiple constraints ──▶ Inclusion-Exclusion               │
+> └─────────────────────────────────────────────────────────────────┘
+> ```
+
 ## 1. nCr Computation (with Modular Arithmetic)
 
 ### Basic nCr (Small Values)
@@ -68,6 +94,36 @@ print(comb.nPr(10, 3))    # 720
 ---
 
 ## 2. Pascal's Triangle
+
+```
+Visual: Pascal's Triangle — Each number is the sum of two above it
+
+Row 0:              1
+                    ╱ ╲
+Row 1:            1     1
+                  ╱ ╲ ╱ ╲
+Row 2:          1     2     1
+                ╱ ╲ ╱ ╲ ╱ ╲
+Row 3:        1     3     3     1
+              ╱ ╲ ╱ ╲ ╱ ╲ ╱ ╲
+Row 4:      1     4     6     4     1
+            ╱ ╲ ╱ ╲ ╱ ╲ ╱ ╲ ╱ ╲
+Row 5:    1     5    10    10     5     1
+
+Key Properties:
+  • C(n, 0) = C(n, n) = 1         (edges are always 1)
+  • C(n, k) = C(n-1, k-1) + C(n-1, k)   (each interior = sum of two above)
+  • Row n sums to 2^n
+  • Row n has n+1 elements
+  • C(n, k) = C(n, n-k)           (symmetry)
+
+Visual: Reading C(n,k) from the triangle
+  To find C(5, 2):
+  Row 5:    1     5    10    10     5     1
+  Index:    0     1     2     3     4     5
+                              ↑
+                          C(5,2) = 10
+```
 
 ```python
 def pascal_triangle(n, mod=None):
@@ -308,6 +364,44 @@ Find number of non-negative integer solutions to: x1 + x2 + ... + xk = n
 
 **Formula:** C(n + k - 1, k - 1)
 
+```
+Visual: Stars and Bars — The Most Intuitive Way to Count
+
+Problem: Distribute 7 identical candies among 3 children.
+         Each child can get 0 or more.
+
+Solution: Use STARS (★) for candies and BARS (│) to separate children.
+
+   ★ ★ ★ │ ★ ★ │ ★ ★
+   ─┬──┬─ ─┬──┬ ─┬──┬
+    x1=3   x2=2   x3=2
+    (3 candies) (2 candies) (2 candies)
+
+   Another arrangement:
+   ★ ★ │ ★ ★ ★ ★ │ ★
+   ─┬── ─┬────── ─┬─
+    x1=2   x2=4   x3=1
+
+Total positions: 7 stars + 2 bars = 9 positions
+Choose 2 positions for bars (or 7 for stars):
+C(9, 2) = 36
+
+General formula:
+  n stars (candies) + k-1 bars (separators) = n+k-1 positions
+  Choose k-1 positions for bars: C(n+k-1, k-1)
+
+Example: 10 candies, 3 children
+  C(10+3-1, 3-1) = C(12, 2) = 66
+
+Visual for small case: 3 candies, 2 children (x1 + x2 = 3)
+  C(3+2-1, 2-1) = C(4, 1) = 4 solutions:
+  
+  ★ ★ ★ │     → x1=3, x2=0
+  ★ ★ │ ★     → x1=2, x2=1
+  ★ │ ★ ★     → x1=1, x2=2
+  │ ★ ★ ★     → x1=0, x2=3
+```
+
 ```python
 MOD = 10**9 + 7
 
@@ -472,6 +566,45 @@ A derangement is a permutation where no element appears in its original position
 **Formula:** D(n) = (n-1) * (D(n-1) + D(n-2))
 **Base:** D(0) = 1, D(1) = 0
 
+```
+Visual: What is a Derangement?
+
+Original positions:   1  2  3  4
+                      │  │  │  │
+Valid permutation:    2  1  4  3    ← Everyone moved! ✓ (derangement)
+Invalid permutation:  2  1  3  4    ← 3 and 4 stayed ✗ (NOT a derangement)
+
+D(1) = 0:  Can't move the only element!
+  Original:  [1]
+  Only perm: [1]  ← 1 is in position 1 (not a derangement)
+
+D(2) = 1:  Only one way to derange 2 elements
+  Original:  [1, 2]
+  Deranged:  [2, 1]  ✓
+
+D(3) = 2:  Two ways to derange 3 elements
+  Original:  [1, 2, 3]
+  Deranged:  [2, 3, 1]  ✓ (no element in original position)
+             [3, 1, 2]  ✓
+
+D(4) = 9:
+  Original:  [1, 2, 3, 4]
+  Some derangements:
+    [2, 1, 4, 3]  ✓  (swap pairs)
+    [2, 3, 4, 1]  ✓  (shift right)
+    [2, 4, 1, 3]  ✓  (complex)
+    [3, 1, 4, 2]  ✓  (complex)
+    [3, 4, 1, 2]  ✓  (complex)
+    [3, 4, 2, 1]  ✓  (complex)
+    [4, 1, 2, 3]  ✓  (shift right more)
+    [4, 3, 1, 2]  ✓  (complex)
+    [4, 3, 2, 1]  ✓  (reverse)
+
+  Total: 9 derangements out of 4! = 24 total permutations
+
+Approximation: D(n) ≈ n! / e (round to nearest integer)
+```
+
 ### Recursive with Memoization
 ```python
 from functools import lru_cache
@@ -585,16 +718,40 @@ print(comb.stars_and_bars_positive(10, 3))  # C(9,2) = 36
 
 ## Quick Reference
 
-| Problem | Formula | Complexity |
-|---------|---------|------------|
-| nCr | n! / (r! * (n-r)!) | O(1) after O(n) preprocessing |
-| nPr | n! / (n-r)! | O(1) after O(n) preprocessing |
-| Permutations with repetition | n! / (n1! * n2! * ... * nk!) | O(k) |
-| Combinations with repetition | C(n+r-1, r) | O(1) after O(n) preprocessing |
-| Catalan number | C(2n,n) / (n+1) | O(n) after O(n) preprocessing |
-| Stars and bars | C(n+k-1, k-1) | O(1) after O(n) preprocessing |
-| Derangements | (n-1) * (D(n-1) + D(n-2)) | O(n) |
-| Inclusion-exclusion | Sum over subsets | O(2^k) |
+| Problem | Formula | Complexity | When to Use |
+|---------|---------|------------|-------------|
+| nCr | n! / (r! * (n-r)!) | O(1) after O(n) preprocessing | Choosing r from n, order doesn't matter |
+| nPr | n! / (n-r)! | O(1) after O(n) preprocessing | Arranging r from n, order matters |
+| Permutations with repetition | n! / (n1! * n2! * ... * nk!) | O(k) | Arranging items with duplicates |
+| Combinations with repetition | C(n+r-1, r) | O(1) after O(n) preprocessing | Choosing r from n types, can repeat |
+| Catalan number | C(2n,n) / (n+1) | O(n) after O(n) preprocessing | Valid brackets, binary trees, triangulations |
+| Stars and bars | C(n+k-1, k-1) | O(1) after O(n) preprocessing | Distributing identical items |
+| Derangements | (n-1) * (D(n-1) + D(n-2)) | O(n) | No element in its original position |
+| Inclusion-exclusion | Sum over subsets | O(2^k) | Counting with multiple constraints |
+
+### Pattern Recognition Guide
+
+```
+When you see these keywords, think of these techniques:
+
+┌─────────────────────────────┬──────────────────────────────────┐
+│        KEYWORD              │        TECHNIQUE                 │
+├─────────────────────────────┼──────────────────────────────────┤
+│ "how many ways"             │ Counting (nCr, nPr, or DP)      │
+│ "order matters"             │ Permutations (nPr)               │
+│ "order doesn't matter"      │ Combinations (nCr)               │
+│ "with replacement/repeat"   │ C(n+r-1, r)                      │
+│ "without replacement"       │ nCr or nPr                       │
+│ "distribute identical"      │ Stars and Bars                   │
+│ "distinguishable"           │ Factor out permutations          │
+│ "valid parentheses/brackets"│ Catalan numbers                  │
+│ "no element in place"       │ Derangements                     │
+│ "at least one of"           │ Inclusion-Exclusion              │
+│ "grid path"                 │ nCr(m+n-2, m-1)                 │
+│ "count subsets with sum"    │ DP or meet-in-the-middle         │
+│ "mod 10^9+7"                │ Precompute factorials + Fermat   │
+└─────────────────────────────┴──────────────────────────────────┘
+```
 
 ### Common Patterns in Infosys Problems
 1. **Count paths:** nCr(n+m, n) or nCr(n+m-2, n-1)

@@ -1,53 +1,74 @@
 # 2D DP — Advanced Problems
 
+## When to Use These Advanced Patterns
+
+```
+┌──────────────────────────────────────────────────────────────────────┐
+│                2D ADVANCED DP PATTERN GUIDE                         │
+├─────────────────────────────┬────────────────────────────────────────┤
+│ Problem hints               │ Pattern                              │
+├─────────────────────────────┼────────────────────────────────────────┤
+│ "palindrome subsequence"    │ Interval DP: dp[i][j] on s[i..j]    │
+│ "shortest supersequence"    │ LCS-based construction               │
+│ "largest square/rectangle"  │ Min of 3 neighbors + 1              │
+│ "burst balloons / partition"│ Interval DP with O(n³) splitting     │
+│ "game from both ends"       │ Minimax interval DP                  │
+│ "count all squares"         │ Sum up dp[i][j] values               │
+└─────────────────────────────┴────────────────────────────────────────┘
+```
+
+---
+
 ## Longest Palindromic Subsequence
 
 Given a string, find the length of the longest subsequence that is a palindrome.
 
-**Concept:** if s[i] == s[j]: dp[i][j] = dp[i+1][j-1] + 2 else: dp[i][j] = max(dp[i+1][j], dp[i][j-1])
+### Visual Walkthrough
+
+```
+s = "bbbab"
+
+The LPS = "bbbb" (length 4) — remove the 'a'
+
+DP Table (filled bottom-left to top-right):
+     b  b  b  a  b      ← j (right pointer)
+  ┌────┬────┬────┬────┬────┐
+ b│ 1  │ 2  │ 3  │ 3  │ 4  │  ← dp[0][4]: s[0]=b, s[4]=b match! → dp[1][3]+2=4
+  ├────┼────┼────┼────┼────┤
+ b│ .  │ 1  │ 2  │ 2  │ 3  │
+  ├────┼────┼────┼────┼────┤
+ b│ .  │ .  │ 1  │ 1  │ 3  │
+  ├────┼────┼────┼────┼────┤
+ a│ .  │ .  │ .  │ 1  │ 1  │
+  ├────┼────┼────┼────┼────┤
+ b│ .  │ .  │ .  │ .  │ 1  │
+  └────┴────┴────┴────┴────┘
+  ↑ i (left pointer, fill bottom-up)
+
+Fill order (diagonals, length increasing):
+  Diagonal 0 (i==j): dp[i][i] = 1  (single char = palindrome of length 1)
+  Diagonal 1:        dp[i][i+1] → s[i]==s[i+1] ? 2 : 1
+  Diagonal 2, 3, 4:  Increasing lengths
+
+  dp[0][4] = 4 means: longest palindromic subsequence of "bbbab" has length 4
+```
 
 ```python
-def longest_palindrome_subseq_memo(s: str, i: int = None, j: int = None, memo=None) -> int:
-    if memo is None:
-        memo = {}
-    if i is None:
-        return longest_palindrome_subseq_memo(s, 0, len(s) - 1, memo)
-    if i > j:
-        return 0
-    if i == j:
-        return 1
-    key = (i, j)
-    if key in memo:
-        return memo[key]
-    if s[i] == s[j]:
-        memo[key] = 2 + longest_palindrome_subseq_memo(s, i + 1, j - 1, memo)
-    else:
-        memo[key] = max(longest_palindrome_subseq_memo(s, i + 1, j, memo),
-                        longest_palindrome_subseq_memo(s, i, j - 1, memo))
-    return memo[key]
-
 def longest_palindrome_subseq_tab(s: str) -> int:
     n = len(s)
     dp = [[0] * n for _ in range(n)]
+    # Fill by increasing interval length
     for i in range(n - 1, -1, -1):
-        dp[i][i] = 1
+        dp[i][i] = 1  # Base: single character is palindrome of length 1
         for j in range(i + 1, n):
             if s[i] == s[j]:
-                dp[i][j] = dp[i + 1][j - 1] + 2
+                dp[i][j] = dp[i + 1][j - 1] + 2  # Both ends match
             else:
-                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])  # Skip one end
     return dp[0][n - 1]
 
-# DP Table for "bbbab":
-#   b b b a b
-# b 1 2 3 3 4
-# b 0 1 2 2 3
-# b 0 0 1 1 3
-# a 0 0 0 1 1
-# b 0 0 0 0 1
-# Answer: 4
-
 # Time: O(n²), Space: O(n²)
+# Note: this is also O(n²) space; can optimize to O(n) with careful rolling
 ```
 
 ---
@@ -102,35 +123,72 @@ def shortest_common_supersequence(a: str, b: str) -> str:
 
 Given a matrix of 0s and 1s, find the area of the largest square containing only 1s.
 
-**Concept:** dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1]) if matrix[i][j] == '1'
+### Visual Walkthrough
+
+```
+matrix:                DP table:
+1 0 1 0 0              0 0 0 0 0 0
+1 0 1 1 1              0 1 0 1 1 1
+1 1 1 1 1              0 1 2 2 2 2
+1 0 0 1 0              0 1 0 0 1 0
+
+Rule: dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1], dp[i-1][j-1])
+                       ─────────────────────────────────────────
+                       If ALL three neighbors are ≥ X, then this
+                       cell can form an (X+1)×(X+1) square
+
+Why? A square needs:
+  -  □ □       Above must support this width
+  -  □ ■  ←    Left must support this height
+  -            Diagonal ensures square shape (not just rectangle)
+
+Visual at dp[3][4] (matrix[2][3]='1'):
+    1  1        dp values:  2  2
+    2  2 ■                   2  [2] ← this = 1 + min(2,2,2) = 3
+    0  0                       0   0
+                            Wait, let me recompute:
+
+matrix[2][3] = '1' → dp[3][4] = 1 + min(dp[2][4], dp[3][3], dp[2][3])
+                          = 1 + min(2, 2, 2) = 3  ← No wait, indexing...
+
+Let me use 0-indexed with padding:
+
+Original matrix:        DP (with 0 padding):
+1 0 1 0 0               0 0 0 0 0 0
+1 0 1 1 1               0 1 0 1 1 1
+1 1 1 1 1               0 1 2 2 2 2
+1 0 0 1 0               0 1 0 0 1 0
+
+At (2,3): matrix=1, dp=1+min(dp[1][3],dp[2][2],dp[1][2])=1+min(1,2,1)=2
+At (2,4): matrix=1, dp=1+min(dp[1][4],dp[2][3],dp[1][3])=1+min(1,2,1)=2
+
+max_side=2 → area = 2×2 = 4
+
+Largest square:
+  1 1
+  1 1   (at rows 2-3, cols 2-3 in 0-indexed matrix)
+```
 
 ```python
 def maximal_square(matrix: list) -> int:
     if not matrix:
         return 0
     m, n = len(matrix), len(matrix[0])
+    # dp[i][j] = side length of largest square ending at (i-1, j-1)
     dp = [[0] * (n + 1) for _ in range(m + 1)]
     max_side = 0
     for i in range(1, m + 1):
         for j in range(1, n + 1):
             if matrix[i - 1][j - 1] == '1':
-                dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1], dp[i - 1][j - 1])
+                dp[i][j] = 1 + min(
+                    dp[i - 1][j],      # square from above
+                    dp[i][j - 1],      # square from left
+                    dp[i - 1][j - 1]   # square from diagonal
+                )
                 max_side = max(max_side, dp[i][j])
-    return max_side * max_side
+    return max_side * max_side  # Area = side²
 
-# DP Table for:
-# 1 0 1 0 0
-# 1 0 1 1 1
-# 1 1 1 1 1
-# 1 0 0 1 0
-# Result: 4 (max side = 2)
-
-# Time: O(m×n), Space: O(m×n)
-```
-
-### With space optimization
-
-```python
+# Space-optimized version:
 def maximal_square_optimized(matrix: list) -> int:
     if not matrix:
         return 0
@@ -146,7 +204,7 @@ def maximal_square_optimized(matrix: list) -> int:
         prev = curr
     return max_side * max_side
 
-# Time: O(m×n), Space: O(n)
+# Time: O(m×n), Space: O(n) optimized
 ```
 
 ---
@@ -234,48 +292,63 @@ def count_squares(matrix: list) -> int:
 
 ## Burst Balloons
 
-Given n balloons, each with a number. Burst balloon i gets nums[i-1] * nums[i] * nums[i+1] coins. Find max coins.
+Given n balloons with numbers. Burst balloon i and get nums[i-1] × nums[i] × nums[i+1] coins. Find max coins.
 
-**Concept:** Add sentinel 1s at both ends. dp[i][j] = max coins from bursting all balloons between i and j.
+### Visual Walkthrough
+
+```
+nums = [3, 1, 5, 8]
+
+Add sentinels: [1, 3, 1, 5, 8, 1]
+
+Key insight: Think of it as "which balloon is the LAST to burst in a range?"
+
+If balloon k is the LAST to burst in range [l..r]:
+  - Before bursting k, balloons in [l..k-1] and [k+1..r] are already gone
+  - When k bursts, its neighbors are the sentinels/boundaries at l and r
+  - Coins = nums[l] × nums[k] × nums[r]  (k is adjacent to boundaries!)
+         + solve(l, k) + solve(k, r)       (burst balloons in left and right sub-ranges)
+
+DP Table for [1, 3, 1, 5, 8, 1]:
+
+  dp[l][r] = max coins from bursting all balloons between l and r (exclusive)
+
+  Length 2: dp[l][l+2] for all valid l (need at least one balloon between)
+    dp[0][2] = nums[0]*nums[1]*nums[2] = 1*3*1 = 3   (only balloon 1 to burst)
+    dp[1][3] = nums[1]*nums[2]*nums[3] = 3*1*5 = 15  (only balloon 1 to burst)
+    dp[2][4] = nums[2]*nums[3]*nums[4] = 1*5*8 = 40
+    dp[3][5] = nums[3]*nums[4]*nums[5] = 5*8*1 = 40
+
+  Length 3: dp[l][l+3]
+    dp[0][3]: k=1: 1*3*1 + dp[0][1]+dp[1][3] = 3+0+0 = 3
+              k=2: 1*1*5 + dp[0][2]+dp[2][3] = 5+3+0 = 8  ← best!
+    dp[1][4]: k=2: 3*1*5 + dp[1][2]+dp[2][4] = 15+0+0 = 15
+              k=3: 3*5*8 + dp[1][3]+dp[3][4] = 120+15+0 = 135 ← best!
+
+  ...continuing fills dp[0][5] = 167
+
+Answer: 167
+```
 
 ```python
-def max_coins_memo(nums: list) -> int:
-    nums = [1] + nums + [1]
-    n = len(nums)
-    memo = {}
-
-    def solve(l: int, r: int) -> int:
-        if l >= r:
-            return 0
-        key = (l, r)
-        if key in memo:
-            return memo[key]
-        best = 0
-        for k in range(l + 1, r):
-            coins = nums[l] * nums[k] * nums[r] + solve(l, k) + solve(k, r)
-            best = max(best, coins)
-        memo[key] = best
-        return best
-
-    return solve(0, n - 1)
-
 def max_coins_tab(nums: list) -> int:
-    nums = [1] + nums + [1]
+    nums = [1] + nums + [1]  # Add sentinel boundaries
     n = len(nums)
     dp = [[0] * n for _ in range(n)]
 
-    for length in range(2, n):  # length from 2 to n-1
-        for i in range(n - length):
-            j = i + length
+    # Fill by increasing range length
+    for length in range(2, n):       # length = gap between boundaries
+        for i in range(n - length):  # i = left boundary
+            j = i + length           # j = right boundary
+            # Try each balloon k as the LAST one to burst in (i, j)
             for k in range(i + 1, j):
+                # Bursting k: coins from k + left subproblem + right subproblem
                 dp[i][j] = max(dp[i][j],
                                nums[i] * nums[k] * nums[j] + dp[i][k] + dp[k][j])
     return dp[0][n - 1]
 
-# Example: nums = [3, 1, 5, 8]
-# Answer: 167 (burst order: 1 → 5 → 3 → 8)
-
 # Time: O(n³), Space: O(n²)
+# n = len(nums) + 2 (with sentinels)
 ```
 
 ---
@@ -358,15 +431,34 @@ def nim_game_dp(n: int) -> bool:
 
 ---
 
-## Summary Table
+## Summary Table & Quick Reference
 
-| Problem | Approach | Time | Space |
-|---------|----------|------|-------|
-| L Palindromic Subseq | Interval DP | O(n²) | O(n²) |
-| Shortest Common Super | LCS + Backtrack | O(m×n) | O(m×n) |
-| Max Square in Matrix | Min of three | O(m×n) | O(n) |
-| Max Rectangle | Histogram method | O(m×n) | O(n) |
-| Count Squares | Bottom-up DP | O(m×n) | O(m×n) |
-| Burst Balloons | Interval DP O(n³) | O(n³) | O(n²) |
-| Stone Game III | Suffix sum DP | O(n) | O(n) |
-| Predict Winner | Minmax DP | O(n²) | O(n²) |
+```
+┌──────────────────────────┬──────────────────────┬──────────┬──────────┬──────────────────────────────┐
+│ Problem                  │ Approach             │ Time     │ Space    │ Key Insight                  │
+├──────────────────────────┼──────────────────────┼──────────┼──────────┼──────────────────────────────┤
+│ L Palindromic Subseq     │ Interval DP          │ O(n²)    │ O(n²)    │ dp[i][j] on s[i..j]         │
+│ Shortest Common Super    │ LCS + Backtrack      │ O(m×n)   │ O(m×n)   │ len(a)+len(b)-LCS           │
+│ Max Square in Matrix     │ Min of 3 + 1         │ O(m×n)   │ O(n)     │ All 3 neighbors must be big │
+│ Max Rectangle            │ Histogram + Stack    │ O(m×n)   │ O(n)     │ Row-by-row height accumulation│
+│ Count Squares            │ Sum dp[i][j] values  │ O(m×n)   │ O(m×n)   │ Each cell counts all squares │
+│ Burst Balloons           │ Interval O(n³)       │ O(n³)    │ O(n²)    │ "last burst" perspective     │
+│ Stone Game III           │ Suffix sum + DP      │ O(n)     │ O(n)     │ suffix[i] - dp[i+take]      │
+│ Predict Winner           │ Minimax interval     │ O(n²)    │ O(n²)    │ take - opponent_best         │
+└──────────────────────────┴──────────────────────┴──────────┴──────────┴──────────────────────────────┘
+```
+
+### Interval DP Pattern (for Burst Balloons, Stone Games, etc.)
+
+```
+The standard interval DP template:
+
+  for length in range(2, n+1):          # increasing range size
+      for i in range(n - length + 1):   # left boundary
+          j = i + length - 1            # right boundary
+          for k in range(i, j):         # split point / last element
+              dp[i][j] = optimize(dp[i][j], combine(dp[i][k], dp[k+1][j]))
+
+  Fill order ensures subproblems are solved before larger problems.
+  Diagonal fill: length=1 → diagonal 0, length=2 → diagonal 1, etc.
+```

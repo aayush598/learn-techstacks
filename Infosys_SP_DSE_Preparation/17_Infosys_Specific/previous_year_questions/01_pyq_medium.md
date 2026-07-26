@@ -2,6 +2,32 @@
 
 > 15 frequently asked medium-level questions from Infosys coding rounds.
 
+## Quick Reference: All Medium Problems
+
+```
+┌────┬──────────────────────────────┬──────────┬───────────┬──────────────────┐
+│  # │ Problem                      │ Time     │ Space     │ Pattern          │
+├────┼──────────────────────────────┼──────────┼───────────┼──────────────────┤
+│  1 │ GET Function (Max Pairs)     │ O(n)     │ O(n)      │ Monotonic Stack  │
+│  2 │ Inversion Pairs Deletion     │ O(n^2)   │ O(n)      │ Prefix/Suffix    │
+│  3 │ Max Product Subarray         │ O(n)     │ O(1)      │ DP               │
+│  4 │ Group Anagrams               │ O(nk lgk)│ O(nk)     │ Hash + Sort      │
+│  5 │ Longest Unique Substring     │ O(n)     │ O(n)      │ Sliding Window   │
+│  6 │ Subarray Sum Equals K        │ O(n)     │ O(n)      │ Prefix Sum       │
+│  7 │ Product Except Self          │ O(n)     │ O(1)      │ Prefix/Suffix    │
+│  8 │ Sort Colors (Dutch Flag)     │ O(n)     │ O(1)      │ Three Pointers   │
+│  9 │ Container Most Water         │ O(n)     │ O(1)      │ Two Pointers     │
+│ 10 │ 3Sum                         │ O(n^2)   │ O(1)      │ Two Pointers     │
+│ 11 │ Coin Change (Min)            │ O(n*C)   │ O(n)      │ 1D DP            │
+│ 12 │ LIS                          │ O(n lgn) │ O(n)      │ DP + BS          │
+│ 13 │ Word Break                   │ O(n^2)   │ O(n)      │ 1D DP            │
+│ 14 │ Kth Largest                  │ O(n lgk) │ O(k)      │ Min-Heap         │
+│ 15 │ Merge Intervals              │ O(n lgn) │ O(n)      │ Sort + Merge     │
+└────┴──────────────────────────────┴──────────┴───────────┴──────────────────┘
+
+EXAM STRATEGY: 15-20 minutes each, focus on explaining approach first!
+```
+
 ---
 
 ## 1. GET Function on Array (Max Value Pairs Problem)
@@ -167,7 +193,52 @@ def group_anagrams_optimized(strs):
 
 **Problem Statement:** Find length of longest substring without repeating characters.
 
-**Approach:** Sliding window with hash map tracking last index of each character.
+### Visual: Sliding Window with Hash Map
+
+```
+s = "abcabcbb"
+
+WINDOW EXPANSION AND SHRINKING:
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ a │ b │ c │ a │ b │ c │ b │ b │   │
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┘
+  
+  Step 1: Expand right until duplicate
+  [a b c] a b c b b    max_len=3
+   L     R
+   chars={a:0, b:1, c:2}
+   
+  Step 2: 'a' duplicate at index 3
+  a [b c a] b c b b    max_len=3
+     L   R
+     chars={b:1, c:2, a:3}
+     
+  Step 3: 'b' duplicate at index 4
+  a b [c a b] c b b    max_len=3
+       L   R
+       chars={c:2, a:3, b:4}
+       
+  Step 4: 'c' duplicate at index 5
+  a b c [a b c] b b    max_len=3
+         L   R
+         chars={a:3, b:4, c:5}
+         
+  Step 5: 'b' duplicate at index 6
+  a b c a [b c b] b    max_len=3
+           L R
+           chars shrink...
+           
+  Continue until end → max_len = 3 ✅
+
+ALGORITHM:
+  For each char at position 'right':
+    If char was seen before AND its index >= left:
+      Move left to (last_seen_index + 1)
+    Update last_seen_index for char
+    max_len = max(max_len, right - left + 1)
+```
+
+---
 
 ```python
 def longest_unique_substring(s):
@@ -228,7 +299,44 @@ print(subarray_sum_k(arr, k))  # Output: 2
 
 **Problem Statement:** Return array where each element is product of all other elements, without using division.
 
-**Approach:** Two passes: left products and right products.
+### Visual: Prefix and Suffix Products
+
+```
+arr = [1, 2, 3, 4]
+
+STEP 1: Left products (product of all elements to the left)
+  result[0] = 1       (nothing to left)
+  result[1] = 1       (= arr[0])
+  result[2] = 1*2 = 2 (= arr[0]*arr[1])
+  result[3] = 1*2*3=6 (= arr[0]*arr[1]*arr[2])
+  
+  result after left pass: [1, 1, 2, 6]
+
+STEP 2: Right products (multiply by product of all to the right)
+  result[3] *= 1      (nothing to right)  → [1, 1, 2, 6]
+  result[2] *= 4      (= arr[3])          → [1, 1, 8, 6]
+  result[1] *= 4*3=12 (= arr[3]*arr[2])  → [1, 12, 8, 6]
+  result[0] *= 4*3*2=24                    → [24, 12, 8, 6]
+
+VISUAL TABLE:
+┌─────────┬───────┬───────┬───────┬───────┐
+│         │  i=0  │  i=1  │  i=2  │  i=3  │
+├─────────┼───────┼───────┼───────┼───────┤
+│ arr     │   1   │   2   │   3   │   4   │
+│ left[]  │   1   │   1   │   2   │   6   │
+│ right[] │  24   │  12   │   4   │   1   │
+│ result  │  24   │  12   │   8   │   6   │
+└─────────┴───────┴───────┴───────┴───────┘
+           ↑       ↑       ↑       ↑
+         2*3*4   1*3*4   1*2*4   1*2*3
+
+WHY NO DIVISION?
+  If we used division: result = total_product / arr[i]
+  BUT: fails with zeros! (division by zero)
+  Also: violates interview constraint
+```
+
+---
 
 ```python
 def product_except_self(arr):
@@ -263,7 +371,60 @@ print(product_except_self(arr))  # Output: [24, 12, 8, 6]
 
 **Problem Statement:** Sort array of 0s, 1s, and 2s in single pass.
 
-**Approach:** Three pointers - low, mid, high.
+### Visual: Three Pointer Movement
+
+```
+arr = [2, 0, 2, 1, 1, 0]
+
+Three regions:
+  [0..low-1]   = all 0s (red)
+  [low..mid-1] = all 1s (white)
+  [mid..high]  = unprocessed
+  [high+1..n-1]= all 2s (blue)
+
+INITIAL STATE:
+  low=0, mid=0, high=5
+  [2, 0, 2, 1, 1, 0]
+   L  M           H
+
+STEP 1: arr[mid]=2 → swap with high, high--
+  [0, 0, 2, 1, 1, 2]
+   L  M        H
+  
+STEP 2: arr[mid]=0 → swap with low, low++, mid++
+  [0, 0, 2, 1, 1, 2]
+      L  M     H
+  (now arr[0]=0 ✅)
+
+STEP 3: arr[mid]=0 → swap with low, low++, mid++
+  [0, 0, 2, 1, 1, 2]
+         L  M  H
+  (now arr[1]=0 ✅)
+
+STEP 4: arr[mid]=2 → swap with high, high--
+  [0, 0, 1, 1, 2, 2]
+         L  M  H
+  (now arr[5]=2 ✅)
+
+STEP 5: arr[mid]=1 → just mid++
+  [0, 0, 1, 1, 2, 2]
+         L     MH
+  (now arr[2]=1 ✅)
+
+STEP 6: arr[mid]=1 → just mid++
+  [0, 0, 1, 1, 2, 2]
+         L     MH
+  (mid > high → STOP!)
+
+FINAL: [0, 0, 1, 1, 2, 2] ✅
+
+DECISION RULE:
+  arr[mid] == 0: swap with low, advance both
+  arr[mid] == 1: just advance mid
+  arr[mid] == 2: swap with high, advance high only
+```
+
+---
 
 ```python
 def sort_colors(arr):
@@ -296,7 +457,48 @@ print(sort_colors(arr))  # Output: [0, 0, 1, 1, 2, 2]
 
 **Problem Statement:** Given heights array, find two lines that together with x-axis form container holding most water.
 
-**Approach:** Two pointers from both ends, move the shorter one.
+### Visual: Two Pointer Greedy Approach
+
+```
+height = [1, 8, 6, 2, 5, 4, 8, 3, 7]
+
+Visual representation:
+  8 │█            █        █
+  7 │█            █        █  █
+  6 │█   █        █        █  █
+  5 │█   █     █  █        █  █
+  4 │█   █     █  █  █     █  █
+  3 │█   █     █  █  █     █  █
+  2 │█   █  █  █  █  █     █  █
+  1 │█   █  █  █  █  █  █  █  █
+    └──────────────────────────────
+     0   1  2  3  4  5  6  7  8
+
+TWO POINTER APPROACH:
+  L=0, R=8: area = min(1,7)*8 = 8
+  L=0, R=7: area = min(1,3)*7 = 3 (smaller, skip)
+  
+  Actually:
+  L=0, R=8: area = min(1,7)*8 = 8  → move L (1<7)
+  L=1, R=8: area = min(8,7)*7 = 49 → move R (7<8) ← MAX!
+  L=1, R=7: area = min(8,3)*6 = 18 → move R (3<8)
+  L=1, R=6: area = min(8,8)*5 = 40 → move R (equal, move either)
+  L=1, R=5: area = min(8,4)*4 = 16 → move R (4<8)
+  L=1, R=4: area = min(8,5)*3 = 15 → move R (5<8)
+  L=1, R=3: area = min(8,2)*2 = 4  → move R (2<8)
+  L=1, R=2: area = min(8,6)*1 = 6  → move R (6<8)
+  L=1, R=1: STOP (L==R)
+
+  Answer = 49 ✅
+
+WHY MOVE THE SHORTER POINTER?
+  Moving the taller pointer NEVER increases area:
+  area = min(h[L], h[R]) * width
+  If we move taller, min stays same but width decreases!
+  Moving shorter gives chance to find taller → bigger min
+```
+
+---
 
 ```python
 def max_area(height):

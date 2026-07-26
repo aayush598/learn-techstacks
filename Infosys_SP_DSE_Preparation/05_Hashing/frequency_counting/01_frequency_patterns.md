@@ -1,27 +1,71 @@
 # Frequency Counting Patterns
 
+## Overview: When to Use Frequency Counting
+
+```
+ ┌─────────────────────────────────────────────────────────────────┐
+ │           FREQUENCY COUNTING — WHEN TO USE                      │
+ ├─────────────────────┬───────────────────────────────────────────┤
+ │ Problem Type        │ Pattern                                  │
+ ├─────────────────────┼───────────────────────────────────────────┤
+ │ Count duplicates    │ Counter(arr) → filter count == 2         │
+ │ Group by count      │ Counter → group elements by freq         │
+ │ Sort by frequency   │ Counter → sort items by -count           │
+ │ Anagram grouping    │ Counter(sorted_str) as grouping key      │
+ │ Top-K frequent      │ Counter.most_common(k) or heap           │
+ │ Sliding window      │ Counter for window state + expand/shrink │
+ │ Stream processing   │ Counter + queue for first non-repeating  │
+ └─────────────────────┴───────────────────────────────────────────┘
+```
+
 ## 1. Frequency Counting with Counter
+
+### Visual Walkthrough
+
+```
+ INPUT: [1, 2, 2, 3, 3, 3]
+
+ STEP-BY-STEP:
+ ┌──────┬───────┬───────────────────────────────────┐
+ │ Step │ item  │ Counter state                     │
+ ├──────┼───────┼───────────────────────────────────┤
+ │  1   │   1   │ Counter({1: 1})                   │
+ │  2   │   2   │ Counter({1: 1, 2: 1})             │
+ │  3   │   2   │ Counter({1: 1, 2: 2})             │
+ │  4   │   3   │ Counter({2: 2, 1: 1, 3: 1})      │
+ │  5   │   3   │ Counter({3: 2, 2: 2, 1: 1})      │
+ │  6   │   3   │ Counter({3: 3, 2: 2, 1: 1})      │
+ └──────┴───────┴───────────────────────────────────┘
+
+ OUTPUT: Counter({3: 3, 2: 2, 1: 1})
+         Sorted by frequency (descending) automatically!
+```
 
 ```python
 from collections import Counter, defaultdict
 
-# Basic frequency counting
+# ============================================================
+# FREQUENCY COUNTING — Two Main Approaches
+# ============================================================
+
+# APPROACH 1: Using Counter (Pythonic, one-liner)
 def count_frequency(arr):
-    """Count frequency of each element"""
+    """Count frequency of each element — O(n)"""
     return Counter(arr)
 
+# APPROACH 2: Using plain dict (interview-friendly, shows understanding)
 def count_frequency_dict(arr):
-    """Count frequency using plain dict"""
+    """Count frequency using plain dict — O(n)"""
     freq = {}
     for item in arr:
-        freq[item] = freq.get(item, 0) + 1
+        freq[item] = freq.get(item, 0) + 1  # get returns 0 if key missing
     return freq
 
-# Character frequency
+# CHARACTER FREQUENCY — Useful for anagram problems
 def char_frequency(s):
-    return Counter(s)
+    return Counter(s)  # Counter({'l': 2, 'h': 1, 'e': 1, 'o': 1})
 
-# Word frequency
+# WORD FREQUENCY — Useful for text analysis problems
 def word_frequency(text):
     words = text.lower().split()
     return Counter(words)
@@ -33,6 +77,33 @@ print(word_frequency("the cat and the dog"))  # Counter({'the': 2, 'cat': 1, ...
 ```
 
 ## 2. Group Elements by Frequency
+
+### Visual Walkthrough: sort_by_frequency
+
+```
+ INPUT: [2, 3, 5, 3, 7, 9, 5, 3]
+
+ STEP 1: Count frequencies
+ ┌─────────────────────────────────────────────┐
+ │ Counter({3: 3, 5: 2, 2: 1, 7: 1, 9: 1})   │
+ └─────────────────────────────────────────────┘
+
+ STEP 2: Sort by (-frequency, value)
+ ┌──────┬───────┬──────────┬───────────────────┐
+ │ num  │ freq  │ sort key │ position          │
+ ├──────┼───────┼──────────┼───────────────────┤
+ │  3   │   3   │ (-3, 3)  │ 1st (highest)     │
+ │  3   │   3   │ (-3, 3)  │ 2nd               │
+ │  3   │   3   │ (-3, 3)  │ 3rd               │
+ │  5   │   2   │ (-2, 5)  │ 4th               │
+ │  5   │   2   │ (-2, 5)  │ 5th               │
+ │  2   │   1   │ (-1, 2)  │ 6th               │
+ │  7   │   1   │ (-1, 7)  │ 7th               │
+ │  9   │   1   │ (-1, 9)  │ 8th               │
+ └──────┴───────┴──────────┴───────────────────┘
+
+ OUTPUT: [3, 3, 3, 5, 5, 2, 7, 9]
+```
 
 ```python
 from collections import Counter, defaultdict
@@ -70,45 +141,87 @@ print(frequency_sort("tree"))  # "eert"
 
 ## 3. Top K Frequent Elements (LeetCode 347)
 
+### Visual Walkthrough: Bucket Sort Approach
+
+```
+ INPUT: nums = [1, 1, 1, 2, 2, 3], k = 2
+
+ STEP 1: Count frequencies
+ Counter({1: 3, 2: 2, 3: 1})
+
+ STEP 2: Create buckets (index = frequency)
+ ┌─────────────────────────────────────────────────────┐
+ │ Buckets (index = frequency, value = list of nums):  │
+ │                                                     │
+ │ Bucket 0: []           (nothing has freq 0)         │
+ │ Bucket 1: [3]          (3 appears once)             │
+ │ Bucket 2: [2]          (2 appears twice)            │
+ │ Bucket 3: [1]          (1 appears thrice)           │
+ │ ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑  │
+ │ Scan from RIGHT to LEFT (highest freq first)        │
+ └─────────────────────────────────────────────────────┘
+
+ STEP 3: Collect top k from rightmost buckets
+   freq=3: [1] → result=[1]
+   freq=2: [2] → result=[1, 2]  ← k=2, done!
+
+ OUTPUT: [1, 2]
+
+ WHY BUCKET SORT IS O(n):
+   - Counting: O(n)
+   - Creating buckets: O(n)
+   - Scanning buckets: O(n) (at most n buckets)
+   - TOTAL: O(n) — better than O(n log n) heap approach!
+```
+
 ```python
 from collections import Counter
 import heapq
 
+# ============================================================
+# APPROACH 1: Counter.most_common(k) — Simplest, O(n log k)
+# ============================================================
 def top_k_frequent(nums, k):
     """Find k most frequent elements"""
     count = Counter(nums)
     return [num for num, _ in count.most_common(k)]
 
+# ============================================================
+# APPROACH 2: Min-Heap — O(n log k), good for large n
+# ============================================================
+# Keep only k elements in heap → log k per insert
 def top_k_frequent_heap(nums, k):
-    """Using heap"""
+    """Using heap — efficient when k << n"""
     count = Counter(nums)
-    
-    # Min heap with k elements
+
     heap = []
     for num, freq in count.items():
         heapq.heappush(heap, (freq, num))
-        if len(heap) > k:
-            heapq.heappop(heap)
-    
+        if len(heap) > k:               # Keep only k smallest frequencies
+            heapq.heappop(heap)          # Remove lowest frequency
+
     return [num for freq, num in heap]
 
+# ============================================================
+# APPROACH 3: Bucket Sort — O(n), optimal!
+# ============================================================
 def top_k_frequent_bucket(nums, k):
-    """Using bucket sort - O(n)"""
+    """Using bucket sort — O(n) time, O(n) space"""
     count = Counter(nums)
     max_freq = max(count.values())
-    
-    # Create buckets
+
+    # Bucket[i] = list of numbers that appear i times
     buckets = [[] for _ in range(max_freq + 1)]
     for num, freq in count.items():
         buckets[freq].append(num)
-    
-    # Collect top k
+
+    # Collect from highest frequency bucket down
     result = []
     for freq in range(max_freq, 0, -1):
         result.extend(buckets[freq])
         if len(result) >= k:
             break
-    
+
     return result[:k]
 
 # Test
@@ -117,7 +230,42 @@ print(top_k_frequent_heap([1, 1, 1, 2, 2, 3], 2))  # [1, 2]
 print(top_k_frequent_bucket([1, 1, 1, 2, 2, 3], 2))  # [1, 2]
 ```
 
+### Complexity Comparison
+
+```
+ ┌─────────────────────┬────────────┬──────────┬───────────────────────┐
+ │ Approach            │ Time       │ Space    │ Best When             │
+ ├─────────────────────┼────────────┼──────────┼───────────────────────┤
+ │ Counter.most_common │ O(n log n) │ O(n)     │ Simple, small input   │
+ │ Min-Heap            │ O(n log k) │ O(n+k)   │ k << n                │
+ │ Bucket Sort         │ O(n)       │ O(n)     │ Always optimal!       │
+ └─────────────────────┴────────────┴──────────┴───────────────────────┘
+```
+
 ## 4. Sort Characters by Frequency
+
+### Visual: How Frequency Sorting Works
+
+```
+ INPUT: "tree"
+
+ STEP 1: Count characters
+ Counter({'e': 2, 't': 1, 'r': 1})
+
+ STEP 2: Sort by frequency (descending)
+ ┌───────────┬───────┬───────────────────────┐
+ │ Character │ Freq  │ Repeated String        │
+ ├───────────┼───────┼───────────────────────┤
+ │   'e'     │   2   │ "ee"                  │
+ │   'r'     │   1   │ "r"                   │
+ │   't'     │   1   │ "t"                   │
+ └───────────┴───────┴───────────────────────┘
+
+ STEP 3: Concatenate
+ OUTPUT: "eert"
+
+ ALTERNATIVE OUTPUT: "eetr" (also valid, depends on tie-breaking)
+```
 
 ```python
 from collections import Counter
@@ -155,6 +303,25 @@ print(sort_string_by_frequency("Aabb"))  # "bbAa"
 ```
 
 ## 5. Maximum Frequency Character
+
+### Visual: Single-Pass Max Tracking
+
+```
+ INPUT: "hello"
+
+ STEP-BY-STEP (tracking max as we go):
+ ┌──────┬───────┬─────────────────────┬───────────┬──────────┐
+ │ Step │ char  │ freq map            │ max_count │ max_char │
+ ├──────┼───────┼─────────────────────┼───────────┼──────────┤
+ │  1   │ 'h'   │ {h:1}               │    1      │   'h'    │
+ │  2   │ 'e'   │ {h:1, e:1}          │    1      │   'h'    │
+ │  3   │ 'l'   │ {h:1, e:1, l:1}     │    1      │   'h'    │
+ │  4   │ 'l'   │ {h:1, e:1, l:2}     │    2      │   'l'    │ ← NEW MAX!
+ │  5   │ 'o'   │ {h:1, e:1, l:2, o:1}│    2      │   'l'    │
+ └──────┴───────┴─────────────────────┴───────────┴──────────┘
+
+ OUTPUT: 'l' (appears 2 times)
+```
 
 ```python
 from collections import Counter
@@ -260,6 +427,29 @@ print(k_most_frequent_subarray([1, 2, 3, 1, 2, 3], 2))
 
 ## 7. Count Distinct Elements in Every Window
 
+### Visual Walkthrough
+
+```
+ INPUT: arr = [1, 2, 1, 3, 4, 2, 3], k = 4
+
+ STEP-BY-STEP SLIDING WINDOW:
+ ┌──────────┬──────────────────┬────────────────────┬─────────────┐
+ │ Position │ Window           │ freq map           │ # Distinct  │
+ ├──────────┼──────────────────┼────────────────────┼─────────────┤
+ │ 0..3     │ [1, 2, 1, 3]     │ {1:2, 2:1, 3:1}   │ 3           │
+ │ 1..4     │ [2, 1, 3, 4]     │ {2:1, 1:1, 3:1, 4:1}│ 4         │
+ │ 2..5     │ [1, 3, 4, 2]     │ {1:1, 3:1, 4:1, 2:1}│ 4         │
+ │ 3..6     │ [3, 4, 2, 3]     │ {3:2, 4:1, 2:1}   │ 3           │
+ └──────────┴──────────────────┴────────────────────┴─────────────┘
+
+ OUTPUT: [3, 4, 4, 3]
+
+ KEY OPERATION: When window slides right by 1:
+   1. ADD new element (right side): freq[new] += 1
+   2. REMOVE old element (left side): freq[old] -= 1
+      → If freq[old] == 0, delete it (reduces distinct count)
+```
+
 ```python
 from collections import defaultdict
 
@@ -320,6 +510,30 @@ print(distinct_elements_sliding([1, 2, 1, 3, 4, 2, 3], 4))  # [3, 4, 4, 3]
 ```
 
 ## 8. First Non-Repeating Character in Stream (LeetCode 387)
+
+### Visual Walkthrough
+
+```
+ INPUT: s = "aababc"
+
+ ┌───────┬───────┬───────────────────┬───────────────┬──────────────────┐
+ │ Step  │ char  │ count map         │ queue (order) │ first non-repeat │
+ ├───────┼───────┼───────────────────┼───────────────┼──────────────────┤
+ │   1   │ 'a'   │ {a:1}             │ [a]           │ 'a'              │
+ │   2   │ 'a'   │ {a:2}             │ []            │ '#' (none)       │
+ │   3   │ 'b'   │ {a:2, b:1}        │ [b]           │ 'b'              │
+ │   4   │ 'a'   │ {a:3, b:1}        │ [b]           │ 'b'              │
+ │   5   │ 'b'   │ {a:3, b:2}        │ []            │ '#' (none)       │
+ │   6   │ 'c'   │ {a:3, b:2, c:1}   │ [c]           │ 'c'              │
+ └───────┴───────┴───────────────────┴───────────────┴──────────────────┘
+
+ OUTPUT: ['a', '#', 'b', '#', '#', 'c']
+
+ KEY INSIGHT: Use a QUEUE to maintain order of first occurrences
+   - Add char to queue when count becomes 1
+   - Remove from front of queue while count > 1
+   - Front of queue = first non-repeating character
+```
 
 ```python
 from collections import OrderedDict
@@ -423,6 +637,46 @@ print(are_anagrams_dict("rat", "car"))  # False
 
 ## 10. Find All Duplicates in Array (LeetCode 442)
 
+### Visual: Negative Marking Technique (O(n) time, O(1) space!)
+
+```
+ INPUT: [4, 3, 2, 7, 8, 2, 3, 1]
+ Values are 1..n, find elements appearing twice.
+
+ IDEA: Use array INDEX as hash key!
+   - Value v maps to index (v-1)
+   - If we've seen v before, nums[v-1] is already negative
+
+ STEP-BY-STEP:
+ ┌──────┬────────────────────────┬───────────────────────────┬──────────┐
+ │ Step │ Current num            │ Array state               │ result   │
+ ├──────┼────────────────────────┼───────────────────────────┼──────────┤
+ │  1   │ nums[0]=4, idx=3       │ [4,3,2,-7,8,2,3,1]       │ []       │
+ │      │ nums[3]=7>0 → negate   │                           │          │
+ │  2   │ nums[1]=3, idx=2       │ [4,3,-2,-7,8,2,3,1]      │ []       │
+ │      │ nums[2]=2>0 → negate   │                           │          │
+ │  3   │ nums[2]=-2, idx=1      │ [4,3,-2,-7,8,2,3,1]      │ []       │
+ │      │ abs=2, nums[1]=3>0→neg  │ [4,-3,-2,-7,8,2,3,1]     │          │
+ │  4   │ nums[3]=-7, idx=6      │ [4,-3,-2,-7,8,2,-3,1]    │ []       │
+ │      │ abs=7, nums[6]=3>0→neg  │                           │          │
+ │  5   │ nums[4]=8, idx=7       │ [4,-3,-2,-7,8,2,-3,-1]   │ []       │
+ │      │ nums[7]=1>0 → negate   │                           │          │
+ │  6   │ nums[5]=2, idx=1       │ [4,-3,-2,-7,8,2,-3,-1]   │ [2] ★    │
+ │      │ nums[1]=-3 < 0 → DUP!  │ Already negative!         │          │
+ │  7   │ nums[6]=-3, idx=2      │ [4,-3,-2,-7,8,2,-3,-1]   │ [2,3] ★  │
+ │      │ abs=3, nums[2]=-2 < 0  │ Already negative!         │          │
+ │  8   │ nums[7]=-1, idx=0      │ [4,-3,-2,-7,8,2,-3,-1]   │ [2,3]    │
+ │      │ abs=1, nums[0]=4>0→neg  │ [-4,-3,-2,-7,8,2,-3,-1]  │          │
+ └──────┴────────────────────────┴───────────────────────────┴──────────┘
+
+ OUTPUT: [2, 3]
+
+ WHY IT WORKS:
+   - Each value v "marks" index (v-1) by making it negative
+   - If we visit v again and find nums[v-1] already negative → duplicate!
+   - Time: O(n), Space: O(1) — modifies input array
+```
+
 ```python
 def find_duplicates(nums):
     """Find all elements that appear twice"""
@@ -462,6 +716,46 @@ print(find_duplicates_set([1, 2, 3, 1, 4, 5]))  # [1]
 ```
 
 ## 11. Additional Frequency Problems
+
+### Visual: Longest Substring with K Distinct Characters
+
+```
+ INPUT: s = "eceba", k = 2
+
+ SLIDING WINDOW:
+ ┌──────────┬──────────────────┬────────────────────┬─────────────┐
+ │ Window   │ chars in window  │ distinct count     │ max_len     │
+ ├──────────┼──────────────────┼────────────────────┼─────────────┤
+ │ "e"      │ {e:1}            │ 1 ≤ 2 ✓           │ 1           │
+ │ "ec"     │ {e:1, c:1}       │ 2 ≤ 2 ✓           │ 2           │
+ │ "ece"    │ {e:2, c:1}       │ 2 ≤ 2 ✓           │ 3           │
+ │ "eceb"   │ {e:2, c:1, b:1}  │ 3 > 2 ✗ → shrink  │ 3           │
+ │ "ceb"    │ {c:1, e:1, b:1}  │ 3 > 2 ✗ → shrink  │ 3           │
+ │ "eb"     │ {e:1, b:1}       │ 2 ≤ 2 ✓           │ 3           │
+ │ "eba"    │ {e:1, b:1, a:1}  │ 3 > 2 ✗ → shrink  │ 3           │
+ └──────────┴──────────────────┴────────────────────┴─────────────┘
+
+ OUTPUT: 3 (substring "ece")
+```
+
+### Complexity Summary
+
+```
+ ┌─────────────────────────────────────────┬────────────┬──────────┐
+ │ Problem                                 │ Time       │ Space    │
+ ├─────────────────────────────────────────┼────────────┼──────────┤
+ │ Frequency Count                         │ O(n)       │ O(n)     │
+ │ Group by Frequency                      │ O(n)       │ O(n)     │
+ │ Sort by Frequency                       │ O(n log n) │ O(n)     │
+ │ Top K Frequent (heap)                   │ O(n log k) │ O(n)     │
+ │ Top K Frequent (bucket)                 │ O(n)       │ O(n)     │
+ │ Max Frequency Char                      │ O(n)       │ O(k)     │
+ │ Distinct in Windows                     │ O(n)       │ O(k)     │
+ │ First Non-Repeating (stream)            │ O(n)       │ O(k)     │
+ │ Find Duplicates (neg marking)           │ O(n)       │ O(1)     │
+ │ Longest Substring K Distinct            │ O(n)       │ O(k)     │
+ └─────────────────────────────────────────┴────────────┴──────────┘
+```
 
 ```python
 from collections import Counter, defaultdict

@@ -2,45 +2,134 @@
 
 ## Union-Find (Disjoint Set Union)
 
+### Visual: How Union-Find Works
+
+```
+Union-Find tracks which "group" (component) each node belongs to.
+Two operations:
+  FIND(x) → Which group is x in? (find the root/representative)
+  UNION(x, y) → Merge the groups containing x and y
+
+INITIAL STATE: Each node is its own group
+  Parent: [0, 1, 2, 3, 4]  (parent[i] = i means i is a root)
+  Visual:
+    0    1    2    3    4    (5 separate components)
+
+UNION(0, 1): Merge groups of 0 and 1
+  Parent: [0, 0, 2, 3, 4]
+  Visual:
+    0    2    3    4
+    |              (4 components: {0,1}, {2}, {3}, {4})
+    1
+
+UNION(2, 3): Merge groups of 2 and 3
+  Parent: [0, 0, 2, 2, 4]
+  Visual:
+    0    2    4
+    |    |         (3 components: {0,1}, {2,3}, {4})
+    1    3
+
+UNION(1, 3): Merge groups of 1 and 3
+  Parent: [0, 0, 0, 2, 4]  ← find(1)=0, find(3)=2, set parent[2]=0
+  Visual:
+    0         4
+    |              (2 components: {0,1,2,3}, {4})
+    1
+    |
+    2
+    |
+    3
+
+FIND(3): Follow parent chain to root
+  parent[3]=2 → parent[2]=0 → parent[0]=0 (root!)
+  Returns 0
+
+FIND(4): Follow parent chain
+  parent[4]=4 (root!)
+  Returns 4
+
+Result: find(0) == find(3) → True (same component!)
+        find(0) == find(4) → False (different components!)
+```
+
+### Path Compression — Making Find Fast
+
+```
+WITHOUT path compression:
+  find(5): 5→4→3→2→1→0  (6 steps!)
+
+WITH path compression:
+  find(5): 5→4→3→2→1→0, then SET all to point directly to 0
+  After:   5→0, 4→0, 3→0, 2→0, 1→0
+  Next find(5): 5→0  (1 step!)
+
+Path compression in code:
+  def find(x):
+      if parent[x] != x:
+          parent[x] = find(parent[x])  ← THIS LINE compresses!
+      return parent[x]
+
+  Before:        After path compression:
+  0              0
+  |             /|\ \
+  1            1 2 3 4 5
+  |
+  2
+  |
+  3
+  |
+  4
+  |
+  5
+```
+
 ```python
 class UnionFind:
     """
     Union-Find with path compression and union by rank
     Time: O(α(n)) per operation ≈ O(1) amortized
     Space: O(n)
+
+    α(n) is the inverse Ackermann function — it's effectively
+    constant for all practical values of n (< 10^800).
     """
     def __init__(self, n):
-        self.parent = list(range(n))
-        self.rank = [0] * n
+        self.parent = list(range(n))  # Each node is its own parent
+        self.rank = [0] * n           # Tree depth (for union by rank)
         self.count = n  # Number of connected components
-    
+
     def find(self, x):
-        """Find root with path compression"""
+        """Find root with PATH COMPRESSION"""
         if self.parent[x] != x:
-            self.parent[x] = self.find(self.parent[x])
+            self.parent[x] = self.find(self.parent[x])  # Compress!
         return self.parent[x]
-    
+
     def union(self, x, y):
-        """Union by rank. Returns True if merged, False if already same set"""
+        """
+        Union by RANK. Attaches shorter tree under taller tree.
+        Returns True if merged, False if already same set.
+        """
         px, py = self.find(x), self.find(y)
-        
+
         if px == py:
-            return False
-        
+            return False  # Already in same set (would create cycle!)
+
+        # Attach shorter tree under taller tree
         if self.rank[px] < self.rank[py]:
-            px, py = py, px
+            px, py = py, px   # Ensure px is the taller one
         self.parent[py] = px
-        
+
+        # Only increase rank if trees were same height
         if self.rank[px] == self.rank[py]:
             self.rank[px] += 1
-        
+
         self.count -= 1
         return True
-    
+
     def connected(self, x, y):
         """Check if x and y are in same set"""
         return self.find(x) == self.find(y)
-    
+
     def components(self):
         """Return number of connected components"""
         return self.count
@@ -50,19 +139,19 @@ class UnionFind:
 class UnionFindSimple:
     def __init__(self, n):
         self.parent = list(range(n))
-    
+
     def find(self, x):
         if self.parent[x] != x:
             self.parent[x] = self.find(self.parent[x])
         return self.parent[x]
-    
+
     def union(self, x, y):
         px, py = self.find(x), self.find(y)
         if px != py:
             self.parent[px] = py
             return True
         return False
-    
+
     def connected(self, x, y):
         return self.find(x) == self.find(y)
 ```
@@ -285,28 +374,100 @@ print(accounts_merge(accounts))
 
 ## Minimum Spanning Tree: Kruskal's Algorithm
 
+### Visual: Kruskal's Step-by-Step
+
+```
+Kruskal's = Greedy: Sort edges by weight, add if no cycle.
+
+Graph:                    Sorted edges:
+  0 --4-- 1               1. (0,2) weight 1
+  |  \ /  |               2. (2,3) weight 1
+  1   2   3               3. (1,2) weight 2
+  |   |   |               4. (1,3) weight 3
+  v   v   v               5. (0,1) weight 4
+  2   3   1               6. (0,3) weight 5
+      |
+      1
+
+Step │ Edge    │ Weight │ Action          │ MST so far     │ Total
+─────│─────────│────────│─────────────────│────────────────│──────
+  1  │ (0,2)   │   1    │ Add (no cycle)  │ {(0,2)}        │  1
+  2  │ (2,3)   │   1    │ Add (no cycle)  │ {(0,2),(2,3)}  │  2
+  3  │ (1,2)   │   2    │ Add (no cycle)  │ {(0,2),(2,3),  │  4
+     │         │        │                 │  (1,2)}        │
+  4  │ (1,3)   │   3    │ SKIP! Creates   │ (already have  │  4
+     │         │        │ cycle 1-2-3-1   │  path 1→2→3)   │
+  5  │ (0,1)   │   4    │ SKIP! Creates   │ (already have  │  4
+     │         │        │ cycle 0-2-1-0   │  path 0→2→1)   │
+  6  │ (0,3)   │   5    │ SKIP! Creates   │ (already have  │  4
+     │         │        │ cycle 0-2-3-0   │  path 0→2→3)   │
+  DONE: MST has 3 edges (V-1), total weight = 4
+
+Final MST:
+  0 --1-- 2 --1-- 3
+         |
+         1
+         |
+         1 (wait, that's wrong)
+  Let me draw it correctly:
+  0 --1-- 2 --1-- 3
+         |
+         1
+         |
+  (This is a tree: 3 edges for 4 nodes)
+
+  Wait, (1,2) connects 1 to 2 with weight 2:
+  0 --1-- 2 --2-- 1
+         |
+         1
+         |
+         3
+  
+  Actually: edges are (0,2,1), (2,3,1), (1,2,2)
+  0 --1-- 2 --2-- 1
+         |
+         1
+         |
+         3
+  
+  MST weight = 1 + 1 + 2 = 4 ✓
+```
+
 ```python
 def kruskal_mst(n, edges):
     """
     Kruskal's MST - Greedy approach using Union-Find
-    Time: O(E log E) | Space: O(V)
+    Time: O(E log E) for sorting + O(E × α(V)) for unions = O(E log E)
+    Space: O(V)
+
+    ALGORITHM:
+    1. Sort all edges by weight (ascending)
+    2. For each edge (in sorted order):
+       - If it doesn't create a cycle → add to MST
+       - If it creates a cycle → skip it
+    3. Stop when MST has V-1 edges
+
+    WHY IT WORKS:
+    Kruskal's is greedy — always pick the cheapest available edge.
+    If adding an edge creates a cycle, we skip it because all nodes
+    in the cycle are already connected (we can reach them cheaper).
     """
     # Sort edges by weight
     edges.sort(key=lambda x: x[2])
-    
+
     uf = UnionFind(n)
     mst = []
     total_weight = 0
-    
+
     for u, v, w in edges:
-        if uf.union(u, v):
+        if uf.union(u, v):    # True = no cycle, edge added
             mst.append((u, v, w))
             total_weight += w
-            
+
             # MST has exactly V-1 edges
             if len(mst) == n - 1:
                 break
-    
+
     return mst, total_weight
 
 
@@ -323,6 +484,43 @@ print(total)  # 4
 
 ## Minimum Spanning Tree: Prim's Algorithm
 
+### Visual: Prim's Step-by-Step
+
+```
+Prim's = Grow from one node: Always add the cheapest edge
+that connects a visited node to an unvisited node.
+
+Graph:
+  0 --4-- 1
+  |  \ /  |
+  1   2   3
+  |   |   |
+  v   v   v
+  2   3   1
+      |
+      1
+
+Starting from node 0:
+
+Step │ Visited       │ Heap (candidates)     │ Pop    │ MST
+─────│───────────────│───────────────────────│────────│──────────
+  1  │ {0}           │ (1,0→2), (4,0→1),     │ (1,0→2)│ {(0,2)}
+     │               │ (5,0→3)               │        │
+  2  │ {0, 2}        │ (4,0→1), (5,0→3),     │ (1,2→3)│ {(0,2),
+     │               │ (1,2→3), (2,2→1)      │        │ (2,3)}
+  3  │ {0, 2, 3}     │ (4,0→1), (2,2→1),     │ (2,2→1)│ {(0,2),
+     │               │ (3,3→1)               │        │ (2,3),(2,1)}
+  4  │ {0,1,2,3}     │ (4,0→1) — skip, 1     │ done!  │ MST done
+     │               │ already visited        │        │
+  DONE: MST has 3 edges, total = 1+1+2 = 4
+
+PRIM'S vs KRUSKAL'S:
+  Kruskal's: Picks globally cheapest edge (may not connect to tree yet)
+  Prim's: Picks cheapest edge FROM the current tree (always connected)
+
+Both give the SAME total weight, but may pick different edges!
+```
+
 ```python
 import heapq
 from collections import defaultdict
@@ -331,34 +529,43 @@ def prim_mst(n, edges):
     """
     Prim's MST - Start from any node, greedily add cheapest edge
     Time: O(E log V) | Space: O(V + E)
+
+    ALGORITHM:
+    1. Start from node 0 (or any node)
+    2. Add all edges from visited → unvisited to min-heap
+    3. Pop cheapest edge; if destination is unvisited, add it
+    4. Repeat until V-1 edges added
+
+    BEST FOR: Dense graphs (fewer nodes, many edges)
     """
     graph = defaultdict(list)
     for u, v, w in edges:
         graph[u].append((v, w))
         graph[v].append((u, w))
-    
+
     visited = set([0])
     mst = []
     total_weight = 0
-    
+
     # Min heap: (weight, from_node, to_node)
     heap = [(w, 0, v) for v, w in graph[0]]
     heapq.heapify(heap)
-    
+
     while heap and len(mst) < n - 1:
         w, u, v = heapq.heappop(heap)
-        
+
         if v in visited:
-            continue
-        
+            continue   # Skip — we already reached this node
+
         visited.add(v)
         mst.append((u, v, w))
         total_weight += w
-        
+
+        # Add edges from newly visited node to unvisited neighbors
         for neighbor, weight in graph[v]:
             if neighbor not in visited:
                 heapq.heappush(heap, (weight, v, neighbor))
-    
+
     return mst, total_weight
 
 
@@ -379,68 +586,123 @@ def prim_mst_from_node(n, edges, start):
     for u, v, w in edges:
         graph[u].append((v, w))
         graph[v].append((u, w))
-    
+
     visited = set([start])
     mst = []
     total_weight = 0
-    
+
     heap = [(w, start, v) for v, w in graph[start]]
     heapq.heapify(heap)
-    
+
     while heap and len(mst) < n - 1:
         w, u, v = heapq.heappop(heap)
-        
+
         if v in visited:
             continue
-        
+
         visited.add(v)
         mst.append((u, v, w))
         total_weight += w
-        
+
         for neighbor, weight in graph[v]:
             if neighbor not in visited:
                 heapq.heappush(heap, (weight, v, neighbor))
-    
+
     return mst, total_weight
 ```
 
 ## Kruskal vs Prim Comparison
 
 ```
-| Feature | Kruskal's | Prim's |
-|---------|-----------|--------|
-| Approach | Edge-based (greedy) | Vertex-based (greedy) |
-| Data Structure | Union-Find | Min Heap |
-| Time | O(E log E) | O(E log V) |
-| Space | O(V) | O(V + E) |
-| Best For | Sparse graphs | Dense graphs |
-| Edge List | Yes | No |
-| Adjacency List | Yes | Yes |
+| Feature           | Kruskal's                | Prim's                    |
+|-------------------|--------------------------|---------------------------|
+| Approach          | Edge-based (greedy)      | Vertex-based (greedy)     |
+| Data Structure    | Union-Find               | Min Heap                  |
+| Time              | O(E log E)               | O(E log V)                |
+| Space             | O(V)                     | O(V + E)                  |
+| Best For          | Sparse graphs            | Dense graphs              |
+| Edge List         | Yes (natural input)      | Needs adjacency list      |
+| Adjacency List    | Yes                      | Yes                       |
+
+DECISION GUIDE:
+┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│  Sparse graph (E << V²)?                                 │
+│  └── YES → Kruskal's (simpler, uses edge list)          │
+│                                                          │
+│  Dense graph (E ≈ V²)?                                   │
+│  └── YES → Prim's (fewer heap operations)               │
+│                                                          │
+│  Already have edge list?                                 │
+│  └── YES → Kruskal's (no need to build graph)           │
+│                                                          │
+│  Need MST from specific node?                            │
+│  └── YES → Prim's (natural starting point)              │
+│                                                          │
+│  Need to detect if graph is connected?                   │
+│  └── EITHER: If MST has V-1 edges, it's connected       │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+
+WHY BOTH WORK:
+  Both are greedy algorithms that exploit the "cut property":
+  For any cut of the graph, the minimum weight edge crossing
+  the cut MUST be in some MST.
+  Kruskal's: Considers edges globally (cheapest first)
+  Prim's: Considers edges locally (from current tree)
 ```
 
 ## Key Takeaways
 
 ```
-Union-Find:
-1. Path compression + union by rank → O(α(n)) ≈ O(1)
+UNION-FIND:
+1. Path compression + union by rank → O(α(n)) ≈ O(1) per operation
 2. Use for: connected components, cycle detection, grouping
 3. Pattern: Create UF, union edges, check find(x) == find(y)
 
-Kruskal's MST:
-1. Sort edges by weight
-2. Add edges if they don't create cycle (Union-Find)
+CRITICAL: Without path compression, find() can be O(n) in worst case!
+  With path compression, the tree stays flat → O(1) amortized.
+
+  No compression:         With compression:
+  0                       0
+  |                      /|\ \
+  1                     1 2 3 4
+  |
+  2
+  |
+  3
+  |     find(4)=O(4)      find(4)=O(1)
+  4
+
+KRUSKAL'S MST:
+1. Sort edges by weight (O(E log E))
+2. Add edges if they don't create cycle (Union-Find checks)
 3. Stop when V-1 edges added
 4. Best for sparse graphs
 
-Prim's MST:
+PRIM'S MST:
 1. Start from any node
-2. Greedily add cheapest edge to unvisited node
+2. Greedily add cheapest edge to unvisited node (min-heap)
 3. Use min heap for efficiency
 4. Best for dense graphs
 
-When to use:
-- Connected components → Union-Find
+WHEN TO USE:
+- Connected components → Union-Find (O(E × α(V)))
 - Cycle detection (undirected) → Union-Find
 - MST → Kruskal's (sparse) or Prim's (dense)
 - Group merging → Union-Find
+- Accounts merge → Union-Find
+- Redundant connection → Union-Find
+
+COMMON MISTAKES:
+┌──────────────────────────────────────────────────────────┐
+│ ✗ Forgetting path compression (find becomes O(n))        │
+│ ✗ Union by rank: forgetting to update rank when equal    │
+│ ✗ Kruskal's: forgetting to sort edges first!             │
+│ ✗ Prim's: not checking if destination already visited    │
+│ ✗ Prim's: using wrong heap format (must be (w, u, v))   │
+│ ✗ Confusing union(x,y) return value:                     │
+│   → Returns False when already same set (CYCLE!)         │
+│   → Returns True when merged successfully                │
+└──────────────────────────────────────────────────────────┘
 ```

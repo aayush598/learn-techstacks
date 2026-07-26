@@ -10,33 +10,43 @@
 
 Given an array of integers and a target sum, find all unique pairs of elements that add up to the target. Return pairs in sorted order.
 
-**Input Format:**
-- First line: N (number of elements) and K (target sum)
-- Second line: N space-separated integers
-
-**Output Format:**
-- Each line: a pair of numbers (sorted)
-- If no pairs exist, print "No pairs found"
-
-**Constraints:**
-- 1 ≤ N ≤ 10^5
-- -10^9 ≤ arr[i], K ≤ 10^9
-
-### Sample Test Cases
+### Visual Problem Understanding
 
 ```
-Input:  N=7, K=6, arr=[1, 5, 7, -1, 5, 1, 6]
-Output:
-    -1 7
-    1 5
-Explanation: (-1,7) and (1,5) sum to 6
+arr = [1, 5, 7, -1, 5, 1, 6], target = 6
 
-Input:  N=4, K=0, arr=[1, 2, 3, -3]
-Output:
-    -3 3
+HASH MAP APPROACH:
+  Build frequency map: {1:2, 5:2, 7:1, -1:1, 6:1}
+  
+  For each number, find complement:
+  ┌────────┬─────────────┬──────────────┬───────────┐
+  │ Number │ Complement  │ In Map?      │ Pair      │
+  ├────────┼─────────────┼──────────────┼───────────┤
+  │ 1      │ 5           │ Yes (2x)     │ (1, 5) ✅│
+  │ 5      │ 1           │ Yes (but 1   │ Skip      │
+  │        │             │  already     │ (visited) │
+  │        │             │  counted)    │           │
+  │ 7      │ -1          │ Yes          │ (-1, 7) ✅│
+  │ -1     │ 7           │ Yes          │ Skip      │
+  │ 5      │ 1           │ Yes          │ Skip      │
+  │ 1      │ 5           │ Yes          │ Skip      │
+  │ 6      │ 0           │ No           │ -         │
+  └────────┴─────────────┴──────────────┴───────────┘
+  
+  Result: [(-1, 7), (1, 5)]
+
+TWO POINTER APPROACH (after sorting):
+  Sorted: [-1, 1, 1, 5, 5, 6, 7]
+   L →                      ← R
+   sum = -1+7 = 6 = target ✅ → (-1, 7)
+   
+   L →                 ← R
+   sum = 1+6 = 7 > 6 → move R left
+   
+   Continue until L meets R
 ```
 
-### Approach 1: Hash Map (Optimal)
+### Complexity Analysis
 
 ```python
 def find_all_pairs(arr, target):
@@ -127,36 +137,76 @@ main()
 
 There are N workers. The i-th worker has quality[i] and minimum wage expectation wage[i]. We want to hire exactly K workers to form a paid group. When hiring a group, we must pay each worker in the group at least their minimum wage expectation AND in proportion to their quality. Find the minimum total cost.
 
-**Input Format:**
-- First line: N and K
-- Second line: quality[i]
-- Third line: wage[i]
-
-**Output Format:**
-- Single float: minimum cost rounded to 2 decimal places
-
-**Constraints:**
-- 1 ≤ K ≤ N ≤ 10^4
-- 1 ≤ quality[i], wage[i] ≤ 10^4
-
-### Sample Test Cases
+### Visual Problem Understanding
 
 ```
-Input:  N=3, K=2
-        quality = [10, 20, 5]
-        wage = [70, 100, 50]
-Output: 105.00
-Explanation: Pay worker 0 and worker 2.
-- Ratio: min(70/10, 50/5) = min(7, 10) = 7
-- Total: 7*10 + 7*5 = 70 + 35 = 105
+Workers:
+  Worker 0: quality=10, wage=70  → ratio = 70/10 = 7.0
+  Worker 1: quality=20, wage=100 → ratio = 100/20 = 5.0
+  Worker 2: quality=5,  wage=50  → ratio = 50/5 = 10.0
 
-Input:  N=3, K=1
-        quality = [10, 20, 5]
-        wage = [70, 100, 50]
-Output: 50.00
+Sort by ratio: Worker 1 (5.0), Worker 0 (7.0), Worker 2 (10.0)
+
+Hiring K=2 workers:
+  ┌─────────────────────────────────────────────────────┐
+  │  The HIGHEST ratio worker determines the pay rate!  │
+  │                                                     │
+  │  If we pick workers [1, 0]:                         │
+  │    Pay rate = max(5.0, 7.0) = 7.0                  │
+  │    Total = 7.0 * (20 + 10) = 210                   │
+  │                                                     │
+  │  If we pick workers [1, 2]:                         │
+  │    Pay rate = max(5.0, 10.0) = 10.0                │
+  │    Total = 10.0 * (20 + 5) = 250                   │
+  │                                                     │
+  │  If we pick workers [0, 2]:                         │
+  │    Pay rate = max(7.0, 10.0) = 10.0                │
+  │    Total = 10.0 * (10 + 5) = 150                   │
+  │                                                     │
+  │  Minimum = 150 ✅ (but expected is 105)            │
+  └─────────────────────────────────────────────────────┘
+  
+  Actually: pay rate = max ratio in group
+  [0, 2]: ratio=10, quality=15 → cost=150
+  [0, 1]: ratio=7,  quality=30 → cost=210
+  [1, 2]: ratio=10, quality=25 → cost=250
+  
+  Wait, the sample says 105... Let me recheck.
+  For workers [0, 2]: wage/quality = 7 and 10
+  Pay rate = max(7, 10) = 10? No - we need to pay each AT LEAST their wage.
+  Worker 0: rate=7 → pay = 7*10 = 70 (≥ 70 ✅)
+  Worker 2: rate=7 → pay = 7*5 = 35 (≥ 50 ❌) 
+  
+  So rate must be ≥ 10 for worker 2:
+  Worker 2: 10*5 = 50 ✅, Worker 0: 10*10 = 100 ✅ → total = 150
+  
+  Hmm, 105 = 7*10 + 7*5 = 70+35=105
+  But 7*5=35 < 50 (worker 2's minimum wage)
+  So 105 doesn't satisfy worker 2's constraint?
+  
+  Actually re-reading: we must pay proportionally AND ≥ min wage
+  If rate=7: worker 0 gets 70 ✓, worker 2 gets 35 ✗ (needs 50)
+  If rate=10: worker 0 gets 100 ✓, worker 2 gets 50 ✓ → total=150
+  
+  The sample output seems off, but the ALGORITHM is correct!
 ```
 
-### Approach 1: Sort by Wage-to-Quality Ratio + Min-Heap (Optimal)
+### KEY ALGORITHM INSIGHT
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  1. Sort workers by ratio (wage[i] / quality[i])               │
+│  2. Use max-heap to track K smallest qualities                 │
+│  3. For each worker as the "ratio setter":                     │
+│     - Add their quality to sum                                 │
+│     - If heap > K, remove largest quality (to minimize cost)   │
+│     - Cost = ratio × quality_sum                               │
+│  4. Track minimum cost across all iterations                   │
+│                                                                 │
+│  Why it works: As ratio increases, only need to minimize total │
+│  quality in the group (since ratio is now fixed higher)        │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ```python
 import heapq
@@ -239,38 +289,63 @@ main()
 
 Given a string `s` and a dictionary of words `wordDict`, return all possible sentences where each word is from the dictionary.
 
-**Input Format:**
-- First line: string s
-- Second line: number of words in dictionary
-- Next lines: dictionary words
-
-**Output Format:**
-- Each line: a valid sentence
-- Sentences should be in lexicographic order
-
-**Constraints:**
-- 1 ≤ |s| ≤ 20
-- 1 ≤ |wordDict| ≤ 1000
-- 1 ≤ |wordDict[i]| ≤ 10
-
-### Sample Test Cases
+### Visual: Backtracking Decision Tree
 
 ```
-Input:  s = "catsanddog"
-        wordDict = ["cat", "cats", "and", "sand", "dog"]
-Output:
-    cat sand dog
-    cats and dog
+s = "catsanddog", wordDict = ["cat", "cats", "and", "sand", "dog"]
 
-Input:  s = "pineapplepenapple"
-        wordDict = ["apple", "pen", "applepen", "pine", "pineapple"]
-Output:
-    pine apple pen apple
-    pine applepen apple
-    pineapple pen apple
+                        ""
+                 /    |    \    \
+              "c"    "ca"  "cat" "cats"
+              /       |      |      |
+           "ca"    "cat"  "cats" "catsand"
+           /         |      |        |
+        "cat"     "cats" "catsa"  "catsand"
+         |          |      ✗        |
+       "cats"    "catsa"         "catsand"
+       /    \        ✗            /    \
+   "catsa" "catsan"           "catsand" "catsand"
+      ✗       ✗                  |          |
+                              "catsand"   "catsandog"
+                              /    \        ✗
+                        "catsand" "catsandd"
+                           |        ✗
+                       "catsandd"
+                           |
+                       "catsanddog" ✅ FOUND!
+
+DECISION: At each position, try ALL dictionary words
+  that match the remaining string
 ```
 
-### Approach 1: Backtracking with Memoization (Optimal)
+### Step-by-Step Walkthrough
+
+```
+s = "catsanddog"
+Dictionary: {"cat", "cats", "and", "sand", "dog"}
+
+Position 0: Try words starting with "c"
+  "cat"  matches → remaining: "sanddog"
+  "cats" matches → remaining: "sanddog"
+
+Path 1: "cat" + backtrack("sanddog")
+  Position 3: Try "sand"
+    "sand" matches → remaining: "dog"
+    Position 7: Try "dog"
+      "dog" matches → remaining: ""
+      Position 10: END → Return ["cat sand dog"] ✅
+
+Path 2: "cats" + backtrack("sanddog")
+  Position 4: Try "and"
+    "and" matches → remaining: "dog"
+    Position 7: Try "dog"
+      "dog" matches → remaining: ""
+      Position 10: END → Return ["cats and dog"] ✅
+
+FINAL ANSWER: ["cat sand dog", "cats and dog"]
+```
+
+### Complexity Analysis
 
 ```python
 def word_break_ii(s, word_dict):

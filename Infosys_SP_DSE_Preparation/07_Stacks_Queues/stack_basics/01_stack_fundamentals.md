@@ -1,54 +1,48 @@
-# Stack Fundamentals
+# Stack Fundamentals - Complete Guide
 
-## Stack Implementation Using List
+## What is a Stack?
+
+A stack is a **Last-In-First-Out (LIFO)** data structure. Think of a stack of plates:
+- You add plates to the TOP
+- You remove plates from the TOP
+- The last plate added is the first one removed
+
+### Visual: Stack Operations
+
+```
+push(1):     push(2):     push(3):     pop():
+             
+   [1]          [2]          [3]        Remove 3
+                [1]          [2]        
+                             [1]        [2]
+                                        [1]
+
+Stack: LIFO (Last In, First Out)
+```
+
+---
+
+## Stack Implementation
+
+### Using Python List
+
 ```python
 class Stack:
     def __init__(self):
         self.items = []
     
     def push(self, item):
-        self.items.append(item)
+        self.items.append(item)  # Add to end
     
     def pop(self):
         if self.is_empty():
             raise IndexError("Stack is empty")
-        return self.items.pop()
+        return self.items.pop()  # Remove from end
     
     def peek(self):
         if self.is_empty():
             raise IndexError("Stack is empty")
-        return self.items[-1]
-    
-    def is_empty(self):
-        return len(self.items) == 0
-    
-    def size(self):
-        return len(self.items)
-    
-    def __str__(self):
-        return str(self.items)
-```
-
-## Stack Using collections.deque - O(1) for all operations
-```python
-from collections import deque
-
-class StackDeque:
-    def __init__(self):
-        self.items = deque()
-    
-    def push(self, item):
-        self.items.append(item)
-    
-    def pop(self):
-        if self.is_empty():
-            raise IndexError("Stack is empty")
-        return self.items.pop()
-    
-    def peek(self):
-        if self.is_empty():
-            raise IndexError("Stack is empty")
-        return self.items[-1]
+        return self.items[-1]  # Look at end
     
     def is_empty(self):
         return len(self.items) == 0
@@ -57,7 +51,8 @@ class StackDeque:
         return len(self.items)
 ```
 
-## Stack Operations Summary
+### Quick Stack Operations (Python)
+
 ```python
 # All operations are O(1)
 stack = []
@@ -66,12 +61,86 @@ stack.append(2)      # push - O(1)
 stack.pop()          # pop - O(1)
 stack[-1]            # peek - O(1)
 len(stack) == 0      # isEmpty - O(1)
-len(stack)           # size - O(1)
 ```
 
-## Balanced Parentheses Problems
+---
 
-### Basic Valid Parentheses
+## Problem 1: Valid Parentheses (LeetCode 20)
+
+**Statement:** Given a string containing just characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+**Constraints:**
+- Open brackets must be closed by same type
+- Open brackets must be closed in correct order
+- Every close bracket has corresponding open bracket
+
+**Example:**
+```
+Input: s = "()[]{}"
+Output: true
+Explanation: All brackets are properly matched.
+
+Input: s = "(]"
+Output: false
+Explanation: '(' is closed by ']', which is wrong type.
+```
+
+### Approach: Stack
+
+**Key Insight:** When we see an opening bracket, push it. When we see a closing bracket, check if it matches the top of stack.
+
+### Step-by-Step Walkthrough:
+
+```
+s = "({[]})"
+
+Step 1: '(' → push to stack
+        Stack: ['(']
+
+Step 2: '{' → push to stack
+        Stack: ['(', '{']
+
+Step 3: '[' → push to stack
+        Stack: ['(', '{', '[']
+
+Step 4: ']' → closing bracket
+        Top of stack = '[' (matches!)
+        Pop '['
+        Stack: ['(', '{']
+
+Step 5: '}' → closing bracket
+        Top of stack = '{' (matches!)
+        Pop '{'
+        Stack: ['(']
+
+Step 6: ')' → closing bracket
+        Top of stack = '(' (matches!)
+        Pop '('
+        Stack: []
+
+Stack is empty → All matched! ✓
+```
+
+### Visual:
+
+```
+s = "({[]})"
+
+Position:  0  1  2  3  4  5
+Char:      (  {  [  ]  }  )
+
+Stack evolution:
+After '(':     ['(']
+After '{':     ['(', '{']
+After '[':     ['(', '{', '[']
+After ']':     ['(', '{']     ← popped '['
+After '}':     ['(']          ← popped '{'
+After ')':     []             ← popped '('
+
+Empty stack at end → Valid! ✓
+```
+
+### The Code:
 ```python
 def is_valid_parentheses(s):
     stack = []
@@ -79,10 +148,12 @@ def is_valid_parentheses(s):
     
     for char in s:
         if char in mapping:
+            # It's a closing bracket
             top = stack.pop() if stack else '#'
             if mapping[char] != top:
                 return False
         else:
+            # It's an opening bracket
             stack.append(char)
     
     return len(stack) == 0
@@ -94,26 +165,54 @@ print(is_valid_parentheses("([)]"))    # False
 print(is_valid_parentheses("{[]}"))    # True
 ```
 
-### Longest Valid Parentheses
-```python
-def longest_valid_parentheses(s):
-    stack = [-1]
-    max_length = 0
-    
-    for i, char in enumerate(s):
-        if char == '(':
-            stack.append(i)
-        else:
-            stack.pop()
-            if not stack:
-                stack.append(i)
-            else:
-                max_length = max(max_length, i - stack[-1])
-    
-    return max_length
+**Time:** O(n) | **Space:** O(n)
+
+---
+
+## Problem 2: Min Stack (Design)
+
+**Statement:** Design a stack that supports push, pop, top, and getMin in O(1) time.
+
+**Example:**
+```
+MinStack.push(-2) → stack: [-2], min: -2
+MinStack.push(0) → stack: [-2, 0], min: -2
+MinStack.push(-3) → stack: [-2, 0, -3], min: -3
+MinStack.getMin() → returns -3
+MinStack.pop() → stack: [-2, 0], min: -2
+MinStack.top() → returns 0
+MinStack.getMin() → returns -2
 ```
 
-## Min Stack (Design) - O(1) for all operations
+### Approach: Two Stacks
+
+**Key Insight:** Keep a separate stack that tracks the minimum at each level.
+
+### Visual:
+
+```
+push(-2):
+  stack: [-2]
+  min_stack: [-2]
+  
+push(0):
+  stack: [-2, 0]
+  min_stack: [-2]  (0 > -2, don't push to min_stack)
+  
+push(-3):
+  stack: [-2, 0, -3]
+  min_stack: [-2, -3]  (-3 <= -2, push to min_stack)
+  
+getMin(): return min_stack[-1] = -3
+
+pop():
+  stack: [-2, 0]
+  min_stack: [-2]  (removed -3 from min_stack)
+  
+getMin(): return min_stack[-1] = -2
+```
+
+### The Code:
 ```python
 class MinStack:
     def __init__(self):
@@ -122,7 +221,6 @@ class MinStack:
     
     def push(self, val):
         self.stack.append(val)
-        
         # Push to min_stack if it's empty or val <= current min
         if not self.min_stack or val <= self.min_stack[-1]:
             self.min_stack.append(val)
@@ -130,12 +228,9 @@ class MinStack:
     def pop(self):
         if not self.stack:
             raise IndexError("Stack is empty")
-        
         val = self.stack.pop()
-        
         if val == self.min_stack[-1]:
             self.min_stack.pop()
-        
         return val
     
     def top(self):
@@ -147,71 +242,145 @@ class MinStack:
         if not self.min_stack:
             raise IndexError("Stack is empty")
         return self.min_stack[-1]
-
-# Alternative: Store (val, current_min) tuples
-class MinStackTuple:
-    def __init__(self):
-        self.stack = []
-    
-    def push(self, val):
-        if self.stack:
-            current_min = min(val, self.stack[-1][1])
-        else:
-            current_min = val
-        self.stack.append((val, current_min))
-    
-    def pop(self):
-        if not self.stack:
-            raise IndexError("Stack is empty")
-        return self.stack.pop()[0]
-    
-    def top(self):
-        if not self.stack:
-            raise IndexError("Stack is empty")
-        return self.stack[-1][0]
-    
-    def get_min(self):
-        if not self.stack:
-            raise IndexError("Stack is empty")
-        return self.stack[-1][1]
 ```
 
-## Max Stack (Design) - O(1) for all operations
+**Time:** O(1) for all operations | **Space:** O(n)
+
+---
+
+## Problem 3: Evaluate Postfix Expression
+
+**Statement:** Evaluate arithmetic expression in postfix (Reverse Polish Notation).
+
+**Example:**
+```
+Input: "2 1 + 3 *"
+Output: 9
+Explanation: ((2 + 1) × 3) = 9
+
+Input: "4 13 5 / +"
+Output: 6
+Explanation: (4 + (13 / 5)) = 4 + 2 = 6
+```
+
+### Approach: Stack
+
+**Key Insight:** When we see a number, push it. When we see an operator, pop two numbers, apply operator, push result.
+
+### Step-by-Step Walkthrough:
+
+```
+Expression: "2 1 + 3 *"
+
+Step 1: '2' → push 2
+        Stack: [2]
+
+Step 2: '1' → push 1
+        Stack: [2, 1]
+
+Step 3: '+' → pop 1 and 2, compute 2+1=3, push 3
+        Stack: [3]
+
+Step 4: '3' → push 3
+        Stack: [3, 3]
+
+Step 5: '*' → pop 3 and 3, compute 3×3=9, push 9
+        Stack: [9]
+
+Result: 9 ✓
+```
+
+### Visual:
+
+```
+"2 1 + 3 *"
+
+  2   1   +   3   *
+  ↓   ↓   ↓   ↓   ↓
+ [2] [2,1] [3] [3,3] [9]
+           ↑
+     2+1 = 3
+           ↑
+     3×3 = 9
+```
+
+### The Code:
 ```python
-class MaxStack:
-    def __init__(self):
-        self.stack = []
-        self.max_stack = []
+def evaluate_postfix(expression):
+    stack = []
+    operators = {'+', '-', '*', '/'}
     
-    def push(self, val):
-        self.stack.append(val)
-        
-        if not self.max_stack or val >= self.max_stack[-1]:
-            self.max_stack.append(val)
+    for token in expression.split():
+        if token not in operators:
+            stack.append(int(token))
+        else:
+            b = stack.pop()  # Second operand
+            a = stack.pop()  # First operand
+            
+            if token == '+':
+                stack.append(a + b)
+            elif token == '-':
+                stack.append(a - b)
+            elif token == '*':
+                stack.append(a * b)
+            elif token == '/':
+                stack.append(int(a / b))  # Truncate toward zero
     
-    def pop(self):
-        if not self.stack:
-            raise IndexError("Stack is empty")
-        
-        val = self.stack.pop()
-        
-        if val == self.max_stack[-1]:
-            self.max_stack.pop()
-        
-        return val
-    
-    def top(self):
-        if not self.stack:
-            raise IndexError("Stack is empty")
-        return self.stack[-1]
-    
-    def get_max(self):
-        if not self.max_stack:
-            raise IndexError("Stack is empty")
-        return self.max_stack[-1]
+    return stack[0]
+
+# Test
+print(evaluate_postfix("2 1 + 3 *"))  # 9
+print(evaluate_postfix("4 13 5 / +"))  # 6
 ```
 
-## Implement Queue Using Stacks - Amortized O(1)
+**Time:** O(n) | **Space:** O(n)
+
+---
+
+## Problem 4: Implement Queue Using Stacks
+
+**Statement:** Implement a FIFO queue using only two stacks.
+
+### Key Insight:
+
+```
+Stack: LIFO (Last In, First Out)
+Queue: FIFO (First In, First Out)
+
+To simulate queue with stacks:
+- Use stack_in for enqueue (push)
+- Use stack_out for dequeue (pop)
+- When stack_out is empty, transfer all from stack_in to stack_out
+```
+
+### Visual:
+
+```
+Enqueue 1, 2, 3:
+  stack_in: [1, 2, 3]
+  stack_out: []
+
+Dequeue():
+  stack_out is empty, transfer!
+  stack_in: []
+  stack_out: [3, 2, 1]  (reversed!)
+  
+  Pop from stack_out: 1 ✓ (FIFO!)
+
+Dequeue():
+  stack_out: [3, 2]
+  Pop: 2 ✓
+
+Enqueue 4:
+  stack_in: [4]
+  stack_out: [3, 2]
+
+Dequeue():
+  stack_out not empty, pop from it
+  Pop: 3 ✓
+```
+
+### The Code:
 ```python
 class QueueUsingStacks:
     def __init__(self):
@@ -250,96 +419,61 @@ class QueueUsingStacks:
         return not self.stack_in and not self.stack_out
 ```
 
-## Implement Stack Using Queues - O(n) for push
-```python
-from collections import deque
+**Time:** O(1) amortized | **Space:** O(n)
 
-class StackUsingQueues:
-    def __init__(self):
-        self.q1 = deque()
-        self.q2 = deque()
-    
-    def push(self, x):
-        # Push to q2
-        self.q2.append(x)
-        
-        # Move all elements from q1 to q2
-        while self.q1:
-            self.q2.append(self.q1.popleft())
-        
-        # Swap q1 and q2
-        self.q1, self.q2 = self.q2, self.q1
-    
-    def pop(self):
-        if not self.q1:
-            raise IndexError("Stack is empty")
-        return self.q1.popleft()
-    
-    def top(self):
-        if not self.q1:
-            raise IndexError("Stack is empty")
-        return self.q1[0]
-    
-    def is_empty(self):
-        return len(self.q1) == 0
+---
 
-# Alternative: O(1) push, O(n) pop
-class StackUsingQueuesV2:
-    def __init__(self):
-        self.q = deque()
-    
-    def push(self, x):
-        self.q.append(x)
-        
-        # Rotate to make last element front
-        for _ in range(len(self.q) - 1):
-            self.q.append(self.q.popleft())
-    
-    def pop(self):
-        if not self.q:
-            raise IndexError("Stack is empty")
-        return self.q.popleft()
-    
-    def top(self):
-        if not self.q:
-            raise IndexError("Stack is empty")
-        return self.q[0]
-    
-    def is_empty(self):
-        return len(self.q) == 0
+## Problem 5: Infix to Postfix Conversion
+
+**Statement:** Convert infix expression (A + B × C) to postfix (A B C × +).
+
+### Precedence Rules:
+```
+^ (power) > * / > + -
+Same precedence: left to right (except ^ which is right to left)
 ```
 
-## Evaluate Postfix Expression - O(n)
-```python
-def evaluate_postfix(expression):
-    stack = []
-    operators = {'+', '-', '*', '/'}
-    
-    for token in expression.split():
-        if token not in operators:
-            stack.append(int(token))
-        else:
-            b = stack.pop()
-            a = stack.pop()
-            
-            if token == '+':
-                stack.append(a + b)
-            elif token == '-':
-                stack.append(a - b)
-            elif token == '*':
-                stack.append(a * b)
-            elif token == '/':
-                # Integer division with truncation toward zero
-                stack.append(int(a / b))
-    
-    return stack[0]
+### Step-by-Step Walkthrough:
 
-# Test
-print(evaluate_postfix("2 1 + 3 *"))  # 9
-print(evaluate_postfix("4 13 5 / +"))  # 6
+```
+Infix: "A + B * C"
+
+Step 1: 'A' → output
+        Output: "A"
+        
+Step 2: '+' → push to stack
+        Stack: ['+']
+        
+Step 3: 'B' → output
+        Output: "A B"
+        
+Step 4: '*' → push (higher precedence than +)
+        Stack: ['+', '*']
+        
+Step 5: 'C' → output
+        Output: "A B C"
+        
+Step 6: End → pop all from stack
+        Pop '*' → Output: "A B C *"
+        Pop '+' → Output: "A B C * +"
+
+Result: "A B C * +"
 ```
 
-## Infix to Postfix Conversion - O(n)
+### Visual:
+
+```
+Infix: A + B * C
+
+Output: A B C * +
+        ↑ ↑ ↑ ↑ ↑
+        A B C * +
+              ↑
+        * has higher precedence than +
+        so * is applied first in postfix
+```
+
+### The Code:
 ```python
 def infix_to_postfix(expression):
     precedence = {'+': 1, '-': 1, '*': 2, '/': 2, '^': 3}
@@ -375,42 +509,31 @@ def infix_to_postfix(expression):
 # Test
 print(infix_to_postfix("A + B * C"))  # A B C * +
 print(infix_to_postfix("( A + B ) * C"))  # A B + C *
-print(infix_to_postfix("A + B * C - D / E"))  # A B C * + D E / -
 ```
 
-## Complete Example Usage
-```python
-# Stack operations
-stack = Stack()
-stack.push(1)
-stack.push(2)
-stack.push(3)
-print(f"Stack: {stack}")          # [1, 2, 3]
-print(f"Peek: {stack.peek()}")    # 3
-print(f"Pop: {stack.pop()}")      # 3
-print(f"Size: {stack.size()}")    # 2
+**Time:** O(n) | **Space:** O(n)
 
-# Min stack
-min_stack = MinStack()
-min_stack.push(5)
-min_stack.push(3)
-min_stack.push(7)
-min_stack.push(1)
-print(f"Min: {min_stack.get_min()}")  # 1
-min_stack.pop()
-print(f"Min: {min_stack.get_min()}")  # 3
+---
 
-# Queue using stacks
-queue = QueueUsingStacks()
-queue.enqueue(1)
-queue.enqueue(2)
-queue.enqueue(3)
-print(f"Dequeue: {queue.dequeue()}")  # 1
-print(f"Peek: {queue.peek()}")        # 2
+## Quick Reference
 
-# Evaluate postfix
-print(f"Postfix: {evaluate_postfix('2 1 + 3 *')}")  # 9
+| Operation | Time | Space |
+|-----------|------|-------|
+| push | O(1) | O(1) |
+| pop | O(1) | O(1) |
+| peek | O(1) | O(1) |
+| isEmpty | O(1) | O(1) |
+| Valid Parentheses | O(n) | O(n) |
+| Min Stack | O(1) all | O(n) |
+| Evaluate Postfix | O(n) | O(n) |
+| Queue using Stacks | O(1) amortized | O(n) |
+| Infix to Postfix | O(n) | O(n) |
 
-# Infix to postfix
-print(f"Postfix: {infix_to_postfix('A + B * C')}")  # A B C * +
-```
+## When to Use Stack
+
+1. **Balanced parentheses** - matching brackets
+2. **Undo/Redo** - last operation first
+3. **Function calls** - recursion stack
+4. **Expression evaluation** - postfix/prefix
+5. **Monotonic stack** - next greater/smaller element
+6. **DFS traversal** - explicit stack

@@ -2,11 +2,73 @@
 
 > Essential technical interview questions for the interview round after coding.
 
+## Interview Structure Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                  INFOSYS SP DSE INTERVIEW FLOW                      │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Round 1: Coding Test (2-3 hours)                                   │
+│    └─ 3 problems: Easy + Medium + Hard                              │
+│                                                                     │
+│  Round 2: Technical Interview (30-45 mins)                         │
+│    ├─ OOP Concepts (5-10 mins)                                      │
+│    ├─ DBMS / SQL (5-10 mins)                                        │
+│    ├─ OS Concepts (5-10 mins)                                       │
+│    ├─ Computer Networks (5 mins)                                    │
+│    ├─ Project Discussion (10-15 mins)                               │
+│    └─ Coding Problem (5-10 mins)                                    │
+│                                                                     │
+│  Round 3: HR Interview (15-20 mins)                                 │
+│    ├─ Resume questions                                               │
+│    ├─ Behavioral questions                                           │
+│    └─ Company fit questions                                          │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+
+INTERVIEW TIPS TIMELINE:
+┌──────────────────────────────────────────────────────────────────┐
+│  0-5 min:  Introduce yourself, be confident                      │
+│  5-15 min: OOP/DBMS - give concise answers with examples        │
+│  15-25 min: Project - use STAR method, technical depth          │
+│  25-35 min: Coding problem - explain approach BEFORE coding     │
+│  35-45 min: Ask questions about role/team                        │
+└──────────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## OOP Concepts
 
-### Four Pillars of OOP
+### Four Pillars of OOP - Visual Overview
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    FOUR PILLARS OF OOP                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  1. ENCAPSULATION          2. ABSTRACTION                       │
+│  ┌──────────────────┐     ┌──────────────────┐                  │
+│  │ ┌──────────────┐ │     │  User sees:      │                  │
+│  │ │ Public       │ │     │  car.start()     │                  │
+│  │ │ Protected    │ │     │  car.stop()      │                  │
+│  │ │ Private      │ │     │                  │                  │
+│  │ └──────────────┘ │     │  Hides:          │                  │
+│  │ Data + Methods   │     │  engine details  │                  │
+│  └──────────────────┘     └──────────────────┘                  │
+│                                                                 │
+│  3. INHERITANCE           4. POLYMORPHISM                       │
+│  ┌──────────────────┐     ┌──────────────────┐                  │
+│  │  Animal (base)   │     │  speak()         │                  │
+│  │   ├── Dog        │     │   → Dog: "Bark"  │                  │
+│  │   ├── Cat        │     │   → Cat: "Meow"  │                  │
+│  │   └── Bird       │     │   → Bird: "Tweet" │                  │
+│  └──────────────────┘     └──────────────────┘                  │
+│                                                                 │
+│  Mnemonic: E-A-I-P = "Every Awesome Programmer Implements"      │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 #### 1. Encapsulation
 - Bundling data and methods that operate on data within a single unit (class)
@@ -142,18 +204,66 @@ class Child(Parent):
 
 ## DBMS Concepts
 
-### ACID Properties
+### ACID Properties - Visual with Bank Transfer Example
 
-| Property | Description | Example |
-|----------|-------------|---------|
-| Atomicity | All or nothing - transaction either completes fully or not at all | Bank transfer: both debit and credit happen or neither does |
-| Consistency | Database moves from one valid state to another | Total balance before and after transfer remains same |
-| Isolation | Concurrent transactions don't interfere | Two transfers on same account don't mix |
-| Durability | Committed data persists even after crash | Once transfer is confirmed, it survives system failure |
+```
+SCENARIO: Transfer ₹1000 from Account A (₹5000) to Account B (₹3000)
 
-**Interview Answer:** "ACID ensures reliable transactions. Atomicity means all-or-nothing, Consistency maintains data integrity, Isolation prevents interference between concurrent transactions, and Durability ensures committed data is permanent."
+┌───────────────────────────────────────────────────────────────────┐
+│  ATOMICITY (All or Nothing)                                       │
+│  ┌──────────────────────────────────────────────┐                 │
+│  │  Step 1: Debit A:  ₹5000 → ₹4000            │                 │
+│  │  Step 2: Credit B: ₹3000 → ₹4000            │                 │
+│  │                                               │                 │
+│  │  If Step 2 fails → Step 1 is ALSO undone!    │                 │
+│  │  Result: A=₹5000, B=₹3000 (original)        │                 │
+│  └──────────────────────────────────────────────┘                 │
+│                                                                   │
+│  CONSISTENCY (Valid State)                                        │
+│  Before: A + B = ₹5000 + ₹3000 = ₹8000                          │
+│  After:  A + B = ₹4000 + ₹4000 = ₹8000  ← Total preserved!     │
+│                                                                   │
+│  ISOLATION (No Interference)                                      │
+│  If C transfers ₹500 to A at same time:                           │
+│  A+B transaction and C+A transaction don't mix up!                │
+│                                                                   │
+│  DURABILITY (Permanent)                                           │
+│  Once commit → even if power fails, the transfer is saved!        │
+└───────────────────────────────────────────────────────────────────┘
+```
 
-### Normalization
+### Normalization Levels - Visual
+
+```
+UNNORMALIZED TABLE (with repeating groups):
+┌───────────┬────────────────────────┐
+│ StudentID │ Courses                │
+├───────────┼────────────────────────┤
+│ 1         │ Math, Science, English │  ← Multiple values in one cell!
+│ 2         │ Math, History          │
+└───────────┴────────────────────────┘
+
+1NF (Atomic Values):
+┌───────────┬─────────┐
+│ StudentID │ Course  │
+├───────────┼─────────┤
+│ 1         │ Math    │  ← One value per cell
+│ 1         │ Science │
+│ 1         │ English │
+│ 2         │ Math    │
+│ 2         │ History │
+└───────────┴─────────┘
+
+2NF (No Partial Dependencies):
+  Problem: If table has (StudentID, Course) → Grade AND DeptName
+           DeptName depends only on StudentID, not on Course!
+  Solution: Split into two tables
+
+3NF (No Transitive Dependencies):
+  Problem: StudentID → DeptID → DeptName
+           DeptName transitively depends on StudentID
+  Solution: Put DeptName in separate Departments table
+```
 
 #### 1NF (First Normal Form)
 - Each column contains atomic values
@@ -254,20 +364,62 @@ query = "CREATE INDEX idx_emp_dept ON Employees(DeptID, Name)"
 
 ## Operating System Concepts
 
-### Process vs Thread
+### Process vs Thread - Visual Comparison
 
-| Aspect | Process | Thread |
-|--------|---------|--------|
-| Definition | Program in execution | Lightweight process |
-| Memory | Separate address space | Shared address space |
-| Creation | Heavyweight | Lightweight |
-| Communication | IPC (pipes, sockets) | Direct (shared memory) |
-| Context Switch | Slow | Fast |
-| Example | Chrome browser | Tabs in Chrome |
+```
+PROCESS (Heavyweight):                    THREAD (Lightweight):
+┌────────────────────────┐               ┌────────────────────────┐
+│     Process A          │               │      Process A         │
+│ ┌─────┐ ┌─────┐       │               │ ┌─────┐ ┌─────┐       │
+│ │ Th1 │ │ Th2 │       │               │ │ Th1 │ │ Th2 │       │
+│ └─────┘ └─────┘       │               │ └──┬──┘ └──┬──┘       │
+│     Heap, Stack        │               │    └───┬───┘          │
+│     Code, Data         │               │   Shared Memory       │
+└────────────────────────┘               └────────────────────────┘
+     ↑ Separate Memory                        ↑ Shared Memory
 
-**Interview Answer:** "A process is an executing program with its own memory space. A thread is a lightweight unit within a process that shares memory with other threads. Creating threads is faster and inter-thread communication is easier."
+COMPARISON TABLE:
+┌──────────────────┬──────────────────┬──────────────────┐
+│ Feature          │ Process          │ Thread            │
+├──────────────────┼──────────────────┼──────────────────┤
+│ Memory           │ Separate         │ Shared            │
+│ Creation speed   │ Slow (heavy)     │ Fast (light)      │
+│ Communication    │ IPC (slow)       │ Shared var (fast) │
+│ Context switch   │ Slow             │ Fast              │
+│ Crash impact     │ Only that process│ Can kill all      │
+│ Example          │ Chrome browser   │ Browser tabs      │
+└──────────────────┴──────────────────┴──────────────────┘
+```
 
-### Deadlock
+### Deadlock - Visual Explanation
+
+```
+DEADLOCK SCENARIO:
+┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│   Thread 1                    Thread 2                   │
+│   ┌──────┐                   ┌──────┐                   │
+│   │ Lock │──── wants ────→   │ Lock │                   │
+│   │  A   │   Lock B          │  B   │                   │
+│   └──────┘                   └──────┘                   │
+│      ↑                          ↑                       │
+│   Holds Lock A              Holds Lock B                 │
+│   Wants Lock B              Wants Lock A                 │
+│                                                          │
+│   RESULT: Both waiting forever! → DEADLOCK               │
+│                                                          │
+│   FOUR CONDITIONS (ALL must be true):                    │
+│   1. Mutual Exclusion - locks can't be shared            │
+│   2. Hold and Wait - hold one, wait for another         │
+│   3. No Preemption - can't forcibly take a lock         │
+│   4. Circular Wait - A→B→A cycle exists                  │
+│                                                          │
+│   PREVENTION: Break ONE condition!                       │
+│   → Always acquire locks in same order (breaks #4)      │
+│   → Or use timeout (breaks #3)                           │
+│   → Or use try-lock (breaks #2)                          │
+└──────────────────────────────────────────────────────────┘
+```
 
 **Four Conditions (Coffman Conditions):**
 1. **Mutual Exclusion:** Resources cannot be shared
@@ -366,21 +518,59 @@ def setter():
 
 ## Computer Networks
 
-### OSI Model (7 Layers)
+### OSI Model (7 Layers) - Visual
 
 ```
-Layer 7: Application    - HTTP, FTP, SMTP, DNS
-Layer 6: Presentation   - SSL/TLS, JPEG, ASCII
-Layer 5: Session        - NetBIOS, RPC
-Layer 4: Transport      - TCP, UDP
-Layer 3: Network        - IP, ICMP, Router
-Layer 2: Data Link      - MAC, Switch, Ethernet
-Layer 1: Physical       - Cables, Hubs, Bits
+┌─────────────────────────────────────────────────────────────────┐
+│  Layer 7: Application     │  HTTP, FTP, SMTP, DNS    │ User    │
+│  Layer 6: Presentation    │  SSL/TLS, JPEG, ASCII    │ Layer   │
+│  Layer 5: Session         │  NetBIOS, RPC             │         │
+│  Layer 4: Transport       │  TCP, UDP                 │ Data    │
+│  Layer 3: Network         │  IP, ICMP, Router         │ Flow    │
+│  Layer 2: Data Link       │  MAC, Switch, Ethernet    │         │
+│  Layer 1: Physical        │  Cables, Hubs, Bits       │ Media   │
+└─────────────────────────────────────────────────────────────────┘
+
+MNEMONIC: "All People Seem To Need Data Processing"
+          (Layer 7 → Layer 1, top to bottom)
+
+DATA FLOW:
+  Sending: Data → L7 → L6 → L5 → L4 → L3 → L2 → L1 → Wire
+  Receiving: Wire → L1 → L2 → L3 → L4 → L5 → L6 → L7 → Data
 ```
 
-**Interview Answer:** "OSI has 7 layers. Application layer interfaces with user, Transport ensures reliable delivery (TCP) or fast delivery (UDP), Network handles routing (IP), Data Link handles physical addressing (MAC), and Physical layer transmits bits."
+### TCP vs UDP - Visual Comparison
 
-### TCP vs UDP
+```
+TCP (Reliable):                    UDP (Fast):
+┌──────────────────────┐         ┌──────────────────────┐
+│  A → SYN → B         │         │  A → DATA → B        │
+│  A ← SYN-ACK ← B    │         │  (no handshake!)     │
+│  A → ACK → B         │         │                      │
+│  A → DATA → B        │         │  Lost packets?       │
+│  A ← ACK ← B         │         │  Too bad, not ressent│
+│  (guaranteed!)       │         │  (just send!)        │
+└──────────────────────┘         └──────────────────────┘
+  Use for: Web, Email              Use for: Video, Games
+  Speed: Slower                    Speed: Faster
+  Order: Guaranteed                Order: Not guaranteed
+```
+
+### TCP Three-Way Handshake - Visual
+
+```
+CLIENT                          SERVER
+  │                               │
+  │──── SYN (seq=x) ───────────→│    "I want to connect"
+  │                               │
+  │←─── SYN-ACK (seq=y,ack=x+1)──│    "OK, I acknowledge"
+  │                               │
+  │──── ACK (ack=y+1) ─────────→│    "Connection established!"
+  │                               │
+  │←═══════ DATA TRANSFER ═══════→│
+  
+  Total: 3 steps to establish, then data flows bidirectionally
+```
 
 | Feature | TCP | UDP |
 |---------|-----|-----|

@@ -63,6 +63,92 @@ Input:  "au"
 Output: 2
 ```
 
+### Step-by-Step Thinking Process
+
+```
+Brainstorming:
+├── "Substring" = contiguous block of characters
+├── "Without repeating" = all chars in window are unique
+├── Need to find LONGEST such substring
+├── Brute force: Check all O(N²) substrings × O(N) validity = O(N³) → Too slow
+└── Key insight: Use SLIDING WINDOW to maintain a "valid" window
+
+Pattern Recognition:
+┌─────────────────────────────────────────────────────────────┐
+│  SLIDING WINDOW = two pointers (left, right)               │
+│                                                             │
+│  1. Expand right pointer to include new character           │
+│  2. If invalid (repeating char), shrink from left           │
+│  3. Track maximum window size seen                          │
+│                                                             │
+│  When to use sliding window:                                │
+│  ✓ Contiguous subarray/substring problems                   │
+│  ✓ Finding min/max length satisfying a condition            │
+│  ✓ "Longest substring" type questions                       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Walkthrough: Sliding Window with Set
+
+```
+String: "abcabcbb"
+
+left=0, right=0: window=[a]         max_len=1
+  "a b c a b c b b"
+   ^
+   L
+
+left=0, right=1: window=[a,b]       max_len=2
+  "a b c a b c b b"
+   ^ ^
+   L R
+
+left=0, right=2: window=[a,b,c]     max_len=3
+  "a b c a b c b b"
+   ^   ^
+   L   R
+
+left=0, right=3: 'a' already in set!
+  ┌──────────────────────────────────────────────┐
+  │ Shrink: remove s[left]='a', left++           │
+  │ Then add s[right]='a'                        │
+  │ New window: [b,c,a]                          │
+  └──────────────────────────────────────────────┘
+  "a b c a b c b b"
+     ^   ^
+     L   R                    max_len=3
+
+left=1, right=4: 'b' already in set!
+  Shrink: remove 'b', left++. Add 'b'.
+  window=[c,a,b]             max_len=3
+  "a b c a b c b b"
+       ^   ^
+       L   R
+
+left=2, right=5: 'c' already in set!
+  Shrink: remove 'c', left++. Add 'c'.
+  window=[a,b,c]             max_len=3
+  "a b c a b c b b"
+         ^   ^
+         L   R
+
+left=2, right=6: 'b' already in set!
+  Shrink until 'b' removed: remove 'a'(left=3), remove 'b'(left=4)
+  window=[c,b]               max_len=3
+  "a b c a b c b b"
+             ^ ^
+             L R
+
+left=4, right=7: 'b' already in set!
+  Shrink: remove 'c'(left=5), remove 'b'(left=6)
+  window=[b]                 max_len=3
+  "a b c a b c b b"
+               ^ ^
+               L R
+
+FINAL: max_len = 3 (substring "abc")
+```
+
 ### Solution 1: Sliding Window with Set
 
 ```python
@@ -209,6 +295,94 @@ Input:  N = 3
 Output:
     1 10
 Explanation: All intervals are within [1,10]
+```
+
+### Step-by-Step Thinking Process
+
+```
+Brainstorming:
+├── "Merge overlapping intervals" → Classic interval problem
+├── Key: When do two intervals overlap?
+│   └── [a,b] and [c,d] overlap if c <= b (assuming sorted by start)
+├── First step: SORT intervals by start time
+├── Then iterate and merge greedily
+└── Edge case: Adjacent intervals [1,4] and [4,5] → merge to [1,5]
+
+Algorithm:
+┌─────────────────────────────────────────────────────────────┐
+│  1. Sort intervals by start time                            │
+│  2. Initialize result with first interval                   │
+│  3. For each remaining interval:                            │
+│     ├── If it overlaps with last result interval:           │
+│     │   └── Merge: extend end = max(end, new_end)           │
+│     └── If no overlap:                                      │
+│         └── Add as new interval to result                   │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Walkthrough: Merge Intervals
+
+```
+Input intervals: [[1,3], [2,6], [8,10], [15,18]]
+
+Step 1: SORT by start time
+  Before: [[1,3], [2,6], [8,10], [15,18]]
+  After:  [[1,3], [2,6], [8,10], [15,18]]  (already sorted)
+
+Step 2: Process intervals
+
+  ┌─── Number Line Visualization ───────────────────────────────┐
+  │                                                              │
+  │  0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18  │
+  │     [=====]                                                  │
+  │        [==========]                                          │
+  │                          [========]                          │
+  │                                                [========]    │
+  └──────────────────────────────────────────────────────────────┘
+
+  Start: result = [[1,3]]
+
+  Process [2,6]:
+    Does [2,6] overlap with [1,3]?
+    Check: 2 <= 3? YES → Merge!
+    New interval: [1, max(3,6)] = [1,6]
+    result = [[1,6]]
+
+    ┌─── After merge ───────────────────────────────────────┐
+    │  1  2  3  4  5  6                                     │
+    │  [===============]  ← merged [1,6]                    │
+    └───────────────────────────────────────────────────────┘
+
+  Process [8,10]:
+    Does [8,10] overlap with [1,6]?
+    Check: 8 <= 6? NO → No overlap
+    result = [[1,6], [8,10]]
+
+  Process [15,18]:
+    Does [15,18] overlap with [8,10]?
+    Check: 15 <= 10? NO → No overlap
+    result = [[1,6], [8,10], [15,18]]
+
+FINAL OUTPUT:
+  1 6
+  8 10
+  15 18
+```
+
+### Another Example: Adjacent Intervals
+
+```
+Input: [[1,4], [4,5]]
+
+Step 1: Already sorted
+Step 2: Process
+  result = [[1,4]]
+
+  Process [4,5]:
+    Check: 4 <= 4? YES → Merge!
+    New: [1, max(4,5)] = [1,5]
+
+OUTPUT: [1,5]  ← Adjacent intervals are merged!
 ```
 
 ### Solution 1: Sort and Merge (Optimal)
@@ -369,19 +543,62 @@ def merge(intervals):
     return merged
 ```
 
-### Edge Cases to Test
-- Empty string/array
-- Single element
-- All elements same
-- No overlapping intervals
-- All intervals overlap
+### Edge Cases to Always Test
 
-### Time Management Tips
-1. Don't spend more than 5 minutes planning
-2. Code the solution quickly
-3. Test with given examples first
-4. Then test edge cases
-5. Optimize only if time permits
+```
+Sliding Window:
+├── Empty string → 0
+├── Single character → 1
+├── All same characters → 1
+├── All unique characters → N (entire string)
+├── String with spaces → spaces count as characters
+└── Very long string → ensure O(N) solution
+
+Merge Intervals:
+├── Empty input → return []
+├── Single interval → return as-is
+├── No overlapping intervals → return all
+├── All overlapping → merge into one
+├── Adjacent intervals [1,4][4,5] → should merge
+└── Nested intervals [1,10][2,3] → outer absorbs inner
+```
+
+### Common Mistakes to Avoid
+
+```
+Sliding Window:
+├── Using while loop to remove chars one-by-one instead of jumping
+│   └── Solution 2 (dict approach) jumps directly → O(N) vs O(2N)
+├── Forgetting that characters can be spaces/symbols (use 128 ASCII)
+├── Not updating the left pointer when duplicate found
+└── Confusing "substring" (contiguous) with "subsequence" (not contiguous)
+
+Merge Intervals:
+├── Not sorting first → wrong results!
+├── Using < instead of <= for overlap check
+│   └── [1,4] and [4,5] should merge (use <=)
+├── Forgetting to handle empty input
+├── Not using max() when merging ends → might shrink interval
+└── Confusing "merge" with "insert interval"
+```
+
+### Speed Tips for Medium Round
+
+```
+Time Budget: 30 minutes per question
+├── 0-5 min:  Read, identify pattern, plan approach
+├── 5-20 min: Write solution
+├── 20-25 min: Test with given samples
+├── 25-28 min: Test edge cases
+└── 28-30 min: Optimize if needed
+
+Pattern Recognition Cheat Sheet:
+├── "Longest substring without repeating" → SLIDING WINDOW
+├── "Merge intervals" → SORT + MERGE
+├── "Minimum window containing..." → SLIDING WINDOW
+├── "Insert interval" → SORT + MERGE + INSERT
+└── When stuck: draw the array/string and trace through manually!
+```
 
 ### Post-Test Checklist
 - [ ] Did I handle all edge cases?
@@ -389,3 +606,5 @@ def merge(intervals):
 - [ ] Did I test with sample inputs?
 - [ ] Did I test with edge cases?
 - [ ] Is my code clean and readable?
+- [ ] Did I sort intervals before merging?
+- [ ] Is my sliding window O(N) not O(N²)?

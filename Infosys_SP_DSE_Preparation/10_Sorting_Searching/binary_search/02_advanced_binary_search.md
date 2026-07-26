@@ -12,7 +12,70 @@
 
 ---
 
+## The "Binary Search on Answer" Framework
+
+Before diving into individual problems, understand the MASTER PATTERN:
+
+```
+BINARY SEARCH ON ANSWER - THE UNIVERSAL TEMPLATE
+═══════════════════════════════════════════════════
+
+Step 1: Identify the SEARCH SPACE
+         What range of answers is possible?
+         (min_possible ... max_possible)
+
+Step 2: Define the PREDICATE (is_valid / can_do)
+         Given a candidate answer "mid", can we check
+         if it's feasible? This is a YES/NO question.
+
+Step 3: Observe the PATTERN
+         As the candidate answer increases:
+         ┌──────────────────────────────────────┐
+         │  FALSE FALSE FALSE ... TRUE TRUE TRUE │
+         │  ──────────────┼───────────────────── │
+         │           the "boundary" we seek      │
+         └──────────────────────────────────────┘
+
+         We binary search for the TRANSITION POINT.
+
+Step 4: Choose the right template:
+         - Minimize the maximum → find leftmost TRUE
+         - Maximize the minimum → find rightmost TRUE
+```
+
+---
+
 ## 1. Binary Search on Floating Point
+
+Instead of searching integers, we search REAL NUMBERS until we reach
+the desired precision.
+
+```
+FINDING sqrt(2) WITH PRECISION 0.1:
+
+Search space: [0.0, 2.0]
+
+Step 1: L=0.0, R=2.0, M=1.0
+        1.0*1.0 = 1.0 <= 2.0 -> L=1.0
+
+Step 2: L=1.0, R=2.0, M=1.5
+        1.5*1.5 = 2.25 > 2.0 -> R=1.5
+
+Step 3: L=1.0, R=1.5, M=1.25
+        1.25*1.25 = 1.5625 <= 2.0 -> L=1.25
+
+Step 4: L=1.25, R=1.5, M=1.375
+        1.375*1.375 = 1.89 <= 2.0 -> L=1.375
+
+Step 5: L=1.375, R=1.5, M=1.4375
+        1.4375*1.4375 = 2.066 > 2.0 -> R=1.4375
+
+R - L = 1.4375 - 1.375 = 0.0625 > 0.1? NO -> STOP
+
+Answer: L = 1.375 (actual sqrt(2) = 1.414...)
+
+With smaller precision (1e-9), we get much more accurate results.
+```
 
 ```python
 def sqrt_precision(x, precision=1e-9):
@@ -21,18 +84,19 @@ def sqrt_precision(x, precision=1e-9):
         raise ValueError("Cannot compute sqrt of negative number")
     if x == 0:
         return 0.0
-    
+
     left, right = 0.0, max(1.0, x)
-    
+
+    # Continue until the search space is smaller than precision
     while right - left > precision:
         mid = (left + right) / 2
-        
+
         if mid * mid <= x:
-            left = mid
+            left = mid       # Answer is mid or larger
         else:
-            right = mid
-    
-    return left
+            right = mid      # Answer is smaller than mid
+
+    return left  # Left is the approximate answer
 
 # Example
 print(f"sqrt(2) = {sqrt_precision(2):.10f}")  # 1.4142135624
@@ -131,29 +195,48 @@ print(first_true(arr))  # 3
 
 **Problem**: Find a peak element where arr[i] > arr[i-1] and arr[i] > arr[i+1].
 
-```python
-def find_peak_element(arr):
-    """Find any peak element in the array."""
-    left, right = 0, len(arr) - 1
-    
-    while left < right:
-        mid = left + (right - left) // 2
-        
-        if arr[mid] < arr[mid + 1]:
-            # Peak is in right half
-            left = mid + 1
-        else:
-            # Peak is in left half (including mid)
-            right = mid
-    
-    return left
-
-# Example
-arr = [1, 2, 3, 1]
-print(find_peak_element(arr))  # 2 (index of 3)
+```
+VISUAL - What is a Peak?
 
 arr = [1, 2, 1, 3, 5, 6, 4]
-print(find_peak_element(arr))  # 5 (index of 6)
+
+Value
+  6 |           *         <- Peak (index 5)
+  5 |         *
+  4 |                   *
+  3 |       *
+  2 |     *
+  1 |   *       *
+    └────────────────────
+      0  1  2  3  4  5  6
+
+Peaks are at index 1 (value=2) and index 5 (value=6).
+The problem asks for ANY one peak.
+
+KEY INSIGHT: If arr[mid] < arr[mid+1], we are on an
+UPHILL slope, so a peak MUST exist to the RIGHT.
+If arr[mid] > arr[mid+1], we are on a DOWNHILL slope,
+so a peak MUST exist at mid or to the LEFT.
+```
+
+### Walkthrough
+
+```
+arr = [1, 2, 1, 3, 5, 6, 4]
+
+Step 1: L=0, R=6, M=3
+        arr[M]=3 < arr[M+1]=5 -> UPHILL, peak is RIGHT
+        L=4
+
+Step 2: L=4, R=6, M=5
+        arr[M]=6 > arr[M+1]=4 -> DOWNHILL, peak is at M or LEFT
+        R=5
+
+Step 3: L=4, R=5, M=4
+        arr[M]=5 < arr[M+1]=6 -> UPHILL, peak is RIGHT
+        L=5
+
+L == R -> return index 5 (value=6) ✓
 ```
 
 ### Find All Peaks
@@ -189,6 +272,31 @@ print(find_all_peaks(arr))  # [1, 3] (indices of 3 and 4)
 ## 4. Capacity to Ship Packages Within D Days
 
 **Problem**: Find minimum capacity to ship all packages within D days.
+
+```
+PROBLEM VISUALIZATION:
+weights = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]    days = 5
+
+Packages must be shipped IN ORDER (contiguous groups).
+We want to find the MINIMUM ship capacity.
+
+If capacity = 15:
+  Day 1: [1, 2, 3, 4, 5] = 15 <= 15 ✓
+  Day 2: [6, 7] = 13 <= 15 ✓
+  Day 3: [8] = 8 <= 15 ✓
+  Day 4: [9] = 9 <= 15 ✓
+  Day 5: [10] = 10 <= 15 ✓
+  All shipped in 5 days! ✓
+
+If capacity = 14:
+  Day 1: [1, 2, 3, 4] = 10 <= 14 ✓
+  Day 2: [5, 6] = 11 <= 14 ✓
+  Day 3: [7] = 7 <= 14 ✓
+  Day 4: [8] = 8 <= 14 ✓
+  Day 5: [9] = 9 <= 14 ✓
+  Day 6: [10] = 10 <= 14 ✓
+  Needs 6 days > 5! ✗
+```
 
 ```python
 def ship_within_days(weights, days):
@@ -325,6 +433,81 @@ print(max_distance(positions, m))  # 5
 
 **Problem**: Place cows in stalls to maximize minimum distance between any two cows.
 
+```
+PROBLEM VISUALIZATION:
+stalls = [1, 2, 4, 8, 16]     cows = 3
+
+Position:  1     2     4           8                 16
+           *     *     *           *                 *
+
+Place 3 cows to MAXIMIZE the minimum distance between any pair.
+
+Option A (distance=3):
+  Cows at positions: 1, 4, 8
+  Distances: |4-1|=3, |8-4|=4
+  Minimum distance = 3
+
+Option B (distance=5):
+  Cows at positions: 1, 8, 16
+  Distances: |8-1|=7, |16-8|=8
+  Minimum distance = 7
+
+Option C (distance=7):
+  Cows at positions: 1, 8, 16
+  Can we place 3 cows with min distance 7?
+  Cow 1 at position 1
+  Cow 2 at position 8 (8-1=7 >= 7) ✓
+  Cow 3 at position 16 (16-8=8 >= 7) ✓
+  YES! Minimum distance = 7
+
+Answer: 7 (maximum possible minimum distance)
+```
+
+### Greedy Predicate Visualization
+
+```
+can_place(distance) - Check if we can place all cows
+
+Algorithm (Greedy):
+  1. Place first cow at first stall
+  2. For each subsequent cow, place it at the first stall
+     that is at least 'distance' away from the last placed cow
+  3. If we can place all cows -> TRUE, else -> FALSE
+
+stalls = [1, 2, 4, 8, 16], distance = 5
+
+  Cow 1: placed at position 1
+         |
+  1     2     4           8                 16
+  C1
+
+  Cow 2: first stall >= 1+5=6? -> position 8
+                    |
+  1     2     4           8                 16
+  C1               C2
+
+  Cow 3: first stall >= 8+5=13? -> position 16
+                                        |
+  1     2     4           8                 16
+  C1               C2               C3
+
+  All 3 cows placed! -> TRUE ✓
+
+stalls = [1, 2, 4, 8, 16], distance = 6
+
+  Cow 1: at 1
+  Cow 2: at 8 (8-1=7 >= 6) ✓
+  Cow 3: need stall >= 8+6=14 -> only 16 left (16-8=8 >= 6) ✓
+  All 3 cows placed! -> TRUE ✓
+
+stalls = [1, 2, 4, 8, 16], distance = 8
+
+  Cow 1: at 1
+  Cow 2: at 8 (8-1=7 >= 8)? NO! Try 16 (16-1=15 >= 8) ✓
+  Cow 3: need stall >= 16+8=24 -> none left! ✗
+  Only 2 cows placed -> FALSE ✗
+```
+
 ```python
 def aggressive_cows(stalls, cows):
     """Find maximum minimum distance between cows."""
@@ -412,6 +595,53 @@ print(painter_partition(boards, painters))  # 60
 ## 8. Koko Eating Bananas
 
 **Problem**: Find minimum eating speed to finish all piles within h hours.
+
+```
+PROBLEM VISUALIZATION:
+piles = [3, 6, 7, 11]     h = 8 hours
+
+Koko eats at speed k bananas/hour.
+Each pile takes ceil(pile_size / k) hours.
+She must finish ALL piles within h hours.
+
+If speed = 4:
+  Pile 1 (3 bananas):  ceil(3/4) = 1 hour
+  Pile 2 (6 bananas):  ceil(6/4) = 2 hours
+  Pile 3 (7 bananas):  ceil(7/4) = 2 hours
+  Pile 4 (11 bananas): ceil(11/4) = 3 hours
+  Total: 1+2+2+3 = 8 hours <= 8 ✓
+
+If speed = 3:
+  Pile 1: ceil(3/3) = 1 hour
+  Pile 2: ceil(6/3) = 2 hours
+  Pile 3: ceil(7/3) = 3 hours
+  Pile 4: ceil(11/3) = 4 hours
+  Total: 1+2+3+4 = 10 hours > 8 ✗
+
+Answer: 4 (minimum speed that works)
+```
+
+### Speed vs Hours Graph
+
+```
+Speed:  1    2    3    4    5    6    7    8    9   10   11
+Hours: 27   14   10    8    7    6    5    5    4    4    4
+
+Hours
+ 27 | *
+ 14 |   *
+ 10 |     *
+  8 |       *  <- threshold (h=8)
+  7 |         *
+  6 |           *
+  5 |             *  *
+  4 |                   *  *  *
+    └──────────────────────────────
+      1  2  3  4  5  6  7  8  9  10  11  Speed
+
+As speed INCREASES, hours DECREASE (monotonic!)
+We binary search for the minimum speed where hours <= 8.
+```
 
 ```python
 def min_eating_speed(piles, h):

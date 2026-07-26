@@ -79,6 +79,47 @@ Array is in descending order. No element has a larger element after it.
 
 **Idea:** Check all pairs (i, j) where j > i.
 
+**Visual Walkthrough:**
+
+```
+arr = [2, 3, 10, 6, 4, 8, 1]
+
+Brute force checks ALL pairs where j > i:
+┌─────────────────────────────────────────────────┐
+│  i=0: j=1 → 3-2=1   j=2 → 10-2=8  ★          │
+│        j=3 → 6-2=4   j=4 → 4-2=2              │
+│        j=5 → 8-2=6   j=6 → 1-2=-1 (skip)      │
+│                                                  │
+│  i=1: j=2 → 10-3=7  j=3 → 6-3=3               │
+│        j=4 → 4-3=1   j=5 → 8-3=5              │
+│        j=6 → 1-3=-2 (skip)                     │
+│                                                  │
+│  i=2: j=3 → 6-10=-4 (skip)                     │
+│        j=4 → 4-10=-6 (skip)                    │
+│        j=5 → 8-10=-2 (skip)                    │
+│        j=6 → 1-10=-9 (skip)                    │
+│                                                  │
+│  i=3: j=4 → 4-6=-2 (skip)                      │
+│        j=5 → 8-6=2   j=6 → 1-6=-5 (skip)      │
+│                                                  │
+│  i=4: j=5 → 8-4=4   j=6 → 1-4=-3 (skip)      │
+│                                                  │
+│  i=5: j=6 → 1-8=-7 (skip)                      │
+└─────────────────────────────────────────────────┘
+
+Maximum positive difference = 8 (arr[2]-arr[0])
+TIME: O(N²) — too slow for N=10^5
+```
+
+**Thinking Process:**
+```
+├── We need arr[j] - arr[i] where j > i
+├── This means: find a PAIR where the later element is larger
+├── Brute force: check all N*(N-1)/2 pairs → O(N²)
+├── Too slow! We need O(N)
+└── Key insight: For each position j, we want the MINIMUM element before it
+```
+
 ```python
 def max_difference_brute(arr):
     n = len(arr)
@@ -100,6 +141,59 @@ def max_difference_brute(arr):
 ### Approach 2: Optimized Single Pass
 
 **Idea:** Track the minimum element seen so far. For each element, calculate difference with that minimum. Update max difference.
+
+**Visual Walkthrough:**
+
+```
+arr = [2, 3, 10, 6, 4, 8, 1]
+
+┌─────────────────────────────────────────────────┐
+│  j=0: min_so_far=2, max_diff=-1 (no pair yet)  │
+│                                                  │
+│  j=1: arr[1]=3 > min_so_far=2 ✓                │
+│    diff = 3-2 = 1                               │
+│    max_diff = max(-1, 1) = 1                    │
+│    min_so_far = min(2, 3) = 2                   │
+│                                                  │
+│  j=2: arr[2]=10 > min_so_far=2 ✓               │
+│    diff = 10-2 = 8  ★ NEW MAX                   │
+│    max_diff = max(1, 8) = 8                     │
+│    min_so_far = min(2, 10) = 2                  │
+│                                                  │
+│  j=3: arr[3]=6 > min_so_far=2 ✓                │
+│    diff = 6-2 = 4                               │
+│    max_diff = max(8, 4) = 8                     │
+│    min_so_far = min(2, 6) = 2                   │
+│                                                  │
+│  j=4: arr[4]=4 > min_so_far=2 ✓                │
+│    diff = 4-2 = 2                               │
+│    max_diff = 8 (unchanged)                     │
+│    min_so_far = min(2, 4) = 2                   │
+│                                                  │
+│  j=5: arr[5]=8 > min_so_far=2 ✓                │
+│    diff = 8-2 = 6                               │
+│    max_diff = 8 (unchanged)                     │
+│    min_so_far = min(2, 8) = 2                   │
+│                                                  │
+│  j=6: arr[6]=1 < min_so_far=2 ✗                │
+│    (no valid pair, arr[6] is not larger)         │
+│    min_so_far = min(2, 1) = 1  ← UPDATE!       │
+│                                                  │
+│  ANSWER: max_diff = 8                            │
+└─────────────────────────────────────────────────┘
+
+Why this works:
+┌─────────────────────────────────────────────────┐
+│  For each position j, the BEST partner i is     │
+│  the position with MINIMUM value among i < j    │
+│                                                  │
+│  We track min_so_far = min of all elements      │
+│  seen so far (which are all valid i's)          │
+│                                                  │
+│  Time: O(N) — single pass                       │
+│  Space: O(1) — just two variables               │
+└─────────────────────────────────────────────────┘
+```
 
 ```python
 def max_difference_optimized(arr):
@@ -278,6 +372,63 @@ Let me use the original 3x3 example which gives 2.
 
 **Idea:** Explore all paths from start to end using DFS, marking visited cells to avoid revisits.
 
+**Visual Walkthrough:**
+
+```
+Grid (3×3 with center blocked):
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │   0 = open
+├───┼───┼───┤
+│ 0 │ 1 │ 0 │   1 = blocked
+├───┼───┼───┤
+│ 0 │ 0 │ 0 │
+└───┴───┴───┘
+
+Start: (0,0)    End: (2,2)
+
+DFS Exploration:
+═══════════════════════════════════════════════════
+
+Path 1: Right → Right → Down → Down
+(0,0) → (0,1) → (0,2) → (1,2) → (2,2) ✓
+┌───┬───┬───┐
+│ S │ → │ → │
+├───┼───┼───┤
+│   │ X │ ↓ │
+├───┼───┼───┤
+│   │   │ E │
+└───┴───┴───┘
+Count: 1
+
+Path 2: Down → Down → Right → Right
+(0,0) → (1,0) → (2,0) → (2,1) → (2,2) ✓
+┌───┬───┬───┐
+│ S │   │   │
+├───┼───┼───┤
+│ ↓ │ X │   │
+├───┼───┼───┤
+│ → │ → │ E │
+└───┴───┴───┘
+Count: 2
+
+Other attempts from (0,0):
+- Right → Down → (1,1) BLOCKED ✗
+- Down → Right → (1,1) BLOCKED ✗
+- Right → Down → Left → (0,0) REVISIT ✗
+
+ANSWER: 2 unique paths
+```
+
+**Thinking Process:**
+```
+├── 4-directional movement (not just right/down!)
+├── Cannot revisit cells → need visited array
+├── This is PATH COUNTING, not shortest path
+├── Backtracking: try all directions, undo when backtracking
+├── Since M,N ≤ 10, exponential solution is fine
+└── Key: visited[i][j] = True before exploring, False after (backtrack)
+```
+
 ```python
 def unique_paths_backtrack(grid):
     m, n = len(grid), len(grid[0])
@@ -306,6 +457,56 @@ def unique_paths_backtrack(grid):
 ### Approach 2: Optimized Backtracking with Pruning
 
 **Idea:** Add checks to prune invalid paths early.
+
+**Visual Walkthrough: 2×2 All Open Grid**
+
+```
+Grid (2×2, all open):
+┌───┬───┐
+│ 0 │ 0 │
+├───┼───┤
+│ 0 │ 0 │
+└───┴───┘
+
+4-directional movement (not just right/down!)
+
+Path 1: Right → Down
+  (0,0) → (0,1) → (1,1) ✓
+  ┌───┬───┐
+  │ S │ → │
+  ├───┼───┤
+  │   │ E │
+  └───┴───┘
+
+Path 2: Down → Right
+  (0,0) → (1,0) → (1,1) ✓
+  ┌───┬───┐
+  │ S │   │
+  ├───┼───┤
+  │ ↓ │ E │
+  └───┴───┘
+
+Wait — what about paths that go LEFT or UP?
+  (0,0) → (0,1) → (0,0) → REVISIT! ✗
+  (0,0) → (1,0) → (0,0) → REVISIT! ✗
+
+So even with 4 directions, no-visit constraint limits us.
+In a 2×2 grid, only 2 simple paths exist.
+
+ANSWER: 2 paths
+```
+
+**Why Not Just Right/Down?**
+```
+With 4-directional movement, paths CAN go left/up
+but the no-revisit constraint prevents cycles.
+
+For larger grids, 4 directions can create MORE paths
+than just right/down because you can take detours:
+  (0,0)→(0,1)→(1,1)→(1,0)→(2,0)→(2,1)→(2,2)
+
+But for small grids (M,N ≤ 10), backtracking handles this.
+```
 
 ```python
 def unique_paths_optimized(grid):
@@ -553,6 +754,32 @@ All tours have same cost:
 
 **Idea:** Try all permutations of cities, calculate cost for each, return minimum.
 
+**Visual Walkthrough:**
+
+```
+N = 4 cities, cost matrix:
+       0    1    2    3
+  0  [ 0,  10,  15,  20]
+  1  [10,   0,  35,  25]
+  2  [15,  35,   0,  30]
+  3  [20,  25,  30,   0]
+
+All permutations of [1,2,3] (cities to visit between start/end):
+┌─────────────────────────────────────────────────┐
+│  Permutation    Cost Calculation       Total    │
+│  ─────────────────────────────────────────────  │
+│  [1,2,3]   0→1:10  1→2:35  2→3:30  3→0:20  = 95│
+│  [1,3,2]   0→1:10  1→3:25  3→2:30  2→0:15  = 80│
+│  [2,1,3]   0→2:15  2→1:35  1→3:25  3→0:20  = 95│
+│  [2,3,1]   0→2:15  2→3:30  3→1:25  1→0:10  = 80│
+│  [3,1,2]   0→3:20  3→1:25  1→2:35  2→0:15  = 95│
+│  [3,2,1]   0→3:20  3→2:30  2→1:35  1→0:10  = 95│
+└─────────────────────────────────────────────────┘
+
+MINIMUM = 80 (tours [1,3,2] or [2,3,1])
+TIME: O(N!) — 4! = 24 permutations, but for N=16 → 16! ≈ 2×10^13 (too slow!)
+```
+
 ```python
 from itertools import permutations
 
@@ -582,6 +809,65 @@ def tsp_brute_force(cost):
 - Use bitmask to represent set of visited cities
 - `dp[mask][i]` = minimum cost to visit all cities in `mask`, ending at city `i`
 - `mask` is a bitmask where bit `j` set means city `j` has been visited
+
+**Visual Walkthrough:**
+
+```
+N = 3 cities, cost matrix:
+       0    1    2
+  0  [ 0,  10,  15]
+  1  [10,   0,  20]
+  2  [15,  20,   0]
+
+Bitmask representation:
+  mask = 001 (binary) → only city 0 visited
+  mask = 011 (binary) → cities 0,1 visited
+  mask = 111 (binary) → all cities visited
+
+DP Table (dp[mask][last_city]):
+═══════════════════════════════════════════════════════════
+
+Start: dp[001][0] = 0 (at city 0, cost=0)
+
+Process mask = 001 (only city 0):
+  From city 0, try city 1:
+    new_mask = 001 | 010 = 011
+    dp[011][1] = dp[001][0] + cost[0][1] = 0 + 10 = 10
+  From city 0, try city 2:
+    new_mask = 001 | 100 = 101
+    dp[101][2] = dp[001][0] + cost[0][2] = 0 + 15 = 15
+
+Process mask = 011 (cities 0,1):
+  From city 1, try city 2:
+    new_mask = 011 | 100 = 111
+    dp[111][2] = dp[011][1] + cost[1][2] = 10 + 20 = 30
+
+Process mask = 101 (cities 0,2):
+  From city 2, try city 1:
+    new_mask = 101 | 010 = 111
+    dp[111][1] = dp[101][2] + cost[2][1] = 15 + 20 = 35
+
+Final: Full mask = 111
+  Return to city 0:
+    From city 1: dp[111][1] + cost[1][0] = 35 + 10 = 45
+    From city 2: dp[111][2] + cost[2][0] = 30 + 15 = 45
+
+ANSWER: 45 (both tours give same cost)
+
+DP Table Visualization:
+┌───────┬──────┬──────┬──────┐
+│ mask  │ i=0  │ i=1  │ i=2  │
+├───────┼──────┼──────┼──────┤
+│ 001   │  0   │  INF │  INF │
+│ 010   │ INF  │  0*  │  INF │ (not reachable from start)
+│ 011   │ INF  │  10  │  INF │
+│ 100   │ INF  │ INF  │  0*  │ (not reachable from start)
+│ 101   │ INF  │ INF  │  15  │
+│ 110   │ INF  │  INF │  INF │
+│ 111   │ INF  │  35  │  30  │
+└───────┴──────┴──────┴──────┘
+(* = not reachable from city 0 directly)
+```
 
 ```python
 def tsp_bitmask_dp(cost):
@@ -880,3 +1166,64 @@ if __name__ == "__main__":
 3. Disconnected graph: Return -1
 4. Asymmetric costs: Algorithm handles this naturally
 5. Self-loops: cost[i][i] = 0, ignored by algorithm
+
+### Common Mistakes to Avoid
+
+```
+Q1 (Maximum Difference):
+├── Forgetting that j > i constraint (order matters!)
+├── Not handling all-descending array → return -1
+├── Not updating min_so_far AFTER checking diff
+│   └── Wrong: update min first, then check diff
+│   └── Right: check diff first, then update min
+└── Edge: all same elements → return -1 (no strict increase)
+
+Q2 (Unique Paths Grid):
+├── Forgetting that 4-directional movement allows going UP/LEFT
+├── Not marking cells as visited → infinite loops
+├── Not unmarking (backtracking) → wrong count
+├── Not handling blocked start/end cells
+└── Forgetting MOD = 10^9 + 7
+
+Q3 (TSP Bitmask DP):
+├── Off-by-one: mask bit positions vs city numbers
+├── Not checking if city u is in mask before transitioning
+├── Forgetting to add return cost (dp[full][u] + cost[u][0])
+├── Starting dp incorrectly: dp[1][0] = 0 (mask=1 means city 0)
+└── Using N! permutation approach when N > 12 → TLE
+```
+
+### Exam Strategy Tips
+
+```
+Time Allocation (3 hours):
+├── Q1 (Easy, 20 marks): 20-25 min
+│   ├── This should be FREE points
+│   ├── Single pass O(N) solution is simple
+│   └── Test with descending array immediately
+│
+├── Q2 (Medium, 35 marks): 50-60 min
+│   ├── Backtracking is straightforward
+│   ├── 4-directional movement is the twist
+│   ├── Test with center-blocked grid
+│   └── Remember: M,N ≤ 10, exponential is OK
+│
+└── Q3 (Hard, 45 marks): 70-90 min
+    ├── MEMORIZE the bitmask DP template
+    ├── Understand the mask representation
+    ├── Build DP table carefully
+    └── Add return-to-start cost at the end
+
+Key Templates to Memorize:
+├── TSP: dp[mask][i] with mask iteration
+├── Grid DFS: visited array + 4 directions + backtrack
+└── Max Difference: track min_so_far in single pass
+```
+
+### Post-Test Checklist
+- [ ] Q1: Did I check j > i constraint?
+- [ ] Q2: Did I handle blocked cells?
+- [ ] Q2: Did I mark/unmark visited cells?
+- [ ] Q3: Did I add return-to-start cost?
+- [ ] Q3: Did I use MOD for large outputs?
+- [ ] All: Did I test with sample inputs?

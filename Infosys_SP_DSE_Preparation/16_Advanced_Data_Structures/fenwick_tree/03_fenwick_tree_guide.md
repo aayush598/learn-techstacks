@@ -1,42 +1,95 @@
 # Fenwick Tree (Binary Indexed Tree) Guide
 
-## What is Fenwick Tree?
+> **Why Fenwick Tree?** It's a simpler, more memory-efficient alternative to Segment Tree for prefix sum problems. Uses O(n) space instead of O(4n), and the code is shorter. The "magic" is in using `idx & (-idx)` to navigate the tree.
 
-A Fenwick Tree (Binary Indexed Tree or BIT) is a data structure that efficiently supports:
-1. **Point updates** (add value to an element)
-2. **Prefix queries** (sum from start to index i)
+---
 
-It's simpler to implement than Segment Tree and uses less memory.
-
-**Key Insight:** Use the binary representation of indices to determine which elements are responsible for which range.
+## What is a Fenwick Tree? (Visual Explanation)
 
 ```
-Index:    1    2    3    4    5    6    7    8
-Binary:  001  010  011  100  101  110  111 1000
-Responsible for:
-  1: [1,1]
-  2: [1,2]
-  3: [3,3]
-  4: [1,4]
-  5: [5,5]
-  6: [5,6]
-  7: [7,7]
-  8: [1,8]
+  Array: [1, 2, 3, 4, 5, 6, 7, 8]
+
+  The BIT stores partial sums based on binary structure:
+
+  Index:  1     2     3     4     5     6     7     8
+  Binary: 001   010   011   100   101   110   111  1000
+          ↓     ↓     ↓     ↓     ↓     ↓     ↓     ↓
+  BIT:   [1,    3,    3,   10,    5,   11,    7,   36]
+          ↓     ↓     ↓     ↓     ↓     ↓     ↓     ↓
+  Covers: [1,1] [1,2] [3,3] [1,4] [5,5] [5,6] [7,7] [1,8]
+
+  ┌──────────────────────────────────────────────────────────┐
+  │  Each index i is responsible for a RANGE of elements.    │
+  │  The range length = lowest set bit of i (i & -i).       │
+  │                                                          │
+  │  i=1 (001): covers 1 element   (1 & -1 = 1)            │
+  │  i=2 (010): covers 2 elements  (2 & -2 = 2)            │
+  │  i=3 (011): covers 1 element   (3 & -3 = 1)            │
+  │  i=4 (100): covers 4 elements  (4 & -4 = 4)            │
+  │  i=5 (101): covers 1 element   (5 & -5 = 1)            │
+  │  i=6 (110): covers 2 elements  (6 & -6 = 2)            │
+  │  i=7 (111): covers 1 element   (7 & -7 = 1)            │
+  │  i=8 (1000): covers 8 elements (8 & -8 = 8)            │
+  └──────────────────────────────────────────────────────────┘
 ```
 
-**When to use:**
-- Need prefix sums with point updates
-- Need to count inversions
-- Need to count smaller elements after self
-- Simpler alternative to Segment Tree for sum queries
+### Visual: Parent-Child Relationship
 
-**Comparison:**
-| Operation | Array | Prefix Sum | BIT | Segment Tree |
-|-----------|-------|------------|-----|--------------|
-| Point Update | O(1) | O(n) | O(log n) | O(log n) |
-| Prefix Query | O(n) | O(1) | O(log n) | O(log n) |
-| Range Query | O(n) | O(1) | O(log n) | O(log n) |
-| Space | O(n) | O(n) | O(n) | O(4n) |
+```
+  The tree structure (implicit):
+
+  Index:  8
+          |
+      ┌───┴───┐
+      4       (8)
+      |
+  ┌───┴───┐
+  2       (6)
+  |
+  ┌───┴───┐
+  1       (3)       (5)       (7)
+
+  Parent of i = i + (i & -i)  [moving UP in tree]
+  So: 1→2→4→8, 3→4→8, 5→6→8, 7→8
+
+  For QUERY (prefix sum): move DOWN by removing lowest set bit
+    idx & (idx - 1) removes lowest set bit
+
+  For UPDATE: move UP by adding lowest set bit
+    idx + (idx & -idx)
+```
+
+---
+
+## When to Use Fenwick Tree vs Segment Tree
+
+```
+  ┌─────────────────┬─────────────┬──────────────────┐
+  │   Operation     │ Fenwick Tree│  Segment Tree    │
+  ├─────────────────┼─────────────┼──────────────────┤
+  │ Point Update    │  O(log n)   │  O(log n)        │
+  │ Prefix Query    │  O(log n)   │  O(log n)        │
+  │ Range Query     │  O(log n)   │  O(log n)        │
+  │ Range Update    │  O(log n)*  │  O(log n)        │
+  │ Range+Range     │  O(log n)** │  O(log n)        │
+  │ Space           │  O(n)       │  O(4n)           │
+  │ Code Complexity │  Simple     │  Moderate        │
+  │ Flexibility     │  Less       │  More            │
+  └─────────────────┴─────────────┴──────────────────┘
+  * with difference array trick
+  ** with two BITs
+
+  USE FENWICK TREE WHEN:
+  ✓ Only need prefix sums + point updates
+  ✓ Memory is a concern
+  ✓ Simpler code is preferred
+  ✓ Counting inversions / smaller elements
+
+  USE SEGMENT TREE WHEN:
+  ✓ Need arbitrary range queries (min, max, gcd)
+  ✓ Need range updates + range queries
+  ✓ Need more flexibility (non-commutative operations)
+```
 
 ---
 
@@ -94,6 +147,37 @@ print(f"BIT array: {bit.tree}")
 
 ## 2. Update BIT
 
+### Visual: How Update Traverses the Tree
+
+```
+  Update index 3 (0-indexed) by adding 5.
+  Convert to 1-indexed: idx = 4 (binary: 100)
+
+  idx & (-idx) for idx=4: 100 & 100 = 4
+
+  Update path: 4 → 8 → (next would be 16, stop if > n)
+
+  BIT before:  [_, 1, 3, 3, 10, 5, 11, 7, 36]
+  Index:        0  1  2  3   4  5   6  7   8
+
+  After updating index 4 by +5:
+  ┌─────────────────────────────────────────────────┐
+  │  idx=4:  tree[4] += 5  → 10+5 = 15             │
+  │  idx=8:  tree[8] += 5  → 36+5 = 41             │
+  │  (next: idx=16 > n=8, stop)                    │
+  └─────────────────────────────────────────────────┘
+
+  BIT after:   [_, 1, 3, 3, 15, 5, 11, 7, 41]
+
+  WHY does this work? We update ALL nodes whose
+  range includes the target index:
+    tree[4] covers [1,4] → includes index 4 ✓
+    tree[8] covers [1,8] → includes index 4 ✓
+    tree[1] covers [1,1] → does NOT include ✗
+    tree[2] covers [1,2] → does NOT include ✗
+    tree[5] covers [5,5] → does NOT include ✗
+```
+
 ```python
 class BIT:
     def __init__(self, n):
@@ -101,12 +185,18 @@ class BIT:
         self.tree = [0] * (n + 1)
     
     def update(self, idx, delta):
-        """Add delta to element at index idx (0-indexed)"""
+        """Add delta to element at index idx (0-indexed).
+        
+        Algorithm: Move UP the tree by adding lowest set bit.
+        Each node on the path covers a range containing idx.
+        
+        Time: O(log n) — at most log₂(n) nodes visited
+        """
         idx += 1  # Convert to 1-indexed
         
         while idx <= self.n:
             self.tree[idx] += delta
-            idx += idx & (-idx)  # Move to parent
+            idx += idx & (-idx)  # Move to parent (next responsible node)
     
     def point_update(self, idx, val):
         """Set element at idx to val (0-indexed)"""
@@ -138,6 +228,43 @@ print(f"After updating index 3 by +5: tree = {bit.tree}")
 
 ## 3. Query BIT (Prefix Sum)
 
+### Visual: How Prefix Query Traverses the Tree
+
+```
+  Query prefix sum [0, 5] (1-indexed: query(6))
+  
+  idx = 6 (binary: 110)
+
+  Query path: 6 → 4 → 0 (stop when idx=0)
+
+  ┌──────────────────────────────────────────────────────┐
+  │  idx=6 (110): tree[6] covers [5,6] → add tree[6]=11 │
+  │  idx=4 (100): tree[4] covers [1,4] → add tree[4]=15 │
+  │  idx=0: STOP                                         │
+  │                                                      │
+  │  Sum = 11 + 15 = 26                                 │
+  │                                                      │
+  │  Verify: [1,2,3,4,5,6] = 1+2+3+4+5+6 = 21         │
+  │  Wait, we updated earlier... after update:           │
+  │  arr[3] became 9 (was 4, +5), so sum = 1+2+3+9+5+6 │
+  │  = 26 ✓                                             │
+  └──────────────────────────────────────────────────────┘
+
+  Moving DOWN: idx -= idx & (-idx) removes lowest set bit
+    110 → 100 → 000 (3 iterations for 3 set bits)
+
+  WHY it works:
+  ┌──────────────────────────────────────────────────────┐
+  │  prefix_sum(6) = arr[1]+arr[2]+arr[3]+arr[4]+       │
+  │                  arr[5]+arr[6]                       │
+  │                                                      │
+  │  tree[6] = arr[5]+arr[6]    → covers [5,6]          │
+  │  tree[4] = arr[1]+arr[2]+arr[3]+arr[4] → covers [1,4]│
+  │                                                      │
+  │  Sum of tree[6] + tree[4] = complete prefix sum!     │
+  └──────────────────────────────────────────────────────┘
+```
+
 ```python
 class BIT:
     def __init__(self, n):
@@ -151,13 +278,19 @@ class BIT:
             idx += idx & (-idx)
     
     def query(self, idx):
-        """Query prefix sum from 0 to idx (inclusive)"""
+        """Query prefix sum from 0 to idx (inclusive).
+        
+        Algorithm: Move DOWN the tree by removing lowest set bit.
+        Accumulate values from nodes covering the prefix.
+        
+        Time: O(log n) — at most log₂(n) nodes visited
+        """
         result = 0
         idx += 1  # Convert to 1-indexed
         
         while idx > 0:
             result += self.tree[idx]
-            idx -= idx & (-idx)  # Move to parent
+            idx -= idx & (-idx)  # Move DOWN (remove lowest set bit)  # Move to parent
         
         return result
     

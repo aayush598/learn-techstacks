@@ -67,6 +67,45 @@ Already all 0s. No flips needed. Cost = 0.
 
 **Idea:** Count the number of 0s and 1s. Cost to make all 1s = count_0 × X. Cost to make all 0s = count_1 × Y. Return minimum.
 
+**Visual Walkthrough:**
+
+```
+arr = [1, 0, 1, 0, 1], X=2, Y=3
+
+Step 1: Count 0s and 1s
+┌─────────────────────────────────────────────┐
+│  Index:  0   1   2   3   4                  │
+│  Value:  1   0   1   0   1                  │
+│          ↑       ↑       ↑  → these are 1s  │
+│              ↑       ↑     → these are 0s   │
+│                                              │
+│  count_0 = 2 (positions 1, 3)               │
+│  count_1 = 3 (positions 0, 2, 4)            │
+└─────────────────────────────────────────────┘
+
+Step 2: Calculate costs
+┌─────────────────────────────────────────────┐
+│  Option A: Make all 1s                      │
+│  → Flip 2 zeros to ones                     │
+│  → Cost = 2 × X = 2 × 2 = 4               │
+│                                              │
+│  Option B: Make all 0s                      │
+│  → Flip 3 ones to zeros                     │
+│  → Cost = 3 × Y = 3 × 3 = 9               │
+│                                              │
+│  Answer = min(4, 9) = 4                     │
+└─────────────────────────────────────────────┘
+```
+
+**Thinking Process:**
+```
+├── We only have TWO options: all 0s or all 1s
+├── To make all 1s: flip every 0 → cost = count_0 × X
+├── To make all 0s: flip every 1 → cost = count_1 × Y
+├── Answer = min(these two costs)
+└── Key insight: We don't need to consider which specific positions to flip
+```
+
 ```python
 def min_cost_brute_force(arr, x, y):
     count_0 = arr.count(0)
@@ -283,6 +322,76 @@ Total = 25 ✓
 ### Approach 1: Greedy with Disjoint Set (Optimal)
 
 **Idea:** Sort jobs by profit (descending). For each job, try to assign it to the latest available slot before its deadline using Union-Find for O(1) slot finding.
+
+**Visual Walkthrough:**
+
+```
+Jobs: [(1,20,2), (2,15,2), (3,10,1), (4,5,3), (5,1,3)]
+       (id, profit, deadline)
+
+Step 1: Sort by PROFIT descending
+┌─────────────────────────────────────────────────┐
+│  Job1: profit=20, deadline=2                    │
+│  Job2: profit=15, deadline=2                    │
+│  Job3: profit=10, deadline=1                    │
+│  Job4: profit=5,  deadline=3                    │
+│  Job5: profit=1,  deadline=3                    │
+└─────────────────────────────────────────────────┘
+
+Step 2: DSU Slot Assignment
+┌─────────────────────────────────────────────────┐
+│  Slots:  [1] [2] [3]                            │
+│  DSU:    parent = [0, 1, 2, 3] (each points     │
+│          to itself initially)                    │
+│                                                  │
+│  Process Job1 (profit=20, dl=2):                │
+│    find(2) = 2 → Slot 2 is free!               │
+│    Assign Job1 to slot 2. Profit = 20           │
+│    Union(2, 1) → parent[2] = 1                 │
+│    Slots:  [1] [Job1] [3]                       │
+│                                                  │
+│  Process Job2 (profit=15, dl=2):                │
+│    find(2) = 1 → Slot 2 taken, try slot 1      │
+│    Assign Job2 to slot 1. Profit = 15+20 = 35  │
+│    Union(1, 0) → parent[1] = 0                 │
+│    Slots:  [Job2] [Job1] [3]                    │
+│                                                  │
+│  Process Job3 (profit=10, dl=1):                │
+│    find(1) = 0 → Slot 1 taken, no free slot    │
+│    SKIP Job3                                    │
+│                                                  │
+│  Process Job4 (profit=5, dl=3):                 │
+│    find(3) = 3 → Slot 3 is free!               │
+│    Assign Job4 to slot 3. Profit = 35+5 = 40   │
+│    Union(3, 2) → parent[3] = 2                  │
+│    Slots:  [Job2] [Job1] [Job4]                 │
+│                                                  │
+│  Process Job5 (profit=1, dl=3):                 │
+│    find(3) = 0 → No free slot                   │
+│    SKIP Job5                                    │
+└─────────────────────────────────────────────────┘
+
+FINAL: 3 jobs scheduled, profit = 40
+```
+
+**DSU Explanation:**
+```
+Why DSU for slot finding?
+┌─────────────────────────────────────────────────┐
+│  Without DSU: For each job, scan backward from  │
+│  deadline to find free slot → O(N) per job      │
+│                                                  │
+│  With DSU: When slot k is used, union(k, k-1)  │
+│  find(deadline) directly gives latest free slot │
+│  → O(α(N)) ≈ O(1) per job                      │
+│                                                  │
+│  Visual:                                        │
+│  Slots:  [1] [2] [3] [4] [5]                   │
+│  After using slot 3: find(3) → 2               │
+│  After using slot 2: find(3) → 1               │
+│  After using slot 1: find(3) → 0 (no slot)    │
+└─────────────────────────────────────────────────┘
+```
 
 ```python
 class DisjointSet:
@@ -577,6 +686,61 @@ Only one way to split into 3 palindromes.
 2. Use recursive DP: `dp(i, k)` = number of ways to partition `S[i:]` into `k` palindromic substrings
 3. For each position `j`, if `S[i:j]` is a palindrome, add `dp(j, k-1)` to result
 
+**Visual Walkthrough:**
+
+```
+S = "aaa", K = 2
+
+Step 1: Build palindrome table is_pal[i][j]
+┌─────────────────────────────────────────────────┐
+│  is_pal[i][j] = True if S[i..j] is palindrome  │
+│                                                  │
+│       j=0   j=1   j=2                           │
+│  i=0  T     T     T    ("a","aa","aaa")         │
+│  i=1  -     T     T    ("a","aa")               │
+│  i=2  -     -     T    ("a")                    │
+│                                                  │
+│  Base: is_pal[i][i] = True (single char)        │
+│  Two chars: is_pal[i][i+1] = (s[i] == s[i+1])  │
+│  Longer: is_pal[i][j] = (s[i]==s[j]) &&        │
+│           is_pal[i+1][j-1]                       │
+└─────────────────────────────────────────────────┘
+
+Step 2: DP Recursion Tree
+┌─────────────────────────────────────────────────┐
+│  dp(0, 2): ways to split "aaa" into 2 palindromes│
+│                                                  │
+│  Try j=0: S[0:0]="" → not useful (empty)        │
+│  Try j=1: S[0:1]="a" → palindrome ✓             │
+│    └── dp(1, 1): ways to split "aa" into 1 pal  │
+│        Try j=1: S[1:1]="" skip                   │
+│        Try j=2: S[1:2]="a" → palindrome ✓       │
+│          └── dp(2, 0): i=2, k=0, i==n → return 1│
+│        Try j=3: S[1:3]="aa" → palindrome ✓      │
+│          └── dp(3, 0): i=3, k=0, i==n → return 1│
+│        dp(1,1) = 2                               │
+│                                                  │
+│  Try j=2: S[0:2]="aa" → palindrome ✓            │
+│    └── dp(2, 1): ways to split "a" into 1 pal   │
+│        Try j=3: S[2:3]="a" → palindrome ✓       │
+│          └── dp(3, 0) = 1                       │
+│        dp(2,1) = 1                               │
+│                                                  │
+│  Try j=3: S[0:3]="aaa" → palindrome ✓           │
+│    └── dp(3, 1): i=3, k=1, i==n but k>0 → 0    │
+│                                                  │
+│  dp(0,2) = dp(1,1) + dp(2,1) + 0 = 2 + 1 = 3? │
+│                                                  │
+│  Wait — let's check the partitions:              │
+│  1. "a" | "aa" → both palindromes ✓             │
+│  2. "aa" | "a" → both palindromes ✓             │
+│  3. "aaa" → only 1 substring, not 2             │
+│                                                  │
+│  Answer = 2 ✓ (the "aaa" option doesn't count   │
+│  because it's 1 substring, not 2)               │
+└─────────────────────────────────────────────────┘
+```
+
 ```python
 def count_palindromic_partitions(s, k):
     n = len(s)
@@ -833,3 +997,59 @@ if __name__ == "__main__":
 3. K = N: Return 1 only if every character is the same (all single-char palindromes)
 4. All characters same: Always has at least one valid partition for any K ≤ N
 5. No palindromic partition possible: Return 0
+
+### Common Mistakes to Avoid
+
+```
+Q1 (Binary Array):
+├── Forgetting that X or Y could be 0 (free flips!)
+├── Not using min() to compare both options
+├── Counting errors when array is large
+└── Edge: Already uniform → cost = 0
+
+Q2 (Job Sequencing):
+├── Not sorting by PROFIT (some students sort by deadline)
+├── DSU find() without path compression → O(N) per query
+├── Not using min(deadline, max_deadline) → index out of bounds
+├── Off-by-one: slots are 1-indexed, not 0-indexed
+└── Forgetting to return BOTH count and profit
+
+Q3 (Palindromic Partition):
+├── Off-by-one in palindrome table (i, j vs i, j+1)
+├── Not handling K > N → return 0 immediately
+├── Forgetting to mod by 10^9 + 7
+├── Base case: dp(0, 0) = 1 (empty string, 0 partitions)
+└── Not using memoization → exponential time
+```
+
+### Exam Strategy Tips
+
+```
+Time Allocation (3 hours):
+├── Q1 (Easy, 20 marks): 20-25 min
+│   ├── This should be FREE points
+│   ├── Read, code, test, move on
+│   └── Don't spend more than 5 min planning
+│
+├── Q2 (Medium, 35 marks): 50-60 min
+│   ├── GREEDY + DSU is the key pattern
+│   ├── If stuck on DSU, use heap approach
+│   └── Test thoroughly with edge cases
+│
+└── Q3 (Hard, 45 marks): 70-90 min
+    ├── DP with memoization is the way
+    ├── Build palindrome table first (O(N²))
+    ├── Then recursive DP (O(N² × K))
+    └── If running low on time, submit partial solution
+
+Priority: Q1 > Q2 > Q3 (secure easy marks first)
+```
+
+### Post-Test Checklist
+- [ ] Q1: Did I check both options (all 0s vs all 1s)?
+- [ ] Q2: Did I sort by profit descending?
+- [ ] Q2: Did I handle DSU path compression?
+- [ ] Q3: Did I build palindrome table correctly?
+- [ ] Q3: Did I mod by 10^9 + 7?
+- [ ] All: Did I test with sample inputs?
+- [ ] All: Did I handle edge cases?

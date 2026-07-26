@@ -2,39 +2,78 @@
 
 ## Cycle in Undirected Graph (DFS)
 
+### Visual: Cycle Detection Using Parent Tracking
+
+```
+Key Idea: In an undirected graph, if we visit a node that is
+ALREADY visited and is NOT our parent, we found a cycle!
+
+Cycle:                        No Cycle (Tree):
+  0 --- 1                       0 --- 1
+  |   / |                       |   /
+  |  /  |                       |  /
+  | /   |                       | /
+  2 --- 3                       2
+
+DFS from 0:                   DFS from 0:
+  Visit 0 (parent=-1)          Visit 0 (parent=-1)
+  Visit 1 (parent=0)           Visit 1 (parent=0)
+  Visit 2 (parent=1)           Visit 2 (parent=1)
+  Visit 3 (parent=2)           3 is leaf → backtrack
+  Look at neighbor 1:          Backtrack to 0
+  1 is VISITED and ≠ parent(3) No more unvisited neighbors
+  → CYCLE FOUND!               → NO CYCLE
+
+WHY does parent tracking work?
+┌───────────────────────────────────────────────────────┐
+│ In undirected graph, edge A↔B means:                  │
+│   When we visit B from A, the edge A→B is "used"     │
+│   The "back" edge B→A is just the reverse             │
+│                                                       │
+│   If we find a visited neighbor that is NOT parent:   │
+│   → We found an edge NOT in our DFS tree              │
+│   → That edge creates a cycle!                        │
+└───────────────────────────────────────────────────────┘
+```
+
 ```python
 def has_cycle_undirected_dfs(n, edges):
     """
     Detect cycle in undirected graph using DFS
     Time: O(V + E) | Space: O(V + E)
+
+    KEY INSIGHT: Track parent of each node.
+    If we reach a visited node that is NOT the parent → cycle!
     """
     from collections import defaultdict
-    
+
     graph = defaultdict(list)
     for u, v in edges:
         graph[u].append(v)
         graph[v].append(u)
-    
+
     visited = set()
-    
+
     def dfs(node, parent):
         visited.add(node)
-        
+
         for neighbor in graph[node]:
             if neighbor not in visited:
+                # Recurse with current node as parent
                 if dfs(neighbor, node):
                     return True
             elif neighbor != parent:
-                # Visited neighbor that is not parent = cycle
+                # Visited neighbor that is NOT parent = CYCLE!
                 return True
-        
+
         return False
-    
+
+    # Check all components (graph might be disconnected)
     for i in range(n):
         if i not in visited:
-            if dfs(i, -1):
+            if dfs(i, -1):   # -1 means no parent (root)
                 return True
-    
+
     return False
 
 
@@ -85,6 +124,54 @@ def has_cycle_undirected_bfs(n, edges):
 
 ## Cycle in Directed Graph (DFS with Color Marking)
 
+### Visual: 3-Color Marking System
+
+```
+WHY we need 3 colors for DIRECTED graphs:
+─────────────────────────────────────────
+In undirected graphs, parent tracking works.
+In directed graphs, edges are ONE-WAY, so we need to detect
+"back edges" — edges that go back to a node currently on
+the recursion stack.
+
+The 3-Color System:
+┌─────────────────────────────────────────────────────────┐
+│  WHITE (0) = Not visited yet                           │
+│  GRAY  (1) = Currently being explored (ON the stack)   │
+│  BLACK (2) = Fully processed (DONE with this node)     │
+│                                                         │
+│  When we see a GRAY neighbor → BACK EDGE → CYCLE!      │
+│  When we see a BLACK neighbor → Already done, skip      │
+│  When we see a WHITE neighbor → Keep exploring          │
+└─────────────────────────────────────────────────────────┘
+
+Example with cycle: 0 → 1 → 2 → 0
+
+Step │ Current │ Colors        │ Action
+─────│─────────│───────────────│───────────────────────────
+  1  │ dfs(0)  │ 0:GRAY        │ Start exploring 0
+  2  │ dfs(1)  │ 0:GRAY,1:GRAY │ 0→1, explore 1
+  3  │ dfs(2)  │ 0:GRAY,1:GRAY │ 1→2, explore 2
+     │         │ 2:GRAY        │
+  4  │ check 0 │ 0:GRAY        │ 2→0, 0 is GRAY = CYCLE!
+
+Without cycle: 0 → 1 → 2 → 3
+
+Step │ Current │ Colors          │ Action
+─────│─────────│─────────────────│─────────────────────────
+  1  │ dfs(0)  │ 0:GRAY          │ Start exploring 0
+  2  │ dfs(1)  │ 0:GRAY,1:GRAY   │ 0→1, explore 1
+  3  │ dfs(2)  │ 0:GRAY,1:GRAY   │ 1→2, explore 2
+     │         │ 2:GRAY          │
+  4  │ dfs(3)  │ ..., 2:GRAY     │ 2→3, explore 3
+     │         │ 3:GRAY          │
+  5  │ done(3) │ ..., 3:BLACK    │ No neighbors → mark BLACK
+  6  │ done(2) │ ..., 2:BLACK    │ Done → mark BLACK
+  7  │ done(1) │ ..., 1:BLACK    │ Done → mark BLACK
+  8  │ done(0) │ 0:BLACK         │ Done → mark BLACK
+     │         │                 │ NO GRAY neighbor found → NO CYCLE
+```
+
 ```python
 def has_cycle_directed_dfs(n, edges):
     """
@@ -93,34 +180,39 @@ def has_cycle_directed_dfs(n, edges):
     GRAY = 1: In current DFS path (on stack)
     BLACK = 2: Fully processed
     Time: O(V + E) | Space: O(V + E)
+
+    WHY IT WORKS:
+    - GRAY nodes are ancestors in the DFS tree
+    - If we reach a GRAY node, we found a back edge → cycle
+    - BLACK nodes are completely done — no need to revisit
     """
     from collections import defaultdict
-    
+
     graph = defaultdict(list)
     for u, v in edges:
         graph[u].append(v)
-    
+
     WHITE, GRAY, BLACK = 0, 1, 2
     color = [WHITE] * n
-    
+
     def dfs(node):
-        color[node] = GRAY
-        
+        color[node] = GRAY   # Mark as "currently exploring"
+
         for neighbor in graph[node]:
             if color[neighbor] == GRAY:
-                # Back edge found = cycle
+                # Back edge found = CYCLE!
                 return True
             if color[neighbor] == WHITE and dfs(neighbor):
                 return True
-        
-        color[node] = BLACK
+
+        color[node] = BLACK  # Mark as "fully processed"
         return False
-    
+
     for i in range(n):
         if color[i] == WHITE:
             if dfs(i):
                 return True
-    
+
     return False
 
 
@@ -128,21 +220,21 @@ def has_cycle_directed_dfs(n, edges):
 def find_cycle_directed(n, edges):
     """Returns the cycle path if found, else []"""
     from collections import defaultdict
-    
+
     graph = defaultdict(list)
     for u, v in edges:
         graph[u].append(v)
-    
+
     WHITE, GRAY, BLACK = 0, 1, 2
     color = [WHITE] * n
     parent = [-1] * n
-    
+
     def dfs(node):
         color[node] = GRAY
-        
+
         for neighbor in graph[node]:
             if color[neighbor] == GRAY:
-                # Reconstruct cycle
+                # Reconstruct cycle by following parent pointers
                 cycle = [neighbor]
                 curr = node
                 while curr != neighbor:
@@ -150,22 +242,22 @@ def find_cycle_directed(n, edges):
                     curr = parent[curr]
                 cycle.append(neighbor)
                 return cycle[::-1]
-            
+
             if color[neighbor] == WHITE:
                 parent[neighbor] = node
                 result = dfs(neighbor)
                 if result:
                     return result
-        
+
         color[node] = BLACK
         return None
-    
+
     for i in range(n):
         if color[i] == WHITE:
             result = dfs(i)
             if result:
                 return result
-    
+
     return []
 
 
@@ -511,23 +603,57 @@ def is_bipartite_bfs(graph):
 ## Key Takeaways for Cycle Detection
 
 ```
-Undirected Graph:
-- DFS: Track parent, if visited neighbor ≠ parent → cycle
-- BFS: Same logic as DFS but with queue
-- Union-Find: If both nodes already in same set → cycle
-- All: O(V + E) time
+UNDIRECTED GRAPH — Cycle Detection:
+────────────────────────────────────
+Method 1: DFS with parent tracking
+  → If visited neighbor ≠ parent → CYCLE
+  → O(V + E) time, O(V) space
 
-Directed Graph:
-- DFS: 3-color marking (WHITE/GRAY/BLACK)
-  - GRAY → GRAY edge = back edge = cycle
-- Kahn's: If topological order size < V → cycle
-- Both: O(V + E) time
+Method 2: BFS with parent tracking
+  → Same logic, using queue instead of recursion
+  → O(V + E) time, O(V) space
 
-Topological Sort:
-- Only works on DAGs (no cycles)
-- DFS: Reverse post-order traversal
-- BFS: Process nodes with in-degree 0 (Kahn's)
-- Both: O(V + E) time
+Method 3: Union-Find
+  → If both nodes already in same set → CYCLE
+  → O(E × α(V)) time ≈ O(E), O(V) space
+
+DIRECTED GRAPH — Cycle Detection:
+──────────────────────────────────
+Method 1: DFS with 3-color marking
+  → WHITE → GRAY → BLACK
+  → GRAY → GRAY edge = back edge = CYCLE
+  → O(V + E) time, O(V) space
+
+Method 2: Kahn's Algorithm (BFS)
+  → Topological sort
+  → If sorted order has < V nodes → CYCLE
+  → O(V + E) time, O(V) space
+
+DECISION GUIDE:
+┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│  Undirected graph?                                       │
+│  ├─ YES → Use Union-Find (simplest) OR DFS with parent  │
+│  │        Union-Find is best for online/edge-by-edge     │
+│  │        DFS is best for one-shot analysis              │
+│  │                                                       │
+│  └─ NO (Directed)?                                       │
+│      ├─ Need cycle path? → DFS with 3-color + parent    │
+│      ├─ Need topological order too? → Kahn's            │
+│      └─ Just need YES/NO? → Either works                │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+
+Complexity Comparison:
+┌─────────────────────┬──────────────┬──────────────┐
+│ Algorithm           │ Time         │ Space        │
+├─────────────────────┼──────────────┼──────────────┤
+│ DFS (undirected)    │ O(V + E)     │ O(V)         │
+│ BFS (undirected)    │ O(V + E)     │ O(V)         │
+│ Union-Find          │ O(E × α(V))  │ O(V)         │
+│ DFS (directed)      │ O(V + E)     │ O(V)         │
+│ Kahn's (directed)   │ O(V + E)     │ O(V)         │
+└─────────────────────┴──────────────┴──────────────┘
 
 When to use what:
 - Undirected graph cycle → Union-Find or DFS with parent

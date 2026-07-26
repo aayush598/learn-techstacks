@@ -1,5 +1,64 @@
 # KMP (Knuth-Morris-Pratt) Algorithm
 
+## What is KMP?
+
+KMP is a **linear-time** string matching algorithm. It avoids re-checking characters by using a precomputed **LPS (Longest Prefix Suffix)** array.
+
+```
+  The Problem:
+  ┌──────────────────────────────────────────────────────────┐
+  │ Text:    A B A B D A B A C D A B A B C A B A B          │
+  │ Pattern: A B A B C A B A B                               │
+  │                                                           │
+  │ Naive approach checks each position from scratch:         │
+  │ At index 0: A B A B [X] -> mismatch at position 4        │
+  │ At index 1: shift pattern by 1, start over               │
+  │ This wastes work! We already know "ABAB" matches!        │
+  └──────────────────────────────────────────────────────────┘
+
+  KMP's Key Insight:
+  ┌──────────────────────────────────────────────────────────┐
+  │ When a mismatch occurs, use what we already matched      │
+  │ to skip ahead instead of starting from scratch.          │
+  │                                                           │
+  │ The LPS array tells us: "if we matched j chars and      │
+  │ hit a mismatch, how many chars can we reuse?"            │
+  └──────────────────────────────────────────────────────────┘
+```
+
+## Algorithm Comparison
+
+| Algorithm    | Time (Avg) | Time (Worst) | Space | Best For                     |
+|-------------|-----------|-------------|-------|------------------------------|
+| Naive       | O(n*m)    | O(n*m)      | O(1)  | Nothing (too slow)           |
+| KMP         | O(n+m)    | O(n+m)      | O(m)  | Single pattern, guaranteed   |
+| Rabin-Karp  | O(n+m)    | O(n*m)      | O(1)  | Multiple patterns            |
+| Z-Algorithm | O(n+m)    | O(n+m)      | O(n+m)| Simple implementation        |
+
+> n = text length, m = pattern length
+
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │            KMP PROBLEM DECISION GUIDE                   │
+  ├─────────────────────────────────────────────────────────┤
+  │                                                         │
+  │  Need guaranteed O(n+m) pattern matching?               │
+  │  └── Use KMP                                            │
+  │                                                         │
+  │  Need to find all overlapping occurrences?              │
+  │  └── KMP with j = lps[j-1] after match                 │
+  │                                                         │
+  │  Need to check repeated substring pattern?              │
+  │  └── KMP: lps[n-1] > 0 and n%(n-lps[n-1])==0          │
+  │                                                         │
+  │  Need to find string period?                            │
+  │  └── period = n - lps[n-1]                              │
+  │                                                         │
+  └─────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 1. LPS (Longest Prefix Suffix) Array
 
 ```python
@@ -72,6 +131,60 @@ print(f"\nLPS Array: {lps}")
 # LPS: [0, 0, 1, 2, 0, 1, 2, 3, 4, 0]
 ```
 
+### Visual: How LPS Array is Computed
+
+```
+  Pattern: "ABABCABABD"
+  lps[i] = length of longest proper prefix of pattern[0..i]
+           that is also a suffix
+
+  ┌─────┬───────────────────────────────────────────────────────┐
+  │ i   │ 0   1   2   3   4   5   6   7   8   9              │
+  │ Char│ A   B   A   B   C   A   B   A   B   D              │
+  │ LPS │ 0   0   1   2   0   1   2   3   4   0              │
+  └─────┴───────────────────────────────────────────────────────┘
+
+  How each value is computed:
+  ┌────────────────────────────────────────────────────────────┐
+  │ i=0: 'A' -> lps=0 (no proper prefix = suffix)            │
+  │ i=1: 'AB' -> check: 'A' != 'B' -> lps=0                 │
+  │ i=2: 'ABA' -> prefix 'A' == suffix 'A' -> lps=1         │
+  │ i=3: 'ABAB' -> prefix 'AB' == suffix 'AB' -> lps=2      │
+  │ i=4: 'ABABC' -> no match -> lps=0                        │
+  │ i=5: 'ABABCA' -> 'A'=='A' -> lps=1                      │
+  │ i=6: 'ABABCAB' -> 'AB'=='AB' -> lps=2                   │
+  │ i=7: 'ABABCABA' -> 'ABA'=='ABA' -> lps=3                │
+  │ i=8: 'ABABCABAB' -> 'ABAB'=='ABAB' -> lps=4             │
+  │ i=9: 'ABABCABABD' -> no match -> lps=0                   │
+  └────────────────────────────────────────────────────────────┘
+```
+
+### The LPS "Jump" Logic Visualized
+
+```
+  When mismatch at position j, don't start over!
+  Instead, jump to lps[j-1]:
+
+  Pattern: A B A B C A B A B
+  Index:   0 1 2 3 4 5 6 7 8
+
+  Suppose we matched up to j=4 ('C' at position 4)
+  and hit a mismatch:
+
+  Text:    ... A B A B X ...
+  Pattern:     A B A B C A B A B
+                       ^
+                   mismatch at j=4
+
+  lps[3] = 2, so we jump j to 2:
+  Text:    ... A B A B X ...
+  Pattern:         A B A B C A B A B
+                       ^
+                   j jumps to position 2
+
+  We skip positions 0,1 because we KNOW they match!
+```
+
 ## 2. KMP Search Algorithm
 
 ```python
@@ -113,6 +226,37 @@ text = "ABABDABACDABABCABAB"
 pattern = "ABABCABAB"
 print(f"Pattern found at indices: {kmp_search(text, pattern)}")
 # [10]
+```
+
+### Visual: KMP Search Step by Step
+
+```
+  Text:    A A B A A C A A D A A B A A A A B
+  Pattern: A A B A A C A A B
+
+  LPS for "AABAA CAAB": [0,1,0,1,2,0,1,2,0]
+
+  Step 1: Start matching from left
+  Text:    A A B A A C A A D A A B A A A A B
+  Pattern: A A B A A C A A B
+           ^^^^^^^^^^^^  ^
+           match 8 chars  mismatch at 'D' vs 'B'
+
+  Step 2: Use LPS! lps[7]=2 -> jump j to 2
+  Text:    A A B A A C A A D A A B A A A A B
+  Pattern:     A A B A A C A A B
+                 ^^
+                 reuse "AA" prefix
+
+  Step 3: 'D' vs 'B' mismatch again. lps[1]=1
+  Text:    A A B A A C A A D A A B A A A A B
+  Pattern:       A A B A A C A A B
+                   ^
+                   reuse "A"
+
+  Continue until pattern found at index 9...
+
+  Key: We NEVER move i backwards! Only j jumps using LPS.
 ```
 
 ## 3. KMP Step-by-Step Visualization
@@ -391,4 +535,39 @@ print("repeatedSubstringPattern('abab'):", repeated_substring_pattern("abab"))  
 print("longestHappyPrefix('level'):", longest_happy_prefix("level"))  # "le"
 print("hasAllCodes('00110110', 2):", has_all_codes("00110110", 2))  # True
 print("kmpWithWildcards('ab', '.b'):", kmp_with_wildcards("ab", ".b"))  # [0]
+```
+
+---
+
+## Summary: KMP Key Takeaways
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                 KMP ALGORITHM CHEAT SHEET                        │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  LPS Array:                                                      │
+  │  └── lps[i] = longest proper prefix of pattern[0..i] that      │
+  │              is also a suffix of pattern[0..i]                  │
+  │  └── Computed in O(m) using two pointers (i and length)        │
+  │  └── Key insight: if mismatch at j, jump to lps[j-1]          │
+  │                                                                  │
+  │  KMP Search:                                                     │
+  │  └── Never move text pointer (i) backward!                      │
+  │  └── On match: advance both i and j                            │
+  │  └── On mismatch: jump j = lps[j-1] (or advance i if j=0)     │
+  │  └── On full match (j==m): record position, j = lps[j-1]      │
+  │                                                                  │
+  │  Applications:                                                   │
+  │  └── Pattern matching: O(n+m) guaranteed                       │
+  │  └── Repeated substring: n % (n - lps[n-1]) == 0             │
+  │  └── String period: n - lps[n-1]                               │
+  │  └── Longest prefix = suffix: lps[n-1]                         │
+  │                                                                  │
+  │  Common Mistakes:                                                │
+  │  └── Forgetting to update j after finding match                │
+  │  └── Off-by-one errors in LPS computation                      │
+  │  └── Moving i backward (NEVER do this in KMP!)                 │
+  │                                                                  │
+  └──────────────────────────────────────────────────────────────────┘
 ```

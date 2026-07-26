@@ -2,6 +2,33 @@
 
 > 15 frequently asked easy-level questions from Infosys coding rounds.
 
+## Quick Reference: All Easy Problems
+
+```
+┌────┬────────────────────────────┬──────────┬───────────┬─────────────────┐
+│  # │ Problem                    │ Time     │ Space     │ Pattern         │
+├────┼────────────────────────────┼──────────┼───────────┼─────────────────┤
+│  1 │ Binary Array Conversion    │ O(n)     │ O(1)      │ Greedy          │
+│  2 │ Pairs with Given Sum       │ O(n)     │ O(n)      │ Hash Map        │
+│  3 │ Rotate Array               │ O(n)     │ O(1)      │ Three Reverses  │
+│  4 │ Majority Element           │ O(n)     │ O(1)      │ Boyer-Moore     │
+│  5 │ Valid Palindrome II        │ O(n)     │ O(1)      │ Two Pointers    │
+│  6 │ Missing Number             │ O(n)     │ O(1)      │ XOR / Formula   │
+│  7 │ Kadane's Algorithm         │ O(n)     │ O(1)      │ DP              │
+│  8 │ Two Sum                    │ O(n)     │ O(n)      │ Hash Map        │
+│  9 │ Buy Sell Stock             │ O(n)     │ O(1)      │ Greedy          │
+│ 10 │ Contains Duplicate         │ O(n)     │ O(n)      │ Set             │
+│ 11 │ Merge Sorted Arrays        │ O(n+m)   │ O(n+m)    │ Two Pointers    │
+│ 12 │ Move Zeros                 │ O(n)     │ O(1)      │ Two Pointers    │
+│ 13 │ Plus One                   │ O(n)     │ O(1)      │ Math            │
+│ 14 │ Single Number              │ O(n)     │ O(1)      │ XOR             │
+│ 15 │ Valid Parentheses          │ O(n)     │ O(n)      │ Stack           │
+└────┴────────────────────────────┴──────────┴───────────┴─────────────────┘
+
+EXAM STRATEGY: All these should take <10 minutes each!
+Total time target: 2-3 hours for all 15 problems.
+```
+
 ---
 
 ## 1. Binary Array Conversion (Min Cost to All 0s or All 1s)
@@ -93,7 +120,34 @@ print(count_pairs_with_sum(arr, target))  # Output: 3
 
 **Problem Statement:** Given an array, rotate it to the right by k positions.
 
-**Approach:** Use three reverses technique. Reverse entire array, then reverse first k elements, then reverse remaining.
+### Visual: Three Reverses Technique
+
+```
+Array: [1, 2, 3, 4, 5, 6, 7], k = 3
+
+GOAL: Move last 3 elements to front
+Result: [5, 6, 7, 1, 2, 3, 4]
+
+THREE REVERSES TRICK:
+Step 1: Reverse entire array
+  [1, 2, 3, 4, 5, 6, 7] → [7, 6, 5, 4, 3, 2, 1]
+
+Step 2: Reverse first k elements (indices 0 to k-1)
+  [7, 6, 5, | 4, 3, 2, 1] → [5, 6, 7, | 4, 3, 2, 1]
+                ↑ reversed!
+
+Step 3: Reverse remaining elements (indices k to end)
+  [5, 6, 7, | 4, 3, 2, 1] → [5, 6, 7, | 1, 2, 3, 4]
+                              ↑ reversed!
+
+WHY DOES THIS WORK?
+  Original: [A B C | D E F G]  (k=3, so D E F G = first part)
+  We want:  [D E F G | A B C]
+  
+  Reverse all:     [G F E D | C B A]
+  Reverse first k: [D E F G | C B A]
+  Reverse rest:    [D E F G | A B C] ✅
+```
 
 ```python
 def rotate_array(arr, k):
@@ -126,7 +180,39 @@ print(rotate_array(arr, k))  # Output: [5, 6, 7, 1, 2, 3, 4]
 
 **Problem Statement:** Find the element that appears more than n/2 times in the array.
 
-**Approach:** Boyer-Moore voting algorithm. Maintain a candidate and counter.
+### Visual: Boyer-Moore Voting Algorithm
+
+```
+arr = [2, 2, 1, 1, 1, 2, 2]
+
+Step-by-step:
+  candidate=None, count=0
+  
+  num=2: count=0 → candidate=2, count=1
+  num=2: same → count=2
+  num=1: diff → count=1
+  num=1: diff → count=0 → RESET!
+  num=1: count=0 → candidate=1, count=1
+  num=2: diff → count=0 → RESET!
+  num=2: count=0 → candidate=2, count=1
+  
+  Final candidate = 2
+  Verify: count of 2 in array = 4 > 7/2 = 3 ✅ → 2 is majority!
+
+VISUAL: "Cancel out" pairs of different elements
+  [2, 2, 1, 1, 1, 2, 2]
+   └┬─┘  └┬─┘     └┬─┘
+   cancel  cancel   cancel
+         1 left → NOT majority!
+  
+  Actually: 2 appears 4 times, 1 appears 3 times
+  4 > 3, so 2 cancels all 1s and has 1 remaining
+
+WHY IT WORKS:
+  Majority element appears > n/2 times
+  Even if all non-majority elements "cancel" it,
+  majority still has at least 1 remaining
+```
 
 ```python
 def majority_element(arr):
@@ -231,7 +317,38 @@ print(find_missing_xor(arr))     # Output: 2
 
 **Problem Statement:** Find the contiguous subarray with the largest sum.
 
-**Approach:** Kadane's algorithm - maintain current sum and max sum.
+### Visual: Kadane's Algorithm Step-by-Step
+
+```
+arr = [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+Step-by-step trace:
+┌─────┬───────┬────────────────────┬─────────┐
+│  i  │ arr[i]│ curr_sum calculation│ max_sum │
+├─────┼───────┼────────────────────┼─────────┤
+│  0  │  -2   │ -2 (start fresh)   │   -2    │
+│  1  │   1   │ max(1, -2+1)=1     │    1    │
+│  2  │  -3   │ max(-3, 1-3)=-2    │    1    │
+│  3  │   4   │ max(4, -2+4)=4     │    4    │
+│  4  │  -1   │ max(-1, 4-1)=3     │    4    │
+│  5  │   2   │ max(2, 3+2)=5      │    5    │
+│  6  │   1   │ max(1, 5+1)=6      │    6    │ ← MAX!
+│  7  │  -5   │ max(-5, 6-5)=1     │    6    │
+│  8  │   4   │ max(4, 1+4)=5      │    6    │
+└─────┴───────┴────────────────────┴─────────┘
+
+Visual of the subarray:
+  [-2, 1, -3, [4, -1, 2, 1], -5, 4]
+                 ↑ subarray with max sum = 6
+
+KEY DECISION at each step:
+  "Should I extend current subarray, or start fresh?"
+  
+  If arr[i] > curr_sum + arr[i]:
+      → Start fresh (arr[i] alone is better)
+  Else:
+      → Extend (include arr[i] in current subarray)
+```
 
 ```python
 def max_subarray_sum(arr):
@@ -279,7 +396,37 @@ print(max_subarray(arr))      # Output: [4, -1, 2, 1]
 
 **Problem Statement:** Given an array and target, find indices of two numbers that add up to target.
 
-**Approach:** Hash map storing complement -> index.
+### Visual: Hash Map Approach
+
+```
+arr = [2, 7, 11, 15], target = 9
+
+HASH MAP LOOKUP:
+  i=0: num=2, complement=9-2=7
+       Is 7 in map? NO → store {2: 0}
+  
+  i=1: num=7, complement=9-7=2
+       Is 2 in map? YES at index 0! → return [0, 1] ✅
+
+VISUAL:
+  ┌──────────────────────────────────────────────────┐
+  │  For each number:                                │
+  │  1. Calculate complement = target - num          │
+  │  2. Check if complement is already in hash map   │
+  │  3. If YES → return both indices                 │
+  │  4. If NO  → store current num → index in map    │
+  └──────────────────────────────────────────────────┘
+
+WHY HASH MAP IS BETTER THAN BRUTE FORCE:
+  Brute Force: Check all pairs → O(n²)
+  Hash Map:    One pass with lookup → O(n)
+  
+  arr = [2, 7, 11, 15]
+         ↓   ↓
+  Hash: {2:0} → found 7's complement (2) → [0,1]
+```
+
+---
 
 ```python
 def two_sum(arr, target):
@@ -306,7 +453,43 @@ print(two_sum(arr, target))  # Output: [0, 1]
 
 **Problem Statement:** Given prices array, find maximum profit by buying and selling once.
 
-**Approach:** Track minimum price seen so far, calculate profit at each step.
+### Visual: Track Minimum Price
+
+```
+prices = [7, 1, 5, 3, 6, 4]
+
+Day:    0   1   2   3   4   5
+Price:  7   1   5   3   6   4
+
+min_price tracking:
+  Day 0: price=7, min=7, profit=0
+  Day 1: price=1, min=1, profit=0  ← new minimum!
+  Day 2: price=5, min=1, profit=4  ← sell at 5, bought at 1
+  Day 3: price=3, min=1, profit=2
+  Day 4: price=6, min=1, profit=5  ← MAX PROFIT!
+  Day 5: price=4, min=1, profit=3
+
+Visual of best trade:
+  7
+  │╲
+  │  ╲
+  │    1 ← buy here (lowest price)
+  │    │╲
+  │    │  5
+  │    │  │╲
+  │    │  │  3
+  │    │  │  │╲
+  │    │  │  │  6 ← sell here (highest after buy)
+  │    │  │  │  │╲
+  └────┴──┴──┴──┴── 4
+  
+  Profit = sell_price - buy_price = 6 - 1 = 5 ✅
+
+ALGORITHM:
+  Keep track of minimum price seen so far
+  At each day, calculate: profit = today_price - min_price
+  Update max_profit if this is better
+```
 
 ```python
 def max_profit(prices):

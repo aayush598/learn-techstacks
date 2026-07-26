@@ -1,5 +1,85 @@
 # Z Algorithm
 
+## What is the Z Algorithm?
+
+The Z Algorithm computes the **Z-array**: for each position i, Z[i] = length of the **longest substring starting at i** that is also a **prefix** of the string.
+
+```
+  Z-array Example: s = "aababcabd"
+
+  Index: 0  1  2  3  4  5  6  7  8
+  Char:  a  a  b  a  b  c  a  b  d
+  Z:     0  1  0  2  1  0  2  1  0
+
+  Z[0] = 0 (by convention, or n)
+  Z[1] = 1 because "a" at index 1 matches prefix "a"
+  Z[3] = 2 because "ab" at index 3 matches prefix "ab"
+  Z[6] = 2 because "ab" at index 6 matches prefix "ab"
+
+  Key Insight: Z[i] >= m means the pattern matches at position i!
+```
+
+## How Z-Array Differs from LPS
+
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │  LPS (for KMP):                                         │
+  │  lps[i] = longest prefix of pattern[0..i] that is      │
+  │           also a suffix of pattern[0..i]                │
+  │  (looks INSIDE the pattern at each position)            │
+  │                                                         │
+  │  Z-array:                                               │
+  │  z[i] = longest substring starting at position i       │
+  │         that matches the PREFIX of the string           │
+  │  (compares each position against the beginning)         │
+  └─────────────────────────────────────────────────────────┘
+
+  Example: s = "aabxaabxcaa"
+
+  LPS approach (self-referencing):
+    At position 4: "aabxa" - what prefix = suffix? "a" -> lps=1
+
+  Z-array approach (prefix-referencing):
+    At position 4: "aabxcaa" compared to prefix "aabxaabxcaa"
+    "aab" matches prefix "aab" -> z[4] = 2... wait, let me check.
+    Actually at position 4: s[4..] = "xaabxcaa", compare with prefix
+    s[0..] = "aabxaabxcaa" -> x!=a -> z[4] = 0
+
+  Z-array is easier to understand and implement!
+```
+
+## Algorithm Comparison
+
+| Algorithm    | Time | Space | Key Feature                    |
+|-------------|------|-------|--------------------------------|
+| KMP         | O(n+m)| O(m) | LPS-based, no extra space     |
+| Z-Algorithm | O(n+m)| O(n+m)| Z-array based, simpler code  |
+| Rabin-Karp  | O(n+m)| O(1) | Hash-based, good for multi-pattern|
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │           Z-ALGORITHM PROBLEM DECISION GUIDE             │
+  ├──────────────────────────────────────────────────────────┤
+  │                                                          │
+  │  Simple pattern matching?                                │
+  │  └── Z-Algorithm: combined = pattern + '$' + text       │
+  │      Any z[i] >= m means match at position i-m-1        │
+  │                                                          │
+  │  Count distinct substrings?                              │
+  │  └── total = n*(n+1)/2 - sum(z[i])                      │
+  │                                                          │
+  │  Find string period?                                     │
+  │  └── If i + z[i] == n, period = i                       │
+  │                                                          │
+  │  Need LPS for KMP?                                       │
+  │  └── Compute Z-array of pattern + '$' + pattern         │
+  │      LPS[i] = z[m+1+i] for pattern of length m         │
+  │                                                          │
+  └──────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 1. Z-Array Computation
 
 ```python
@@ -74,6 +154,42 @@ print(f"\nZ-array: {z}")
 # Z-array: [0, 1, 0, 2, 1, 0, 0, 2, 1, 0]
 ```
 
+### Visual: Z-Array Computation with "Box" (L,R Window)
+
+```
+  s = "aabaabcabd"
+
+  The algorithm maintains a "box" [L, R] representing
+  the rightmost Z-box found so far.
+
+  Index:  0  1  2  3  4  5  6  7  8  9
+  Char:   a  a  b  a  a  b  c  a  b  d
+  Z:      0  1  0  2  1  0  0  2  1  0
+
+  ┌─────────────────────────────────────────────────────────┐
+  │ i=1: z[1]=1 (extend match from prefix)                  │
+  │      New box: L=1, R=1                                  │
+  │                                                         │
+  │ i=2: Inside box [1,1]? No (i > R)                      │
+  │      Try matching from scratch: s[0]='a' != s[2]='b'  │
+  │      z[2] = 0                                           │
+  │                                                         │
+  │ i=3: Inside box? No. Match from scratch:               │
+  │      s[0]='a'==s[3]='a', s[1]='a'==s[4]='a'          │
+  │      s[2]='b'==s[5]='b' -> z[3]=3, but wait...        │
+  │      Actually s[2]='b'==s[5]='b' -> z[3]=3?           │
+  │      New box: L=3, R=5                                  │
+  │                                                         │
+  │ i=4: Inside box [3,5]? YES! (i=4 <= R=5)              │
+  │      z[4] = min(R-i+1, z[i-L]) = min(5-4+1, z[4-3])  │
+  │      z[4] = min(2, z[1]) = min(2, 1) = 1              │
+  │      Try extending from z[4]=1... s[1]='a'!=s[5]='b'  │
+  │      z[4] stays at 1                                     │
+  │                                                         │
+  │ Continue for all i...                                    │
+  └─────────────────────────────────────────────────────────┘
+```
+
 ## 2. Pattern Matching Using Z Algorithm
 
 ```python
@@ -105,6 +221,34 @@ def z_algorithm_search(text, pattern):
 text = "ABABDABACDABABCABAB"
 pattern = "ABABCABAB"
 print(f"Pattern found at: {z_algorithm_search(text, pattern)}")
+```
+
+### Visual: Z-Algorithm Pattern Matching
+
+```
+  text = "ABABDABACDABABCABAB"
+  pattern = "ABABCABAB" (m=9)
+
+  Combined string: "ABABCABAB$ABABDABACDABABCABAB"
+                     ─────────  ──────────────────
+                      pattern         text
+
+  Compute Z-array of combined string:
+  Combined: A B A B C A B A B $ A B A B D A B A C D A B A B C A B A B
+  Z:        0 0 0 0 0 0 0 0 0 0 4 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+                                      ^
+                                      Z[10]=4 means "ABAB" matches prefix
+                                      But we need Z[i] >= 9 for full match
+
+  For each position i in text section (i >= m+1):
+    If z[i] >= m (pattern length), match found at position i-m-1
+
+  ┌──────────────────────────────────────────────────────┐
+  │ i=10: z[10]=4 < 9 -> no full match                   │
+  │ i=11: z[11]=0 < 9 -> no match                        │
+  │ ...                                                   │
+  │ i=19: z[19]=9 >= 9 -> MATCH at text[19-9-1] = [10]  │
+  └──────────────────────────────────────────────────────┘
 ```
 
 ## 3. Z Algorithm Step-by-Step Visualization
@@ -400,4 +544,47 @@ print("Z-function of 'aabaaab':", z_function("aabaaab"))
 print("Longest unique substring 'abcabcbb':", longest_unique_substring("abcabcbb"))
 print("Min window 'ADOBECODEBANC' for 'ABC':", min_window_substring("ADOBECODEBANC", "ABC"))
 print("Longest duplicate in 'banana':", longest_duplicate_substring_z("banana"))
+```
+
+---
+
+## Summary: Z Algorithm Key Takeaways
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │               Z ALGORITHM CHEAT SHEET                            │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  Z-array Definition:                                             │
+  │  └── z[i] = length of longest substring starting at i that    │
+  │             matches the PREFIX of the string                    │
+  │  └── z[0] = 0 (or n by convention)                             │
+  │                                                                  │
+  │  Algorithm:                                                      │
+  │  └── Maintain box [L, R] = rightmost Z-box                    │
+  │  └── If i inside box: z[i] = min(R-i+1, z[i-L]) (copy)       │
+  │  └── Then try extending: while match, z[i]++                  │
+  │  └── Update box if match extends beyond R                      │
+  │                                                                  │
+  │  Pattern Matching:                                               │
+  │  └── Create: pattern + '$' + text                              │
+  │  └── Compute Z-array of combined string                        │
+  │  └── Match at position i if z[i] >= len(pattern)              │
+  │  └── Position in original text = i - len(pattern) - 1         │
+  │                                                                  │
+  │  Distinct Substrings:                                            │
+  │  └── total = n*(n+1)/2 - sum(z[i])                            │
+  │  └── Each z[i] value represents i duplicated substrings       │
+  │                                                                  │
+  │  String Period:                                                  │
+  │  └── If i + z[i] == n, then i is a period                     │
+  │  └── Example: "abcabc" has period 3 (z[3]=3, 3+3=6)          │
+  │                                                                  │
+  │  vs KMP:                                                         │
+  │  └── Same time complexity O(n+m)                               │
+  │  └── Z is simpler to code                                       │
+  │  └── KMP uses less space O(m) vs O(n+m)                       │
+  │  └── Z-array of pattern+'$'+pattern gives LPS array           │
+  │                                                                  │
+  └──────────────────────────────────────────────────────────────────┘
 ```

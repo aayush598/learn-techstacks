@@ -846,6 +846,309 @@ SELECT * FROM org_chart ORDER BY level, name;
 
 ---
 
+## Visual Guide to SQL Joins (Venn Diagrams)
+
+```
+INNER JOIN (Intersection only):
+  Only rows that match in BOTH tables
+
+  Table A           Table B
+  ┌───────┐         ┌───────┐
+  │ ● ● ● │         │ ○ ○ ○ │
+  │ ● ● ● │───╳────│ ○ ○ ○ │
+  │ ● ● ● │         │ ○ ○ ○ │
+  └───────┘         └───────┘
+         ████ = Result (middle)
+         Rows in A that have match in B
+
+LEFT JOIN (All of A + matching B):
+  Every row from left table, NULLs where no match
+
+  Table A           Table B
+  ┌───────┐         ┌───────┐
+  │ ██████│         │       │
+  │ ██████│─────────│ █ █ █ │
+  │ ██████│         │ ○ ○ ○ │
+  └───────┘         └───────┘
+  ████ = All of A + matched B
+  ○○○ = B rows with no match (shown as NULL)
+
+RIGHT JOIN (Matching A + all of B):
+  Every row from right table, NULLs where no match
+
+  Table A           Table B
+  ┌───────┐         ┌───────┐
+  │       │         │ ██████│
+  │ █ █ █ │─────────│ ██████│
+  │ ○ ○ ○ │         │ ██████│
+  └───────┘         └───────┘
+
+FULL OUTER JOIN (All of both):
+  All rows from both tables, NULLs where no match
+
+  ┌───────┐         ┌───────┐
+  │ ██████│         │ ██████│
+  │ ██████│─────────│ ██████│
+  │ ██████│         │ ██████│
+  └───────┘         └───────┘
+
+CROSS JOIN (Cartesian Product):
+  Every row of A paired with every row of B
+  Result = |A| x |B| rows
+```
+
+---
+
+## Normalization Deep Dive (Step-by-Step)
+
+### Example: Student Enrollment System
+
+```
+UNNORMALIZED TABLE (0NF):
+┌─────────┬───────────┬─────────┬──────────┬──────────┐
+│ Student │ Course    │ Grade   │ Dept     │ DeptHead │
+├─────────┼───────────┼─────────┼──────────┼──────────┤
+│ Alice   │ Math,CS   │ A,B     │ Science  │ Dr. Smith│
+│ Bob     │ Math      │ A       │ Science  │ Dr. Smith│
+└─────────┴───────────┴─────────┴──────────┴──────────┘
+
+Problems:
+- Multi-valued cells (courses, grades)
+- Update anomalies (change DeptHead -> update multiple rows)
+- Insert anomalies (can't add dept without student)
+- Delete anomalies (delete student -> lose dept info)
+```
+
+```
+STEP 1: Convert to 1NF (Atomic values)
+Split multi-valued columns into separate rows:
+
+┌─────────┬──────────┬─────────┬──────────┬──────────┐
+│ Student │ Course   │ Grade   │ Dept     │ DeptHead │
+├─────────┼──────────┼─────────┼──────────┼──────────┤
+│ Alice   │ Math     │ A       │ Science  │ Dr. Smith│
+│ Alice   │ CS       │ B       │ Science  │ Dr. Smith│
+│ Bob     │ Math     │ A       │ Science  │ Dr. Smith│
+└─────────┴──────────┴─────────┴──────────┴──────────┘
+
+1NF achieved but still has redundancy
+```
+
+```
+STEP 2: Convert to 2NF (Remove partial dependencies)
+Composite key: (Student, Course)
+Problem: DeptHead depends only on Dept (partial dependency)
+
+Table 1: Students (Student -> Dept, Phone)
+┌─────────┬──────────┬─────────┐
+│ Student │ Dept     │ Phone   │
+├─────────┼──────────┼─────────┤
+│ Alice   │ Science  │ 555-1234│
+│ Bob     │ Science  │ 555-5678│
+└─────────┴──────────┴─────────┘
+
+Table 2: Enrollments (Student, Course -> Grade)
+┌─────────┬──────────┬─────────┐
+│ Student │ Course   │ Grade   │
+├─────────┼──────────┼─────────┤
+│ Alice   │ Math     │ A       │
+│ Alice   │ CS       │ B       │
+│ Bob     │ Math     │ A       │
+└─────────┴──────────┴─────────┘
+
+Table 3: Departments (Dept -> DeptHead)
+┌──────────┬──────────┐
+│ Dept     │ DeptHead │
+├──────────┼──────────┤
+│ Science  │ Dr. Smith│
+└──────────┴──────────┘
+```
+
+```
+STEP 3: Convert to 3NF (Remove transitive dependencies)
+Problem: Student -> Dept -> DeptHead (transitive chain)
+
+Already separated in step 2!
+
+Final tables:
+1. Students(Student, Dept, Phone)
+2. Enrollments(Student, Course, Grade)
+3. Departments(Dept, DeptHead)
+
+No anomalies remain!
+```
+
+---
+
+## SQL Query Optimization Guide
+
+### Index Usage Visualization
+
+```
+Without Index (Full Table Scan):
+┌─────────────────────────────────────────┐
+│ Table: 1,000,000 rows                  │
+│ Query: SELECT * FROM users WHERE id=42 │
+│ Scan: Check ALL 1,000,000 rows         │
+│ Time: O(n) = SLOW                      │
+└─────────────────────────────────────────┘
+
+With B-Tree Index:
+                    ┌─────────┐
+                    │  Root   │
+                    └────┬────┘
+               ┌─────────┴─────────┐
+          ┌────┴────┐         ┌────┴────┐
+          │  Mid    │         │  Mid    │
+          └────┬────┘         └────┬────┘
+        ┌──────┴──────┐    ┌──────┴──────┐
+    ┌───┴───┐   ┌───┴───┐ ┌───┴───┐  ┌───┴───┐
+    │ 1-100 │   │101-200│ │201-300│  │301-400│
+    └───────┘   └───────┘ └───────┘  └───────┘
+
+Query: WHERE id = 42
+Traverse: Root -> Left Mid -> Left Leaf -> Found!
+Time: O(log n) = FAST
+```
+
+### Query Optimization Checklist
+
+```
+1. EXPLAIN your queries first
+2. Add indexes on WHERE, JOIN, ORDER BY columns
+3. Avoid SELECT * (fetch only needed columns)
+4. Use LIMIT for large result sets
+5. Avoid functions on indexed columns
+   Bad:  WHERE YEAR(date) = 2024
+   Good: WHERE date >= '2024-01-01'
+6. Use JOINs instead of subqueries (usually)
+7. Avoid LIKE 'abc%' (can't use index)
+8. Batch INSERT statements
+9. Use covering indexes (include all needed columns)
+10. Analyze slow query log regularly
+```
+
+---
+
+## CAP Theorem Deep Dive
+
+```
+The CAP Triangle:
+
+              Consistency
+                 /\
+                /  \
+               / CP \
+              /------\
+             /   CA   \
+            /----------\
+           AP ----------
+
+Real Systems:
+
+CA Systems (Traditional RDBMS):
+- MySQL, PostgreSQL, Oracle
+- No partition tolerance (single node)
+- Strong consistency + High availability
+
+CP Systems (Consistent + Partition Tolerant):
+- MongoDB, Redis, HBase, Zookeeper
+- May reject requests during partitions
+- Sacrifice availability for consistency
+
+AP Systems (Available + Partition Tolerant):
+- Cassandra, DynamoDB, CouchDB, Riak
+- Always available, eventual consistency
+- Sacrifice consistency for availability
+
+Trade-offs:
+┌───────────┬──────────────┬─────────────────┐
+│ System    │ Chooses      │ Sacrifices      │
+├───────────┼──────────────┼─────────────────┤
+│ MySQL     │ C + A        │ Partition T     │
+│ MongoDB   │ C + P        │ Availability    │
+│ Cassandra │ A + P        │ Consistency     │
+└───────────┴──────────────┴─────────────────┘
+```
+
+---
+
+## Common SQL Anti-Patterns to Avoid
+
+```
+ANTI-PATTERN 1: Using OR instead of IN
+Bad:  WHERE status = 'A' OR status = 'B' OR status = 'C'
+Good: WHERE status IN ('A', 'B', 'C')
+
+ANTI-PATTERN 2: NOT IN with NULLs
+Bad:  WHERE id NOT IN (SELECT id FROM table_with_nulls)
+Good: WHERE NOT EXISTS (SELECT 1 FROM t WHERE t.id = main.id)
+
+ANTI-PATTERN 3: Using DISTINCT unnecessarily
+Bad:  SELECT DISTINCT name FROM users
+Good: SELECT name FROM users  (if name is already unique)
+
+ANTI-PATTERN 4: Implicit type conversion
+Bad:  WHERE phone = 5551234  (phone is VARCHAR)
+Good: WHERE phone = '5551234'
+
+ANTI-PATTERN 5: SELECT * in production
+Bad:  SELECT * FROM users
+Good: SELECT id, name, email FROM users
+```
+
+---
+
+## Additional Interview Questions
+
+### Q9: Explain normalization with a real-world example.
+
+**Answer:** Normalization eliminates redundancy and anomalies.
+
+```
+E-commerce Example:
+Unnormalized: Orders table with customer info repeated
+┌─────────┬──────────┬──────────────┐
+│ OrderID │ Customer │ Address      │
+├─────────┼──────────┼──────────────┤
+│ 1       │ Alice    │ 123 Main St  │
+│ 2       │ Alice    │ 123 Main St  │  <- Redundant!
+│ 3       │ Bob      │ 456 Oak Ave  │
+└─────────┴──────────┴──────────────┘
+
+After 3NF:
+Orders:                  Customers:
+┌────────┬──────┐       ┌──────────┬──────────┐
+│OrderID │ Cust │       │ CustID   │ Name     │
+├────────┼──────┤       ├──────────┼──────────┤
+│ 1      │ C01  │       │ C01      │ Alice    │
+│ 2      │ C01  │       │ C02      │ Bob      │
+│ 3      │ C02  │       └──────────┴──────────┘
+└────────┴──────┘
+
+Benefits: Update once, reflected everywhere
+```
+
+### Q10: What is the difference between correlated and non-correlated subqueries?
+
+**Answer:**
+
+```
+Non-Correlated (independent - runs once):
+SELECT * FROM employees
+WHERE dept_id IN (SELECT dept_id FROM departments WHERE location = 'NYC');
+-- Subquery runs once, result used by outer query
+
+Correlated (dependent - runs for each row):
+SELECT * FROM employees e
+WHERE salary > (SELECT AVG(salary) FROM employees WHERE dept_id = e.dept_id);
+-- Subquery runs for EACH row in outer query
+
+Performance: Non-correlated is usually faster
+```
+
+---
+
 ## Quick Reference Cheat Sheet
 
 | Topic | Key Points |
@@ -863,8 +1166,10 @@ SELECT * FROM org_chart ORDER BY level, name;
 | SELF JOIN | Table joined with itself |
 | B-Tree Index | Sorted, supports range queries |
 | Hash Index | Exact match only, fast |
-| Isolation Levels | READ UNCOMMITTED → READ COMMITTED → REPEATABLE READ → SERIALIZABLE |
+| Isolation Levels | READ UNCOMMITTED -> READ COMMITTED -> REPEATABLE READ -> SERIALIZABLE |
 | CAP | Consistency, Availability, Partition Tolerance (pick 2) |
 | DELETE | DML, can rollback, triggers |
 | TRUNCATE | DDL, fast, reset identity |
 | DROP | DDL, remove table entirely |
+| WHERE vs HAVING | WHERE filters rows before GROUP BY; HAVING filters groups after |
+| Correlated Subquery | Runs once per outer row; Non-correlated runs once |

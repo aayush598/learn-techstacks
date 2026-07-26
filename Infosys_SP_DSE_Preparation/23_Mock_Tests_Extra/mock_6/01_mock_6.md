@@ -85,6 +85,58 @@ Return the rearranged array. If there are multiple valid arrangements, return an
 
 **Idea:** Extract elements at even indices, sort them ascending. Extract elements at odd indices, sort them descending. Place them back at their respective positions.
 
+**Visual Walkthrough:**
+
+```
+arr = [5, 1, 3, 7, 2, 8, 4]
+
+Step 1: Extract elements by index parity
+┌─────────────────────────────────────────────────┐
+│  Index:  0   1   2   3   4   5   6              │
+│  Value:  5   1   3   7   2   8   4              │
+│          ↑       ↑       ↑       ↑               │
+│        even    even    even    even              │
+│          ↑       ↑       ↑                       │
+│         odd     odd     odd                      │
+│                                                  │
+│  even_vals = [5, 3, 2, 4]  (indices 0,2,4,6)   │
+│  odd_vals  = [1, 7, 8]     (indices 1,3,5)     │
+└─────────────────────────────────────────────────┘
+
+Step 2: Sort
+┌─────────────────────────────────────────────────┐
+│  even_vals sorted ascending: [2, 3, 4, 5]       │
+│  odd_vals  sorted descending: [8, 7, 1]         │
+└─────────────────────────────────────────────────┘
+
+Step 3: Place back at positions
+┌─────────────────────────────────────────────────┐
+│  Position 0 (even): take from even_vals[0] = 2  │
+│  Position 1 (odd):  take from odd_vals[0]  = 8  │
+│  Position 2 (even): take from even_vals[1] = 3  │
+│  Position 3 (odd):  take from odd_vals[1]  = 7  │
+│  Position 4 (even): take from even_vals[2] = 4  │
+│  Position 5 (odd):  take from odd_vals[2]  = 1  │
+│  Position 6 (even): take from even_vals[3] = 5  │
+│                                                  │
+│  Result: [2, 8, 3, 7, 4, 1, 5]                 │
+│                                                  │
+│  Verify:                                         │
+│  Even positions (0,2,4,6): 2,3,4,5 → ascending ✓│
+│  Odd positions (1,3,5):    8,7,1   → descending ✓│
+└─────────────────────────────────────────────────┘
+```
+
+**Thinking Process:**
+```
+├── Even and odd positions are INDEPENDENT
+├── We can sort them separately
+├── Even positions → ascending order (small to large)
+├── Odd positions → descending order (large to small)
+├── Then merge back by position
+└── Key insight: The problem is just two independent sorting tasks!
+```
+
 ```python
 def rearrange_separate_sort(arr):
     n = len(arr)
@@ -333,6 +385,44 @@ def longest_rpal_brute(s):
 **Idea:** Use a bitmask to track parity of character frequencies. A bitmask has at most 1 bit set if and only if the corresponding characters can form a rearrangeable palindrome. Use the fact that for each starting position, we can expand the window. However, since we want the maximum length, we iterate from large to small, or use the bitmask + hash set approach.
 
 **Key Insight:** For a substring `s[i..j]`, compute XOR of bitmasks. If the XOR result has 0 or 1 bits set, the substring is valid. Use prefix XOR bitmask array.
+
+**Visual Walkthrough:**
+
+```
+s = "aabbc"
+
+Bitmask representation (each char = 1 bit):
+  a = 00001 (bit 0)
+  b = 00010 (bit 1)
+  c = 00100 (bit 2)
+
+XOR property: XOR toggles bits (odd count = bit ON, even count = bit OFF)
+
+Prefix XOR bitmask:
+  prefix[0] = 00000 (empty)
+  prefix[1] = 00000 ^ 00001 = 00001 ("a")
+  prefix[2] = 00001 ^ 00001 = 00000 ("aa")  ← a appears twice, bit OFF
+  prefix[3] = 00000 ^ 00010 = 00010 ("aab")
+  prefix[4] = 00010 ^ 00010 = 00000 ("aabb")
+  prefix[5] = 00000 ^ 00100 = 00100 ("aabbc")
+
+To check substring s[i..j]:
+  xor_val = prefix[j+1] ^ prefix[i]
+
+Example: s[0..4] = "aabbc"
+  xor_val = prefix[5] ^ prefix[0] = 00100 ^ 00000 = 00100
+  Check: 00100 has exactly 1 bit set → VALID (can form palindrome) ✓
+  "aabbc" → rearrange to "abcba" → palindrome!
+
+Example: s[0..2] = "aab"
+  xor_val = prefix[3] ^ prefix[0] = 00010 ^ 00000 = 00010
+  Check: 00010 has 1 bit set → VALID ✓
+  "aab" → rearrange to "aba" → palindrome!
+
+Check if bitmask has ≤ 1 bit set:
+  xor_val == 0  → 0 bits set (all even frequencies) ✓
+  xor_val & (xor_val - 1) == 0  → power of 2 (exactly 1 bit) ✓
+```
 
 ```python
 def longest_rpal_bitmask(s):
@@ -648,6 +738,41 @@ Let me fix the expected output:
 
 **Idea:** For each query, run BFS or DFS from `u` to find the path to `v`, then compute the maximum edge weight along that path.
 
+**Visual Walkthrough:**
+
+```
+Tree:
+        1
+       / \
+    (3)   (10)
+     /      \
+    2        3
+   / \        \
+ (7) (1)     (1)
+  /    \       \
+ 3      4       6
+        |
+       (5)
+        |
+        5
+
+Edges: (1,2,3), (2,3,7), (2,4,1), (4,5,5), (1,3,10), (3,6,1)
+
+Query (1,3): BFS from 1 to 3
+  1 → 3 directly with edge weight 10
+  But also: 1 → 2 → 3 with max(3,7) = 7
+  BFS finds shortest path: 1 → 3, max edge = 10
+  Wait — we want the unique path in a TREE (not shortest path)
+
+In a tree, there's EXACTLY ONE path between any two nodes!
+
+Query (1,3): Path 1→3, edges: (1,3,10), max = 10
+Query (3,5): Path 3→2→4→5, edges: (2,3,7),(2,4,1),(4,5,5), max = 7
+Query (1,5): Path 1→2→4→5, edges: (1,2,3),(2,4,1),(4,5,5), max = 5
+
+TIME: O(Q × N) — too slow for N,Q = 10^5
+```
+
 ```python
 from collections import defaultdict, deque
 
@@ -694,6 +819,65 @@ def max_edge_naive(n, edges, queries):
 **Idea:** Preprocess the tree using binary lifting to answer LCA queries in O(log N). For each node, store the maximum edge weight on the path to its 2^k-th ancestor. To find max edge on path (u, v):
 1. Find LCA of u and v
 2. Max edge = max(max edge from u to LCA, max edge from v to LCA)
+
+**Visual Walkthrough:**
+
+```
+Tree rooted at node 1:
+        1 (depth=0)
+       / \
+    (3)   (10)
+     /      \
+    2(d=1)   3(d=1)
+   / \        \
+ (7) (1)     (1)
+  /    \       \
+ 3(d=2) 4(d=2)  6(d=2)
+        |
+       (5)
+        |
+        5(d=3)
+
+Binary Lifting Tables:
+═══════════════════════════════════════════════════════════
+
+parent[0][v] = immediate parent of v
+max_edge[0][v] = weight of edge from v to parent
+
+       v:     1    2    3    4    5    6
+parent[0]:    0    1    1    2    4    3
+max_e[0]:     0    3   10    1    5    1
+
+parent[k][v] = parent[k-1][ parent[k-1][v] ]
+max_edge[k][v] = max( max_edge[k-1][v], max_edge[k-1][ parent[k-1][v] ] )
+
+k=1 (jump 2 steps):
+       v:     1    2    3    4    5    6
+parent[1]:    0    1    1    1    2    1
+max_e[1]:     0    3   10   max(1,3)=3  max(5,1)=5  max(1,10)=10
+
+k=2 (jump 4 steps):
+       v:     1    2    3    4    5    6
+parent[2]:    0    0    0    0    1    0
+max_e[2]:     0    3   10    3    5   10
+
+Query Example: max edge on path (4, 6)
+═══════════════════════════════════════════════════════════
+
+Step 1: Make depths equal
+  depth[4]=2, depth[6]=2 → already equal
+
+Step 2: Find LCA
+  Try k=1: parent[1][4]=1, parent[1][6]=1 → same!
+  Try k=0: parent[0][4]=2, parent[0][6]=3 → different
+    max_w = max(max_e[0][4], max_e[0][6]) = max(1, 1) = 1
+    u=2, v=3
+  One more step: parent[0][2]=1, parent[0][3]=1 → same
+    max_w = max(1, max_e[0][2], max_e[0][3]) = max(1, 3, 10) = 10
+
+Answer: max edge on path 4→6 = 10 ✓
+Path: 4→2→1→3→6, edges: (1,3,10,1), max = 10
+```
 
 ```python
 import sys
@@ -1037,6 +1221,72 @@ if __name__ == "__main__":
 - Root the tree arbitrarily (node 1) — BFS/DFS from root sets depth and parent
 - Edge case: query (u, u) — answer is 0 (no edges on path)
 - Alternative: Disjoint Set Union (DSU) on sorted edges for offline queries — also O(N log N + Q α(N))
+
+### Common Mistakes to Avoid
+
+```
+Q1 (Even-Odd Sort):
+├── Confusing even INDEX with even VALUE
+│   └── The problem says even INDEX (0, 2, 4, ...)
+├── Not sorting odd values in DESCENDING order
+├── Off-by-one when extracting elements
+├── Single element array → return as-is
+└── Two element array → even idx gets small, odd gets large
+
+Q2 (Rearrangeable Palindrome):
+├── Not understanding "rearrangeable palindrome" condition
+│   └── Key: at most ONE character has odd frequency
+├── Using O(N³) approach when bitmask gives O(N²) or O(N log N)
+├── Forgetting the bit trick: x & (x-1) == 0 checks power of 2
+├── Not using prefix XOR for O(1) substring parity check
+└── Edge: single character → always valid (length 1)
+
+Q3 (Max Edge on Tree Path):
+├── Not using binary lifting → O(N) per query → TLE
+├── Off-by-one in LOG size (need LOG=20 for N=10^5)
+├── Not handling the "lift to same depth" step correctly
+├── Forgetting that after lifting, one more step to reach LCA
+├── Not using sys.stdin.read() for large input → TLE on I/O
+└── Edge: query(u, u) → answer is 0
+```
+
+### Exam Strategy Tips
+
+```
+Time Allocation (3 hours):
+├── Q1 (Easy, 20 marks): 20-25 min
+│   ├── Simple sort and merge
+│   ├── Don't overthink — just extract, sort, place back
+│   └── Test with single element and two elements
+│
+├── Q2 (Medium, 35 marks): 50-60 min
+│   ├── RECOGNIZE the bitmask XOR trick
+│   ├── Build prefix XOR array
+│   ├── Use (x & (x-1)) == 0 to check ≤1 bit set
+│   └── For N ≤ 10^5, prefer O(N log N) binary search approach
+│
+└── Q3 (Hard, 45 marks): 70-90 min
+    ├── MEMORIZE binary lifting template
+    ├── Build parent[] and max_edge[] tables
+    ├── Query: lift deeper node, then lift both together
+    └── Use fast I/O (sys.stdin.read)
+
+Key Bitwise Tricks to Know:
+├── x & (x-1) == 0  → x is 0 or power of 2
+├── x ^ (1 << k)     → toggle bit k
+├── x | (1 << k)     → set bit k
+├── x & (1 << k)     → check if bit k is set
+└── (1 << n) - 1      → mask with all n bits set
+```
+
+### Post-Test Checklist
+- [ ] Q1: Did I sort even ascending, odd descending?
+- [ ] Q2: Did I use prefix XOR bitmask?
+- [ ] Q2: Did I check ≤1 bit set correctly?
+- [ ] Q3: Did I build binary lifting tables?
+- [ ] Q3: Did I handle the LCA finding correctly?
+- [ ] All: Did I test with sample inputs?
+- [ ] All: Did I use fast I/O?
 
 ---
 

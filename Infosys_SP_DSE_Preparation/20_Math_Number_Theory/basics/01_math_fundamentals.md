@@ -1,6 +1,59 @@
 # Math Fundamentals for Infosys SP DSE
 
+> **Visual Roadmap — What This File Covers:**
+> ```
+> ┌─────────────────────────────────────────────────────┐
+> │            MATH FUNDAMENTALS ROADMAP                │
+> ├─────────────────────────────────────────────────────┤
+> │                                                     │
+> │  ┌──────────┐    ┌──────────┐    ┌──────────────┐  │
+> │  │   GCD /  │───▶│  Prime   │───▶│   Prime      │  │
+> │  │   LCM    │    │  Sieves  │    │Factorization │  │
+> │  └──────────┘    └──────────┘    └──────────────┘  │
+> │       │               │                │           │
+> │       ▼               ▼                ▼           │
+> │  ┌──────────┐    ┌──────────┐    ┌──────────────┐  │
+> │  │ Extended │    │Segmented │    │  Divisor     │  │
+> │  │  Euclid  │    │  Sieve   │    │  Count/Sum   │  │
+> │  └──────────┘    └──────────┘    └──────────────┘  │
+> │       │                                    │        │
+> │       ▼                                    ▼        │
+> │  ┌──────────┐    ┌──────────┐    ┌──────────────┐  │
+> │  │ Primality│    │   nCr /  │    │  Fibonacci / │  │
+> │  │  Tests   │    │ Catalan  │    │  Sequences   │  │
+> │  └──────────┘    └──────────┘    └──────────────┘  │
+> └─────────────────────────────────────────────────────┘
+> ```
+
+---
+
 ## 1. GCD (Greatest Common Divisor)
+
+### What is GCD? — Visual Explanation
+
+The GCD of two numbers is the **largest number that divides both evenly**.
+
+```
+Example: GCD(12, 18)
+
+Factors of 12:  1, 2, 3, 4, 6, 12
+Factors of 18:  1, 2, 3, 6, 9, 18
+                 ─────  ────
+Common:         1, 2, 3, 6
+
+Largest common = 6  ✓
+
+Visual on number line:
+0   1   2   3   4   5   6   7   8   9  10  11  12
+    │   │   │       │   │
+    │   │   │       │   └── Both divisible by 6
+    │   │   │       └────── 12/4=3, 18/4=4.5 ✗
+    │   │   └────────────── Both divisible by 3
+    │   └────────────────── Both divisible by 2
+    └────────────────────── Both divisible by 1
+    ↑
+    GCD = 6 (largest!)
+```
 
 ### Using math.gcd (Built-in)
 ```python
@@ -15,9 +68,69 @@ print(math.gcd(12, 18, 24))  # 6
 **Time Complexity:** O(log(min(a, b)))
 **When to use:** Default choice in CP
 
+### How the Euclidean Algorithm Works — Step by Step
+
+The key insight: **GCD(a, b) = GCD(b, a % b)**
+
+```
+Walkthrough: GCD(48, 18)
+
+Step 1:  48 = 18 × 2 + 12    →  GCD(48, 18) = GCD(18, 12)
+         ┌────────────────┐
+         │ 48 ÷ 18 = 2   │
+         │ remainder = 12 │
+         └────────────────┘
+
+Step 2:  18 = 12 × 1 + 6     →  GCD(18, 12) = GCD(12, 6)
+         ┌────────────────┐
+         │ 18 ÷ 12 = 1   │
+         │ remainder = 6  │
+         └────────────────┘
+
+Step 3:  12 = 6 × 2 + 0      →  GCD(12, 6) = GCD(6, 0) = 6
+         ┌────────────────┐
+         │ 12 ÷ 6 = 2    │
+         │ remainder = 0  │ ← STOP!
+         └────────────────┘
+
+Visual recursion tree:
+              GCD(48, 18)
+                  │
+                  ▼
+              GCD(18, 12)
+                  │
+                  ▼
+              GCD(12, 6)
+                  │
+                  ▼
+              GCD(6, 0)
+                  │
+                  ▼
+              return 6 ✓
+```
+
 ### Euclidean Algorithm (Recursive)
 ```python
 def gcd_recursive(a, b):
+    """
+    Recursively compute GCD using Euclidean algorithm.
+    
+    Visual flow for gcd_recursive(48, 18):
+    
+        gcd(48, 18)
+            │ 48 % 18 = 12, so call gcd(18, 12)
+            ▼
+        gcd(18, 12)
+            │ 18 % 12 = 6, so call gcd(12, 6)
+            ▼
+        gcd(12, 6)
+            │ 12 % 6 = 0, so call gcd(6, 0)
+            ▼
+        gcd(6, 0)
+            │ b == 0, return a = 6
+            ▼
+        return 6
+    """
     if b == 0:
         return a
     return gcd_recursive(b, a % b)
@@ -28,12 +141,26 @@ def gcd_recursive(a, b):
 ### Euclidean Algorithm (Iterative)
 ```python
 def gcd_iterative(a, b):
+    """
+    Iteratively compute GCD using Euclidean algorithm.
+    
+    Step-by-step for gcd_iterative(48, 18):
+    
+    ┌───────┬───────┬───────┬─────────────────────┐
+    │   a   │   b   │ a % b │      Action         │
+    ├───────┼───────┼───────┼─────────────────────┤
+    │  48   │  18   │  12   │ a,b = 18, 12        │
+    │  18   │  12   │   6   │ a,b = 12, 6         │
+    │  12   │   6   │   0   │ a,b = 6, 0          │
+    │   6   │   0   │  ---  │ b==0, return a=6 ✓  │
+    └───────┴───────┴───────┴─────────────────────┘
+    """
     while b:
         a, b = b, a % b
     return a
 ```
 **Time Complexity:** O(log(min(a, b)))
-**Space Complexity:** O(1)
+**Space Complexity:** O(1) — preferred over recursive version
 
 ### GCD of Array
 ```python
@@ -127,7 +254,29 @@ def extended_gcd_iterative(a, b):
 
 ## 4. Sieve of Eratosthenes
 
-Find all primes up to N.
+Find all primes up to N. Here's how it works visually:
+
+```
+Sieve of Eratosthenes for N = 30:
+
+Initial array (all marked as potential primes):
+Index: 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+       F  F  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P  P
+
+Step 1: Mark multiples of 2 (start from 2*2=4):
+       0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29
+       F  F  P  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P  ✗  P
+
+Step 2: Mark multiples of 3 (start from 3*3=9):
+       ...mark 9, 15, 21, 27 as ✗
+
+Step 3: Mark multiples of 5 (start from 5*5=25):
+       ...mark 25 as ✗
+
+Step 4: sqrt(30) ≈ 5.48, so we stop after 5.
+
+Remaining P (primes): 2, 3, 5, 7, 11, 13, 17, 19, 23, 29
+```
 
 ```python
 def sieve_of_eratosthenes(n):
@@ -167,7 +316,31 @@ def sieve_optimized(n):
 ### Smallest Prime Factor Sieve
 ```python
 def smallest_prime_factor_sieve(n):
-    """Returns array where spf[i] = smallest prime factor of i."""
+    """
+    Returns array where spf[i] = smallest prime factor of i.
+    
+    Visual example for n=20:
+    
+    Index:  0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20
+    SPF:    0   1   2   3   2   5   2   7   2   3   2  11   2  13   2   3   2  17   2  19   2
+    
+    How to use SPF for factorization:
+    
+    Factorize 45:
+        spf[45] = 3  →  divide: 45/3 = 15
+        spf[15] = 3  →  divide: 15/3 = 5
+        spf[5]  = 5  →  divide: 5/5 = 1  → DONE!
+        Result: 45 = 3² × 5
+    
+    Factorize 360:
+        spf[360] = 2  →  360/2 = 180
+        spf[180] = 2  →  180/2 = 90
+        spf[90]  = 2  →  90/2  = 45
+        spf[45]  = 3  →  45/3  = 15
+        spf[15]  = 3  →  15/3  = 5
+        spf[5]   = 5  →  5/5   = 1  → DONE!
+        Result: 360 = 2³ × 3² × 5
+    """
     spf = list(range(n + 1))
     for i in range(2, int(n**0.5) + 1):
         if spf[i] == i:  # i is prime
@@ -175,9 +348,6 @@ def smallest_prime_factor_sieve(n):
                 if spf[j] == j:
                     spf[j] = i
     return spf
-
-spf = smallest_prime_factor_sieve(50)
-print(spf[45])  # 3 (smallest prime factor of 45)
 ```
 **Time Complexity:** O(n log log n)
 **Space Complexity:** O(n)
@@ -188,6 +358,33 @@ print(spf[45])  # 3 (smallest prime factor of 45)
 ## 5. Segmented Sieve
 
 For finding primes in a large range [L, R] when R can be up to 10^12 but R-L is small.
+
+```
+Why Segmented Sieve?
+
+Problem: Find primes in [L, R] where R can be 10^12
+         Regular sieve needs O(R) memory — IMPOSSIBLE!
+
+Solution: We only need primes up to sqrt(R) to mark composites in [L, R]
+
+Visual for range [10, 50]:
+
+Step 1: Find small primes up to sqrt(50) ≈ 7
+        Small primes: [2, 3, 5, 7]
+
+Step 2: Create boolean array for range [10, 50]:
+        Index:  0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15  16  17  18  19  20  21
+        Value: 10  11  12  13  14  15  16  17  18  19  20  21  22  23  24  25  26  27  28  29  30  31
+        Mark:   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T   T
+
+Step 3: For each small prime p, mark its multiples in [10, 50]:
+        p=2: mark 10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50
+        p=3: mark 12,15,18,21,24,27,30,33,36,39,42,45,48
+        p=5: mark 10,15,20,25,30,35,40,45,50
+        p=7: mark 14,21,28,35,42,49
+
+Step 4: Remaining unmarked = primes: [11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47]
+```
 
 ```python
 import math
@@ -353,6 +550,34 @@ print(factorize_with_spf(spf, 360))  # {2: 3, 3: 2, 5: 1}
 ---
 
 ## 8. Number of Divisors
+
+```
+Visual: Why does the formula work?
+
+For n = 360 = 2³ × 3² × 5¹
+
+Every divisor d of 360 can be written as: d = 2^a × 3^b × 5^c
+where: 0 ≤ a ≤ 3, 0 ≤ b ≤ 2, 0 ≤ c ≤ 1
+
+Number of choices for a: 4  (a can be 0, 1, 2, 3)
+Number of choices for b: 3  (b can be 0, 1, 2)
+Number of choices for c: 2  (c can be 0, 1)
+
+Total divisors = 4 × 3 × 2 = 24
+
+Divisor Tree:
+                        360
+                       / | \
+                     /   |   \
+                   2^a  3^b  5^c
+                   /|\   /|\   /|\
+                  0 1 2 3 0 1 2 0 1
+                 (4)  (3) (2)
+
+All 24 divisors of 360:
+ 1,  2,  3,  4,  5,  6,  8,  9, 10, 12, 15, 18,
+20, 24, 30, 36, 40, 45, 60, 72, 90, 120, 180, 360
+```
 
 ```python
 def count_divisors(n):
@@ -574,6 +799,47 @@ print(fibonacci_matrix(10**18, 10**9 + 7))  # Works for huge n!
 ## 13. Catalan Numbers
 
 The nth Catalan number: C(n) = C(2n, n) / (n + 1)
+
+```
+What Catalan Numbers Count — Visual Examples:
+
+n=0: C(0) = 1
+     Empty bracket sequence: (empty)
+
+n=1: C(1) = 1
+     Valid brackets: ()
+
+n=2: C(2) = 2
+     ()()    (())
+
+n=3: C(3) = 5
+     ()()()  ()(())  (())()  (()())  ((()))
+
+n=4: C(4) = 14
+     ()()()()    ()()(())    ()(()())    ()((()))    (())()()
+     (())(())    (()())()    (()(()))    ((()))()    ((())())
+     (()()())    ((()()))    ((())())    (((())))
+
+Visual: n=3 bracket trees
+        ((()))          (()())         (())()        ()(())        ()()()
+         │                │               │              │              │
+        ┌─┐            ┌─┐ ┌─┐        ┌─┐  ()       ()  ┌─┐       ()  ()  ()
+       ┌─┐ │          ┌─┐ │ │       ┌─┐ │            │ ┌─┐ │
+      ┌─┐ │ │        ┌─┐ │ │ │     ┌─┐ │ │          │ │ │ ┌─┐
+     ( ( ( ) ) )    ( ( ) ( ) )   ( ( ) ) ( )      ( ) ( ( ) )   ( ) ( ) ( )
+
+The first 10 Catalan numbers:
+C(0)  =           1
+C(1)  =           1
+C(2)  =           2
+C(3)  =           5
+C(4)  =          14
+C(5)  =          42
+C(6)  =         132
+C(7)  =         429
+C(8)  =        1430
+C(9)  =        4862
+```
 
 ```python
 def catalan(n):

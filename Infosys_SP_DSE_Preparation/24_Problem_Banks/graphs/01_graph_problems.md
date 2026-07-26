@@ -44,6 +44,43 @@ def numIslands(grid):
 
 **Tip:** Use iterative BFS if the grid is very large to avoid stack overflow.
 
+**Visual Walkthrough:**
+```
+Grid:              After DFS marking:
+1 1 0 0 1          0 0 0 0 1
+1 1 0 0 0    →     0 0 0 0 0
+0 0 1 0 0          0 0 1 0 0
+0 0 0 1 1          0 0 0 1 1
+
+Island 1: (0,0)→(0,1)→(1,0)→(1,1) — DFS floods entire component
+Island 2: (0,4) — single cell
+Island 3: (2,2) — single cell  
+Island 4: (3,3)→(3,4) — connected horizontally
+Total: 4 islands
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| DFS (recursive) | O(m×n) | O(m×n) stack | Simple, may overflow |
+| **BFS (iterative)** | **O(m×n)** | **O(min(m,n))** | **Safe for large grids** |
+| Union-Find | O(m×n × α(mn)) | O(m×n) | Advanced, union cells |
+
+**Common Mistakes:**
+- Modifying grid while iterating (use visited set or mark in-place)
+- Not checking all 4 directions (up, down, left, right)
+- Forgetting diagonal is NOT connected (unless problem says 8-directional)
+- Stack overflow on large grids (use iterative BFS instead of recursive DFS)
+
+**Edge Cases:**
+- Empty grid → return 0
+- All 1s → return 1
+- All 0s → return 0
+- Single cell → return 0 or 1 depending on value
+
+**Pattern Recognition:**
+**Grid DFS/BFS Pattern**: Traverse grid, when you find an unvisited cell that starts a new component, increment count and flood-fill/mark all connected cells. Used in: Number of Islands, Number of Provinces, Max Area of Island, Surrounded Regions.
+
 ---
 
 ### 2. Flood Fill
@@ -199,6 +236,36 @@ def orangesRotting(grid):
 **Complexity:** O(m × n) time, O(m × n) space.
 
 **Tip:** Multi-source BFS naturally computes the minimum time because all rotten sources expand simultaneously.
+
+**Visual Walkthrough:**
+```
+Initial:              Minute 1:            Minute 2:
+2 1 1                 2 2 1                2 2 2
+1 1 0       →         2 1 0       →        2 2 0
+0 1 1                 0 1 1                0 2 2
+
+All rotten at minute 2 → return 2
+BFS layers expand simultaneously from all rotten oranges
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Simulation | O((m×n)²) | O(m×n) | Simulate minute by minute |
+| **Multi-source BFS** | **O(m×n)** | **O(m×n)** | **Optimal: all sources expand together** |
+
+**Common Mistakes:**
+- Forgetting to count initial fresh oranges → can't detect impossible case
+- Off-by-one in minutes (return `minutes - 1` not `minutes`)
+- Not handling case where some fresh oranges remain unreachable → return -1
+
+**Edge Cases:**
+- No fresh oranges initially → return 0
+- Some fresh oranges unreachable → return -1
+- Single cell grid → return 0
+
+**Pattern Recognition:**
+**Multi-Source BFS**: When multiple starting points expand simultaneously (rotting, fire spreading, water flow), enqueue all sources at once. BFS layer = one time step. Used in: Rotting Oranges, 01 Matrix, Walls and Gates, As Far from Land as Possible.
 
 ---
 
@@ -397,6 +464,36 @@ def findOrder(numCourses, prerequisites):
 **Complexity:** O(V + E) time, O(V + E) space.
 
 **Tip:** Kahn's algorithm gives a valid topological order. DFS-based approach is also possible but harder to implement correctly.
+
+**Visual Walkthrough (numCourses=4, prerequisites=[[1,0],[2,0],[3,1],[3,2]]):**
+```
+Graph:  0 → 1 → 3
+        0 → 2 → 3
+
+Indegree: [0, 1, 1, 2]
+          ↑  
+          0 has indegree 0 → start here
+
+Step 1: Process 0 → order=[0], reduce indegree of 1,2
+Step 2: Process 1 → order=[0,1], reduce indegree of 3
+Step 3: Process 2 → order=[0,1,2], reduce indegree of 3
+Step 4: Process 3 → order=[0,1,2,3]
+
+Return [0,1,2,3] or [0,2,1,3] (both valid)
+```
+
+**Common Mistakes:**
+- Not detecting cycles (if `len(order) != numCourses` → cycle exists)
+- Using DFS approach incorrectly (needs post-order + reverse)
+- Not handling disconnected components (all nodes must be processed)
+
+**Edge Cases:**
+- No prerequisites → any order is valid
+- Cycle exists → return empty array
+- Single course → return [0]
+
+**Pattern Recognition:**
+**Topological Sort Pattern**: When you have dependencies between items, use Kahn's algorithm (BFS + indegree) for linear ordering. Used in: Course Schedule, Course Schedule II, Alien Dictionary, Parallel Courses.
 
 ---
 

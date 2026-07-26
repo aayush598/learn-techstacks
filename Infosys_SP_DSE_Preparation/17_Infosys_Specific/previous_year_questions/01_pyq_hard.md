@@ -2,6 +2,36 @@
 
 > 15 frequently asked hard-level questions from Infosys coding rounds.
 
+## Quick Reference: All Hard Problems
+
+```
+┌────┬──────────────────────────────┬──────────────┬───────────┬───────────────────┐
+│  # │ Problem                      │ Time         │ Space     │ Pattern           │
+├────┼──────────────────────────────┼──────────────┼───────────┼───────────────────┤
+│  1 │ Magical Vine                 │ O(n²/min)    │ O(n)      │ String            │
+│  2 │ Partition Divisibility       │ O(n²)        │ O(n)      │ DP                │
+│  3 │ Kingdom Prime                │ O(V+E)       │ O(V)      │ Graph + Math      │
+│  4 │ Trapping Rain Water          │ O(n)         │ O(1)      │ Two Pointer       │
+│  5 │ Edit Distance                │ O(mn)        │ O(mn)     │ 2D DP             │
+│  6 │ Burst Balloons               │ O(n³)        │ O(n²)     │ Interval DP       │
+│  7 │ Regex Matching               │ O(mn)        │ O(mn)     │ 2D DP             │
+│  8 │ Longest Palindromic Subseq   │ O(n²)        │ O(n²)     │ 2D DP             │
+│  9 │ Min Window Substring         │ O(n)         │ O(n)      │ Sliding Window    │
+│ 10 │ Sliding Window Max           │ O(n)         │ O(k)      │ Monotonic Deque   │
+│ 11 │ Largest Rectangle            │ O(n)         │ O(n)      │ Monotonic Stack   │
+│ 12 │ Serialize/Deserialize Tree   │ O(n)         │ O(n)      │ DFS / BFS         │
+│ 13 │ Max Path Sum (Tree)          │ O(n)         │ O(h)      │ DFS               │
+│ 14 │ Median Sorted Arrays         │ O(log min)   │ O(1)      │ Binary Search     │
+│ 15 │ Word Ladder II               │ O(n*26^L)    │ O(n)      │ BFS + DFS         │
+└────┴──────────────────────────────┴──────────────┴───────────┴───────────────────┘
+
+EXAM STRATEGY:
+  - These problems differentiate TOP candidates
+  - Partial solutions earn partial marks
+  - ALWAYS explain approach before coding
+  - Focus on correctness first, optimization second
+```
+
 ---
 
 ## 1. Magical Vine Pattern Matching (S = P + Q + P + Q + ...)
@@ -152,7 +182,35 @@ print(kingdom_paths(n, edges, values))
 
 **Problem Statement:** Given heights of bars, compute how much water can be trapped after rain.
 
-**Approach:** Two pointers or precompute left max and right max arrays.
+### Visual: How Water Gets Trapped
+
+```
+height = [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+
+Visual (█ = bar, ~ = water):
+  3 │              █
+  2 │      █  ~~~  █  █  ~~~ █
+  1 │  █  █  █  █  █  █  █  █  █  ~~~ █
+  0 │  █  █  █  █  █  █  █  █  █  █  █  █
+    └──────────────────────────────────────────
+     0  1  2  3  4  5  6  7  8  9 10 11
+
+Water at each position = min(left_max, right_max) - height[i]
+
+left_max[]:  [0, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3]
+right_max[]: [3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 1]
+water[i]:    [0, 0, 1, 0, 1, 2, 1, 0, 0, 1, 0, 0]
+                           ↑  ↑     ↑     ↑
+                          water trapped!
+
+Total water = 0+0+1+0+1+2+1+0+0+1+0+0 = 6 ✅
+
+WHY min(left_max, right_max)?
+  Water level is limited by the SHORTER wall!
+  If left wall=3 and right wall=2, water can only reach height 2
+```
+
+---
 
 ```python
 def trapping_rain_water(height):
@@ -287,7 +345,38 @@ print(max_coins(nums))  # Output: 167
 
 **Problem Statement:** Implement regex matching with '.' (any char) and '*' (zero or more of preceding char).
 
-**Approach:** 2D DP. dp[i][j] = True if s[:i] matches p[:j].
+### Visual: 2D DP Table
+
+```
+s = "aa", p = "a*"
+
+DP TABLE: dp[i][j] = does s[:i] match p[:j]?
+
+      ""  a  *
+  ""   T  F  T      ← p="a*" can match empty (0 a's)
+   a   F  T  T      ← p="a*" can match "a" (1 a)
+   a   F  F  T      ← p="a*" can match "aa" (2 a's)
+
+DECISION RULES:
+┌─────────────────────────────────────────────────────────────┐
+│  If p[j] = '*':                                            │
+│    Option 1: Match ZERO of preceding: dp[i][j-2]          │
+│    Option 2: Match ONE+ of preceding:                      │
+│      if p[j-1] matches s[i]: dp[i-1][j]                   │
+│                                                         │
+│  If p[j] = '.' or p[j] = s[i]:                           │
+│    dp[i][j] = dp[i-1][j-1]                                │
+│                                                         │
+│  Else: dp[i][j] = False                                   │
+└─────────────────────────────────────────────────────────────┘
+
+"*" TRICKY CASES:
+  "aa" vs "a*"  → True  (a matches a*, 0 a's after)
+  "ab" vs ".*"  → True  (. matches any, * means any number)
+  "aab" vs "c*a*b" → True (c=0, a*=aa, b=b)
+```
+
+---
 
 ```python
 def is_match(s, p):
@@ -413,7 +502,52 @@ print(min_window(s, t))  # Output: "BANC"
 
 **Problem Statement:** Given array and window size k, find maximum in each window.
 
-**Approach:** Monotonic deque.
+### Visual: Monotonic Deque Approach
+
+```
+nums = [1, 3, -1, -3, 5, 3, 6, 7], k = 3
+
+MONOTONIC DEQUE stores INDICES (not values!)
+  Deque maintains DECREASING order of values
+
+Window 1: [1, 3, -1]
+  Deque: [3(1)]  → max = 3
+  (1 removed because 3 > 1)
+  (then -1 added but deque maintains decreasing)
+
+Window 2: [3, -1, -3]
+  Deque: [3(1), -1(2), -3(3)]  → max = 3
+  (all decreasing, keep all)
+
+Window 3: [-1, -3, 5]
+  Remove indices outside window
+  Deque: [5(4)]  → max = 5
+  (5 > -1 and 5 > -3, so they're removed)
+
+Window 4: [-3, 5, 3]
+  Deque: [5(4), 3(5)]  → max = 5
+
+Window 5: [5, 3, 6]
+  Remove 5 from deque (outside window? no, still in)
+  6 > 5 → remove 5, 6 > 3 → remove 3
+  Deque: [6(6)]  → max = 6
+
+Window 6: [3, 6, 7]
+  7 > 6 → remove 6
+  Deque: [7(7)]  → max = 7
+
+Result: [3, 3, 5, 5, 6, 7]
+
+VISUAL of deque at each step:
+  Step 0: deque = [1]         → max=1
+  Step 1: deque = [3]         → max=3  (1 removed, 3>1)
+  Step 2: deque = [3,-1]      → max=3  (-1 added, -1<3)
+  Step 3: deque = [3,-1,-3]   → max=3  (-3 added, -3<-1)
+  Step 4: deque = [5]         → max=5  (-3,-1 removed by 5, 1 out of window)
+  ...
+```
+
+---
 
 ```python
 from collections import deque
@@ -453,7 +587,55 @@ print(sliding_window_max(nums, k))  # Output: [3, 3, 5, 5, 6, 7]
 
 **Problem Statement:** Find area of largest rectangle in histogram.
 
-**Approach:** Monotonic stack to find left and right boundaries.
+### Visual: Monotonic Stack Approach
+
+```
+heights = [2, 1, 5, 6, 2, 3]
+
+Visual:
+  6 │      █  █
+  5 │      █  █
+  4 │      █  █
+  3 │      █  █           █
+  2 │ █    █  █        █  █
+  1 │ █  █ █  █  █  █  █  █
+    └──────────────────────
+     0  1  2  3  4  5
+     2  1  5  6  2  3
+
+MONOTONIC STACK tracks increasing heights:
+  When we see a SHORTER bar, pop and calculate area!
+
+Step-by-step:
+  Push 2: stack = [0]  (height[0]=2)
+  Push 1: height[1]=1 < height[0]=2 → POP 0!
+    Area = height[0] * (1-0) = 2*1 = 2
+    stack = [1]
+  Push 5: stack = [1, 2] (height[2]=5 > height[1]=1)
+  Push 6: stack = [1, 2, 3] (height[3]=6 > height[2]=5)
+  Push 2: height[4]=2 < height[3]=6 → POP 3!
+    Area = height[3] * (4-2-1) = 6*1 = 6
+    height[4]=2 < height[2]=5 → POP 2!
+    Area = height[2] * (4-1-1) = 5*2 = 10  ← MAX!
+    height[4]=2 > height[1]=1 → STOP
+    stack = [1, 4]
+  Push 3: stack = [1, 4, 5]
+  
+  End: POP remaining:
+    POP 5: area = 3*(6-4-1) = 3
+    POP 4: area = 2*(6-1-1) = 8
+    POP 1: area = 1*6 = 6
+
+  MAX AREA = 10 ✅
+
+KEY FORMULA:
+  When popping index 'i' with stack top 's':
+  width = current_index - s - 1 (if stack not empty)
+  width = current_index (if stack empty)
+  area = heights[i] * width
+```
+
+---
 
 ```python
 def largest_rectangle(heights):

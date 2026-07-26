@@ -2,9 +2,129 @@
 
 Ready-to-use templates. Copy-paste during the exam.
 
+> **Exam Tip:** Memorize the template numbers below. During the exam, identify the
+> problem type, jump to the matching template, and adapt it to the problem.
+
+---
+
+## Quick Reference - Decision Flowchart
+
+```
+                    START HERE
+                        |
+               What does the problem ask?
+                        |
+        +---------------+----------------+------------------+
+        |               |                |                  |
+   PATH in graph?   RANGE query?    PATTERN in string?  NUMBER theory?
+        |               |                |                  |
+   +----+----+     +---+----+      +----+----+        +----+----+
+   |         |     |        |      |         |        |         |
+ Weighted?  No   Update?  Just   Exact?   Hash?    nCr/pow?  Matrix?
+   |        |     |       sum?     |         |        |         |
+ Dijkstra  BFS  SegTree Fenwick  KMP    RabinKarp   ModArith  MatExp
+                Fenwick Tree
+                        |
+            +-----------+-----------+
+            |           |           |
+        Subarray?   Connect?   Order tasks?
+            |           |           |
+         Kadane    Union-Find   TopoSort
+            |           |
+        Sliding     Cycle in
+         Window     undirected?
+                        |
+                    Union-Find
+```
+
+## Template Cheat Sheet
+
+| #  | Template              | Time           | Space  | One-Liner When to Use                     |
+|----|-----------------------|----------------|--------|-------------------------------------------|
+| 1  | Fast I/O              | -              | -      | **Always** in CP                          |
+| 2  | BFS                   | O(V + E)       | O(V)   | Shortest path unweighted grid/graph       |
+| 3  | DFS                   | O(V + E)       | O(V)   | Components, cycles, reachability          |
+| 4  | Dijkstra              | O((V+E) log V) | O(V)   | Shortest path weighted graph              |
+| 5  | Union-Find            | O(alpha(n))    | O(n)   | Dynamic connectivity, merge sets          |
+| 6  | Segment Tree          | O(n log n)     | O(n)   | Range query + point update                |
+| 7  | Trie                  | O(L)           | O(N*L) | Prefix matching, autocomplete             |
+| 8  | Monotonic Stack       | O(n)           | O(n)   | Next greater/smaller, histogram           |
+| 9  | Backtracking          | O(2^n) / n!    | O(n)   | Generate all combos/permutations          |
+| 10 | Modular Arithmetic    | O(log n)       | O(n)   | nCr, power, inverse mod MOD               |
+| 11 | Binary Search Answer  | O(log R * f()) | O(1)   | Minimize max / maximize min               |
+| 12 | Sliding Window        | O(n)           | O(k)   | Contiguous subarray/substring             |
+| 13 | Kadane's              | O(n)           | O(1)   | Maximum subarray sum                      |
+| 14 | Topological Sort      | O(V + E)       | O(V)   | Task ordering, detect cycle in DAG        |
+| 15 | Fenwick Tree          | O(n log n)     | O(n)   | Prefix sum + point update (simpler than ST)|
+| 16 | DSU + Rollback        | O(n alpha(n))  | O(n)   | Offline connectivity queries              |
+| 17 | LCA (Binary Lifting)  | O(n log n)     | O(n log n)| Distance between tree nodes            |
+| 18 | KMP                   | O(n + m)       | O(m)   | Exact pattern matching                    |
+| 19 | Rabin-Karp            | O(n + m) avg   | O(1)   | Multiple pattern matching, rolling hash   |
+| 20 | Matrix Exponentiation | O(k^3 log n)   | O(k^2) | Fast Fibonacci, linear recurrences        |
+
+**Legend:** V = vertices, E = edges, n = input size, L = string length, k = matrix size, R = binary search range
+
 ---
 
 ## 1. Fast I/O Template
+
+### Why This Matters
+
+Python's default `input()` is **slow** — it strips whitespace, decodes bytes,
+and does extra processing. When a problem reads 10^5 lines, this overhead adds
+up. `sys.stdin.readline` is **~5-10x faster** and is the single most important
+optimization in Python CP.
+
+### When to Use
+
+```
+Problem input size?
+  |
+  +-- >= 10^4 lines  -->  MUST use this template
+  +-- < 10^4 lines   -->  input() works, but this is always safe
+  +-- Multiple test cases  -->  Use the loop variant
+```
+
+### How It Works - Step by Step
+
+```
+  input = sys.stdin.readline
+         |
+         v
+  Built-in input():     "  42  \n"  ->  "42"        (strips + decodes)
+  sys.stdin.readline(): "  42  \n"  ->  "  42  \n"   (raw, use .strip())
+
+
+  Reading a line of numbers: "5 3 7 1 9\n"
+         |
+         v
+  input().split()   ->  ['5', '3', '7', '1', '9']     (split by whitespace)
+         |
+         v
+  map(int, ...)     ->  5, 3, 7, 1, 9                  (convert each to int)
+         |
+         v
+  list(...)         ->  [5, 3, 7, 1, 9]                 (make it a list)
+```
+
+### Complexity
+
+- **Time:** O(n) per line (unavoidable), but constant factor ~5x smaller than default
+- **Space:** O(1) extra overhead
+
+### Key Pattern: Multiple Test Cases
+
+```
+  Standard input layout:
+  ┌─────────────────┐
+  │  t               │  <-- number of test cases
+  │  n               │  <-- size of array for test case 1
+  │  a1 a2 ... an    │  <-- array elements
+  │  n               │  <-- size for test case 2
+  │  a1 a2 ... an    │
+  │  ...             │
+  └─────────────────┘
+```
 
 ```python
 import sys
@@ -31,6 +151,67 @@ solve()
 ---
 
 ## 2. BFS Template
+
+### Why This Matters
+
+BFS explores nodes **level by level** (all neighbors first, then their neighbors).
+This guarantees the **shortest path** in unweighted graphs/grids.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "shortest path" + unweighted grid/graph  -->  USE BFS
+  +-- "minimum steps" to reach target           -->  USE BFS
+  +-- "level order traversal"                   -->  USE BFS
+  +-- "nearest" in a grid with obstacles         -->  USE BFS
+  +-- "01 BFS" or weighted edges                 -->  USE Dijkstra instead (Template 4)
+```
+
+### Visual: How BFS Explores
+
+```
+  Start at node 0. Explore all neighbors, then their neighbors...
+
+      Graph:              BFS Level-by-Level Exploration:
+
+        0                  Level 0:  [0]
+       / \                 Level 1:  [1, 2]
+      1   2                Level 2:  [3, 4]
+     / \   \               Level 3:  [5]
+    3   4   5
+
+  Queue progression:
+  ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+  │ [0] │[1,2]│[2,3]│[3,4]│[4,5]│ [5] │ [ ] │
+  └─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+   pop 0  pop 1  pop 2  pop 3  pop 4  pop 5  done!
+```
+
+### Step-by-Step Walkthrough (Grid BFS)
+
+```
+  Grid (3x4), S = start, T = target, # = wall:
+
+      S . . .
+      . # # .
+      . . . T
+
+  Step 1: Queue = [(0,0)], Dist = {(0,0): 0}
+  Step 2: Pop (0,0) -> check neighbors:
+          (0,1): empty, add, dist=1
+          (1,0): empty, add, dist=1
+  Step 3: Pop (0,1) -> check neighbors:
+          (0,2): empty, add, dist=2
+          (1,1): '#', skip
+  ...continues until (2,3) is reached with dist=4
+```
+
+### Complexity
+
+- **Time:** O(V + E) for graph, O(rows × cols) for grid
+- **Space:** O(V) for visited set + queue
 
 ```python
 from collections import deque
@@ -92,6 +273,70 @@ def bfs_grid(start, grid, rows, cols):
 
 ## 3. DFS Template
 
+### Why This Matters
+
+DFS explores **as deep as possible** before backtracking. It's the Swiss Army
+knife of graph algorithms — used for connectivity, cycle detection, path finding,
+and topological sort.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "connected components"       -->  DFS (or BFS)
+  +-- "cycle detection"            -->  DFS with coloring
+  +-- "is there a path?"           -->  DFS
+  +-- "topological ordering"       -->  DFS (Template 14 for Kahn's BFS variant)
+  +-- "generate all paths"         -->  DFS + backtracking
+  +-- "maze solving"               -->  DFS
+  +-- needs shortest path?         -->  Use BFS instead (Template 2)
+```
+
+### Visual: DFS vs BFS
+
+```
+  Same graph, different traversal order:
+
+       A              DFS goes DEEP first:
+      / \             A -> B -> D -> (backtrack) -> E -> (backtrack)
+     B   C            -> C -> F
+    / \   \
+   D   E   F
+
+  BFS: A, B, C, D, E, F   (level by level)
+  DFS: A, B, D, E, C, F   (depth first, then backtrack)
+```
+
+### Iterative vs Recursive DFS
+
+```
+  Recursive:                    Iterative:
+  + Clean code                  + No stack overflow risk
+  + Natural for tree problems   + Same time complexity
+  - Risk of stack overflow      + Slightly more code
+    for deep graphs (10^5+)
+```
+
+### Key Concept: Topological Sort via DFS
+
+```
+  Post-order DFS on DAG gives reverse topological order:
+
+      0 --> 1 --> 3
+      |         ^
+      v         |
+      2 --------+
+
+  DFS post-order:  3, 1, 2, 0
+  Topo order:      0, 2, 1, 3  (reversed)
+```
+
+### Complexity
+
+- **Time:** O(V + E) — each node and edge visited once
+- **Space:** O(V) — visited set + recursion stack / explicit stack
+
 ```python
 def dfs(node, graph, visited):
     """Iterative DFS using a stack."""
@@ -146,6 +391,58 @@ def dfs_connected_components(n, graph):
 ---
 
 ## 4. Dijkstra Template
+
+### Why This Matters
+
+BFS only works for **unweighted** graphs. When edges have weights (costs, distances),
+Dijkstra finds the shortest path using a **priority queue** (min-heap).
+
+### When to Use
+
+```
+Problem has weighted edges?  -->
+  |
+  +-- All weights >= 0?       -->  USE Dijkstra
+  +-- Some weights negative?  -->  USE Bellman-Ford (not in this template set)
+  +-- Need path itself?       -->  Use dijkstra_with_path variant
+  +-- Just need distances?    -->  Use dijkstra variant
+```
+
+### Visual: How Dijkstra Works
+
+```
+  Graph with weights:
+        1
+   0 ------- 1
+   |         |
+   4         2
+   |         |
+   2 ------- 3
+        3
+
+  Step-by-step (start=0):
+
+  ┌──────┬──────────┬─────────────────────────────────┐
+  │ Step │ Heap     │ dist[]                           │
+  ├──────┼──────────┼─────────────────────────────────┤
+  │  0   │ [(0,0)]  │ [0, inf, inf, inf]              │
+  │  1   │ [(1,1),  │ [0, 1, 4, inf]  -- pop 0, relax │
+  │      │  (4,2)]  │   neighbors                     │
+  │  2   │ [(2,3),  │ [0, 1, 3, inf]  -- pop 1, relax │
+  │      │  (4,2)]  │   1 -> 3 (cost 2)               │
+  │  3   │ [(3,3),  │ [0, 1, 3, 5]   -- pop 2, relax  │
+  │      │  (3,3)]  │   2 -> 3 (cost 3)               │
+  │  4   │ [(3,3)]  │ [0, 1, 3, 5]   -- pop 3, done   │
+  └──────┴──────────┴─────────────────────────────────┘
+
+  Key insight: Once a node is popped from heap, its distance is FINAL
+  (because all edge weights >= 0).
+```
+
+### Complexity
+
+- **Time:** O((V + E) log V) — each edge processed once, heap operations log V
+- **Space:** O(V) — distance array + heap
 
 ```python
 import heapq
@@ -204,6 +501,60 @@ def dijkstra_with_path(start, end, graph, n):
 ---
 
 ## 5. Union-Find Template
+
+### Why This Matters
+
+Union-Find (Disjoint Set Union / DSU) efficiently tracks which elements belong
+to the same group. It supports two operations: **find** (which group?) and
+**union** (merge two groups) in nearly O(1) amortized time.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "are these two nodes connected?"    -->  Union-Find
+  +-- "how many connected components?"    -->  Union-Find
+  +-- "merge two groups/sets"             -->  Union-Find
+  +-- "detect cycle in undirected graph"  -->  Union-Find
+  +-- "Kruskal's MST"                     -->  Union-Find
+  +-- dynamic connectivity queries        -->  Union-Find
+```
+
+### Visual: How Union-Find Works
+
+```
+  Initially: Each element is its own set.
+
+  [0] [1] [2] [3] [4]    <-- 5 separate components
+
+  union(0, 1):           union(2, 3):
+  [0]──[1] [2] [3] [4]   [0]──[1] [2]──[3] [4]
+   └──────┘              parent[1] = 0     parent[3] = 2
+
+  union(0, 2):
+  [0]──[1]               [0]──[1]
+   \                      /
+    [2]──[3]    --->    [2]──[3]     All in one tree!
+                    parent[2] = 0
+
+  Path Compression (find(3)):
+  Before:  0              After find(3):
+          / \             0
+         1   2            /|\
+             |           1 2 3    <-- 3 now points directly to root!
+             3
+
+  Union by Rank (attach smaller tree under larger):
+  Always make the shorter tree a child of the taller one.
+  This keeps trees balanced = fast finds.
+```
+
+### Complexity
+
+- **Time:** O(alpha(n)) amortized per operation — alpha is inverse Ackermann,
+  effectively O(1) for all practical inputs (n <= 10^6)
+- **Space:** O(n) — parent and rank/size arrays
 
 ```python
 class UnionFind:
@@ -268,6 +619,79 @@ class UnionFindWithSize:
 ---
 
 ## 6. Segment Tree Template
+
+### Why This Matters
+
+Naive range sum: O(n) per query. With updates, that's O(n²) for q queries.
+Segment Tree does **both** range queries and point updates in **O(log n)**.
+
+### When to Use
+
+```
+Problem has?  -->
+  |
+  +-- Range query (sum/min/max) + Point update  -->  Segment Tree
+  +-- Range query + Range update (lazy)          -->  Segment Tree + Lazy Propagation
+  +-- Just prefix sums, no updates?              -->  Use simple prefix array
+  +-- Just prefix sums + point updates?          -->  Fenwick Tree (simpler, Template 15)
+  +-- Need median / order statistics?            -->  Segment Tree with counts
+```
+
+### Visual: Segment Tree Structure
+
+```
+  Array: [1, 3, 5, 7, 9, 11]
+
+  Segment Tree (stores sums):
+
+                    [36]              Range [0,5]
+                   /    \
+              [9]          [27]        [0,2]     [3,5]
+             /   \        /    \
+         [4]     [5]  [16]    [11]    [0,1] [2,2] [3,4] [5,5]
+        /   \          /  \          /  \
+      [1]   [3]      [7]  [9]     [1]  [3]  [5]  [7]  [9]  [11]
+       ^     ^                              Leaf nodes = original array
+
+  Query: sum(1, 4) = ?
+  Path:  [36] -> [9] (covers 0-2, partially) -> [5] (covers 1-2, YES)
+                         -> [27] (covers 3-5, partially) -> [16] (covers 3-4, YES)
+  Result: 5 + 16 = 21  (which is 3+5+7+9 = 24... wait let me recalc)
+  Actually: sum of index 1..4 = 3+5+7+9 = 24
+  Tree query: node [5] covers [1,2]=5+7... 
+```
+
+### Step-by-Step: Query Range [1, 4]
+
+```
+  query(node=1, start=0, end=5, l=1, r=4)
+
+  Step 1: node=1 covers [0,5], not fully in [1,4]
+          -> go to children
+
+  Step 2: node=2 covers [0,2], partially overlaps [1,4]
+          -> go to children
+      Step 2a: node=4 covers [0,1], partially overlaps [1,4]
+               -> go to children
+          Step 2a-i:  node=8 covers [0,0], NOT in [1,4] -> return 0
+          Step 2a-ii: node=9 covers [1,1], IN [1,4] -> return 3 ✓
+
+      Step 2b: node=5 covers [2,2], IN [1,4] -> return 5 ✓
+
+  Step 3: node=3 covers [3,5], partially overlaps [1,4]
+          -> go to children
+      Step 3a: node=6 covers [3,4], IN [1,4] -> return 16 ✓
+      Step 3b: node=7 covers [5,5], NOT in [1,4] -> return 0
+
+  Result: 3 + 5 + 16 = 24  ✓
+```
+
+### Complexity
+
+- **Build:** O(n)
+- **Query:** O(log n)
+- **Update:** O(log n)
+- **Space:** O(4n) — array of size 4n for safety
 
 ```python
 class SegmentTree:
@@ -351,6 +775,69 @@ class SegmentTreeMinMax:
 
 ## 7. Trie Template
 
+### Why This Matters
+
+A Trie (prefix tree) stores strings character-by-character in a tree. It enables
+**O(L)** prefix matching, search, and autocomplete — where L is the word length,
+independent of how many words are stored.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "prefix matching" / "starts with"   -->  Trie
+  +-- "autocomplete" / "word search"      -->  Trie
+  +-- "count words with prefix"           -->  Trie (with count field)
+  +-- "XOR maximum" with numbers          -->  Binary Trie variant
+  +-- "spell check" / "dictionary"        -->  Trie
+  +-- just substring search?              -->  Use KMP (Template 18) instead
+```
+
+### Visual: Trie Structure
+
+```
+  Insert: "app", "apple", "application", "bat", "ball"
+
+                  root
+                /      \
+              a          b
+              |          |
+              p          a
+             / \        / \
+            p   p*     t*  l
+            |   |          |
+           l*  i           l*
+           |   |
+           e*  c
+               |
+               a
+               |
+               t
+               |
+               i
+               |
+               o
+               |
+               n*
+
+  * = is_end of a word (complete word ends here)
+
+  Search "apple":  root -> a -> p -> p -> l -> e*   FOUND
+  Search "app":    root -> a -> p -> p*              FOUND
+  Search "ap":     root -> a -> p (not is_end)       NOT FOUND
+  Starts "app":    root -> a -> p -> p               EXISTS
+  Count "app":     Follow path to second p, return node.count = 3
+                   (app, apple, application all have prefix "app")
+```
+
+### Complexity
+
+- **Insert:** O(L) where L = word length
+- **Search:** O(L)
+- **Space:** O(N × L × alphabet_size) worst case, but shared prefixes save memory
+  (N = number of words)
+
 ```python
 class TrieNode:
     def __init__(self):
@@ -428,6 +915,81 @@ print(trie.count_words_with_prefix("app"))  # 3
 ---
 
 ## 8. Monotonic Stack Template
+
+### Why This Matters
+
+Monotonic stack solves "next greater/smaller element" problems in **O(n)**.
+The stack maintains elements in sorted order, allowing you to find relationships
+between elements in a single pass.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "next greater element"               -->  Monotonic decreasing stack
+  +-- "next smaller element"               -->  Monotonic increasing stack
+  +-- "largest rectangle in histogram"     -->  Monotonic stack
+  +-- "trapping rain water"                -->  Monotonic stack (or prefix arrays)
+  +-- "daily temperatures"                 -->  Monotonic stack
+  +-- "stock span problem"                 -->  Monotonic stack
+```
+
+### Visual: Next Greater Element
+
+```
+  Array:  [2, 1, 2, 4, 3]
+
+  Scan left to right, maintain decreasing stack:
+
+  i=0: stack=[], push 0(val=2)     stack=[0]
+  i=1: arr[1]=1 < arr[0]=2        stack=[0,1]
+  i=2: arr[2]=2 > arr[1]=1        pop 1 -> result[1]=2
+       arr[2]=2 == arr[0]=2       stack=[0,2]
+  i=3: arr[3]=4 > arr[2]=2        pop 2 -> result[2]=4
+       arr[3]=4 > arr[0]=2        pop 0 -> result[0]=4
+       push 3                      stack=[3]
+  i=4: arr[4]=3 < arr[3]=4        stack=[3,4]
+
+  result = [4, 2, 4, -1, -1]
+
+  Visual:
+  [2] [1] [2] [4] [3]
+   ^   ^   ^   ^   ^
+   |   |   |   |   no next element -> -1
+   |   |   |   no greater element -> -1
+   |   |   |
+   |   |   next greater is 4
+   |   next greater is 2
+   next greater is 4
+```
+
+### Visual: Largest Rectangle in Histogram
+
+```
+  Heights: [2, 1, 5, 6, 2, 3]
+
+     ██
+     ██ ██
+     ██ ██
+  ██ ██ ██
+  ██ ██ ██ ██
+  ██ ██ ██ ██    ██
+  ─────────────────
+  0  1  2  3  4  5
+
+  For each bar, find how far it extends left and right
+  (while maintaining height >= current bar).
+
+  Bar 2 (h=5): extends from index 2 to 3 -> area = 5 * 2 = 10
+  Bar 3 (h=6): extends from index 3 to 3 -> area = 6 * 1 = 6
+  Best: Bar 2 -> area = 10
+```
+
+### Complexity
+
+- **Time:** O(n) — each element pushed and popped at most once
+- **Space:** O(n) — stack stores indices
 
 ```python
 def next_greater_element(arr):
@@ -508,6 +1070,66 @@ def trapping_rain_water(height):
 ---
 
 ## 9. Backtracking Template
+
+### Why This Matters
+
+Backtracking systematically explores all possible solutions by **building choices
+incrementally** and **undoing** bad decisions. It's the go-to for generating all
+permutations, combinations, subsets, and constraint-satisfaction problems.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "generate all permutations"          -->  Backtracking
+  +-- "generate all combinations"          -->  Backtracking
+  +-- "generate all subsets"               -->  Backtracking
+  +-- "N-Queens" / "Sudoku"                -->  Backtracking with constraints
+  +-- "word search" in grid                -->  DFS + backtracking
+  +-- "partition into k subsets"           -->  Backtracking
+  +-- Problem asks for "all possible"       -->  Backtracking
+```
+
+### Visual: How Backtracking Works (Subsets of [1, 2, 3])
+
+```
+  Decision tree:
+
+                          []
+                  /         |         \
+               [1]        [2]        [3]
+              /   \        |          |
+          [1,2]  [1,3]  [2,3]       |
+            |      |       |         |
+        [1,2,3] [1,2,3] [1,2,3] [1,2,3]
+
+  All subsets: [], [1], [2], [3], [1,2], [1,3], [2,3], [1,2,3]
+
+  Key: At each step, pick one element from remaining, add to path,
+  recurse, then REMOVE (backtrack) before trying next choice.
+```
+
+### The Backtracking Pattern
+
+```
+  def backtrack(path, choices):
+      if goal_reached:
+          result.append(path[:])    # IMPORTANT: copy the path!
+          return
+
+      for choice in choices:
+          path.append(choice)       # 1. CHOOSE
+          backtrack(path, new_choices)  # 2. EXPLORE
+          path.pop()                # 3. UN-CHOOSE (backtrack!)
+```
+
+### Complexity
+
+- **Permutations:** O(n! × n) — n! permutations, each of length n
+- **Combinations:** O(C(n,k) × k) — C(n,k) combinations
+- **Subsets:** O(2^n × n) — 2^n subsets
+- **N-Queens:** O(n!) — prune early when queen placement conflicts
 
 ```python
 def permutations(nums):
@@ -607,6 +1229,78 @@ def n_queens(n):
 
 ## 10. Modular Arithmetic Template
 
+### Why This Matters
+
+CP problems often ask for answers **modulo 10^9 + 7** because numbers get huge
+(e.g., 100! has 158 digits). Modular arithmetic keeps numbers manageable while
+preserving mathematical properties.
+
+### When to Use
+
+```
+Problem says "answer modulo 10^9+7"?  -->
+  |
+  +-- Need nCr (combinations)?    -->  precompute_factorials() + nCr()
+  +-- Need nPr (permutations)?    -->  precompute_factorials() + nPr()
+  +-- Need a^b % MOD?             -->  power() (fast exponentiation)
+  +-- Need a/b % MOD?             -->  mod_div() (Fermat's little theorem)
+  +-- Need a*b % MOD?             -->  mod_mul()
+```
+
+### Key Concepts
+
+```
+  MOD = 10^9 + 7 (a prime number)
+
+  Why prime? Because Fermat's Little Theorem applies:
+    a^(p-1) ≡ 1 (mod p)  when p is prime and a is not divisible by p
+    Therefore: a^(-1) ≡ a^(p-2) (mod p)
+
+  This lets us do modular DIVISION:
+    a / b  (mod p)  =  a * b^(p-2)  (mod p)
+```
+
+### Visual: Fast Exponentiation (Binary Exponentiation)
+
+```
+  Compute 3^13 % 7:
+
+  13 in binary: 1101
+
+  Step:    base    exp     result
+  Init:      3     1101     1
+  exp & 1?   3      yes    1 * 3 = 3
+  square:    3^2=9  110     3
+  exp & 1?   9      yes    3 * 9 = 27 ≡ 6 (mod 7)
+  square:    9^2=81 11      6
+  exp & 1?   81     yes    6 * 81 = 486 ≡ 3 (mod 7)
+  square:    ...    1       3
+  exp & 1?   ...    yes    3 * ... ≡ 5 (mod 7)
+
+  Result: 3^13 % 7 = 5
+
+  Time: O(log exp) instead of O(exp)!
+```
+
+### Visual: Factorial Precomputation
+
+```
+  fact[0] = 1
+  fact[1] = 1 * 1 = 1
+  fact[2] = 1 * 2 = 2
+  fact[3] = 2 * 3 = 6
+  ...
+  fact[n] = fact[n-1] * n % MOD
+
+  Then nCr = fact[n] * inv(fact[r]) * inv(fact[n-r]) % MOD
+```
+
+### Complexity
+
+- **Fast power:** O(log exp)
+- **Precompute factorials:** O(n)
+- **nCr query:** O(log MOD) after precomputation
+
 ```python
 MOD = 10**9 + 7
 
@@ -661,6 +1355,69 @@ def nPr(n, r, fact, mod=MOD):
 
 ## 11. Binary Search on Answer Template
 
+### Why This Matters
+
+Instead of binary searching on an array, you binary search on the **answer space**.
+The idea: if you can check whether a candidate answer works in O(f(n)), you can
+find the optimal answer in O(log(R) × f(n)), where R is the range of possible answers.
+
+### When to Use
+
+```
+Problem has these properties?  -->
+  |
+  +-- Answer is a number (not a path/structure)     -->  Yes
+  +-- You can CHECK if a candidate works in O(n)    -->  Yes
+  +-- Binary monotonicity:                          -->  Yes
+     "if X works, does X+1 work?"                    -->  Minimize: YES
+     "if X works, does X-1 work?"                    -->  Maximize: YES
+  +-- Then USE THIS TEMPLATE
+```
+
+### Visual: Binary Search on Answer
+
+```
+  Problem: Split array into m subarrays, minimize the maximum subarray sum.
+
+  Answer space: [max(nums), sum(nums)]
+
+  Example: nums = [7, 2, 5, 10, 8], m = 2
+  Answer space: [10, 32]
+
+  Binary search:
+  ┌─────┬──────────────────────────────────────────────┐
+  │ lo  │ 10  (minimum possible = max element)         │
+  │ hi  │ 32  (maximum possible = sum of all)          │
+  │ mid │ 21  -> can we split into <= 2 groups         │
+  │     │     with max sum 21? YES (7+2+5=14, 10+8=18) │
+  │     │     -> try smaller: hi = 21                  │
+  │ mid │ 15  -> can we split? NO                      │
+  │     │     -> try bigger: lo = 16                   │
+  │ mid │ 18  -> can we split? YES (7+2+5=14, 10+8=18) │
+  │     │     -> try smaller: hi = 18                  │
+  │ ... │ converges to 18                              │
+  └─────┴──────────────────────────────────────────────┘
+```
+
+### The Two Variants
+
+```
+  Minimize maximum (e.g., split array):
+    check(mid) = True  ->  hi = mid      (try smaller)
+    check(mid) = False ->  lo = mid + 1  (must go bigger)
+    mid = (lo + hi) // 2
+
+  Maximize minimum (e.g., allocate flowers):
+    check(mid) = True  ->  lo = mid      (try bigger)
+    check(mid) = False ->  hi = mid - 1  (must go smaller)
+    mid = (lo + hi + 1) // 2    <-- NOTE: +1 to avoid infinite loop!
+```
+
+### Complexity
+
+- **Time:** O(log(R) × f(n)) where R = answer range, f(n) = check function time
+- **Space:** O(1) or O(n) depending on check function
+
 ```python
 def binary_search_minimize(lo, hi, check):
     """Find minimum value in [lo, hi] where check(mid) is True.
@@ -707,6 +1464,64 @@ def split_array(nums, m):
 ---
 
 ## 12. Sliding Window Template
+
+### Why This Matters
+
+Sliding window processes **contiguous subarrays/substrings** in O(n) instead
+of O(n²). The window expands right and contracts left, maintaining a valid
+window throughout.
+
+### When to Use
+
+```
+Problem has these properties?  -->
+  |
+  +-- Contiguous subarray/substring required   -->  Yes
+  +-- Fixed size window?                       -->  Use sliding_window_fixed
+  +-- Variable size with constraint?           -->  Use sliding_window_variable
+  +-- "Longest subarray where..."              -->  Sliding window
+  +-- "Smallest subarray containing..."        -->  Sliding window
+  +-- "Maximum/minimum sum of k elements"      -->  Sliding window fixed
+```
+
+### Visual: Fixed-Size Window (k=3)
+
+```
+  Array: [1, 2, 3, 4, 5, 6, 7]
+
+  Window slides right by 1 each step:
+
+  Step 1: [1, 2, 3] 4, 5, 6, 7    sum = 6
+  Step 2:  1 [2, 3, 4] 5, 6, 7    sum = 9   (+4, -1)
+  Step 3:  1, 2 [3, 4, 5] 6, 7    sum = 12  (+5, -2)
+  Step 4:  1, 2, 3 [4, 5, 6] 7    sum = 15  (+6, -3)
+  Step 5:  1, 2, 3, 4 [5, 6, 7]   sum = 18  (+7, -4)
+
+  Key: Remove left element, add right element -> O(1) update!
+```
+
+### Visual: Variable-Size Window
+
+```
+  Problem: Longest substring without repeating characters.
+  String: "abcabcbb"
+
+  left  right  window    valid?
+  0     0      "a"       yes     max_len = 1
+  0     1      "ab"      yes     max_len = 2
+  0     2      "abc"     yes     max_len = 3
+  0     3      "abca"    NO! 'a' repeats -> shrink left
+  1     3      "bca"     yes     max_len = 3
+  1     4      "bcab"    NO! 'b' repeats -> shrink left
+  2     4      "cab"     yes     max_len = 3
+  ...
+  Result: 3 ("abc")
+```
+
+### Complexity
+
+- **Time:** O(n) — each element added and removed at most once
+- **Space:** O(k) where k = window size or alphabet size
 
 ```python
 from collections import Counter
@@ -807,6 +1622,67 @@ def min_window(s, t):
 
 ## 13. Kadane's Algorithm Template
 
+### Why This Matters
+
+Finding the maximum subarray sum naively is O(n²). Kadane's algorithm does it
+in **O(n)** using the key insight: at each position, either extend the current
+subarray or start a new one.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "maximum subarray sum"               -->  Kadane's
+  +-- "maximum sum contiguous subarray"    -->  Kadane's
+  +-- "largest sum subarray"               -->  Kadane's
+  +-- "circular array max subarray sum"    -->  Kadane's circular variant
+  +-- "maximum product subarray"           -->  Modified Kadane (track min too)
+```
+
+### Visual: How Kadane's Works
+
+```
+  Array: [-2, 1, -3, 4, -1, 2, 1, -5, 4]
+
+  i:       0    1    2    3    4    5    6    7    8
+  arr[i]: -2    1   -3    4   -1    2    1   -5    4
+  curr:   -2    1   -2    4    3    5    6    1    5
+  max:    -2    1    1    4    4    5    6    6    6
+
+  Key decisions:
+  i=1: max(1, -2+1) = 1    -> Start new (1 > -1)
+  i=2: max(-3, 1-3) = -2   -> Extend (not starting from -3)
+  i=3: max(4, -2+4) = 4    -> Start new (4 > 2)
+  ...
+  i=6: max(1, 5+1) = 6     -> Extend!
+
+  Best subarray: [4, -1, 2, 1] with sum = 6
+  Visual:
+  [-2] [1] [-3] [4, -1, 2, 1] [-5] [4]
+                      ^^^^^^^^
+                   maximum sum = 6
+```
+
+### Circular Variant
+
+```
+  For circular arrays, the max subarray might WRAP AROUND:
+
+  [5, -3, 5] -> max normal = 5, max circular = 5+5 = 10 (wraps!)
+
+  Trick: max_circular = total_sum - min_subarray_sum
+  (If we remove the minimum subarray, what's left wraps around)
+
+  Final answer = max(normal_max, circular_max)
+  Special case: if all negative, circular_max = 0 (invalid), use normal_max
+```
+
+### Complexity
+
+- **Time:** O(n) — single pass through array
+- **Space:** O(1) — just a few variables
+
 ```python
 def kadane(arr):
     """Maximum subarray sum (can be all negative)."""
@@ -861,6 +1737,56 @@ def kadane_circular(arr):
 ---
 
 ## 14. Topological Sort (Kahn's) Template
+
+### Why This Matters
+
+Topological sort orders vertices in a **Directed Acyclic Graph (DAG)** so that
+every edge goes from earlier to later. It's essential for task scheduling,
+dependency resolution, and cycle detection.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "order of tasks" / "prerequisites"    -->  Topological sort
+  +-- "can finish all courses?"             -->  Topological sort (check for cycle)
+  +-- "dependency resolution"               -->  Topological sort
+  +-- "compile order" / "build order"       -->  Topological sort
+  +-- undirected graph?                     -->  Use Union-Find (Template 5) instead
+```
+
+### Visual: Kahn's Algorithm (BFS-based)
+
+```
+  Graph (task dependencies):
+  0 -> 1, 0 -> 2, 1 -> 3, 2 -> 3, 3 -> 4
+
+  Step 1: Compute indegrees:
+  Node:    0   1   2   3   4
+  Indeg:   0   1   1   2   1
+
+  Step 2: Start BFS with indegree=0 nodes: [0]
+  ┌──────┬───────┬──────────┬────────────────────────┐
+  │ Step │ Queue │ Popped   │ Update indegrees       │
+  ├──────┼───────┼──────────┼────────────────────────┤
+  │  1   │ [0]   │ 0        │ 1->0, 2->0            │
+  │  2   │ [1,2] │ 1        │ 3->1                  │
+  │  3   │ [2,3] │ 2        │ 3->0                  │
+  │  4   │ [3]   │ 3        │ 4->0                  │
+  │  5   │ [4]   │ 4        │ done!                 │
+  └──────┴───────┴──────────┴────────────────────────┘
+
+  Result: [0, 1, 2, 3, 4] (valid topological order)
+
+  CYCLE DETECTION: If result has fewer nodes than graph, cycle exists!
+  (Some nodes never reach indegree=0 because of circular dependency)
+```
+
+### Complexity
+
+- **Time:** O(V + E) — each node and edge processed once
+- **Space:** O(V) — indegree array + queue + result
 
 ```python
 from collections import deque
@@ -921,6 +1847,57 @@ def course_schedule(n, prerequisites):
 ---
 
 ## 15. Fenwick Tree (Binary Indexed Tree) Template
+
+### Why This Matters
+
+Fenwick Tree does **prefix sums + point updates** in O(log n) — same as Segment
+Tree but with **much simpler code** and smaller constant factor. If you only need
+prefix sums (not arbitrary range queries), prefer this over Segment Tree.
+
+### When to Use
+
+```
+Problem has?  -->
+  |
+  +-- Prefix sum queries + point updates          -->  Fenwick Tree (simplest!)
+  +-- Range sum queries + point updates           -->  Fenwick Tree (with subtraction)
+  +-- Range sum + range updates                   -->  Segment Tree (Fenwick can't do this)
+  +-- Range min/max + updates                     -->  Segment Tree
+  +-- 2D prefix sum + point updates               -->  FenwickTree2D
+  +-- Just prefix sums, no updates?               -->  Simple prefix array O(1)
+```
+
+### Visual: How Fenwick Tree Uses Binary Indexing
+
+```
+  Index:    1    2    3    4    5    6    7    8
+  Binary:  001  010  011  100  101  110  111  1000
+                          ^
+  The lowest set bit determines what range each node covers:
+
+  Node 1 (001): covers [1]           (1 element)
+  Node 2 (010): covers [1,2]         (2 elements)
+  Node 3 (011): covers [3]           (1 element)
+  Node 4 (100): covers [1,2,3,4]     (4 elements)
+  Node 5 (101): covers [5]           (1 element)
+  Node 6 (110): covers [5,6]         (2 elements)
+  Node 7 (111): covers [7]           (1 element)
+  Node 8 (1000):covers [1..8]        (8 elements)
+
+  prefix_sum(7) = tree[7] + tree[6] + tree[4]
+                  covers [7] + [5,6] + [1,2,3,4]
+                  = all of [1..7] ✓
+
+  Key operation: i & (-i) gives the lowest set bit!
+    6 & (-6) = 110 & 010 = 010 = 2  (covers 2 elements)
+```
+
+### Complexity
+
+- **Build:** O(n)
+- **Update:** O(log n)
+- **Query:** O(log n)
+- **Space:** O(n)
 
 ```python
 class FenwickTree:
@@ -994,6 +1971,52 @@ class FenwickTree2D:
 
 ## 16. Disjoint Set Union (with Size + Rollback) Template
 
+### Why This Matters
+
+This is an **advanced DSU** with two extra features:
+1. **Size tracking** — know how big each component is
+2. **Rollback** — undo previous unions (for offline/parallel algorithms)
+
+### When to Use
+
+```
+Problem has?  -->
+  |
+  +-- Basic connectivity?                     -->  DSU (Template 5)
+  +-- Need component sizes?                   -->  UnionFindWithSize (Template 5)
+  +-- Need to UNDO unions (rollback)?         -->  DSURollback (this template)
+  +-- Offline connectivity + queries?          -->  DSURollback
+  +-- Dynamic connectivity over time?         -->  DSURollback + divide & conquer
+  +-- Kruskal's MST + need to check?          -->  DSU (Template 5)
+```
+
+### Visual: Rollback DSU
+
+```
+  Operations:
+  union(0,1) -> union(1,2) -> rollback -> rollback
+
+  History stack:
+  ┌────┬──────────────────────────┐
+  │ #  │ Changes made             │
+  ├────┼──────────────────────────┤
+  │  1 │ parent[1]=0, size[0]=2  │  union(0,1)
+  │  2 │ parent[2]=0, size[0]=3  │  union(1,2)
+  └────┴──────────────────────────┘
+
+  After rollback #2: parent[2]=2, size[0]=2  (undo union(1,2))
+  After rollback #1: parent[1]=1, size[0]=1  (undo union(0,1))
+  Back to initial state!
+
+  Note: NO path compression in rollback DSU (would break rollback).
+  Only union by size/rank.
+```
+
+### Complexity
+
+- **Time:** O(log n) per operation (no path compression, only union by size)
+- **Space:** O(n + number of unions)
+
 ```python
 class DSU:
     """DSU with union by size, path compression, and component count."""
@@ -1061,6 +2084,65 @@ class DSURollback:
 ---
 
 ## 17. LCA (Binary Lifting) Template
+
+### Why This Matters
+
+Lowest Common Ancestor (LCA) of two nodes u and v is the deepest node that is
+an ancestor of both. Binary Lifting preprocesses the tree so each LCA query
+answers in **O(log n)**.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "distance between two nodes in tree"    -->  LCA (distance = depth[u]+depth[v]-2*depth[lca])
+  +-- "lowest common ancestor"                -->  LCA
+  +-- "path between two nodes"                -->  LCA + path reconstruction
+  +-- "k-th ancestor of node"                 -->  Binary lifting (same preprocessing)
+  +-- just parent queries?                    -->  Simple DFS is enough
+```
+
+### Visual: Binary Lifting Concept
+
+```
+  Tree:
+         0
+        / \
+       1   2
+      / \   \
+     3   4   5
+    /       / \
+   6       7   8
+
+  parent[node][j] = 2^j-th ancestor of node
+
+  j=0 (2^0=1st ancestor):     j=1 (2^1=2nd ancestor):
+  parent[0][0] = -1            parent[0][1] = -1
+  parent[1][0] = 0             parent[1][1] = -1
+  parent[2][0] = 0             parent[2][1] = -1
+  parent[3][0] = 1             parent[3][1] = 0    (1's parent)
+  parent[4][0] = 1             parent[4][1] = 0
+  parent[5][0] = 2             parent[5][1] = 0
+  parent[6][0] = 3             parent[6][1] = 1    (3's parent)
+  parent[7][0] = 5             parent[7][1] = 2    (5's parent)
+  parent[8][0] = 5             parent[8][1] = 2
+
+  To find LCA(6, 8):
+  Step 1: Equalize depths. depth[6]=3, depth[8]=3 -> same depth.
+  Step 2: Check if ancestors are different going up in powers of 2:
+          j=1: parent[6][1]=1, parent[8][1]=2 -> different, move both up
+          j=0: parent[6][0]=3, parent[8][0]=5 -> different, move both up
+          Now parent[6][0]=1, parent[8][0]=2 -> different, move up
+          ... eventually they meet at node 0.
+          LCA(6, 8) = 0 ✓
+```
+
+### Complexity
+
+- **Preprocessing:** O(n log n)
+- **Query:** O(log n)
+- **Space:** O(n log n)
 
 ```python
 import sys
@@ -1131,6 +2213,74 @@ class LCA:
 
 ## 18. KMP Algorithm Template
 
+### Why This Matters
+
+Naive string matching is O(n×m). KMP achieves **O(n+m)** by using the LPS
+(Longest Proper Prefix which is also Suffix) array to avoid redundant comparisons.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "find pattern in text"                  -->  KMP or Rabin-Karp
+  +-- "all occurrences of pattern"            -->  KMP
+  +-- "string contains substring"             -->  KMP
+  +-- "periodic string" / "repeated pattern"  -->  KMP (LPS array gives period)
+  +-- multiple patterns to search?            -->  Aho-Corasick (advanced)
+  +-- just need existence?                    -->  Python 'in' operator is fine
+```
+
+### Visual: How LPS Array Works
+
+```
+  Pattern: "ABABCABAB"
+
+  LPS[i] = length of longest proper prefix of pattern[0..i]
+           that is also a suffix of pattern[0..i]
+
+  Index:  0   1   2   3   4   5   6   7   8
+  Char:   A   B   A   B   C   A   B   A   B
+  LPS:    0   0   1   2   0   1   2   3   4
+
+  LPS[8] = 4 because:
+  "ABABCABAB"
+   ^^^^   ^^^^
+   prefix "ABAB" == suffix "ABAB"
+
+  Why does this help? When mismatch at position j:
+  Instead of restarting from pattern[0], jump to LPS[j-1].
+  We know the suffix already matches the prefix!
+```
+
+### Visual: KMP Search
+
+```
+  Text:    "ABABDABACDABABCABAB"
+  Pattern: "ABABCABAB"
+
+  i=0:  ABABDABACDABABCABAB     Match ABAB, mismatch at D/C
+        ABABCABAB
+        ^^^^
+        LPS says: skip first 2 chars, try from "AB..."
+
+  i=2:  ABABDABACDABABCABAB     Match ABABC...
+        ..ABABCABAB
+            ^
+
+  (continues until full match at position 9)
+
+  Key: The text pointer i NEVER goes backward!
+  This is what makes KMP O(n+m).
+```
+
+### Complexity
+
+- **Build LPS:** O(m)
+- **Search:** O(n)
+- **Total:** O(n + m)
+- **Space:** O(m) for LPS array
+
 ```python
 def kmp_build_lps(pattern):
     """Build the Longest Proper Prefix which is also Suffix array.
@@ -1194,6 +2344,73 @@ print(kmp_search(text, pattern))  # [9]
 
 ## 19. Rabin-Karp Algorithm Template
 
+### Why This Matters
+
+Rabin-Karp uses **rolling hash** to compare strings in O(1) instead of O(m).
+This makes it great for searching **multiple patterns simultaneously** or for
+problems requiring hash-based string comparison.
+
+### When to Use
+
+```
+Problem keyword?  -->
+  |
+  +-- "find pattern in text"              -->  Rabin-Karp or KMP
+  +-- "count distinct substrings"         -->  Rabin-Karp (with HashSet)
+  +-- "longest repeated substring"        -->  Rabin-Karp + binary search
+  +-- "anagram substrings"                -->  Rabin-Karp with hash
+  +-- "find all rotations"                -->  Rabin-Karp
+  +-- need guaranteed O(n+m)?             -->  Use KMP instead (no hash collisions)
+```
+
+### Visual: Rolling Hash Concept
+
+```
+  Text:    "ABABDABAC"
+  Pattern: "ABAB"  (m=4)
+
+  base = 256, mod = 10^9+7
+
+  hash("ABAB") = A*256^3 + B*256^2 + A*256^1 + B*256^0
+
+  Rolling hash: slide window by 1 character:
+
+  hash("ABAB") = h1
+  hash("BABA") = (h1 - A*256^3) * 256 + A    <-- remove leading, add trailing
+                = (h1 - A*256^3) * 256 + new_char
+
+  This is O(1) per shift! Instead of recomputing entire hash.
+
+  ┌───┬───┬───┬───┐
+  │ A │ B │ A │ B │ D │ A │ B │ A │ C │
+  └───┴───┴───┴───┘
+    h1 (hash of "ABAB")
+         └───┴───┴───┬───┘
+           h2 = rolling(h1, remove 'A', add 'D')
+```
+
+### Visual: Collision Handling
+
+```
+  Problem: Two different strings could have the same hash!
+
+  Solution: When hash matches, ALWAYS verify character by character.
+
+  hash(text[i:i+m]) == hash(pattern)?
+    |
+    +-- NO   ->  definitely not a match, skip
+    +-- YES  ->  verify: text[i:i+m] == pattern?
+                   |
+                   +-- YES ->  confirmed match!
+                   +-- NO  ->  hash collision, skip (rare)
+```
+
+### Complexity
+
+- **Average case:** O(n + m)
+- **Worst case:** O(n × m) with hash collisions (rare with good mod)
+- **Space:** O(1)
+
 ```python
 def rabin_karp(text, pattern):
     """Rabin-Karp string matching using rolling hash.
@@ -1243,6 +2460,76 @@ print(rabin_karp(text, pattern))  # [9]
 ---
 
 ## 20. Fast Exponentiation + Combinatorics Template
+
+### Why This Matters
+
+Matrix exponentiation computes **linear recurrences** (like Fibonacci) in
+**O(k^3 log n)** where k is the matrix size. This turns O(n) DP into O(log n).
+
+### When to Use
+
+```
+Problem has linear recurrence?  -->
+  |
+  +-- Fibonacci: F(n) = F(n-1) + F(n-2)           -->  2x2 matrix
+  +-- Any F(n) = a*F(n-1) + b*F(n-2) + c          -->  3x3 matrix
+  +-- System of linear equations evolving in steps  -->  Matrix exponentiation
+  +-- "nth term of recurrence in O(log n)"         -->  Matrix exponentiation
+  +-- just Fibonacci?                               -->  Could also use fast doubling
+```
+
+### Visual: Matrix Exponentiation for Fibonacci
+
+```
+  Fibonacci: F(0)=0, F(1)=1, F(n)=F(n-1)+F(n-2)
+
+  Can be written as matrix multiplication:
+
+  [F(n+1)]   [1  1]^n   [F(1)]   [1  1]^n   [1]
+  [F(n)  ] = [1  0]   * [F(0)] = [1  0]   * [0]
+
+  So: compute [1 1; 1 0]^n using binary exponentiation!
+
+  [1 1]^n
+  [1 0]
+
+  n=5 (binary: 101):
+
+  Start: result = I = [1 0; 0 1]
+
+  bit=1 (odd):  result = I * M = [1 1; 1 0]
+  square:       M = M^2 = [2 1; 1 1]
+  bit=0 (even): result unchanged
+  square:       M = M^4 = [5 3; 3 2]
+  bit=1 (odd):  result = [1 1; 1 0] * [5 3; 3 2] = [8 5; 5 3]
+
+  F(5) = result[0][1] = 5 ✓
+```
+
+### Visual: Binary Exponentiation of Matrix
+
+```
+  Compute M^13 (13 = 1101 in binary):
+
+  ┌──────┬──────────┬────────────────────────┐
+  │ Step │ exp bit  │ Action                 │
+  ├──────┼──────────┼────────────────────────┤
+  │ init │ 1101     │ result = I            │
+  │  1   │    1     │ result *= M^1         │
+  │  2   │   10     │ M squared -> M^2      │
+  │  3   │  100     │ result unchanged      │
+  │      │          │ M squared -> M^4      │
+  │  4   │ 1000     │ result *= M^4         │
+  │      │          │ M squared -> M^8      │
+  └──────┴──────────┴────────────────────────┘
+  result = M^1 * M^4 * M^8 = M^13  ✓
+```
+
+### Complexity
+
+- **Matrix multiplication:** O(k^3) where k = matrix dimension
+- **Matrix exponentiation:** O(k^3 × log n)
+- **Space:** O(k^2)
 
 ```python
 MOD = 10**9 + 7
@@ -1296,27 +2583,103 @@ for i in range(10):
 
 ---
 
-## Template Quick Reference
+## Template Quick Reference (Detailed)
 
-| # | Template | When to Use |
-|---|----------|-------------|
-| 1 | Fast I/O | Always in competitive programming |
-| 2 | BFS | Shortest path in unweighted graph/grid |
-| 3 | DFS | Connected components, cycle detection, path finding |
-| 4 | Dijkstra | Shortest path in weighted graph |
-| 5 | Union-Find | Dynamic connectivity, cycle detection in undirected graph |
-| 6 | Segment Tree | Range queries + point updates |
-| 7 | Trie | String prefix matching, autocomplete |
-| 8 | Monotonic Stack | Next greater/smaller element, largest rectangle |
-| 9 | Backtracking | Permutations, combinations, N-Queens, Sudoku |
-| 10 | Modular Arithmetic | nCr, power, inverse (always with MOD) |
-| 11 | Binary Search on Answer | Minimize maximum, maximize minimum |
-| 12 | Sliding Window | Subarray/substring problems |
-| 13 | Kadane's | Maximum subarray sum |
-| 14 | Topological Sort | Task scheduling, course prerequisites |
-| 15 | Fenwick Tree | Prefix sums with updates |
-| 16 | DSU | Graph connectivity, Kruskal's MST |
-| 17 | LCA (Binary Lifting) | Distance between nodes in tree |
-| 18 | KMP | Pattern matching in strings |
-| 19 | Rabin-Karp | Pattern matching with rolling hash |
-| 20 | Matrix Exponentiation | Fast Fibonacci, linear recurrences |
+### Problem Type -> Template Mapping
+
+```
+  GRAPH PROBLEMS
+  ┌─────────────────────────────────────┬──────────────────────────┐
+  │ Problem Type                        │ Template to Use          │
+  ├─────────────────────────────────────┼──────────────────────────┤
+  │ Shortest path (unweighted)          │ #2 BFS                   │
+  │ Shortest path (weighted, no neg)    │ #4 Dijkstra              │
+  │ Detect cycle in undirected graph    │ #5 Union-Find            │
+  │ Connected components                │ #3 DFS or #5 Union-Find  │
+  │ Topological ordering                │ #14 TopoSort             │
+  │ Task scheduling / prerequisites     │ #14 TopoSort             │
+  │ MST (Kruskal's)                     │ #5 Union-Find            │
+  │ LCA / tree distance                 │ #17 LCA                  │
+  │ All paths in graph                  │ #3 DFS + #9 Backtracking │
+  └─────────────────────────────────────┴──────────────────────────┘
+
+  ARRAY / STRING PROBLEMS
+  ┌─────────────────────────────────────┬──────────────────────────┐
+  │ Problem Type                        │ Template to Use          │
+  ├─────────────────────────────────────┼──────────────────────────┤
+  │ Maximum subarray sum                │ #13 Kadane's             │
+  │ Next greater/smaller element        │ #8 Monotonic Stack       │
+  │ Range sum + point updates           │ #15 Fenwick or #6 SegTree│
+  │ Range min/max + updates             │ #6 Segment Tree          │
+  │ Subarray with condition             │ #12 Sliding Window       │
+  │ Find pattern in string              │ #18 KMP or #19 RabinKarp │
+  │ Prefix matching                     │ #7 Trie                  │
+  │ Largest rectangle in histogram      │ #8 Monotonic Stack       │
+  │ Trapping rain water                 │ #8 Monotonic Stack       │
+  └─────────────────────────────────────┴──────────────────────────┘
+
+  MATH / NUMBER THEORY
+  ┌─────────────────────────────────────┬──────────────────────────┐
+  │ Problem Type                        │ Template to Use          │
+  ├─────────────────────────────────────┼──────────────────────────┤
+  │ nCr or nPr mod 10^9+7               │ #10 Modular Arithmetic   │
+  │ Fast power (a^b mod p)              │ #10 Modular Arithmetic   │
+  │ Fibonacci (large n)                 │ #20 Matrix Exponentiation│
+  │ General linear recurrence           │ #20 Matrix Exponentiation│
+  └─────────────────────────────────────┴──────────────────────────┘
+
+  OPTIMIZATION
+  ┌─────────────────────────────────────┬──────────────────────────┐
+  │ Problem Type                        │ Template to Use          │
+  ├─────────────────────────────────────┼──────────────────────────┤
+  │ Minimize the maximum value          │ #11 Binary Search Answer │
+  │ Maximize the minimum value          │ #11 Binary Search Answer │
+  │ All permutations/combinations       │ #9 Backtracking          │
+  │ N-Queens / Sudoku / constraint      │ #9 Backtracking          │
+  └─────────────────────────────────────┴──────────────────────────┘
+```
+
+### Complete Quick Reference Table
+
+| #  | Template              | Time           | Space  | When to Use                                  |
+|----|-----------------------|----------------|--------|----------------------------------------------|
+| 1  | Fast I/O              | -              | -      | **Always** in CP                             |
+| 2  | BFS                   | O(V + E)       | O(V)   | Shortest path unweighted grid/graph          |
+| 3  | DFS                   | O(V + E)       | O(V)   | Components, cycles, reachability             |
+| 4  | Dijkstra              | O((V+E) log V) | O(V)   | Shortest path weighted graph                 |
+| 5  | Union-Find            | O(alpha(n))    | O(n)   | Dynamic connectivity, merge sets             |
+| 6  | Segment Tree          | O(n log n)     | O(n)   | Range query + point update                   |
+| 7  | Trie                  | O(L)           | O(N*L) | Prefix matching, autocomplete                |
+| 8  | Monotonic Stack       | O(n)           | O(n)   | Next greater/smaller, histogram              |
+| 9  | Backtracking          | O(2^n) / n!    | O(n)   | Generate all combos/permutations             |
+| 10 | Modular Arithmetic    | O(log n)       | O(n)   | nCr, power, inverse mod MOD                  |
+| 11 | Binary Search Answer  | O(log R * f()) | O(1)   | Minimize max / maximize min                  |
+| 12 | Sliding Window        | O(n)           | O(k)   | Contiguous subarray/substring                |
+| 13 | Kadane's              | O(n)           | O(1)   | Maximum subarray sum                         |
+| 14 | Topological Sort      | O(V + E)       | O(V)   | Task ordering, detect cycle in DAG           |
+| 15 | Fenwick Tree          | O(n log n)     | O(n)   | Prefix sum + point update (simpler than ST)  |
+| 16 | DSU + Rollback        | O(n alpha(n))  | O(n)   | Offline connectivity queries                 |
+| 17 | LCA (Binary Lifting)  | O(n log n)     | O(n log n) | Distance between tree nodes              |
+| 18 | KMP                   | O(n + m)       | O(m)   | Exact pattern matching                       |
+| 19 | Rabin-Karp            | O(n + m) avg   | O(1)   | Multiple pattern matching, rolling hash      |
+| 20 | Matrix Exponentiation | O(k^3 log n)   | O(k^2) | Fast Fibonacci, linear recurrences           |
+
+**Legend:** V = vertices, E = edges, n = input size, L = string length, k = matrix size, R = binary search range, alpha = inverse Ackermann (nearly 1)
+
+### Exam Day Checklist
+
+```
+  Before coding:
+  □  Add Fast I/O template (Template 1) — always
+  □  Check if answer needs MOD 10^9+7 -> use Template 10 helpers
+  □  Identify the problem type -> jump to matching template
+  □  Copy template, rename functions, adapt to problem
+  □  Test with given examples before submitting
+
+  Common pitfalls:
+  ⚠  Forgetting to use sys.setrecursionlimit(10**6) for DFS
+  ⚠  Off-by-one in segment tree / fenwick tree (0-indexed vs 1-indexed)
+  ⚠  Using BFS for weighted graphs (use Dijkstra instead)
+  ⚠  Not handling edge cases (n=0, n=1, negative numbers)
+  ⚠  Integer overflow in C++ — not an issue in Python, but watch for TLE
+```

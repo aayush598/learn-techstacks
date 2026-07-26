@@ -16,23 +16,71 @@
 
 A **greedy algorithm** builds a solution piece by piece, always choosing the **locally optimal** option at each step with the hope of finding a **global optimum**.
 
+### The Intuition
+
+Imagine you are at a buffet and want to fill your plate to maximize deliciousness.
+A greedy approach: at each step, pick the tastiest item available right now.
+You never go back to swap — you just keep picking the best you see.
+
+```
+  BUFFET TABLE (items with values)
+  ┌──────────────────────────────────────────────────┐
+  │  [Cake=9]  [Pizza=7]  [Pasta=5]  [Salad=2]      │
+  │     1          2          3          4            │
+  └──────────────────────────────────────────────────┘
+
+  GREEDY PICK ORDER:  Cake(9) -> Pizza(7) -> Pasta(5) -> Salad(2)
+  At each step, pick the HIGHEST value item remaining.
+```
+
 ### Core Principles
 
 ```python
 # Greedy Algorithm Template
 def greedy_algorithm(input):
-    # 1. Sort/organize by greedy criterion
+    # STEP 1: Sort/organize by greedy criterion
+    #         (earliest deadline? highest value? best ratio?)
     sorted_input = sort_by_criterion(input)
     
-    # 2. Initialize result
+    # STEP 2: Initialize result
     result = initial_value
     
-    # 3. Process items one by one
+    # STEP 3: Process items one by one
     for item in sorted_input:
+        # STEP 4: Check if this item fits / is valid
         if can_add(item, result):
+            # STEP 5: Make the greedy choice (never reconsider)
             result = update_result(item, result)
     
     return result
+```
+
+### Step-by-Step Walkthrough: Simple Greedy
+
+```
+  Problem: Pick maximum non-overlapping intervals
+  
+  Intervals sorted by finish time:
+  ──────────────────────────────────────────────
+  Time:  0  1  2  3  4  5  6  7  8  9  10
+         │──A──│                     A finishes at 4
+              │──────B──────│        B finishes at 6
+                     │──C──│        C finishes at 8
+                            │──D──│  D finishes at 10
+  ──────────────────────────────────────────────
+  
+  Step 1: Pick A (finishes earliest at t=4) ✓
+          last_finish = 4
+  
+  Step 2: B starts at 3, but 3 < 4 → OVERLAP → SKIP B
+  
+  Step 3: C starts at 5, and 5 >= 4 → PICK C ✓
+          last_finish = 8
+  
+  Step 4: D starts at 9, and 9 >= 8 → PICK D ✓
+          last_finish = 10
+  
+  RESULT: [A, C, D] — 3 activities selected
 ```
 
 ### Key Properties
@@ -40,9 +88,52 @@ def greedy_algorithm(input):
 1. **Greedy Choice Property**: A globally optimal solution can be arrived at by making locally optimal choices
 2. **Optimal Substructure**: An optimal solution to the problem contains optimal solutions to subproblems
 
----
+```
+  ╔═══════════════════════════════════════════════════════╗
+  ║           GREEDY CHOICE PROPERTY (visual)            ║
+  ╠═══════════════════════════════════════════════════════╣
+  ║                                                       ║
+  ║   Global Optimal Solution                             ║
+  ║   ┌─────┬─────┬─────┬─────┐                         ║
+  ║   │ g₁  │ g₂  │ g₃  │ g₄  │                         ║
+  ║   └──┬──┴─────┴─────┴─────┘                         ║
+  ║      │                                                ║
+  ║      ▼                                                ║
+  ║   First choice g₁ is locally optimal                 ║
+  ║   Remaining g₂..g₄ is also optimal for subproblem    ║
+  ║                                                       ║
+  ╚═══════════════════════════════════════════════════════╝
+```
 
 ## 2. When to Use Greedy
+
+### Decision Flowchart: Should I Use Greedy?
+
+```
+                    ┌─────────────────────────┐
+                    │  Can I make a locally   │
+                    │  optimal choice at each  │
+                    │        step?             │
+                    └────────┬────────────────┘
+                             │
+                    ┌────────▼────────┐
+               YES  │                 │  NO
+                    │                 ├──────────────► Use DP / Brute Force
+                    ▼                 │
+          ┌─────────────────────┐     │
+          │ Does this local     │     │
+          │ choice guarantee a  │     │
+          │ global optimum?     │     │
+          └────────┬────────────┘     │
+                   │                  │
+          ┌────────▼────────┐         │
+     YES  │                 │  NO     │
+          │                 ├─────────┘
+          ▼                 │
+    ┌───────────┐           │
+    │ USE GREEDY│           │
+    └───────────┘           │
+```
 
 ### Greedy Works When
 
@@ -59,24 +150,32 @@ def greedy_algorithm(input):
 
 ### Common Greedy Patterns
 
-| Pattern | Example |
-|---------|---------|
-| Sorting by criterion | Activity selection |
-| Priority queue | Task scheduling |
-| Two pointers | Two sum sorted |
-| Mathematical proof | Fractional knapsack |
+| Pattern | Key Idea | Example Problems |
+|---------|----------|-----------------|
+| **Sorting by criterion** | Order items by greedy metric | Activity selection, Interval merging |
+| **Priority queue** | Always process "most important" first | Task scheduling, Huffman coding |
+| **Two pointers** | Match from both ends of sorted array | Assign Cookies, Two Sum sorted |
+| **Mathematical proof** | Prove local = global via exchange argument | Fractional knapsack |
+| **Exchange argument** | Show swapping with greedy improves it | Minimum spanning tree |
 
-### Greedy Doesn't Work When
+### Greedy Fails: 0/1 Knapsack Example
 
-```python
-# 1. Local optimum ≠ Global optimum
-#    Example: 0/1 Knapsack (need DP)
+```
+  Capacity = 50
+  ┌────────┬────────┬────────┬──────────────────────────┐
+  │  Item  │ Weight │ Value  │ Value/Weight Ratio       │
+  ├────────┼────────┼────────┼──────────────────────────┤
+  │   A    │   10   │   60   │  6.0  ◄── greedy picks  │
+  │   B    │   20   │  100   │  5.0                      │
+  │   C    │   30   │  120   │  4.0                      │
+  └────────┴────────┴────────┴──────────────────────────┘
 
-# 2. Choices affect future choices
-#    Example: Matrix chain multiplication
+  Greedy by ratio:  A + B = weight 30, value 160
+  Optimal (DP):     B + C = weight 50, value 220  ← BETTER!
 
-# 3. Need to consider all combinations
-#    Example: Traveling salesman
+  Why greedy fails: it picks A (ratio 6.0) but that leaves
+  only 40 capacity, and B+C (weight 50) doesn't fit.
+  The globally optimal choice is B+C without A.
 ```
 
 ---
@@ -112,11 +211,72 @@ def greedy_algorithm(input):
 | Correctness | Needs proof | Always correct |
 | Backtracking | No | Yes |
 
+### Visual Comparison
+
+```
+  GREEDY APPROACH:                    DP APPROACH:
+  ────────────────                    ────────────
+  Make one choice, never undo         Explore all choices
+  
+  Start                               Start
+    │                                   │
+    ▼                                   ├──── Choose A ────┐
+  Pick BEST option now                  │                   │
+    │                                   ├──── Choose B ────┤
+    ▼                                   │                   │
+  Pick BEST option now                  ├──── Choose C ────┤
+    │                                   │                   │
+    ▼                                   ▼                   ▼
+  DONE (one path)                   Compare all paths,
+                                    pick the best
+  
+  Time: O(n) to O(n log n)          Time: O(2^n) to O(n*w)
+  Space: O(1)                       Space: O(n) to O(n*w)
+```
+
 ---
 
 ## 4. Activity Selection Problem
 
 **Problem**: Select maximum number of non-overlapping activities.
+
+### Visual Explanation
+
+```
+  All activities on a timeline:
+  
+  Time: 0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+        │──A──│                                          A=(1,4)
+           │────B────│                                   B=(3,5)
+        │────────C────────│                              C=(0,6)
+                          │──D──│                        D=(5,7)
+              │──────────────E──────────────│            E=(3,9)
+                    │────────F────────│                  F=(5,9)
+                       │────────G────────│              G=(6,10)
+                                  │──H──│               H=(8,11)
+                                  │────────I────────│   I=(8,12)
+        │──────────────J──────────────│                  J=(2,14)
+                                                │──K──│ K=(12,16)
+
+  SORTED BY FINISH TIME:
+  ┌─────┬───────┬────────┐
+  │ Act │ Start │ Finish │
+  ├─────┼───────┼────────┤
+  │  A  │   1   │    4   │ ◄── Pick first (earliest finish)
+  │  B  │   3   │    5   │     3 < 4 → SKIP
+  │  C  │   0   │    6   │     0 < 4 → SKIP
+  │  D  │   5   │    7   │     5 >= 4 → PICK ✓
+  │  E  │   3   │    9   │     3 < 7 → SKIP
+  │  F  │   5   │    9   │     5 < 7 → SKIP
+  │  G  │   6   │   10   │     6 < 7 → SKIP
+  │  H  │   8   │   11   │     8 >= 7 → PICK ✓
+  │  I  │   8   │   12   │     8 < 11 → SKIP
+  │  J  │   2   │   14   │     2 < 11 → SKIP
+  │  K  │  12   │   16   │    12 >= 11 → PICK ✓
+  └─────┴───────┴────────┘
+
+  RESULT: [A, D, H, K] → 4 activities
+```
 
 ```python
 def activity_selection(activities):
@@ -181,6 +341,29 @@ def activity_selection_with_proof(activities):
 ## 5. Fractional Knapsack
 
 **Problem**: Given weights and values, fill knapsack to maximize value (can take fractions).
+
+### Visual Explanation
+
+```
+  ITEMS:                          KNAPSACK (capacity = 50):
+  ┌───────┬────────┬───────┬──────────────┐
+  │ Item  │ Weight │ Value │ Value/Weight │     ┌────────────────────────┐
+  ├───────┼────────┼───────┼──────────────┤     │                        │
+  │   1   │   10   │   60  │    6.0       │     │  [10kg][20kg][20/30kg] │
+  │   2   │   20   │  100  │    5.0       │     │  =========  =========  │
+  │   3   │   30   │  120  │    4.0       │     │  Item 1   Item 2  ⅓ of │
+  └───────┴────────┴───────┴──────────────┘     │  (full)  (full) Item 3│
+                                                │                        │
+  Sort by ratio (descending):                   └────────────────────────┘
+  1. Item 1: ratio 6.0  → take all   (10kg)     Used: 10+20 = 30 kg
+  2. Item 2: ratio 5.0  → take all   (20kg)     Remaining: 20 kg
+  3. Item 3: ratio 4.0  → take ⅓     (10kg)     Used: 10 kg
+  
+  Total value = 60 + 100 + (120 × ⅓) = 60 + 100 + 40 = 200
+
+  KEY INSIGHT: In fractional knapsack, always pick the item
+  with the HIGHEST value-to-weight ratio first!
+```
 
 ```python
 def fractional_knapsack(weights, values, capacity):
@@ -267,6 +450,36 @@ fractional_knapsack_detailed(weights, values, capacity)
 ## 6. Minimum Number of Coins
 
 **Problem**: Find minimum number of coins to make a given amount.
+
+### Visual Walkthrough (US Coins)
+
+```
+  Coins available: [25, 10, 5, 1]
+  Amount to make: 41
+  
+  GREEDY APPROACH (pick largest coin that fits):
+  ┌─────────────────────────────────────────────────────┐
+  │  Amount = 41                                        │
+  │                                                     │
+  │  Step 1: 41 >= 25 → Pick $25   Remaining: 41-25=16 │
+  │  Step 2: 16 >= 10 → Pick $10   Remaining: 16-10=6  │
+  │  Step 3:  6 >= 5  → Pick $5    Remaining: 6-5=1    │
+  │  Step 4:  1 >= 1  → Pick $1    Remaining: 1-1=0    │
+  │                                                     │
+  │  Coins used: [25, 10, 5, 1] = 4 coins              │
+  └─────────────────────────────────────────────────────┘
+
+  When greedy FAILS:
+  ┌─────────────────────────────────────────────────────┐
+  │  Coins: [1, 3, 4],  Amount: 6                       │
+  │                                                     │
+  │  Greedy: 4 + 1 + 1 = 3 coins                       │
+  │  Optimal: 3 + 3 = 2 coins   ← BETTER!              │
+  │                                                     │
+  │  Greedy fails because coin system [1,3,4] is NOT    │
+  │  canonical. US coins [1,5,10,25] ARE canonical.     │
+  └─────────────────────────────────────────────────────┘
+```
 
 ```python
 def min_coins(coins, amount):
@@ -367,6 +580,34 @@ print(greedy_works_for_coins([1, 3, 4]))  # (False, 6)
 
 **Problem**: Each child i has greed factor g[i], each cookie j has size s[j]. Maximize content children.
 
+### Visual Explanation
+
+```
+  Children (sorted): [1, 2, 3]
+  Cookies (sorted):  [1, 1]
+  
+  TWO-POINTER APPROACH:
+  ┌────────────────────────────────────────────────────┐
+  │  Child:  1   2   3                                 │
+  │          ▲   ▲   ▲                                 │
+  │          │   │   │                                 │
+  │  Cookie: 1   1                                     │
+  │          ▲   ▲                                     │
+  │          │   │                                     │
+  │  Step 1: Cookie[0]=1 >= Child[0]=1 → MATCH! ✓     │
+  │          Both pointers advance                     │
+  │  Step 2: Cookie[1]=1 < Child[1]=2 → Cookie too    │
+  │          small, advance cookie pointer             │
+  │  Step 3: No more cookies                           │
+  │                                                    │
+  │  Content children: 1                               │
+  └────────────────────────────────────────────────────┘
+
+  GREEDY INSIGHT: Always give the smallest cookie that
+  satisfies a child. This preserves larger cookies for
+  harder-to-please children.
+```
+
 ```python
 def find_content_children(children, cookies):
     """
@@ -443,6 +684,35 @@ find_content_children_detailed(children, cookies)
 ## 8. Lemonade Change
 
 **Problem**: Customers pay with $5, $10, $20 bills. Start with no change. Can you give change to all customers?
+
+### Visual Walkthrough
+
+```
+  Lemonade costs $5. Customers pay with $5, $10, $20.
+  Start with empty register.
+
+  bills = [5, 5, 5, 10, 20]
+
+  ┌──────────┬────────┬───────────────┬──────────────────────┐
+  │ Customer │  Bill  │ Change Given  │ Register After       │
+  ├──────────┼────────┼───────────────┼──────────────────────┤
+  │    1     │   $5   │ None          │ {$5: 1}              │
+  │    2     │   $5   │ None          │ {$5: 2}              │
+  │    3     │   $5   │ None          │ {$5: 3}              │
+  │    4     │  $10   │ Give $5       │ {$5: 2, $10: 1}     │
+  │    5     │  $20   │ Give $10 + $5 │ {$5: 1, $10: 0}     │
+  └──────────┴────────┴───────────────┴──────────────────────┘
+
+  GREEDY STRATEGY for $20 bill change:
+  Prefer to give $10 + $5 (preserves more $5 bills)
+  If not possible, give $5 + $5 + $5
+  If neither possible, return False
+
+  Why prefer $10+$5 over $5+$5+$5?
+  Because $10 bills are LESS useful for change ($10 can only
+  give change for $10 payments, while $5 bills are needed
+  for both $10 and $20 change).
+```
 
 ```python
 def lemonade_change(bills):
@@ -546,12 +816,72 @@ print(f"Success: {success}")
 | Two pointers | Match from both ends | Assign cookies |
 | Mathematical | Prove local = global | Fractional knapsack |
 
+### When to Use Each Pattern (Visual Guide)
+
+```
+  ┌─────────────────────────────────────────────────────────────┐
+  │              GREEDY PATTERN DECISION GUIDE                  │
+  ├─────────────────────────────────────────────────────────────┤
+  │                                                             │
+  │  Problem has intervals/times?                               │
+  │    YES → Sort by finish time (Activity Selection)           │
+  │                                                             │
+  │  Problem has items with ratios?                             │
+  │    YES → Sort by ratio (Fractional Knapsack)                │
+  │                                                             │
+  │  Problem has two sorted sequences to match?                 │
+  │    YES → Two pointers (Assign Cookies)                      │
+  │                                                             │
+  │  Problem needs "best item at each step"?                    │
+  │    YES → Priority queue (Task Scheduling, Huffman)          │
+  │                                                             │
+  │  Problem needs minimum coins/change?                        │
+  │    YES → Pick largest denomination (Coin Change)            │
+  │    WARNING: Only works for canonical coin systems!          │
+  │                                                             │
+  └─────────────────────────────────────────────────────────────┘
+```
+
 ---
 
 ## Common Pitfalls
 
-1. **Not proving greedy choice property** - always verify local optimum leads to global
-2. **Greedy doesn't work for 0/1 knapsack** - need DP
-3. **Coin change** - greedy fails for non-canonical coin systems
-4. **Missing edge cases** - empty input, single element
-5. **Off-by-one errors** - careful with boundary conditions
+```
+  ╔══════════════════════════════════════════════════════════════╗
+  ║                  TOP 5 GREEDY MISTAKES                       ║
+  ╠══════════════════════════════════════════════════════════════╣
+  ║                                                              ║
+  ║  1. NOT PROVING GREEDY CHOICE PROPERTY                       ║
+  ║     → Always verify: does local optimum = global optimum?    ║
+  ║     → Use exchange argument if unsure                        ║
+  ║                                                              ║
+  ║  2. USING GREEDY FOR 0/1 KNAPSACK                            ║
+  ║     → Greedy by ratio gives suboptimal result                ║
+  ║     → Use DP for 0/1 knapsack instead                        ║
+  ║                                                              ║
+  ║  3. COIN CHANGE WITH NON-CANONICAL SYSTEMS                   ║
+  ║     → Greedy works for [1,5,10,25] but not [1,3,4]          ║
+  ║     → When in doubt, use DP for coin change                  ║
+  ║                                                              ║
+  ║  4. OFF-BY-ONE ERRORS                                        ║
+  ║     → Careful with >= vs > in overlap checks                 ║
+  ║     → Activity: start >= last_finish (not >)                 ║
+  ║                                                              ║
+  ║  5. NOT HANDLING EDGE CASES                                  ║
+  ║     → Empty input, single element, all same values           ║
+  ║     → Always check: if not activities: return []             ║
+  ║                                                              ║
+  ╚══════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Complexity Analysis
+
+| Problem | Time | Space | Sorting Step |
+|---------|------|-------|-------------|
+| Activity Selection | O(n log n) | O(1) | Sort by finish time |
+| Fractional Knapsack | O(n log n) | O(1) | Sort by value/weight ratio |
+| Min Coins (Greedy) | O(n × amount) | O(1) | Sort coins descending |
+| Assign Cookies | O(n log n) | O(1) | Sort both arrays |
+| Lemonade Change | O(n) | O(1) | No sorting needed |

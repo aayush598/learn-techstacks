@@ -1,5 +1,63 @@
 # Anagram Problems
 
+## What is an Anagram?
+
+Two strings are **anagrams** if they contain the **same characters with the same frequencies**, just rearranged.
+
+```
+Example:
+  "listen" and "silent"   -> True  (same chars: i,l,s,t,e,n)
+  "anagram" and "nagaram" -> True  (same chars: a,n,g,r,a,m)
+  "rat" and "car"         -> False (different characters)
+
+Visual Representation:
+  "listen"          "silent"
+  +---+---+---+---+---+---+     +---+---+---+---+---+---+
+  | l | i | s | t | e | n |     | s | i | l | e | n | t |
+  +---+---+---+---+---+---+     +---+---+---+---+---+---+
+
+  Both contain: {l:1, i:1, s:1, t:1, e:1, n:1}
+  Therefore: ANAGRAM!
+```
+
+## Approach Comparison
+
+| Approach           | Time       | Space  | When to Use                        |
+|-------------------|-----------|--------|-------------------------------------|
+| Sorting           | O(n log n)| O(n)   | Simple, small strings              |
+| Character Count   | O(n)      | O(k)   | Best general-purpose               |
+| Counter (Python)  | O(n)      | O(k)   | Quick coding in interviews          |
+| Fixed Array (26)  | O(n)      | O(1)   | Lowercase letters only (fastest)   |
+
+> **k** = size of character set (26 for lowercase, 128 for ASCII)
+
+## Quick Reference: When to Use What
+
+```
+  ┌─────────────────────────────────────────────────────────┐
+  │           ANAGRAM PROBLEM DECISION TREE                │
+  ├─────────────────────────────────────────────────────────┤
+  │                                                         │
+  │  Need to check if two strings are anagrams?             │
+  │  └── Use character counting (O(n))                      │
+  │                                                         │
+  │  Need to group strings by anagram?                      │
+  │  └── Use sorted-string or count-tuple as hash key       │
+  │                                                         │
+  │  Need to find anagram substrings in a string?           │
+  │  └── Use sliding window + character count               │
+  │                                                         │
+  │  Need minimum swaps to make anagram?                    │
+  │  └── Count character frequency differences              │
+  │                                                         │
+  │  Need to sort characters by frequency?                  │
+  │  └── Use Counter + sorting or max-heap                  │
+  │                                                         │
+  └─────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 1. Anagram Definition and Checking
 
 ```python
@@ -57,6 +115,44 @@ print(is_anagram_counter("listen", "silent"))    # True
 print(is_anagram_array("hello", "olleh"))        # True
 ```
 
+### Visual: Character Counting Approach
+
+```
+  Checking if "anagram" is an anagram of "nagaram":
+
+  Step 1: Build frequency map of "anagram"
+  ┌───┬───┬───┬───┬───┬───┐
+  │ a │ n │ g │ r │ m │   │
+  │ 3 │ 1 │ 1 │ 1 │ 1 │   │
+  └───┴───┴───┴───┴───┴───┘
+
+  Step 2: Subtract using characters from "nagaram"
+  Processing 'n': a:3, n:0, g:1, r:1, m:1
+  Processing 'a': a:2, n:0, g:1, r:1, m:1
+  Processing('g'): a:2, n:0, g:0, r:1, m:1
+  Processing('a'): a:1, n:0, g:0, r:1, m:1
+  Processing('r'): a:1, n:0, g:0, r:0, m:1
+  Processing('m'): a:1, n:0, g:0, r:0, m:0
+
+  Result: All counts are 0 -> ANAGRAM!
+```
+
+### Visual: Fixed Array (26 letters) Approach
+
+```
+  Counting array for "hello":
+  Index:  0  1  2  3  4  5  6  7  8  9 ... 25
+  Letter: a  b  c  d  e  f  g  h  i  j ...  z
+  Count: [0, 0, 0, 0, 1, 0, 0, 1, 0, 0 ...  0]
+                                   ^        ^
+                                   h        o has 2
+                                   e has 1
+
+  For "olleh", subtract:
+  Count: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ...  0]
+  All zeros -> ANAGRAM!
+```
+
 ## 2. Group Anagrams (LeetCode 49)
 
 ```python
@@ -99,6 +195,34 @@ print(group_anagrams(["eat", "tea", "tan", "ate", "nat", "bat"]))
 
 print(group_anagrams_optimal(["eat", "tea", "tan", "ate", "nat", "bat"]))
 # [['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]
+```
+
+### Visual: Grouping Anagrams Using Sorted Key
+
+```
+  Input: ["eat", "tea", "tan", "ate", "nat", "bat"]
+
+  Step 1: Sort each string to create hash key
+  ┌─────────┬────────────┬──────────────┐
+  │ String  │ Sorted Key │ Group        │
+  ├─────────┼────────────┼──────────────┤
+  │ "eat"   │ "aet"      │ ["eat"]      │
+  │ "tea"   │ "aet"      │ ["eat","tea"]│
+  │ "tan"   │ "ant"      │ ["tan"]      │
+  │ "ate"   │ "aet"      │ ["eat","tea",│
+  │         │            │  "ate"]      │
+  │ "nat"   │ "ant"      │ ["tan","nat"]│
+  │ "bat"   │ "abt"      │ ["bat"]      │
+  └─────────┴────────────┴──────────────┘
+
+  Final Groups:
+  ┌────────┬──────────────────┐
+  │ Key    │ Value            │
+  ├────────┼──────────────────┤
+  │ "aet"  │ ["eat","tea","ate"]  │
+  │ "ant"  │ ["tan","nat"]    │
+  │ "abt"  │ ["bat"]          │
+  └────────┴──────────────────┘
 ```
 
 ## 3. Find All Anagram Substrings in a String
@@ -171,6 +295,41 @@ def find_anagrams_optimized(s, p):
 # Test
 print(find_anagrams("cbaebabacd", "abc"))    # [0, 6]
 print(find_anagrams_optimized("abab", "ab"))  # [0, 1, 2]
+```
+
+### Visual: Sliding Window for Finding Anagram Substrings
+
+```
+  s = "cbaebabacd", p = "abc"
+  Window size = len(p) = 3
+
+  Step-by-step sliding window:
+  ┌───────────────────────────────────────────────────────┐
+  │ Index: 0  1  2  3  4  5  6  7  8  9                  │
+  │ Text:  c  b  a  e  b  a  b  a  c  d                  │
+  ├───────────────────────────────────────────────────────┤
+  │                                                       │
+  │ Step 1: Window [c,b,a]  -> {c:1,b:1,a:1}             │
+  │         p_count     = {a:1,b:1,c:1}   MATCH! index=0 │
+  │         ^^^                                                  │
+  │                                                       │
+  │ Step 2: Window [b,a,e]  -> {b:1,a:1,e:1}             │
+  │         p_count     = {a:1,b:1,c:1}   NO MATCH       │
+  │                                                       │
+  │ Step 3: Window [a,e,b]  -> no 'c'                    │
+  │         NO MATCH                                      │
+  │                                                       │
+  │ ... (continue sliding)                                │
+  │                                                       │
+  │ Step 7: Window [a,c,d]  ...                           │
+  │ Step 8: Window [c,d,a]  ...                           │
+  │                                                       │
+  │ Step 7: Window [a,c,d]  -> no match                  │
+  │ Step 8: Window [c,d,a]  ...                           │
+  │         Window [b,a,c] at index 6 -> MATCH!           │
+  │                                                       │
+  │ Result: [0, 6]                                        │
+  └───────────────────────────────────────────────────────┘
 ```
 
 ## 4. Minimum Number of Swaps to Make Anagram
@@ -461,4 +620,41 @@ def find_anagrams_streaming(s, p):
 
 # Test
 print(find_anagrams_streaming("cbaebabacd", "abc"))  # [0, 6]
+```
+
+---
+
+## Summary: Anagram Problem Patterns
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │              ANAGRAM PROBLEM CHEAT SHEET                         │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  PATTERN 1: Character Counting                                   │
+  │  └── Use for: is_anagram, group_anagrams, close_strings         │
+  │  └── Key: Count freq of each char, compare counts              │
+  │                                                                  │
+  │  PATTERN 2: Sliding Window + Count                              │
+  │  └── Use for: find_anagrams (substring search)                  │
+  │  └── Key: Window size = len(pattern), slide and compare counts  │
+  │                                                                  │
+  │  PATTERN 3: Sorted String as Hash Key                           │
+  │  └── Use for: group_anagrams (sorting approach)                 │
+  │  └── Key: sorted(s) == sorted(t) iff anagram                   │
+  │                                                                  │
+  │  PATTERN 4: Frequency Distribution Comparison                   │
+  │  └── Use for: are_close (LeetCode 1657)                         │
+  │  └── Key: Same chars + same freq multiset = close               │
+  │                                                                  │
+  │  PATTERN 5: Count + Sort by Frequency                           │
+  │  └── Use for: frequency_sort (LeetCode 451)                     │
+  │  └── Key: Counter + sort by freq descending                     │
+  │                                                                  │
+  │  REMEMBER:                                                       │
+  │  - Anagram check: O(n) with counting, O(n log n) with sort     │
+  │  - Group anagrams: O(n*k) with count key, O(n*k log k) with sort│
+  │  - Sliding window: O(n) for finding anagram substrings          │
+  │                                                                  │
+  └──────────────────────────────────────────────────────────────────┘
 ```

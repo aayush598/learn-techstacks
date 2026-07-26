@@ -4,6 +4,37 @@
 
 ---
 
+## How to Use This Guide
+
+```
+Each problem includes:
+  ✦ Visual example with ASCII tree
+  ✦ Step-by-step approach explanation
+  ✦ Code with comments
+  ✦ Time/Space complexity
+
+Study order:
+  1. Master EASY problems (1-5) → builds foundational patterns
+  2. Tackle MEDIUM problems (6-10) → combines patterns
+  3. Challenge HARD problems (11-15) → advanced techniques
+  4. Reinforce with additional problems (16-20)
+
+Key patterns to recognize:
+  ┌─────────────────────────────────────────────────────────────┐
+  │ Pattern             │ Problems                              │
+  │ ─────────────────── │ ────────────────────────────────────  │
+  │ DFS + return value   │ 1, 2, 4, 5, 10, 19, 20              │
+  │ DFS + global var     │ 5, 12, 15                            │
+  │ BFS + queue          │ 8, 13                                │
+  │ Backtracking         │ 9, 11                                │
+  │ BST property         │ 6, 7, 18, 19                         │
+  │ Post-order DP        │ 15, 16                               │
+  │ Construction         │ 11, 17                               │
+  └─────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## EASY (5 Problems)
 
 ### 1. Maximum Depth of Binary Tree
@@ -18,12 +49,21 @@ Input:     3
             /  \
            15   7
 Output: 3
+
+Depth calculation (bottom-up):
+  Node 15: depth = 1 (leaf)
+  Node 7:  depth = 1 (leaf)
+  Node 20: depth = 1 + max(1, 1) = 2
+  Node 9:  depth = 1 (leaf)
+  Node 3:  depth = 1 + max(1, 2) = 3 ← ANSWER
 ```
 
 **Approach:** Recursively find depth of left and right subtrees, return 1 + max.
 
 ```python
 def max_depth(root):
+    """Base case: empty tree has depth 0.
+    Recursive case: depth = 1 + max(left_depth, right_depth)."""
     if not root:
         return 0
     return 1 + max(max_depth(root.left), max_depth(root.right))
@@ -180,28 +220,48 @@ def diameter_of_binary_tree(root):
 
 **Example:**
 ```
-Input:     2
-          / \
-         1   3
-Output: True
+Input:     2              Input:     5
+          / \                       / \
+         1   3                     1   4
+                                  / \ / \
+                                 3  6 3  6
+Output: True              Output: False
 
-Input:     5
-          / \
-         1   4
-            / \
-           3   6
-Output: False (4 is between 2 and 5 but in wrong subtree)
+Why? 1 < 2 < 3 ✓         Why? 4 is in left subtree of 5,
+                          but 4 > 2 (root of left subtree)
+                          Also 3 < 5 but 3 is in right subtree of 4
+```
+
+**The Trap:** Checking only parent-child is NOT enough!
+
+```
+WRONG approach: just check left < node < right
+  5
+ / \
+1   4    ← 4 < 5 ✓ (parent check passes)
+   / \
+  3   6  ← but 3 is in LEFT subtree of 5, and 3 < 5
+           The issue: 3 should be > 1 AND < 5 (ancestor constraint)
+
+CORRECT approach: pass (min, max) bounds down
+  Node 5: bounds = (-∞, +∞)
+  Node 1: bounds = (-∞, 5)   ← must be < 5
+  Node 4: bounds = (5, +∞)   ← must be > 5
+  Node 3: bounds = (5, 4)    ← 3 < 5? NO! Invalid!
 ```
 
 **Approach:** Use bounds — each node must be within (min, max) range.
 
 ```python
 def is_valid_bst(root):
+    """Each node must be strictly within (min_val, max_val).
+    Start with (-inf, +inf) and tighten bounds as we go down."""
     def validate(node, min_val, max_val):
         if not node:
             return True
         if node.val <= min_val or node.val >= max_val:
             return False
+        # Left child must be < node.val, right child must be > node.val
         return (validate(node.left, min_val, node.val) and
                 validate(node.right, node.val, max_val))
     
@@ -570,13 +630,36 @@ Input:     3
          2   3
           \   \
            3   1
-Output: 7 (rob nodes 3 + 3 + 1 = root + left-right + right-right)
+
+DP values at each node (rob, skip):
+  Node 3 (leaf): (3, 0)
+  Node 3 (leaf): (3, 0)
+  Node 2: left=(0,0), right=(3,0)
+           rob = 2 + 0 + 0 = 2
+           skip = 0 + 3 = 3
+           → (2, 3)
+  Node 3: left=(0,0), right=(1,0) [leaf with val 1]
+           rob = 3 + 0 + 0 = 3
+           skip = 0 + 1 = 1
+           → (3, 1)
+  Root 3: left=(2,3), right=(3,1)
+           rob = 3 + 3 + 1 = 7
+           skip = 3 + 3 = 6
+           → (7, 6)
+
+Output: max(7, 6) = 7 (rob root + node 2's right + node 3's right)
 ```
 
 **Approach:** For each node, return (max_rob, max_not_rob). If rob → can't rob children. If not rob → take max from children.
 
 ```python
 def rob(root):
+    """Post-order DP: at each node, decide to rob or skip.
+    
+    Return (rob_this, skip_this):
+      rob_this:  max value if we rob this node (can't rob children)
+      skip_this: max value if we skip this node (take best from children)
+    """
     def dfs(node):
         if not node:
             return (0, 0)
@@ -584,7 +667,9 @@ def rob(root):
         left = dfs(node.left)
         right = dfs(node.right)
         
+        # If we rob this node → children must be skipped
         rob_this = node.val + left[1] + right[1]
+        # If we skip → take best from each child independently
         not_rob_this = max(left) + max(right)
         
         return (rob_this, not_rob_this)
@@ -725,34 +810,62 @@ def min_depth(root):
 
 ## Complexity Summary
 
-| # | Problem | Difficulty | Time | Space |
-|---|---------|------------|------|-------|
-| 1 | Maximum Depth | Easy | O(n) | O(h) |
-| 2 | Same Tree | Easy | O(n) | O(h) |
-| 3 | Invert Binary Tree | Easy | O(n) | O(h) |
-| 4 | Subtree of Another Tree | Easy | O(mn) | O(h) |
-| 5 | Diameter | Easy | O(n) | O(h) |
-| 6 | Validate BST | Medium | O(n) | O(h) |
-| 7 | Kth Smallest in BST | Medium | O(k+h) | O(h) |
-| 8 | Level Order Traversal | Medium | O(n) | O(n) |
-| 9 | Path Sum II | Medium | O(n²) | O(n) |
-| 10 | LCA of Binary Tree | Medium | O(n) | O(h) |
-| 11 | Serialize/Deserialize | Hard | O(n) | O(n) |
-| 12 | Max Path Sum | Hard | O(n) | O(h) |
-| 13 | Vertical Order | Hard | O(n log n) | O(n) |
-| 14 | Morris Traversal | Hard | O(n) | O(1) |
-| 15 | House Robber III | Hard | O(n) | O(h) |
-| 16 | Path Sum III | Medium | O(n) | O(n) |
-| 17 | Build from Pre+Inorder | Medium | O(n) | O(n) |
-| 18 | BST Iterator | Medium | O(1)* | O(h) |
-| 19 | Sorted Array to BST | Medium | O(n) | O(log n) |
-| 20 | Minimum Depth | Easy | O(n) | O(h) |
+| # | Problem | Difficulty | Time | Space | Pattern |
+|---|---------|------------|------|-------|---------|
+| 1 | Maximum Depth | Easy | O(n) | O(h) | DFS return |
+| 2 | Same Tree | Easy | O(n) | O(h) | DFS compare |
+| 3 | Invert Binary Tree | Easy | O(n) | O(h) | DFS swap |
+| 4 | Subtree of Another Tree | Easy | O(mn) | O(h) | DFS + is_same |
+| 5 | Diameter | Easy | O(n) | O(h) | DFS + global max |
+| 6 | Validate BST | Medium | O(n) | O(h) | DFS bounds |
+| 7 | Kth Smallest in BST | Medium | O(k+h) | O(h) | Iterative inorder |
+| 8 | Level Order Traversal | Medium | O(n) | O(n) | BFS queue |
+| 9 | Path Sum II | Medium | O(n²) | O(n) | DFS backtrack |
+| 10 | LCA of Binary Tree | Medium | O(n) | O(h) | DFS post-order |
+| 11 | Serialize/Deserialize | Hard | O(n) | O(n) | DFS preorder |
+| 12 | Max Path Sum | Hard | O(n) | O(h) | DFS contribution |
+| 13 | Vertical Order | Hard | O(n log n) | O(n) | BFS + sort |
+| 14 | Morris Traversal | Hard | O(n) | O(1) | Threaded tree |
+| 15 | House Robber III | Hard | O(n) | O(h) | Tree DP |
+| 16 | Path Sum III | Medium | O(n) | O(n) | Prefix sum |
+| 17 | Build from Pre+Inorder | Medium | O(n) | O(n) | Construction |
+| 18 | BST Iterator | Medium | O(1)* | O(h) | Stack simulate |
+| 19 | Sorted Array to BST | Medium | O(n) | O(log n) | Binary search |
+| 20 | Minimum Depth | Easy | O(n) | O(h) | DFS return |
 
 > **h** = height (O(log n) balanced, O(n) skewed), *amortized
 
 ---
 
 ## Key Patterns to Remember
+
+### Pattern Recognition Cheat Sheet
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║  When you see...           │ Think...                                  ║
+║ ────────────────────────── │ ───────────────────────────────────────── ║
+║  "depth" / "height"        │ DFS return 1 + max(left, right)          ║
+║  "same" / "identical"      │ Recursively compare both trees           ║
+║  "mirror" / "invert"       │ Swap left and right at each node         ║
+║  "subtree"                 │ Check is_same at every node              ║
+║  "diameter" / "longest"    │ left_depth + right_depth at each node    ║
+║  "validate BST"            │ Pass (min, max) bounds down              ║
+║  "kth smallest"            │ Inorder traversal (sorted for BST)       ║
+║  "level order"             │ BFS with queue                           ║
+║  "path sum"                │ DFS with remaining sum                   ║
+║  "all paths"               │ DFS + backtracking                       ║
+║  "LCA"                     │ Post-order: left & right non-null        ║
+║  "serialize"               │ Preorder with null markers               ║
+║  "max path sum"            │ Contribution pattern (two calculations)  ║
+║  "vertical order"          │ BFS with column tracking                 ║
+║  "O(1) space"              │ Morris Traversal                         ║
+║  "rob" / "no adjacent"     │ Include/Exclude DP                       ║
+║  "prefix sum"              │ HashMap for subarray-sum trick           ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+### 10 Core Patterns
 
 1. **DFS + return value:** Maximum depth, minimum depth, diameter, path sum
 2. **DFS + global variable:** Max path sum, diameter, tree DP problems
@@ -764,3 +877,23 @@ def min_depth(root):
 8. **Prefix sum:** Path Sum III (subarray sum technique on trees)
 9. **Graph conversion:** Burning tree, distance K (convert tree to undirected graph)
 10. **Construction:** Use preorder/root + inorder split, or bounds for BST
+
+### Study Roadmap
+
+```
+Week 1: Master Easy (1-5)
+  → Focus on: DFS basics, recursion, tree properties
+  → Goal: Write these solutions in < 5 minutes each
+
+Week 2: Tackle Medium (6-10)
+  → Focus on: BST properties, BFS, backtracking
+  → Goal: Recognize patterns instantly
+
+Week 3: Challenge Hard (11-15)
+  → Focus on: Advanced techniques, DP, construction
+  → Goal: Handle edge cases and optimizations
+
+Week 4: Reinforce (16-20)
+  → Focus on: Mixed practice, speed
+  → Goal: Solve under interview time pressure (15-20 min each)
+```

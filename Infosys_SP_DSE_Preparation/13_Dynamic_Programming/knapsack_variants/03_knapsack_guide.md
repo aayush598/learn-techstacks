@@ -1,89 +1,129 @@
 # Knapsack Variants — Complete Guide
 
+## Decision Tree for Knapsack Problems
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│                    KNAPSACK PATTERN DECISION TREE                        │
+│                                                                          │
+│  "Can I pick each item at most once?"                                    │
+│       │                                                                  │
+│       ├─ YES → 0/1 Knapsack (loop capacity RIGHT-TO-LEFT)              │
+│       │                                                                  │
+│       └─ NO → "Can I pick unlimited times?"                             │
+│                │                                                         │
+│                ├─ YES → Unbounded Knapsack (loop capacity LEFT-TO-RIGHT)│
+│                │                                                         │
+│                └─ NO → "Limited count[i] for each item?"                │
+│                         │                                                │
+│                         └─ YES → Bounded Knapsack (binary splitting)    │
+│                                                                          │
+│  Variants of 0/1 Knapsack:                                              │
+│    - Subset Sum?      → dp[i][s] = dp[i-1][s] or dp[i-1][s-num[i]]    │
+│    - Equal Partition? → target = sum/2, check subset sum                │
+│    - Count subsets?   → dp[i][s] = dp[i-1][s] + dp[i-1][s-num[i]]     │
+│    - Min diff?        → closest subset sum to total/2                   │
+│                                                                          │
+│  Variants of Unbounded:                                                  │
+│    - Coin Change (min)?  → dp[a] = min(dp[a], dp[a-coin] + 1)          │
+│    - Coin Change (count)?→ dp[a] += dp[a-coin]                          │
+│    - Rod Cutting?        → dp[i] = max over all cut lengths             │
+└──────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 0/1 Knapsack Problem
 
 Given weights[i] and values[i], maximize value with capacity W. Each item chosen at most once.
 
-**Concept:** dp[i][w] = max(dp[i-1][w], dp[i-1][w-wt[i]] + val[i]) for each item i and weight w.
+### Visual Walkthrough
 
-### Recursive
+```
+Items:    wt=[1,3,4,5], val=[1,4,5,7], W=7
 
-```python
-def knapsack_recursive(W: int, wt: list, val: list, n: int = None) -> int:
-    if n is None:
-        n = len(wt)
-    if n == 0 or W == 0:
-        return 0
-    if wt[n - 1] > W:
-        return knapsack_recursive(W, wt, val, n - 1)
-    return max(knapsack_recursive(W, wt, val, n - 1),
-               val[n - 1] + knapsack_recursive(W - wt[n - 1], wt, val, n - 1))
+dp[i][w] = max value using items 0..i-1 with capacity w
 
-# Time: O(2^n), Space: O(n) recursion stack
+     Capacity →   0    1    2    3    4    5    6    7
+  ┌─────────────────────────────────────────────────────┐
+  │  0 items:  [  0    0    0    0    0    0    0    0 ]│  ← base row
+  ├─────────────────────────────────────────────────────┤
+  │  item 1:   [  0    1    1    1    1    1    1    1 ]│  wt=1, val=1
+  ├─────────────────────────────────────────────────────┤     ↑ only 1 item of wt=1
+  │  item 2:   [  0    1    1    4    5    5    5    5 ]│  wt=3, val=4
+  ├─────────────────────────────────────────────────────┤     ↑ at w≥3: can take item2
+  │  item 3:   [  0    1    1    4    5    6    6    9 ]│  wt=4, val=5
+  ├─────────────────────────────────────────────────────┤     ↑ at w=7: items 2+3 = 4+5=9
+  │  item 4:   [  0    1    1    4    5    7    8    9 ]│  wt=5, val=7
+  └─────────────────────────────────────────────────────┘
+
+Answer: 9 (items with weight 3+4 = values 4+5 = 9)
+
+State transition for dp[i][w]:
+  ┌───────────────────────────────────────────────────────────────┐
+  │  if wt[i-1] > w:                                              │
+  │      dp[i][w] = dp[i-1][w]           # Can't fit, skip item   │
+  │  else:                                                         │
+  │      dp[i][w] = max(dp[i-1][w],            # Skip item i      │
+  │                     val[i-1] + dp[i-1][w-wt[i-1]]) # Take it │
+  └───────────────────────────────────────────────────────────────┘
 ```
 
-### Memoization
-
-```python
-def knapsack_memo(W: int, wt: list, val: list, n: int = None, memo=None) -> int:
-    if memo is None:
-        memo = {}
-    if n is None:
-        n = len(wt)
-    if n == 0 or W == 0:
-        return 0
-    key = (n, W)
-    if key in memo:
-        return memo[key]
-    if wt[n - 1] > W:
-        memo[key] = knapsack_memo(W, wt, val, n - 1, memo)
-    else:
-        memo[key] = max(knapsack_memo(W, wt, val, n - 1, memo),
-                        val[n - 1] + knapsack_memo(W - wt[n - 1], wt, val, n - 1, memo))
-    return memo[key]
-
-# Time: O(n × W), Space: O(n × W) for memo
-```
-
-### Tabulation
-
-```python
-def knapsack_tab(W: int, wt: list, val: list) -> int:
-    n = len(wt)
-    dp = [[0] * (W + 1) for _ in range(n + 1)]
-    for i in range(1, n + 1):
-        for w in range(1, W + 1):
-            if wt[i - 1] <= w:
-                dp[i][w] = max(dp[i - 1][w],
-                               val[i - 1] + dp[i - 1][w - wt[i - 1]])
-            else:
-                dp[i][w] = dp[i - 1][w]
-    return dp[n][W]
-
-# DP Table for wt=[1,3,4,5], val=[1,4,5,7], W=7:
-#    0  1  2  3  4  5  6  7
-# 0  0  0  0  0  0  0  0  0
-# 1  0  1  1  1  1  1  1  1
-# 2  0  1  1  4  5  5  5  5
-# 3  0  1  1  4  5  6  6  9
-# 4  0  1  1  4  5  7  8  9
-# Answer: 9
-
-# Time: O(n × W), Space: O(n × W)
-```
-
-### Space Optimized (1D array)
+### Space-Optimized 1D Version
 
 ```python
 def knapsack_optimized(W: int, wt: list, val: list) -> int:
     n = len(wt)
     dp = [0] * (W + 1)
     for i in range(n):
+        # CRITICAL: iterate capacity RIGHT-TO-LEFT to prevent using item twice
         for w in range(W, wt[i] - 1, -1):
             dp[w] = max(dp[w], val[i] + dp[w - wt[i]])
     return dp[W]
 
+# Why right-to-left?
+# If we go left-to-right, dp[w - wt[i]] might have ALREADY been updated
+# in this iteration (using item i), allowing item i to be used twice!
+#
+# Right-to-left ensures dp[w - wt[i]] still reflects the PREVIOUS iteration.
+
 # Time: O(n × W), Space: O(W)
+```
+
+### Tracing the 1D Optimization
+
+```
+wt=[1,3,4,5], val=[1,4,5,7], W=7
+
+Initial: dp = [0, 0, 0, 0, 0, 0, 0, 0]
+
+Item 1 (wt=1, val=1), loop w=7→1:
+  w=7: dp[7] = max(0, 1+dp[6]) = 1
+  w=6: dp[6] = max(0, 1+dp[5]) = 1
+  ...
+  w=1: dp[1] = max(0, 1+dp[0]) = 1
+  dp = [0, 1, 1, 1, 1, 1, 1, 1]
+
+Item 2 (wt=3, val=4), loop w=7→3:
+  w=7: dp[7] = max(1, 4+dp[4]) = max(1,4+1) = 5
+  w=6: dp[6] = max(1, 4+dp[3]) = max(1,4+1) = 5
+  w=5: dp[5] = max(1, 4+dp[2]) = max(1,4+1) = 5
+  w=4: dp[4] = max(1, 4+dp[1]) = max(1,4+1) = 5
+  w=3: dp[3] = max(1, 4+dp[0]) = max(1,4+0) = 4
+  dp = [0, 1, 1, 4, 5, 5, 5, 5]
+
+Item 3 (wt=4, val=5), loop w=7→4:
+  w=7: dp[7] = max(5, 5+dp[3]) = max(5,5+4) = 9
+  w=6: dp[6] = max(5, 5+dp[2]) = max(5,5+1) = 6
+  w=5: dp[5] = max(5, 5+dp[1]) = max(5,5+1) = 6
+  w=4: dp[4] = max(5, 5+dp[0]) = max(5,5+0) = 5
+  dp = [0, 1, 1, 4, 5, 6, 6, 9]
+
+Item 4 (wt=5, val=7), loop w=7→5:
+  w=7: dp[7] = max(9, 7+dp[2]) = max(9,7+1) = 9
+  w=6: dp[6] = max(6, 7+dp[1]) = max(6,7+1) = 8
+  w=5: dp[5] = max(6, 7+dp[0]) = max(6,7+0) = 7
+  dp = [0, 1, 1, 4, 5, 7, 8, 9]  ← Answer: 9
 ```
 
 ---
@@ -92,52 +132,50 @@ def knapsack_optimized(W: int, wt: list, val: list) -> int:
 
 Given an array of positive integers, determine if there exists a subset with sum equal to target.
 
-**Concept:** dp[i][s] = dp[i-1][s] or dp[i-1][s-nums[i]] if s >= nums[i]
+### Visual Walkthrough
+
+```
+nums = [3, 34, 4, 12, 5, 2], target = 9
+
+dp[i][s] = True if subset of nums[0..i-1] sums to s
+
+     Sum →      0    1    2    3    4    5    6    7    8    9
+  ┌──────────────────────────────────────────────────────────────┐
+  │  0 nums:  [  T    F    F    F    F    F    F    F    F    F ]│  ← sum 0 always possible (empty set)
+  ├──────────────────────────────────────────────────────────────┤
+  │  num=3:   [  T    F    F    T    F    F    F    F    F    F ]│  ← 3 in subset
+  ├──────────────────────────────────────────────────────────────┤
+  │  num=34:  [  T    F    F    T    F    F    F    F    F    F ]│  ← 34 > target, no new sums
+  ├──────────────────────────────────────────────────────────────┤
+  │  num=4:   [  T    F    F    T    T    F    F    F    F    F ]│  ← 3+4=7... wait:
+  ├──────────────────────────────────────────────────────────────┤     At s=7: dp[s-4]=dp[3]=T → dp[7]=T
+  │  num=12:  [  T    F    F    T    T    F    F    F    F    F ]│     At s=4: dp[s-4]=dp[0]=T → dp[4]=T
+  ├──────────────────────────────────────────────────────────────┤
+  │  num=5:   [  T    F    F    T    T    T    F    F    F    F ]│  ← 5 directly: dp[5]=T
+  ├──────────────────────────────────────────────────────────────┤     4+5=9: dp[9]=T!
+  │  num=2:   [  T    F    T    T    T    T    T    F    T    T ]│
+  └──────────────────────────────────────────────────────────────┘
+                                                     ▲
+                                                Answer: T (3+4+2=9)
+
+Space-optimized 1D version:
+  dp = [T, F, F, F, F, F, F, F, F, F]
+  After num=3:  dp = [T, F, F, T, F, F, F, F, F, F]
+  After num=4:  dp = [T, F, F, T, T, F, F, T, F, F]
+  After num=5:  dp = [T, F, F, T, T, T, F, T, T, T]  ← dp[9]=T!
+```
 
 ```python
-def subset_sum_memo(nums: list, target: int, i: int = None, memo=None) -> bool:
-    if memo is None:
-        memo = {}
-    if i is None:
-        return subset_sum_memo(nums, target, len(nums), memo)
-    if target == 0:
-        return True
-    if i == 0:
-        return False
-    key = (i, target)
-    if key in memo:
-        return memo[key]
-    ans = subset_sum_memo(nums, target, i - 1, memo)
-    if not ans and nums[i - 1] <= target:
-        ans = ans or subset_sum_memo(nums, target - nums[i - 1], i - 1, memo)
-    memo[key] = ans
-    return memo[key]
-
-def subset_sum_tab(nums: list, target: int) -> bool:
-    n = len(nums)
-    dp = [[False] * (target + 1) for _ in range(n + 1)]
-    for i in range(n + 1):
-        dp[i][0] = True
-    for i in range(1, n + 1):
-        for s in range(1, target + 1):
-            dp[i][s] = dp[i - 1][s]
-            if nums[i - 1] <= s:
-                dp[i][s] = dp[i][s] or dp[i - 1][s - nums[i - 1]]
-    return dp[n][target]
-
 def subset_sum_optimized(nums: list, target: int) -> bool:
     dp = [False] * (target + 1)
-    dp[0] = True
+    dp[0] = True  # Base: sum 0 is always achievable (empty subset)
     for num in nums:
-        for s in range(target, num - 1, -1):
+        for s in range(target, num - 1, -1):  # Right-to-left (0/1 style!)
             if dp[s - num]:
                 dp[s] = True
-        if dp[target]:
+        if dp[target]:  # Early termination
             return True
     return dp[target]
-
-# Example: nums = [3, 34, 4, 12, 5, 2], target = 9
-# Answer: True (4 + 5 = 9)
 
 # Time: O(n × target), Space: O(target)
 ```
@@ -148,26 +186,32 @@ def subset_sum_optimized(nums: list, target: int) -> bool:
 
 Given an array, check if it can be partitioned into two subsets with equal sum.
 
-**Concpet:** target = sum/2, check subset sum exists.
+### Key Insight
+
+```
+If total_sum is odd → impossible (can't split odd into two equal halves)
+If total_sum is even → check if subset with sum = total_sum/2 exists!
+
+Example: nums = [1, 5, 11, 5]
+  total = 22, target = 11
+  Subset [1, 5, 5] sums to 11 ✓  (other subset [11] also sums to 11)
+```
 
 ```python
 def can_partition(nums: list) -> bool:
     total = sum(nums)
     if total % 2 != 0:
-        return False
+        return False  # Can't split odd sum equally
     target = total // 2
     dp = [False] * (target + 1)
     dp[0] = True
     for num in nums:
         for s in range(target, num - 1, -1):
             if dp[s - num]:
-                if s == target:
-                    return True
                 dp[s] = True
+                if s == target:  # Early exit
+                    return True
     return dp[target]
-
-# Example: nums = [1, 5, 11, 5]
-# Answer: True ([1, 5, 5] and [11])
 
 # Time: O(n × target), Space: O(target)
 ```
@@ -260,30 +304,32 @@ def min_subset_diff(nums: list) -> int:
 
 Each item can be chosen unlimited times.
 
-**Concept:** dp[w] = max(dp[w], val[i] + dp[w - wt[i]])
+### Critical Difference from 0/1 Knapsack
+
+```
+0/1 Knapsack:  inner loop goes RIGHT → LEFT  (prevents reuse)
+Unbounded:     inner loop goes LEFT → RIGHT  (allows reuse)
+
+Why? In 0/1 knapsack, right-to-left ensures dp[w-wt[i]] is from the
+     PREVIOUS item's row (not yet updated for this item).
+
+     In unbounded, left-to-right means dp[w-wt[i]] may have been
+     updated already in this iteration, effectively allowing item i
+     to be used again.
+
+  0/1 Knapsack:                Unbounded:
+  for w in range(W, wt[i]-1, -1)  for w in range(wt[i], W+1)
+       ← ← ← ←                     → → → →
+  (fresh values)                   (may reuse current item)
+```
 
 ```python
-def unbounded_knapsack_tab(W: int, wt: list, val: list) -> int:
-    n = len(wt)
-    dp = [[0] * (W + 1) for _ in range(n + 1)]
-    for i in range(1, n + 1):
-        for w in range(1, W + 1):
-            if wt[i - 1] <= w:
-                dp[i][w] = max(dp[i - 1][w], val[i - 1] + dp[i][w - wt[i - 1]])
-            else:
-                dp[i][w] = dp[i - 1][w]
-    return dp[n][W]
-
 def unbounded_knapsack_optimized(W: int, wt: list, val: list) -> int:
     dp = [0] * (W + 1)
     for i in range(len(wt)):
-        for w in range(wt[i], W + 1):
+        for w in range(wt[i], W + 1):  # LEFT TO RIGHT!
             dp[w] = max(dp[w], val[i] + dp[w - wt[i]])
     return dp[W]
-
-# Key difference from 0/1: inner loop goes left to right (allows reuse)
-# 0/1 Knapsack: inner loop right to left (prevents reuse)
-# Unbounded:   inner loop left to right  (allows reuse)
 
 # Time: O(n × W), Space: O(W)
 ```
@@ -294,34 +340,39 @@ def unbounded_knapsack_optimized(W: int, wt: list, val: list) -> int:
 
 Given coins denominations and amount, find minimum number of coins needed.
 
-```python
-def coin_change_memo(coins: list, amount: int, memo=None) -> int:
-    if memo is None:
-        memo = {}
-    if amount == 0:
-        return 0
-    if amount < 0:
-        return float('inf')
-    if amount in memo:
-        return memo[amount]
-    min_coins = float('inf')
-    for coin in coins:
-        res = coin_change_memo(coins, amount - coin, memo)
-        if res != float('inf'):
-            min_coins = min(min_coins, 1 + res)
-    memo[amount] = min_coins
-    return memo[amount]
+### This is Unbounded Knapsack!
 
+```
+coins = [1, 2, 5], amount = 11
+
+dp[a] = min coins needed to make amount a
+
+dp = [0, ∞, ∞, ∞, ∞, ∞, ∞, ∞, ∞, ∞, ∞, ∞]
+      0  1  2  3  4  5  6  7  8  9  10 11
+
+After coin=1:
+dp = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+
+After coin=2:
+dp = [0, 1, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6]
+      ↑ using 2s where beneficial
+
+After coin=5:
+dp = [0, 1, 1, 2, 2, 1, 2, 2, 3, 3, 2, 3]
+                                     ↑   ↑
+                              10=5+5=2   11=5+5+1=3
+
+Answer: 3 (5 + 5 + 1)
+```
+
+```python
 def coin_change_tab(coins: list, amount: int) -> int:
     dp = [float('inf')] * (amount + 1)
-    dp[0] = 0
+    dp[0] = 0  # Base: 0 coins needed for amount 0
     for coin in coins:
-        for a in range(coin, amount + 1):
+        for a in range(coin, amount + 1):  # Left-to-right (unbounded!)
             dp[a] = min(dp[a], dp[a - coin] + 1)
     return dp[amount] if dp[amount] != float('inf') else -1
-
-# Example: coins = [1, 2, 5], amount = 11 -> Answer: 3 (5 + 5 + 1)
-# Example: coins = [2], amount = 3 -> Answer: -1
 
 # Time: O(n × amount), Space: O(amount)
 ```
@@ -332,34 +383,40 @@ def coin_change_tab(coins: list, amount: int) -> int:
 
 Count number of combinations that make up the amount.
 
-```python
-def change_memo(coins: list, amount: int, i: int = None, memo=None) -> int:
-    if memo is None:
-        memo = {}
-    if amount == 0:
-        return 1
-    if amount < 0 or i is None or i < 0:
-        return 0
-    key = (i, amount)
-    if key in memo:
-        return memo[key]
-    ways = change_memo(coins, amount, i - 1, memo)
-    if coins[i] <= amount:
-        ways += change_memo(coins, amount - coins[i], i, memo)
-    memo[key] = ways
-    return memo[key]
+### Key Difference from Coin Change I
 
+```
+Coin Change I:   min(dp[a], dp[a-coin] + 1)   → minimizing
+Coin Change II:  dp[a] += dp[a-coin]           → counting
+
+coins = [1, 2, 5], amount = 5
+
+dp = [1, 0, 0, 0, 0, 0]
+      ↑ base: 1 way to make amount 0
+
+After coin=1: dp = [1, 1, 1, 1, 1, 1]   (all 1s)
+After coin=2: dp = [1, 1, 2, 2, 3, 3]
+After coin=5: dp = [1, 1, 2, 2, 3, 4]
+                                     ↑
+Answer: 4 ways
+  {5}
+  {2, 2, 1}
+  {2, 1, 1, 1}
+  {1, 1, 1, 1, 1}
+  Note: {1,2,2} = {2,1,2} = {2,2,1} (same combination, counted once!)
+```
+
+```python
 def change_tab(coins: list, amount: int) -> int:
     dp = [0] * (amount + 1)
-    dp[0] = 1
-    for coin in coins:
+    dp[0] = 1  # One way to make amount 0: use no coins
+    for coin in coins:          # Iterate coins first → combinations (not permutations)
         for a in range(coin, amount + 1):
-            dp[a] += dp[a - coin]
+            dp[a] += dp[a - coin]  # Add number of ways
     return dp[amount]
 
-# Example: coins = [1, 2, 5], amount = 5
-# Answer: 4 ({5}, {2,2,1}, {2,1,1,1}, {1,1,1,1,1})
-# NOT: {1,2,2} and {2,1,2} are the same set
+# WARNING: If you swap the loops (amount first, then coins), you count
+# PERMUTATIONS instead of combinations! Be careful about problem requirements.
 
 # Time: O(n × amount), Space: O(amount)
 ```
@@ -415,16 +472,34 @@ def rod_cutting_optimized(price: list) -> int:
 
 ---
 
-## Summary Table
+## Summary Table & Quick Reference
 
-| Problem | Type | Approach | Time | Space |
-|---------|------|----------|------|-------|
-| 0/1 Knapsack | 1 item limit | DP with W capacity | O(n×W) | O(W) |
-| Subset Sum | Decision | Boolean DP | O(n×target) | O(target) |
-| Equal Partition | Decision | target = sum/2 | O(n×target) | O(target) |
-| Count Subsets | Count | Combinations DP | O(n×target) | O(target) |
-| Min Subset Diff | Optimization | Closest sum to target | O(n×target) | O(target) |
-| Unbounded Knapsack | Unlimited items | Left-to-right loop | O(n×W) | O(W) |
-| Coin Change (min) | Minimization | Unbounded pattern | O(n×W) | O(W) |
-| Coin Change II | Count combos | Unbounded pattern | O(n×W) | O(W) |
-| Rod Cutting | Unbounded variant | O(n²) iteration | O(n²) | O(n) |
+```
+┌──────────────────────────┬──────────────────┬──────────┬──────────┬───────────────────────────────────┐
+│ Problem                  │ Type             │ Time     │ Space    │ Key Insight                       │
+├──────────────────────────┼──────────────────┼──────────┼──────────┼───────────────────────────────────┤
+│ 0/1 Knapsack             │ 1 item limit     │ O(n×W)   │ O(W)     │ Loop R→L (prevent double use)    │
+│ Subset Sum               │ Decision         │ O(n×tgt) │ O(tgt)   │ Boolean knapsack variant          │
+│ Equal Partition          │ Decision         │ O(n×tgt) │ O(tgt)   │ target = total/2                  │
+│ Count Subsets            │ Count            │ O(n×tgt) │ O(tgt)   │ dp[s] += dp[s-num]               │
+│ Min Subset Diff          │ Optimization     │ O(n×tgt) │ O(tgt)   │ Closest subset sum to total/2     │
+│ Unbounded Knapsack       │ Unlimited items  │ O(n×W)   │ O(W)     │ Loop L→R (allows reuse)           │
+│ Coin Change (min coins)  │ Minimization     │ O(n×amt) │ O(amt)   │ Unbounded + min                   │
+│ Coin Change II (ways)    │ Count combos     │ O(n×amt) │ O(amt)   │ Unbounded + count                 │
+│ Rod Cutting              │ Unbounded variant│ O(n²)    │ O(n)     │ Try all cut positions             │
+└──────────────────────────┴──────────────────┴──────────┴──────────┴───────────────────────────────────┘
+```
+
+### The Golden Rule of Loop Direction
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║  0/1 Knapsack (each item once):                                  ║
+║     for w in range(W, weight-1, -1):   ← RIGHT TO LEFT          ║
+║     Ensures dp[w-wt] is from previous item's row                ║
+║                                                                  ║
+║  Unbounded Knapsack (each item unlimited):                       ║
+║     for w in range(weight, W+1):        ← LEFT TO RIGHT         ║
+║     Allows dp[w-wt] to include current item again               ║
+╚══════════════════════════════════════════════════════════════════╝
+```

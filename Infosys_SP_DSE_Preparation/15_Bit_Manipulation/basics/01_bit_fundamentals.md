@@ -1,31 +1,126 @@
 # Bit Manipulation Fundamentals
 
+> **Why learn bit manipulation?** It's the fastest way to manipulate individual bits in memory. In competitive programming, bit tricks can reduce O(n) solutions to O(1) or enable elegant subset enumeration. Infosys SP DSE exams love testing XOR tricks, power-of-2 checks, and bitmask enumeration.
+
+---
+
+## Quick Reference Cheat Sheet
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║                  BIT MANIPULATION CHEAT SHEET                ║
+╠══════════════════════════════════════════════════════════════╣
+║  n & (n-1)   → clears lowest set bit                        ║
+║  n & (-n)     → isolates lowest set bit                      ║
+║  n | (1<<i)   → set bit i                                   ║
+║  n & ~(1<<i)  → clear bit i                                 ║
+║  n ^ (1<<i)   → flip/toggle bit i                           ║
+║  (n >> i) & 1 → check if bit i is set                       ║
+║  n & (n-1)==0 → power of 2 check                            ║
+║  a ^ a = 0    → self-inverse                                ║
+║  a ^ 0 = a    → identity                                    ║
+║  n << k = n * 2^k                                           ║
+║  n >> k = n / 2^k (floor)                                   ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
+---
+
 ## 1. Binary Representation
 
-Every integer in Python is stored in binary (base-2). Understanding binary is crucial for bit manipulation.
+Every integer in Python is stored in binary (base-2). Understanding binary is the foundation of all bit manipulation.
+
+### How Numbers are Stored in Binary
+
+```
+Decimal to Binary Conversion:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  13 in decimal:
+
+  Step-by-step division by 2:
+  ┌──────────┬───────┬────────┐
+  │  Divide  │  Quot │ Remain │
+  ├──────────┼───────┼────────┤
+  │  13 / 2  │   6   │   1    │  ← LSB (least significant bit)
+  │   6 / 2  │   3   │   0    │
+  │   3 / 2  │   1   │   1    │
+  │   1 / 2  │   0   │   1    │  ← MSB (most significant bit)
+  └──────────┴───────┴────────┘
+
+  Read remainders bottom → top: 1 1 0 1
+
+  So 13₁₀ = 1101₂
+
+  Bit position:    3    2    1    0
+  Bit value:       1    1    0    1
+  Power of 2:     2³   2²   2¹   2⁰
+  Weight:          8    4    0    1   → Sum = 13
+```
+
+### Visual: Bit Layout of a Number
+
+```
+  Number: 42 (decimal)
+
+  32-bit representation:
+  ┌─────┬─────┬─────┬─────┬─────┬─────┬─────┬─────┐
+  │ ... │  0  │  0  │  0  │  1  │  0  │  1  │  0  │
+  └─────┴─────┴─────┴─────┴─────┴─────┴─────┴─────┘
+    31    29    27    25    23    21    19    17
+  (only showing some positions)
+
+  Full 8-bit:  0 0 1 0 1 0 1 0
+  Position:    7 6 5 4 3 2 1 0
+  Weight:     64 32 16 8 4 2 1
+
+  0×64 + 0×32 + 1×16 + 0×8 + 1×4 + 0×2 + 1×0... wait
+  Actually 42 = 32 + 8 + 2 = 1×2⁵ + 0×2⁴ + 1×2³ + 0×2² + 1×2¹ + 0×2⁰
+
+  Correct: 0 0 1 0 1 0 1 0
+           64 32 16 8  4  2  1
+  Sum: 0 + 0 + 32 + 0 + 8 + 0 + 2 + 0 = 42 ✓
+```
 
 ```python
 def binary_representation(n):
-    """Show binary representation of a number"""
+    """Show binary representation of a number.
+    
+    How it works:
+    - Repeatedly divide by 2, collect remainders
+    - Remainders read bottom-to-top give the binary digits
+    - Each remainder is either 0 or 1 (the bits)
+    
+    Example: n = 13
+      13 % 2 = 1  (bit 0)
+       6 % 2 = 0  (bit 1)
+       3 % 2 = 1  (bit 2)
+       1 % 2 = 1  (bit 3)
+    Result: 1101 (read remainders in reverse)
+    """
     if n == 0:
         return "0"
     
     result = []
     while n > 0:
-        result.append(str(n % 2))
-        n //= 2
+        result.append(str(n % 2))  # Collect remainder (0 or 1)
+        n //= 2                     # Integer divide by 2
     
-    return ''.join(reversed(result))
+    return ''.join(reversed(result))  # Reverse to get MSB first
 
 # Example
 print(binary_representation(13))  # Output: 1101
 print(binary_representation(0))   # Output: 0
 
-# Python built-in functions
+# Python built-in functions (use these in competitive programming!)
 n = 13
-print(bin(n))      # '0b1101'
-print(oct(n))      # '0o15'
-print(hex(n))      # '0xd'
+print(bin(n))      # '0b1101'   ← binary literal
+print(oct(n))      # '0o15'     ← octal literal
+print(hex(n))      # '0xd'      ← hexadecimal literal
+
+# Useful: convert binary string back to int
+print(int('1101', 2))   # 13  ← base 2
+print(int('0b1101', 2)) # 13  ← also works with prefix
 ```
 
 **Time Complexity:** O(log n) - Number of bits needed
@@ -42,41 +137,86 @@ def bitwise_operators_demo():
     a = 12  # 1100 in binary
     b = 10  # 1010 in binary
     
-    # AND (&): Both bits must be 1
+    # AND (&): Both bits must be 1 → result is 1
     and_result = a & b
     print(f"{a} & {b} = {and_result}")  # 1100 & 1010 = 1000 = 8
     
-    # OR (|): At least one bit must be 1
+    # OR (|): At least one bit must be 1 → result is 1
     or_result = a | b
     print(f"{a} | {b} = {or_result}")   # 1100 | 1010 = 1110 = 14
     
-    # XOR (^): Bits must be different
+    # XOR (^): Bits must be different → result is 1
     xor_result = a ^ b
     print(f"{a} ^ {b} = {xor_result}")  # 1100 ^ 1010 = 0110 = 6
     
     # NOT (~): Invert all bits (two's complement)
+    # ~n = -(n+1) in Python
     not_result = ~a
     print(f"~{a} = {not_result}")       # ~12 = -13
     
     # LEFT SHIFT (<<): Multiply by 2^n
     left_shift = a << 2
-    print(f"{a} << 2 = {left_shift}")   # 12 << 2 = 48
+    print(f"{a} << 2 = {left_shift}")   # 12 << 2 = 48 (12 × 4)
     
-    # RIGHT SHIFT (>>): Divide by 2^n
+    # RIGHT SHIFT (>>): Divide by 2^n (floor)
     right_shift = a >> 2
-    print(f"{a} >> 2 = {right_shift}")  # 12 >> 2 = 3
+    print(f"{a} >> 2 = {right_shift}")  # 12 >> 2 = 3  (12 / 4)
 
 bitwise_operators_demo()
+```
+
+### Visual: Bitwise Operations on 12 & 10
+
+```
+  a = 12  →  1 1 0 0
+  b = 10  →  1 0 1 0
+             ─────────
+
+  AND (&):   1 1 0 0        Both 1? → 1, else → 0
+             1 0 1 0
+             ─────────
+             1 0 0 0  = 8
+
+  OR (|):   1 1 0 0        At least one 1? → 1
+             1 0 1 0
+             ─────────
+             1 1 1 0  = 14
+
+  XOR (^):  1 1 0 0        Different? → 1, Same → 0
+             1 0 1 0
+             ─────────
+             0 1 1 0  = 6
+
+  NOT (~):  ~1100 = ...0011 (in two's complement)
+             Result = -(12 + 1) = -13
+
+  LEFT SHIFT: 1100 << 2 = 110000 = 48
+              Shift bits LEFT by 2 positions
+              Equivalent to: 12 × 2² = 12 × 4 = 48
+
+  RIGHT SHIFT: 1100 >> 2 = 11 = 3
+               Shift bits RIGHT by 2 positions
+               Equivalent to: 12 / 2² = 12 / 4 = 3
 ```
 
 ### Operator Truth Tables
 
 ```
-AND:          OR:           XOR:
-0 & 0 = 0     0 | 0 = 0     0 ^ 0 = 0
-0 & 1 = 0     0 | 1 = 1     0 ^ 1 = 1
-1 & 0 = 0     1 | 0 = 1     1 ^ 0 = 1
-1 & 1 = 1     1 | 1 = 1     1 ^ 1 = 0
+ AND:          OR:           XOR:          NOT:
+┌───┬───┬───┐ ┌───┬───┬───┐ ┌───┬───┬───┐ ┌───┬───┐
+│ a │ b │a&b│ │ a │ b │a|b│ │ a │ b │a^b│ │ a │~a │
+├───┼───┼───┤ ├───┼───┼───┤ ├───┼───┼───┤ ├───┼───┤
+│ 0 │ 0 │ 0 │ │ 0 │ 0 │ 0 │ │ 0 │ 0 │ 0 │ │ 0 │ 1 │
+│ 0 │ 1 │ 0 │ │ 0 │ 1 │ 1 │ │ 0 │ 1 │ 1 │ │ 1 │ 0 │
+│ 1 │ 0 │ 0 │ │ 1 │ 0 │ 1 │ │ 1 │ 0 │ 1 │ └───┴───┘
+│ 1 │ 1 │ 1 │ │ 1 │ 1 │ 1 │ │ 1 │ 1 │ 0 │
+└───┴───┴───┘ └───┴───┴───┘ └───┴───┴───┘
+
+ Key mnemonics:
+ • AND = "both must be 1"
+ • OR  = "any one is enough"
+ • XOR = "must be different"
+ • NOT = "flip everything"
 ```
 
 ---
@@ -133,6 +273,44 @@ demonstrate_properties()
 
 **Trick:** `n & (n-1)` removes the lowest set bit. If result is 0, then n was a power of 2.
 
+### Visual Walkthrough: Why n & (n-1) Works
+
+```
+  Powers of 2 have exactly ONE bit set:
+
+  1  = 0 0 0 0 0 0 0 1    ← only one '1'
+  2  = 0 0 0 0 0 0 1 0    ← only one '1'
+  4  = 0 0 0 0 0 1 0 0    ← only one '1'
+  8  = 0 0 0 0 1 0 0 0    ← only one '1'
+
+  What n-1 does: flips all bits below the lowest set bit
+
+  n     = 12  = 0 1 1 0 0    (not a power of 2)
+  n - 1 = 11  = 0 1 0 1 1    (bits flipped below lowest set bit)
+
+  n & (n-1) = 0 1 0 0 0  = 8   (NOT zero → not power of 2)
+
+  ─────────────────────────────────────
+
+  n     = 8   = 0 0 0 1 0 0 0   (IS a power of 2)
+  n - 1 = 7   = 0 0 0 0 1 1 1   (all bits below are now 1)
+
+  n & (n-1) = 0 0 0 0 0 0 0  = 0   (ZERO → IS power of 2!)
+
+  ─────────────────────────────────────
+
+  WHY it works:
+  ┌──────────────────────────────────────────────────────────┐
+  │ For power of 2: n = 1000...0 (exactly one 1)             │
+  │              n-1 = 0111...1 (all 0s below that bit)      │
+  │           n & (n-1) = 0000...0 = 0  ← Always zero!      │
+  ├──────────────────────────────────────────────────────────┤
+  │ For non-power-of-2: n has multiple 1s                   │
+  │              n-1 only flips bits below lowest set bit    │
+  │           n & (n-1) still has bits set → NOT zero       │
+  └──────────────────────────────────────────────────────────┘
+```
+
 ```python
 def is_power_of_two(n):
     """Check if n is a power of 2"""
@@ -169,6 +347,43 @@ print(is_power_of_two(-8))   # False
 
 **Normal approach:** Check each bit - O(log n)
 **Brian Kernighan's:** `n & (n-1)` clears lowest set bit - O(set bits)
+
+### Visual: Brian Kernighan's Algorithm Walkthrough
+
+```
+  Counting set bits in 29 = 1 1 1 0 1
+
+  Normal approach (check every bit):
+  ┌──────────┬────────────┬────────┐
+  │  Step    │   n        │  Bit=1?│
+  ├──────────┼────────────┼────────┤
+  │  n&1=1   │ 11101      │  Yes   │ count = 1
+  │  n>>=1   │ 1110       │  Yes   │ count = 2
+  │  n>>=1   │ 111        │  Yes   │ count = 3
+  │  n>>=1   │ 11         │  Yes   │ count = 4
+  │  n>>=1   │ 1          │  Yes   │ count = 5   ← WRONG
+  └──────────┴────────────┴────────┘
+  Wait, we need to be more careful. 29 = 11101 (4 set bits)
+
+  Normal approach checks ALL bits even if they're 0:
+  29 = 11101 → checks 5 bits, counts 4 of them
+
+  Brian Kernighan's approach: only visits SET bits!
+  ┌──────────┬────────────┬──────────────────────┐
+  │  Step    │   n        │  n & (n-1)           │
+  ├──────────┼────────────┼──────────────────────┤
+  │  Start   │ 1 1 1 0 1  │                      │ count = 0
+  │  Step 1  │ 1 1 1 0 0  │ clears lowest '1'   │ count = 1
+  │  Step 2  │ 1 1 0 0 0  │ clears next '1'     │ count = 2
+  │  Step 3  │ 1 0 0 0 0  │ clears next '1'     │ count = 3
+  │  Step 4  │ 0 0 0 0 0  │ clears next '1'     │ count = 4
+  │  Done!   │ 0 0 0 0 0  │ n is now 0           │
+  └──────────┴────────────┴──────────────────────┘
+
+  4 iterations for a number with 4 set bits (not 5)!
+  Each step clears exactly one set bit, so we only
+  loop once per set bit.
+```
 
 ```python
 def count_set_bits_normal(n):
@@ -213,6 +428,42 @@ print(f"Built-in: {count_set_bits_builtin(n)}")    # 4
 - `a ^ 0 = a`
 - XOR is commutative and associative
 
+### Visual Walkthrough: Why XOR Finds the Unique Element
+
+```
+  Array: [2, 3, 2, 4, 3]
+
+  Step-by-step XOR folding:
+  ┌─────────────────────────────────────────────────┐
+  │  2 ^ 3 ^ 2 ^ 4 ^ 3                              │
+  │  = (2 ^ 2) ^ (3 ^ 3) ^ 4    ← regrouping!      │
+  │  = 0       ^ 0       ^ 4    ← pairs cancel!    │
+  │  = 4                          ← unique element  │
+  └─────────────────────────────────────────────────┘
+
+  In binary:
+    2  = 0 1 0
+    3  = 0 1 1
+    2  = 0 1 0
+    4  = 1 0 0
+    3  = 0 1 1
+           ─────
+  XOR all = 1 0 0  = 4  ✓
+
+  ┌─────────────────────────────────────────────────┐
+  │  WHY does this work?                            │
+  │                                                 │
+  │  XOR has these properties:                      │
+  │    a ^ a = 0    (self-canceling)                │
+  │    a ^ 0 = a    (identity)                      │
+  │    Commutative: a ^ b = b ^ a                   │
+  │    Associative: (a^b)^c = a^(b^c)               │
+  │                                                 │
+  │  So all pairs cancel to 0, leaving only         │
+  │  the unpaired element!                          │
+  └─────────────────────────────────────────────────┘
+```
+
 ```python
 def find_single_number(nums):
     """Find single number where every other appears twice"""
@@ -241,6 +492,30 @@ print(find_single_number([4, 1, 2, 1, 2]))  # Output: 4
 
 **Problem:** Every element appears 3 times except one appears once.
 **Solution:** Count set bits at each position. If count % 3 != 0, that bit belongs to the single number.
+
+### Visual: Bit Counting Approach
+
+```
+  Array: [2, 2, 3, 2]
+
+  Binary representation:
+    2 = 0 1 0
+    2 = 0 1 0
+    3 = 0 1 1
+    2 = 0 1 0
+            ──
+    Bit 0: 0+0+1+0 = 1  → 1 % 3 = 1 → SET in result
+    Bit 1: 1+1+1+1 = 4  → 4 % 3 = 1 → SET in result
+    Bit 2: 0+0+0+0 = 0  → 0 % 3 = 0 → NOT set
+
+  Result = 0 1 1 = 3 ✓
+
+  ┌──────────────────────────────────────────────────────┐
+  │  For each bit position:                              │
+  │  If a bit appears 3k+1 times → it belongs to unique │
+  │  If a bit appears 3k times   → it's from triplets   │
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 def find_single_number_ii(nums):
@@ -301,6 +576,38 @@ print(find_single_number_ii_efficient([2, 2, 3, 2]))  # Output: 3
 - `a = a ^ b`
 - `b = a ^ b`
 - `a = a ^ b`
+
+### Visual Walkthrough: XOR Swap
+
+```
+  Swap a=5, b=10 using XOR
+
+  a = 5   →  0 1 0 1
+  b = 10  →  1 0 1 0
+
+  Step 1: a = a ^ b = 0101 ^ 1010 = 1111
+          a becomes 15  →  1 1 1 1
+
+  Step 2: b = a ^ b = 1111 ^ 1010 = 0101
+          b becomes 5   →  0 1 0 1  ← original a!
+
+  Step 3: a = a ^ b = 1111 ^ 0101 = 1010
+          a becomes 10  →  1 0 1 0  ← original b!
+
+  ┌────────────────────────────────────────────────┐
+  │  Summary:                                      │
+  │    Before: a=5,  b=10                          │
+  │    After:  a=10, b=5   ✓ Swapped!             │
+  │                                                │
+  │  Proof:                                        │
+  │    a' = a ^ b                                  │
+  │    b' = (a ^ b) ^ b = a ^ (b ^ b) = a ^ 0 = a │
+  │    a'' = (a ^ b) ^ a = (a ^ a) ^ b = 0 ^ b = b│
+  └────────────────────────────────────────────────┘
+
+  NOTE: In Python, prefer a, b = b, a (tuple unpacking).
+  The XOR method is mainly useful in C/C++/Java.
+```
 
 ```python
 def swap_without_temp(a, b):
@@ -368,6 +675,54 @@ print(f"Bit 2: {(12 >> 2) & 1}")  # 1
 
 ## 10. Set, Clear, Flip ith Bit
 
+### Visual: How Bit Manipulation Operations Work
+
+```
+  For n = 12 = 1 1 0 0 (binary), working on bit position i:
+
+  ┌──────────────────────────────────────────────────────────┐
+  │  SET bit i (force it to 1):                              │
+  │    n | (1 << i)                                          │
+  │                                                          │
+  │  Example: Set bit 1 of 12 (1100)                        │
+  │    mask   = 1 << 1  = 0 0 1 0                           │
+  │    n      =         = 1 1 0 0                           │
+  │    n|mask =         = 1 1 1 0  = 14                     │
+  │                                                          │
+  │  CLEAR bit i (force it to 0):                            │
+  │    n & ~(1 << i)                                         │
+  │                                                          │
+  │  Example: Clear bit 3 of 12 (1100)                      │
+  │    mask    = 1 << 3 = 0 1 0 0                           │
+  │    ~mask   =        = 1 0 1 1                           │
+  │    n       =        = 1 1 0 0                           │
+  │    n&~mask =        = 1 0 0 0  = 8                      │
+  │                                                          │
+  │  FLIP/Toggle bit i (0→1 or 1→0):                        │
+  │    n ^ (1 << i)                                          │
+  │                                                          │
+  │  Example: Flip bit 2 of 12 (1100)                       │
+  │    mask   = 1 << 2 = 0 1 0 0                           │
+  │    n      =         = 1 1 0 0                           │
+  │    n^mask =         = 1 0 0 0  = 8                      │
+  │                                                          │
+  │  Example: Flip bit 0 of 12 (1100)                       │
+  │    mask   = 1 << 0 = 0 0 0 1                           │
+  │    n      =         = 1 1 0 0                           │
+  │    n^mask =         = 1 1 0 1  = 13                     │
+  └──────────────────────────────────────────────────────────┘
+
+  Quick Reference:
+  ┌──────────────┬──────────────────┬────────────┐
+  │  Operation   │  Formula         │  Result    │
+  ├──────────────┼──────────────────┼────────────┤
+  │  Set bit 1   │  12 | (1<<1)     │  14 (1110) │
+  │  Clear bit 3 │  12 & ~(1<<3)    │  8  (1000) │
+  │  Flip bit 2  │  12 ^ (1<<2)     │  8  (1000) │
+  │  Flip bit 0  │  12 ^ (1<<0)     │  13 (1101) │
+  └──────────────┴──────────────────┴────────────┘
+```
+
 ```python
 def set_ith_bit(n, i):
     """Set (make 1) the ith bit"""
@@ -406,6 +761,48 @@ print(f"Flip bit 0: {flip_ith_bit(n, 0)} = {bin(flip_ith_bit(n, 0))}")    # 13 =
 ## 11. Generate All Subsets Using Bitmasks
 
 **Key Insight:** For n elements, there are 2^n subsets. Each subset can be represented by a binary number of n bits.
+
+### Visual: How Bitmask Subset Generation Works
+
+```
+  nums = [1, 2, 3]  (n = 3 elements)
+
+  Each number from 0 to 2^3 - 1 = 7 represents a subset.
+  If bit i is set in the mask, include nums[i].
+
+  ┌──────┬───────────┬─────────────┬──────────────────────┐
+  │ Mask │  Binary   │  Bits Set   │  Subset              │
+  ├──────┼───────────┼─────────────┼──────────────────────┤
+  │  0   │  0 0 0    │  none       │  []                  │
+  │  1   │  0 0 1    │  bit 0      │  [1]                 │
+  │  2   │  0 1 0    │  bit 1      │  [2]                 │
+  │  3   │  0 1 1    │  bits 0,1   │  [1, 2]              │
+  │  4   │  1 0 0    │  bit 2      │  [3]                 │
+  │  5   │  1 0 1    │  bits 0,2   │  [1, 3]              │
+  │  6   │  1 1 0    │  bits 1,2   │  [2, 3]              │
+  │  7   │  1 1 1    │  all bits   │  [1, 2, 3]           │
+  └──────┴───────────┴─────────────┴──────────────────────┘
+
+  Visual tree of all subsets:
+
+                          ┌───┐
+                          │   │ (empty)
+                          └─┬─┘
+                  ┌─────────┼─────────┐
+                [1]       [2]       [3]
+                / \       / \
+            [1,2] [1,3] [2,3]
+                \ /
+          [1,2,3]
+
+  Time complexity: O(2^n × n)
+  - 2^n masks, each takes O(n) to build the subset
+
+  When to use in CP:
+  - N ≤ 20 (otherwise too slow)
+  - Need to enumerate all subsets
+  - Bitmask DP problems
+```
 
 ```python
 def generate_subsets_bitmask(nums):

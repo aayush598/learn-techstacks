@@ -50,6 +50,31 @@ class Solution:
 
 **Trick/Tip:** This is the foundation of tree recursion. Every tree problem starts here. Remember: `1 + max(left, right)`.
 
+**Visual Walkthrough:**
+```
+        3           depth(3) = 1 + max(depth(9), depth(20))
+       / \          depth(9) = 1 + max(0, 0) = 1
+      9  20         depth(20) = 1 + max(depth(15), depth(7))
+        /  \        depth(15) = 1 + max(0, 0) = 1
+       15   7       depth(7) = 1 + max(0, 0) = 1
+
+Backtrack: depth(20) = 1 + max(1, 1) = 2
+           depth(3) = 1 + max(1, 2) = 3 ✓
+```
+
+**Common Mistakes:**
+- Forgetting base case (node is None → return 0)
+- Off-by-one: depth is number of nodes, not edges
+- Using `+1` for each level correctly
+
+**Edge Cases:**
+- Empty tree → return 0
+- Single node → return 1
+- Skewed tree (all left or all right) → return n
+
+**Pattern Recognition:**
+**Tree DFS Pattern**: Recursive post-order traversal. Process left subtree, process right subtree, combine results at current node. This is the template for most tree height/depth problems.
+
 ---
 
 ## Problem 2: Same Tree

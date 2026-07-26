@@ -1,5 +1,65 @@
 # Rabin-Karp Algorithm
 
+## What is Rabin-Karp?
+
+Rabin-Karp uses **hashing** to compare strings. Instead of comparing characters one by one, it compares hash values of the pattern and each text window.
+
+```
+  Core Idea:
+  ┌─────────────────────────────────────────────────────────┐
+  │ Instead of comparing strings character by character,    │
+  │ compare their HASH VALUES first. If hashes match,      │
+  │ then verify character by character (rare case).        │
+  └─────────────────────────────────────────────────────────┘
+
+  Rolling Hash Trick:
+  ┌─────────────────────────────────────────────────────────┐
+  │ When sliding the window by 1, we can compute the new   │
+  │ hash from the old hash in O(1) time:                   │
+  │                                                         │
+  │  old_window = "ABCD"  (hash = h_old)                   │
+  │  new_window = "BCDE"                                    │
+  │                                                         │
+  │  h_new = (h_old - hash('A') * base^(m-1)) * base       │
+  │          + hash('E')                                    │
+  │                                                         │
+  │  Remove leftmost char, shift, add rightmost char.      │
+  └─────────────────────────────────────────────────────────┘
+```
+
+## Algorithm Comparison
+
+| Aspect          | Rabin-Karp        | KMP               |
+|----------------|-------------------|-------------------|
+| Time (Avg)     | O(n+m)            | O(n+m)            |
+| Time (Worst)   | O(n*m)            | O(n+m)            |
+| Space          | O(1)              | O(m)              |
+| Multiple Pat.  | Excellent         | Needs modifications|
+| Implementation | Simple            | Moderate          |
+| Hash Collisions| Possible          | None              |
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │         RABIN-KARP PROBLEM DECISION GUIDE                │
+  ├──────────────────────────────────────────────────────────┤
+  │                                                          │
+  │  Need to search for MULTIPLE patterns at once?           │
+  │  └── Rabin-Karp is ideal (hash each pattern)            │
+  │                                                          │
+  │  Plagiarism / duplicate detection?                       │
+  │  └── Rabin-Karp with rolling hash                        │
+  │                                                          │
+  │  Need guaranteed O(n+m) single pattern?                  │
+  │  └── Use KMP instead (no hash collisions)                │
+  │                                                          │
+  │  Need O(1) space?                                        │
+  │  └── Rabin-Karp uses O(1) vs KMP's O(m)                 │
+  │                                                          │
+  └──────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 1. Polynomial Rolling Hash
 
 ```python
@@ -31,6 +91,35 @@ s = "abcabc"
 prefix, powers = compute_prefix_hashes(s)
 print(f"Hash of 'abc' (0:3): {get_substring_hash(prefix, powers, 0, 2)}")
 print(f"Hash of 'abc' (3:6): {get_substring_hash(prefix, powers, 3, 5)}")
+```
+
+### Visual: Polynomial Rolling Hash
+
+```
+  String "abc" with base=31:
+  hash('abc') = 'a'*31^2 + 'b'*31^1 + 'c'*31^0
+              = 97*961 + 98*31 + 99*1
+              = 93217 + 3038 + 99
+              = 96354
+
+  Rolling Hash - Sliding Window:
+  ┌──────────────────────────────────────────────────────┐
+  │ Text: "ABCDABE"    Pattern: "ABD" (m=3)             │
+  │                                                       │
+  │ Window 1: "ABC"  -> hash = h_ABC                     │
+  │                                                       │
+  │ Slide to "BCD":                                        │
+  │   h_BCD = (h_ABC - 'A'*base^2) * base + 'D'          │
+  │   Remove 'A', shift left, add 'D'                    │
+  │                                                       │
+  │ This is O(1) per slide!                               │
+  └──────────────────────────────────────────────────────┘
+
+  Hash Formula:
+  ┌──────────────────────────────────────────────────────┐
+  │  h(s[l..r]) = prefix[r+1] - prefix[l] * base^(r-l+1)│
+  │  All operations mod MOD to prevent overflow           │
+  └──────────────────────────────────────────────────────┘
 ```
 
 ## 2. Basic Rabin-Karp Implementation
@@ -75,6 +164,32 @@ def rabin_karp(text, pattern, base=31, mod=10**9 + 7):
 text = "ABABDABACDABABCABAB"
 pattern = "ABABCABAB"
 print(f"Pattern found at: {rabin_karp(text, pattern)}")
+```
+
+### Visual: Rolling Hash Sliding Window
+
+```
+  text = "ABABDABACDABABCABAB"
+  pattern = "ABABCABAB" (m=9)
+
+  Step 1: Compute pattern hash
+  h_pattern = hash("ABABCABAB") = some value
+
+  Step 2: Slide window across text
+
+  Window 0: "ABABDABAC" -> hash vs h_pattern -> mismatch
+  Window 1: "BABDABACD" -> hash vs h_pattern -> mismatch
+  ...
+  Window 9: "DABABCABA" -> hash vs h_pattern -> mismatch
+  Window 10:"ABABCABAB" -> hash == h_pattern -> VERIFY -> MATCH!
+
+  Rolling hash update for each slide:
+  ┌─────────────────────────────────────────────────────┐
+  │ h_new = (h_old - ord(text[i]) * base^(m-1))        │
+  │         * base + ord(text[i+m])                     │
+  │ h_new = h_new % MOD                                 │
+  │ h_new = (h_new + MOD) % MOD  (ensure non-negative) │
+  └─────────────────────────────────────────────────────┘
 ```
 
 ## 3. Handling Hash Collisions
@@ -471,4 +586,42 @@ def min_window(s, t):
 print("Anagrams of 'ab' in 'abba':", find_anagrams("abba", "ab"))
 print("Longest with 2 distinct in 'eceba':", longest_substring_k_distinct("eceba", 2))
 print("Min window of 'ADOBECODEBANC' for 'ABC':", min_window("ADOBECODEBANC", "ABC"))
+```
+
+---
+
+## Summary: Rabin-Karp Key Takeaways
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │              RABIN-KARP ALGORITHM CHEAT SHEET                    │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  Rolling Hash:                                                   │
+  │  └── hash = s[0]*b^(m-1) + s[1]*b^(m-2) + ... + s[m-1]*b^0   │
+  │  └── Slide window: remove leftmost, multiply by b, add right   │
+  │  └── Always use MOD to prevent overflow                        │
+  │                                                                  │
+  │  Algorithm:                                                      │
+  │  1. Compute pattern hash: O(m)                                 │
+  │  2. Compute initial window hash: O(m)                          │
+  │  3. Slide window, update hash in O(1) each step                │
+  │  4. If hash matches, VERIFY (handle collisions!)               │
+  │                                                                  │
+  │  When to Use:                                                    │
+  │  └── Multiple pattern search (best use case)                   │
+  │  └── Plagiarism detection                                      │
+  │  └── When O(1) space is needed (vs KMP's O(m))                │
+  │  └── When average O(n+m) is acceptable                         │
+  │                                                                  │
+  │  Avoid When:                                                     │
+  │  └── Guaranteed O(n+m) is required (use KMP)                   │
+  │  └── High collision risk (many similar strings)                │
+  │                                                                  │
+  │  Pro Tips:                                                       │
+  │  └── Choose base=31 or base=131, mod=10^9+7 or 10^9+9         │
+  │  └── Use TWO mods to reduce collision probability to ~0       │
+  │  └── Prefix hashes allow O(1) substring hash queries          │
+  │                                                                  │
+  └──────────────────────────────────────────────────────────────────┘
 ```

@@ -1,10 +1,62 @@
 # Segment Tree Problems
 
+> This file covers advanced segment tree problems. Make sure you understand the basics from 02_segment_tree_guide.md first.
+
+---
+
+## Quick Reference: When to Use What
+
+```
+╔══════════════════════════════════════════════════════════════╗
+║  PROBLEM TYPE              →  DATA STRUCTURE TO USE          ║
+╠══════════════════════════════════════════════════════════════╣
+║  Range sum/min + updates   →  Segment Tree                   ║
+║  Kth element in stream     →  Segment Tree + binary search   ║
+║  Count > X in range        →  Merge Sort Tree                ║
+║  Count inversions          →  Merge Sort / BIT               ║
+║  Reverse pairs             →  Merge Sort / BIT               ║
+║  Sliding window maximum    →  Segment Tree / Deque           ║
+║  Count smaller after self  →  BIT + coordinate compression   ║
+║  Range frequency query     →  Position lists + binary search ║
+╚══════════════════════════════════════════════════════════════╝
+```
+
 ## Problem 1: Kth Number in Stream
 
 **Problem:** Given a stream of numbers, find the kth smallest number at any point.
 
 **Approach:** Use a segment tree to count frequencies and binary search for kth element.
+
+### Visual: How It Works
+
+```
+  Numbers added so far: [5, 3, 8, 1, 4]
+  Values range: 0 to 100
+
+  Segment tree stores COUNTS (not values):
+
+  Index:  0  1  2  3  4  5  6  7  8  9  10 ...
+  Count:  0  1  0  1  1  1  0  0  1  0  0  ...
+          ↑     ↑     ↑  ↑        ↑
+        (no)  1×  (no) 4  5    8
+
+  To find 3rd smallest:
+  Start at root, total count = 5
+  ├── Left child (indices 0-50): count = 4
+  │   3 ≤ 4 → go left
+  │   ├── Left child (indices 0-25): count = 2
+  │   │   3 > 2 → go right, k = 3-2 = 1
+  │   │   ├── Left child (indices 13-25): count = 0
+  │   │   │   ...
+  │   │   (binary search continues until leaf)
+  │   Eventually reach index 4 → answer is 4
+
+  ┌──────────────────────────────────────────────────────┐
+  │  The segment tree acts like an ORDERED STATISTICS     │
+  │  TREE — we can find kth element in O(log max_val)    │
+  │  by following the count in left/right children.      │
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 class KthNumberStream:
@@ -207,8 +259,51 @@ print(f"Offline results: {count_greater_offline(nums, queries)}")  # [2, 4]
 ## Problem 3: Merge Sort with Segment Tree (Count Inversions)
 
 **Problem:** Count number of inversions in an array.
+**Inversion:** A pair (i, j) where i < j and arr[i] > arr[j].
 
-**Approach:** Use merge sort technique - count inversions during merge phase.
+### Visual: How Merge Sort Counts Inversions
+
+```
+  Array: [2, 4, 1, 3, 5]
+
+  Merge sort tree:
+                    [2,4,1,3,5]
+                   /           \
+            [2,4,1]           [3,5]
+           /     \            /   \
+        [2,4]   [1]        [3]   [5]
+        /  \
+      [2]  [4]
+
+  Merge [2] and [4]: 2 ≤ 4, no inversion
+  Merge [2,4] and [1]:
+    2 > 1 → inversion! (all remaining in left: 2 elements: 2,4)
+    Count += 2   (pairs: (2,1) and (4,1))
+    Merged: [1,2,4]
+
+  Merge [3] and [5]: 3 ≤ 5, no inversion
+
+  Merge [1,2,4] and [3,5]:
+    1 < 3 → no inversion, take 1
+    2 < 3 → no inversion, take 2
+    4 > 3 → inversion! Count += 1 (pair: (4,3))
+    Take 3
+    4 < 5 → no inversion, take 4
+    Take 5
+    Count += 1
+
+  Total inversions: 2 + 0 + 1 = 3 ✓
+
+  Inversions: (2,1), (4,1), (4,3)
+
+  ┌──────────────────────────────────────────────────────┐
+  │  KEY INSIGHT during merge:                           │
+  │  When arr[i] > arr[j] and i < j,                    │
+  │  ALL remaining elements in left subarray also > arr[j]│
+  │  (because left is sorted!)                           │
+  │  So we can count them in bulk: (mid - i + 1)         │
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 def count_inversions_merge_sort(nums):
@@ -835,3 +930,28 @@ print(f"Heap Median: {mf_heap.findMedian()}")  # 2
 3. **BIT:** When only prefix queries are needed
 4. **Lazy Propagation:** For range updates with range queries
 5. **Coordinate Compression:** When values are large but sparse
+
+### Problem-Solving Checklist
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │  BEFORE solving:                                         │
+  │  □ Read problem carefully — what operations are needed?  │
+  │  □ Static or dynamic array?                              │
+  │  □ What type of query? (sum, min, max, count, kth)      │
+  │  □ Any updates? Point or range?                          │
+  │  □ Constraints? (n ≤ 10^5 → O(n log n) is OK)          │
+  │                                                          │
+  │  CHOOSE your structure:                                  │
+  │  □ Only prefix sums + point updates? → BIT              │
+  │  □ Range queries + range updates? → Segment Tree + Lazy  │
+  │  □ Order statistics in range? → Merge Sort Tree          │
+  │  □ Counting problem? → BIT + coordinate compression     │
+  │                                                          │
+  │  IMPLEMENT:                                              │
+  │  □ Write clean class with build/query/update methods     │
+  │  □ Test with small examples manually                     │
+  │  □ Check edge cases: empty range, single element         │
+  │  □ Verify complexity matches constraints                 │
+  └──────────────────────────────────────────────────────────┘
+```

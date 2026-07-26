@@ -618,18 +618,493 @@ def delete_user(user_id):
 
 ---
 
+## Real-World Analogies for Networking Concepts
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║           NETWORKING CONCEPT -> REAL WORLD ANALOGY             ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                ║
+║  OSI MODEL = Post Office System                                ║
+║  - Application: Writing the letter                            ║
+║  - Presentation: Translating language, formatting              ║
+║  - Session: Starting and ending conversation                   ║
+║  - Transport: Certified mail with tracking                     ║
+║  - Network: Routing to correct city                            ║
+║  - Data Link: Finding correct house on the street              ║
+║  - Physical: The actual road/truck delivering the letter       ║
+║                                                                ║
+║  TCP = Registered Post                                         ║
+║  - Must sign for delivery (ACK)                                ║
+║  - If lost, it's resent (reliability)                          ║
+║  - Slower but guaranteed                                       ║
+║                                                                ║
+║  UDP = Regular Mail                                            ║
+║  - Drop in mailbox, hope it arrives                            ║
+║  - No tracking, no signature                                   ║
+║  - Fast but no guarantee                                       ║
+║                                                                ║
+║  DNS = Phone Book                                             ║
+║  - google.com (name) -> 142.250.80.46 (number)                ║
+║  - You know the name, system needs the number                  ║
+║                                                                ║
+║  HTTP/HTTPS = Sending a Letter                                 ║
+║  - HTTP = Postcard (anyone can read it)                        ║
+║  - HTTPS = Sealed envelope (encrypted, secure)                 ║
+║                                                                ║
+║  Firewall = Security Guard                                     ║
+║  - Checks who's allowed in/out                                 ║
+║  - Blocks suspicious traffic                                   ║
+║                                                                ║
+║  Load Balancer = Restaurant Host                               ║
+║  - Directs customers to available tables                       ║
+║  - No single table gets overloaded                             ║
+║                                                                ║
+║  NAT = Hotel Reception                                         ║
+║  - All guests share one public phone number                    ║
+║  - Internally, each room has its own extension                 ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Deep Dive: What Happens When You Type a URL?
+
+```
+Step-by-step journey of "https://www.google.com"
+
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 1: URL Parsing                                        │
+│ Input: https://www.google.com/search?q=hello               │
+│ Breakdown:                                                  │
+│   Protocol: https                                           │
+│   Domain: www.google.com                                    │
+│   Path: /search                                             │
+│   Query: q=hello                                            │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 2: DNS Resolution (Domain -> IP)                      │
+│                                                             │
+│ Browser Cache ──not found──> OS Cache ──not found──>        │
+│                                                             │
+│ Router Cache ──not found──> ISP DNS ──not found──>          │
+│                                                             │
+│ Recursive Query:                                            │
+│ Client -> Resolver -> Root DNS -> TLD DNS -> Auth DNS       │
+│                                                             │
+│ Result: 142.250.80.46                                       │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 3: TCP 3-Way Handshake                                │
+│                                                             │
+│ Client ──SYN──> Server                                      │
+│ Client <──SYN-ACK── Server                                  │
+│ Client ──ACK──> Server                                      │
+│                                                             │
+│ Connection established on port 443 (HTTPS)                  │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 4: TLS Handshake (HTTPS only)                         │
+│                                                             │
+│ Client ──ClientHello (supported ciphers)──> Server          │
+│ Client <──ServerHello (chosen cipher + certificate)──       │
+│ Client verifies certificate with Certificate Authority      │
+│ Client ──Pre-master secret (encrypted)──> Server            │
+│ Both generate session keys                                  │
+│                                                             │
+│ Encrypted communication begins!                             │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 5: HTTP Request                                       │
+│                                                             │
+│ GET /search?q=hello HTTP/1.1                                │
+│ Host: www.google.com                                        │
+│ User-Agent: Mozilla/5.0 ...                                 │
+│ Accept: text/html                                           │
+│ Cookie: session=abc123                                      │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 6: Server Processing                                   │
+│                                                             │
+│ - Load balancer routes to available server                  │
+│ - Server processes request                                  │
+│ - Queries database if needed                                │
+│ - Generates HTML response                                   │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 7: HTTP Response                                      │
+│                                                             │
+│ HTTP/1.1 200 OK                                             │
+│ Content-Type: text/html                                     │
+│ Content-Length: 12345                                        │
+│                                                             │
+│ <html>...</html>                                            │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 8: Browser Rendering                                   │
+│                                                             │
+│ Parse HTML -> Build DOM Tree -> Load CSS/JS/Images          │
+│ Render -> Display page to user                              │
+└─────────────────────────────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────┐
+│ STEP 9: TCP 4-Way Termination (when done)                  │
+│                                                             │
+│ Client ──FIN──> Server                                       │
+│ Client <──ACK── Server                                       │
+│ Client <──FIN── Server                                       │
+│ Client ──ACK──> Server                                       │
+│                                                             │
+│ Connection closed                                            │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## TCP vs UDP Visual Comparison
+
+```
+TCP (Reliable, Ordered):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Packet 1 ──sent──> Packet 1 ──ACK──>
+  Packet 2 ──sent──> Packet 2 ──ACK──>
+  Packet 3 ──sent──> (lost!)
+                    (resend) ──sent──> Packet 3 ──ACK──>
+
+  All packets arrive IN ORDER, GUARANTEED
+  Like: Phone call (both parties connected, real-time)
+
+
+UDP (Fast, Unreliable):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Packet 1 ──sent──> Packet 1 arrives
+  Packet 2 ──sent──> Packet 2 arrives
+  Packet 3 ──sent──> (lost forever!)
+  Packet 4 ──sent──> Packet 4 arrives
+
+  No ACK, no ordering, some may be lost
+  Like: TV broadcast (sent to everyone, no confirmation)
+```
+
+---
+
+## HTTP Status Codes Visual Guide
+
+```
+1xx INFORMATIONAL
+├── 100 Continue          <- Server got headers, continue sending body
+└── 101 Switching Protocols <- Switching to WebSocket
+
+2xx SUCCESS
+├── 200 OK                <- Everything worked!
+├── 201 Created           <- New resource created (POST success)
+├── 202 Accepted          <- Request accepted, processing async
+└── 204 No Content        <- Success, but no body to return (DELETE)
+
+3xx REDIRECTION
+├── 301 Moved Permanently <- URL changed forever (update bookmarks)
+├── 302 Found             <- Temporary redirect
+└── 304 Not Modified      <- Use cached version (saves bandwidth)
+
+4xx CLIENT ERROR (you messed up)
+├── 400 Bad Request       <- Malformed syntax
+├── 401 Unauthorized      <- Not logged in (need credentials)
+├── 403 Forbidden         <- Logged in but not allowed
+├── 404 Not Found         <- URL doesn't exist
+├── 405 Method Not Allowed <- Wrong HTTP method
+├── 409 Conflict          <- Resource state conflict
+├── 422 Unprocessable     <- Valid syntax but semantic errors
+└── 429 Too Many Requests <- Rate limited
+
+5xx SERVER ERROR (server messed up)
+├── 500 Internal Error    <- Generic server error
+├── 502 Bad Gateway       <- Upstream server returned bad response
+├── 503 Unavailable       <- Server temporarily down
+└── 504 Gateway Timeout   <- Upstream server too slow
+```
+
+---
+
+## Deep Dive: OSI Model Data Flow
+
+```
+Sending Data (Top to Bottom):
+
+Layer 7 Application:
+  User types "Hello" in browser
+  ┌───────────────┐
+  │     Hello     │
+  └───────────────┘
+
+Layer 6 Presentation:
+  Encrypt: "Hello" -> "xK9f2m..."
+  ┌───────────────┐
+  │  xK9f2m...    │ (encrypted)
+  └───────────────┘
+
+Layer 5 Session:
+  Add session token
+  ┌───────────────┐
+  │ Session|Data  │
+  └───────────────┘
+
+Layer 4 Transport:
+  Add TCP header (source/dest port, sequence number)
+  ┌──────────────┬───────────────┐
+  │  TCP Header  │     Data      │
+  │ Src:80       │               │
+  │ Dst:54321    │               │
+  │ Seq:1000     │               │
+  └──────────────┴───────────────┘
+  = SEGMENT
+
+Layer 3 Network:
+  Add IP header (source/dest IP, TTL)
+  ┌──────────────┬──────────────┬───────────┐
+  │  IP Header   │  TCP Header  │   Data    │
+  │ Src:10.0.0.1 │              │           │
+  │ Dst:8.8.8.8  │              │           │
+  │ TTL:64       │              │           │
+  └──────────────┴──────────────┴───────────┘
+  = PACKET
+
+Layer 2 Data Link:
+  Add MAC header + trailer (error detection)
+  ┌───────┬──────────┬──────────┬────────┬────────┐
+  │ MAC   │ IP       │ TCP      │ Data   │ CRC    │
+  │ Hdr   │ Header   │ Header   │        │ Check  │
+  └───────┴──────────┴──────────┴────────┴────────┘
+  = FRAME
+
+Layer 1 Physical:
+  Convert to electrical signals
+  10101010101010101010101010101010...
+```
+
+---
+
+## Subnetting Deep Dive
+
+```
+Example: Divide 192.168.1.0/24 into 4 subnets
+
+Original Network:
+┌──────────────────────────────────────────────┐
+│ 192.168.1.0/24                               │
+│ Range: 192.168.1.0 - 192.168.1.255           │
+│ Hosts: 254 (2^8 - 2)                         │
+│ Binary: 11000000.10101000.00000001.00000000  │
+│         └──network──┘└──network──┘└─host─┘   │
+└──────────────────────────────────────────────┘
+
+Need 4 subnets: borrow 2 more bits (2^2 = 4)
+New mask: /26 (255.255.255.192)
+
+Subnet 1: 192.168.1.0/26
+├── Binary: 11000000.10101000.00000001.00|000000
+├── Range:  192.168.1.0   - 192.168.1.63
+├── Usable: 192.168.1.1   - 192.168.1.62
+└── Broadcast: 192.168.1.63
+
+Subnet 2: 192.168.1.64/26
+├── Binary: 11000000.10101000.00000001.01|000000
+├── Range:  192.168.1.64  - 192.168.1.127
+├── Usable: 192.168.1.65  - 192.168.1.126
+└── Broadcast: 192.168.1.127
+
+Subnet 3: 192.168.1.128/26
+├── Binary: 11000000.10101000.00000001.10|000000
+├── Range:  192.168.1.128 - 192.168.1.191
+├── Usable: 192.168.1.129 - 192.168.1.190
+└── Broadcast: 192.168.1.191
+
+Subnet 4: 192.168.1.192/26
+├── Binary: 11000000.10101000.00000001.11|000000
+├── Range:  192.168.1.192 - 192.168.1.255
+├── Usable: 192.168.1.193 - 192.168.1.254
+└── Broadcast: 192.168.1.255
+
+Visual:
+┌──────────────────────────────────────────┐
+│ 192.168.1.0/24                           │
+│ ┌────────────┬────────────┬────────────┐ │
+│ │ Subnet 1   │ Subnet 2   │ Subnet 3   │ │
+│ │ .0 - .63   │ .64 - .127 │ .128-.191  │ │
+│ ├────────────┴────────────┴────────────┤ │
+│ │           Subnet 4                   │ │
+│ │         .192 - .255                  │ │
+│ └──────────────────────────────────────┘ │
+└──────────────────────────────────────────┘
+```
+
+---
+
+## Additional Interview Questions
+
+### Q13: What is the difference between a Hub, Switch, and Router?
+
+**Answer:**
+
+```
+Hub (Layer 1 - Physical):
+┌─────┐
+│ Hub │──→ Sends to ALL ports (broadcast)
+└─────┘
+  Port 1 ←──┐
+  Port 2 ←──┤  Data goes to everyone
+  Port 3 ←──┤  (wasteful, insecure)
+  Port 4 ←──┘
+
+Switch (Layer 2 - Data Link):
+┌────────┐
+│ Switch │──→ Sends to SPECIFIC port using MAC
+└────────┘
+  Port 1 ←──┐
+  Port 2 ←──┤  Switch learns MAC addresses
+  Port 3 ←──┤  and forwards only to correct port
+  Port 4 ←──┘
+  Table: MAC -> Port mapping
+
+Router (Layer 3 - Network):
+┌────────┐
+│ Router │──→ Routes between NETWORKS using IP
+└────────┘
+  Network A ←──┐
+  Network B ←──┤  Connects different networks
+  Network C ←──┘  (e.g., home to internet)
+```
+
+### Q14: What is NAT and how does it work?
+
+**Answer:** Network Address Translation maps private IPs to a public IP.
+
+```
+Home Network (Private IPs):
+┌─────────────────────────────────────────────────────┐
+│ Device A (192.168.1.10)                             │
+│ Device B (192.168.1.11)    ┌────────┐               │
+│ Device C (192.168.1.12) ──>│ Router │──> Internet   │
+│                            │(NAT)   │  (Public IP)  │
+│                            └────────┘               │
+└─────────────────────────────────────────────────────┘
+
+NAT Translation Table:
+┌──────────────────┬──────────────────┬──────────────┐
+│ Private IP:Port  │ Public IP:Port   │ Destination  │
+├──────────────────┼──────────────────┼──────────────┤
+│ 192.168.1.10:5000│ 203.0.113.1:40001│ google.com   │
+│ 192.168.1.11:5001│ 203.0.113.1:40002│ github.com   │
+│ 192.168.1.12:5002│ 203.0.113.1:40003│ stackoverflow│
+└──────────────────┴──────────────────┴──────────────┘
+
+All 3 devices share ONE public IP (203.0.113.1)
+NAT uses PORT numbers to track which device made which request
+```
+
+### Q15: What is ARP and how does it work?
+
+**Answer:** Address Resolution Protocol maps IP addresses to MAC addresses.
+
+```
+Scenario: Device A (192.168.1.10) wants to send data to
+          Device B (192.168.1.20), knows IP but not MAC
+
+Step 1: ARP Request (Broadcast)
+┌────────────────────────────────────────────────┐
+│ Device A sends to ALL devices on network:       │
+│ "Who has 192.168.1.20? Tell 192.168.1.10"     │
+│ Destination MAC: FF:FF:FF:FF:FF:FF (broadcast) │
+└────────────────────────────────────────────────┘
+
+Step 2: ARP Reply (Unicast)
+┌────────────────────────────────────────────────┐
+│ Device B responds directly to Device A:         │
+│ "192.168.1.20 is at AA:BB:CC:DD:EE:FF"        │
+│ Destination MAC: AA:BB:CC:DD:EE:FF (specific)  │
+└────────────────────────────────────────────────┘
+
+Step 3: Cache Update
+┌────────────────────────────────────────────────┐
+│ Device A's ARP Table:                          │
+│ 192.168.1.20 -> AA:BB:CC:DD:EE:FF (cached)    │
+│ (Cached for ~5 minutes to avoid repeated ARPs) │
+└────────────────────────────────────────────────┘
+```
+
+### Q16: What is a Load Balancer? Explain algorithms.
+
+**Answer:** Distributes incoming traffic across multiple servers.
+
+```
+Before Load Balancer:
+    Client ──────────> Server 1 (overloaded!)
+
+After Load Balancer:
+                    ┌─────────────┐
+    Client 1 ──────>│             │──────> Server 1
+    Client 2 ──────>│    Load     │──────> Server 2
+    Client 3 ──────>│  Balancer   │──────> Server 3
+    Client 4 ──────>│             │──────> Server 1
+                    └─────────────┘
+
+Load Balancing Algorithms:
+1. Round Robin:        1->2->3->1->2->3 (cyclic)
+2. Least Connections: Send to server with fewest active connections
+3. IP Hash:            Same client IP always goes to same server
+4. Weighted Round Robin: More powerful server gets more requests
+```
+
+### Q17: What is CORS and why does it exist?
+
+**Answer:** Cross-Origin Resource Sharing controls which websites can access your API.
+
+```
+Without CORS:
+  Browser blocks: Frontend (app.com) cannot call API (api.com)
+  Error: "Blocked by CORS policy"
+
+With CORS:
+  Server sets: Access-Control-Allow-Origin: https://app.com
+  Browser allows: Frontend (app.com) can now call API (api.com)
+
+CORS Preflight (for complex requests):
+  Browser ──OPTIONS request──> Server
+  Browser <──CORS headers──── Server
+  Browser ──Actual request───> Server
+  Browser <──Response──────── Server
+```
+
+---
+
 ## Quick Reference Cheat Sheet
 
 | Topic | Key Points |
 |-------|-----------|
-| OSI Model | 7 layers: Physical → Data Link → Network → Transport → Session → Presentation → Application |
-| TCP/IP Model | 4 layers: Network Access → Internet → Transport → Application |
+| OSI Model | 7 layers: Physical -> Data Link -> Network -> Transport -> Session -> Presentation -> Application |
+| TCP/IP Model | 4 layers: Network Access -> Internet -> Transport -> Application |
 | TCP | Connection-oriented, reliable, ordered, slower |
 | UDP | Connectionless, unreliable, faster, no overhead |
-| TCP Handshake | SYN → SYN-ACK → ACK |
-| TCP Termination | FIN → ACK → FIN → ACK |
+| TCP Handshake | SYN -> SYN-ACK -> ACK |
+| TCP Termination | FIN -> ACK -> FIN -> ACK |
 | HTTP/HTTPS | Port 80/443, HTTPS encrypted with TLS |
-| DNS | Domain → IP translation, hierarchical caching |
+| DNS | Domain -> IP translation, hierarchical caching |
 | IPv4 | 32-bit, dotted decimal (192.168.1.1) |
 | IPv6 | 128-bit, hex notation (2001:db8::1) |
 | Subnetting | /24 = 254 hosts, /25 = 126, /26 = 62 |
@@ -637,7 +1112,11 @@ def delete_user(user_id):
 | Socket | Endpoint for communication (IP:Port) |
 | MAC Address | 48-bit, physical address (permanent) |
 | IP Address | 32/128-bit, logical address (changeable) |
-| ARP | IP → MAC resolution |
+| ARP | IP -> MAC resolution |
 | DHCP | Automatic IP assignment |
-| NAT | Private → Public IP translation |
+| NAT | Private -> Public IP translation |
 | Load Balancer | Distributes traffic across servers |
+| Hub | Layer 1, broadcasts to all ports |
+| Switch | Layer 2, forwards using MAC addresses |
+| Router | Layer 3, routes between networks using IPs |
+| CORS | Controls cross-origin API access |

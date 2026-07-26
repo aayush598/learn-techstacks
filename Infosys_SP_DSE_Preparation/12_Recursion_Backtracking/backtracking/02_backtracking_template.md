@@ -39,6 +39,55 @@ def backtrack(path, choices):
         path.pop()
 ```
 
+### Visual: The 4-Step Backtracking Cycle
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │                  BACKTRACKING LIFECYCLE                          │
+  │                                                                  │
+  │  ┌─────────┐    ┌──────────┐    ┌───────────┐    ┌──────────┐  │
+  │  │ 1. CHOOSE │──►│ 2. RECURSE│──►│ 3. UNDO   │──►│ 4. NEXT  │  │
+  │  │           │    │ (explore) │    │ (backtrack)│    │ CHOICE   │  │
+  │  │ path.append│   │ go deeper │    │ path.pop() │    │ continue │  │
+  │  └─────────┘    └──────────┘    └───────────┘    └─────┬────┘  │
+  │       ▲                                                  │       │
+  │       └──────────────── loop back ───────────────────────┘       │
+  └──────────────────────────────────────────────────────────────────┘
+
+  EXAMPLE: Generating subsets of [1, 2, 3]
+
+  path=[] ──choose(1)──► path=[1] ──choose(2)──► path=[1,2] ──choose(3)──► path=[1,2,3]
+                          │                          │                          │
+                     record []                  record [1]               record [1,2]
+                     (at every node)            (at every node)          (at every node)
+                          │                          │                          │
+                     undo(1)─► path=[]        undo(2)─► path=[1]       undo(3)─► path=[1,2]
+                       │                          │                          │
+                    choose(2)──► path=[2]    choose(3)──► path=[1,3]   record [1,2,3]
+                       │                          │
+                  record [2]                record [1,3]
+                       │                          │
+                    undo(2)─► path=[]        undo(3)─► path=[1]
+                       │                          │
+                    choose(3)──► path=[3]    undo(1)─► path=[]
+                       │                          │
+                  record [2]                choose(2)──► path=[2]
+                       │                          │
+                    undo(3)─► path=[]        record [2]
+                                                 │
+                                              undo(2)─► path=[]
+                                                 │
+                                              choose(3)──► path=[3]
+                                                 │
+                                            record [2,3]
+                                                 │
+                                              undo(3)─► path=[2]
+                                                 │
+                                              undo(2)─► path=[]
+                                                 │
+                                              ... and so on
+```
+
 ### Template Variants
 
 ```python
@@ -48,40 +97,40 @@ def backtrack_one(path, choices):
         return True  # stop searching
 
     for choice in choices:
-        path.append(choice)
+        path.append(choice)                    # 1. MAKE choice
         if backtrack_one(path, next_choices(choice)):
-            return True  # propagate stop signal
-        path.pop()
+            return True                        # 2. PROPAGATE stop signal up
+        path.pop()                             # 3. UNDO choice
 
-    return False  # no solution found
+    return False  # no solution found from this state
 
 
 # Variant 2: Count solutions
 def backtrack_count(path, choices):
     if is_solution(path):
-        return 1
+        return 1  # found one solution
 
     count = 0
     for choice in choices:
-        path.append(choice)
-        count += backtrack_count(path, next_choices(choice))
-        path.pop()
+        path.append(choice)                    # 1. MAKE choice
+        count += backtrack_count(path, next_choices(choice))  # 2. ACCUMULATE
+        path.pop()                             # 3. UNDO choice
 
-    return count
+    return count  # total solutions from this state
 
 
 # Variant 3: Find BEST solution (optimization)
 def backtrack_best(path, choices):
     if is_solution(path):
-        return evaluate(path)
+        return evaluate(path)  # return score
 
     best = float('-inf')
     for choice in choices:
-        path.append(choice)
-        best = max(best, backtrack_best(path, next_choices(choice)))
-        path.pop()
+        path.append(choice)                    # 1. MAKE choice
+        best = max(best, backtrack_best(path, next_choices(choice)))  # 2. TRACK best
+        path.pop()                             # 3. UNDO choice
 
-    return best
+    return best  # best score from this state
 ```
 
 ---
@@ -183,6 +232,37 @@ def solve_n_queens(n):
 
 Pruning eliminates branches of the search tree that cannot lead to a solution.
 
+### Visual: What Pruning Does
+
+```
+  WITHOUT PRUNING: Full search tree for Combination Sum [2,3,6,7], target=7
+
+                          []
+                     /  / |  \
+                   [2] [3] [6] [7] ✓ ← found!
+                  / |\  |
+             [2,2] [2,3]... [3,3]
+             / |\
+        [2,2,2] [2,2,3]...
+         /|        \
+  [2,2,2,2]...  [2,2,3,2]  ← exploring MANY dead ends
+
+  ═══════════════════════════════════════════════════════════════════
+
+  WITH PRUNING (sort + break on overflow):
+
+                          []
+                     /  / |  \         ← after [6] > 7, break
+                   [2] [3] [6] [7] ✓    (no need to try larger)
+                  / |\  
+             [2,2] [2,3] ✓   ← found!
+             / |
+        [2,2,2] ...          ← [2,2,2]=6, can still try [2,2,3]=7 ✓
+                               BUT [2,2,2,2]=8 > 7, PRUNE!
+
+  PRUNED branches = eliminated without exploring → massive speedup!
+```
+
 ### 1. Sort and Early Termination (for sum/target problems)
 
 ```python
@@ -278,9 +358,164 @@ def partition_palindrome(s):
 
 ---
 
+## Common Backtracking Mistakes
+
+```
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #1: Forgetting to copy path (path[:] not path)               │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  result.append(path)      # ❌ All results point to the SAME list!      │
+  │  result.append(path[:])   # ✓ Creates a COPY of current path            │
+  │                                                                         │
+  │  WHY: path is a reference. After backtracking, path changes.            │
+  │  Without copy, all results become the final state of path.              │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #2: Wrong start index (causes duplicates or misses)           │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  COMBINATIONS/SUBSETS: Use 'i' not 'i+1' for reuse, 'i+1' for no dup  │
+  │  backtrack(i, ...)   ← reuse allowed (Combination Sum I)               │
+  │  backtrack(i+1, ...) ← no reuse (Subsets, Combination Sum II)          │
+  │                                                                         │
+  │  PERMUTATIONS: Use used array, loop over ALL indices                    │
+  │  for i in range(len(nums))  ← try every element                        │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #3: Not undoing state before returning                        │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  path.append(choice)                                                    │
+  │  backtrack(path)                                                        │
+  │  path.pop()     # ← MUST pop! Otherwise path accumulates choices       │
+  │                                                                         │
+  │  same for: used[i] = True / used[i] = False                            │
+  │  same for: board[r][c] = 'Q' / board[r][c] = '.'                       │
+  │  same for: cols.add(col) / cols.remove(col)                             │
+  └─────────────────────────────────────────────────────────────────────────┘
+
+  ┌─────────────────────────────────────────────────────────────────────────┐
+  │  MISTAKE #4: Not sorting before duplicate pruning                      │
+  ├─────────────────────────────────────────────────────────────────────────┤
+  │                                                                         │
+  │  nums.sort()  # ← MUST sort first!                                     │
+  │  # Then: if i > start and nums[i] == nums[i-1]: continue               │
+  │  # Without sorting, duplicates aren't adjacent → can't detect them      │
+  └─────────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## N-Queens
 
 Place N queens on an N x N chessboard such that no two queens attack each other.
+
+### Visual: N-Queens Problem for N=4
+
+```
+  QUEEN ATTACK PATTERNS:
+  ═══════════════════════
+
+  A queen attacks: entire row, column, and both diagonals
+
+         Q ←──── ROW ────→
+         |
+       DIAG              DIAG
+      (row-col)        (row+col)
+         ↓                 ↓
+       ╲ | ╱            ╲ | ╱
+        ╲|╱              ╲|╱
+  ───────Q───────    ───────Q───────
+        ╱|╲              ╱|╲
+       ╱ | ╲            ╱ | ╲
+
+  ┌─────────────┐     ┌─────────────┐
+  │ Q . . . . . │     │ . . . Q . . │
+  │ . Q . . . . │     │ . . . . . . │
+  │ . . Q . . . │     │ . . . . . . │
+  │ . . . Q . . │     │ Q . . . . . │
+  │ . . . . Q . │     │ . . . . . . │
+  │ . . . . . Q │     │ . . . . . Q │
+  └─────────────┘     └─────────────┘
+   VALID (diagonal)     INVALID! Queen at (0,3)
+                        attacks queen at (5,3) — same column!
+```
+
+### Step-by-Step: Solving N-Queens for N=4
+
+```
+  PLACEMENT ATTEMPTS (row by row):
+  ════════════════════════════════════
+
+  Row 0: Try col=0
+  ┌───┬───┬───┬───┐
+  │ Q │   │   │   │  ← place Q at (0,0)
+  ├───┼───┼───┼───┤
+  │   │   │   │   │
+  ├───┼───┼───┼───┤
+  │   │   │   │   │
+  ├───┼───┼───┼───┤
+  │   │   │   │   │
+  └───┴───┴───┴───┘
+
+  Row 1: Try col=0 ❌ (same col)
+         Try col=1 ❌ (same diagonal)
+         Try col=2 ✓ place at (1,2)
+  ┌───┬───┬───┬───┐
+  │ Q │   │   │   │
+  ├───┼───┼───┼───┤
+  │   │   │ Q │   │  ← place Q at (1,2)
+  ├───┼───┼───┼───┤
+  │   │   │   │   │
+  ├───┼───┼───┼───┤
+  │   │   │   │   │
+  └───┴───┴───┴───┘
+
+  Row 2: Try col=0 ❌ (same diag ↗)
+         Try col=1 ❌ (same diag ↘ from Q(1,2))
+         Try col=2 ❌ (same col)
+         Try col=3 ❌ (same diag ↗ from Q(0,0))
+         → DEAD END! No valid position for row 2
+         → BACKTRACK: remove Q from (1,2)
+
+  After exhaustive search from (0,0):
+  ┌───┬───┬───┬───┐
+  │   │ Q │   │   │  ← try (0,1) instead
+  ├───┼───┼───┼───┤
+  │   │   │   │ Q │  ← (1,3) works
+  ├───┼───┼───┼───┤
+  │ Q │   │   │   │  ← (2,0) works
+  ├───┼───┼───┼───┤
+  │   │   │ Q │   │  ← (3,2) works
+  └───┴───┴───┴───┘
+  ✓ SOLUTION FOUND!
+
+  THE COMPLETE DECISION TREE (N=4):
+  ════════════════════════════════════
+                              []
+                   ┌────┬────┼────┬────┐
+                 col=0  col=1 col=2 col=3
+                 [0]    [1]   [2]   [3]
+                / | \    / \    X     / \
+            col  col col col  DEAD  col col
+            0,1  0,2 0,3    END   3,0 3,1
+             X    |   X              |    X
+                col=2             col=1   DEAD
+                [1,2]            [3,1]   END
+                 X                 |
+               DEAD              col=0
+               END              [3,1,0]
+                                 |
+                               col=2
+                               [3,1,0,2]
+                                ✓ VALID!
+
+  Key insight: We place row by row (not all combinations).
+  Each row gets exactly ONE queen.
+```
 
 ### Solution 1: Row-by-row placement
 
@@ -354,27 +589,34 @@ def n_queens_count(n):
 ```python
 def solve_n_queens_optimized(n):
     result = []
-    board = [-1] * n
-    cols = set()
-    diag1 = set()  # row - col
-    diag2 = set()  # row + col
+    board = [-1] * n          # board[row] = col (which column queen is in)
+    cols = set()              # columns that have queens
+    diag1 = set()             # main diagonals: row - col (constant on each diag)
+    diag2 = set()             # anti diagonals: row + col (constant on each diag)
 
     def backtrack(row):
         if row == n:
-            result.append(board[:])
+            result.append(board[:])    # found a valid placement
             return
+
         for col in range(n):
+            # CHECK 3 CONSTRAINTS IN O(1):
             if col in cols or (row - col) in diag1 or (row + col) in diag2:
-                continue
-            cols.add(col)
-            diag1.add(row - col)
-            diag2.add(row + col)
-            board[row] = col
-            backtrack(row + 1)
-            cols.remove(col)
-            diag1.remove(row - col)
-            diag2.remove(row + col)
-            board[row] = -1
+                continue               # this column is attacked — skip
+
+            # PLACE QUEEN
+            cols.add(col)              # mark column as occupied
+            diag1.add(row - col)       # mark main diagonal as occupied
+            diag2.add(row + col)       # mark anti diagonal as occupied
+            board[row] = col           # record which column queen is in
+
+            backtrack(row + 1)         # move to next row
+
+            # REMOVE QUEEN (backtrack)
+            cols.remove(col)           # unmark column
+            diag1.remove(row - col)    # unmark main diagonal
+            diag2.remove(row + col)    # unmark anti diagonal
+            board[row] = -1            # clear record
 
     backtrack(0)
     return result
@@ -387,6 +629,40 @@ def solve_n_queens_optimized(n):
 ## Sudoku Solver
 
 Fill a 9x9 grid so each row, column, and 3x3 box contains digits 1-9 exactly once.
+
+### Visual: Sudoku Constraints
+
+```
+  ROW CONSTRAINT: Each row has 1-9
+  ┌───────┬───────┬───────┐
+  │ 5 3 _ │ _ 7 _ │ _ _ _ │  ← must contain all digits 1-9
+  │ 6 _ _ │ 1 9 5 │ _ _ _ │
+  │ _ 9 8 │ _ _ _ │ _ 6 _ │
+  ├───────┼───────┼───────┤
+  │ 8 _ _ │ _ 6 _ │ _ _ 3 │
+  │ 4 _ _ │ 8 _ 3 │ _ _ 1 │
+  │ 7 _ _ │ _ 2 _ │ _ _ 6 │
+  ├───────┼───────┼───────┤
+  │ _ 6 _ │ _ _ _ │ 2 8 _ │
+  │ _ _ _ │ 4 1 9 │ _ _ 5 │
+  │ _ _ _ │ _ 8 _ │ _ 7 9 │
+  └───────┴───────┴───────┘
+      ↑                 ↑
+  COLUMN            3x3 BOX
+  CONSTRAINT:       CONSTRAINT:
+  Each column       Each 3x3 box
+  has 1-9           has 1-9
+
+  BOX NUMBERING:
+  ┌─────┬─────┬─────┐
+  │  0  │  1  │  2  │
+  ├─────┼─────┼─────┤
+  │  3  │  4  │  5  │
+  ├─────┼─────┼─────┤
+  │  6  │  7  │  8  │
+  └─────┴─────┴─────┘
+  Box index = 3 * (row // 3) + (col // 3)
+```
 
 ```python
 def solve_sudoku(board):
@@ -477,6 +753,33 @@ def solve_sudoku_optimized(board):
 ## Word Search
 
 Given a 2D grid and a word, find if the word exists in the grid. Move up/down/left/right. Each cell used only once.
+
+### Visual: Word Search Example
+
+```
+  Finding "ABCCED" in the grid:
+  ══════════════════════════════
+
+  ┌───┬───┬───┬───┐
+  │ A │ B │ C │ E │    Step 1: Find 'A' → (0,0)
+  ├───┼───┼───┼───┤    Step 2: From A, look for 'B' → (0,1) ✓
+  │ S │ F │ C │ S │    Step 3: From B, look for 'C' → (0,2) ✓
+  ├───┼───┼───┼───┤    Step 4: From C, look for 'C' → (1,2) ✓
+  │ A │ D │ E │ E │    Step 5: From C, look for 'E' → (2,2) ✓
+  └───┴───┴───┴───┘    Step 6: From E, look for 'D' → (2,1) ✓ DONE!
+
+  PATH MARKED:
+  ┌───┬───┬───┬───┐
+  │ A→│ B→│ C │ E │
+  ├───┼───┼───┼───┤
+  │ S │ F │ C↓│ S │
+  ├───┼───┼───┼───┤
+  │ A │ D←│ E←│ E │
+  └───┴───┴───┴───┘
+
+  "ABCB" would FAIL: after finding A→B→C, the next 'B' is at (0,1)
+  which is already visited. No other 'B' is adjacent. → False
+```
 
 ```python
 def exist(board, word):
@@ -798,3 +1101,70 @@ def permutations_unique(nums):
 | Partition | `start = 0` | `range(start+1, n+1)` | Check palindrome |
 | N-Queens | `row = 0` | `range(n)` | Check safety sets |
 | Word Search | `(r, c)` | 4 directions | Bounds + match check |
+
+### Decision Flowchart: Which Backtracking Approach?
+
+```
+  ┌─────────────────────────────────────────────────────────────┐
+  │           CHOOSING YOUR BACKTRACKING APPROACH               │
+  └─────────────────────────────┬───────────────────────────────┘
+                                │
+                    ┌───────────▼───────────┐
+                    │ Need to find ALL      │
+                    │ solutions/possibilities?│
+                    └───────────┬───────────┘
+                         YES    │
+                    ┌───────────▼───────────┐
+                    │ Is order important?   │
+                    └───────────┬───────────┘
+                     YES        │         NO
+                ┌───────────────▼──┐  ┌───▼──────────────┐
+                │ PERMUTATION      │  │ SUBSET/COMBINATION│
+                │ (used array)     │  │ (start index)     │
+                │                  │  │                   │
+                │ Try all elements │  │ Only look forward │
+                │ at each position │  │ from start index  │
+                └──────────────────┘  └───────────────────┘
+                                │
+                    ┌───────────▼───────────┐
+                    │ Need to find ONE      │
+                    │ valid arrangement?    │
+                    └───────────┬───────────┘
+                         YES    │
+                    ┌───────────▼───────────┐
+                    │ Is it a GRID/BOARD?   │
+                    └───────────┬───────────┘
+                     YES        │         NO
+                ┌───────────────▼──┐  ┌───▼──────────────┐
+                │ N-QUEENS /        │  │ GRAPH COLORING /  │
+                │ SUDOKU /          │  │ HAMILTONIAN PATH  │
+                │ WORD SEARCH       │  │ (visited set)     │
+                │ (position-based)  │  │                   │
+                └──────────────────┘  └───────────────────┘
+
+  KEY INSIGHT: The "start index" pattern naturally avoids duplicates
+  by only considering elements after the current position.
+  The "used array" pattern allows any order but needs explicit tracking.
+```
+
+### Template Quick-Reference Card
+
+```
+  ╔═══════════════════════════════════════════════════════════════════╗
+  ║  BACKTRACKING TEMPLATE CHEAT SHEET                               ║
+  ╠═══════════════════════════════════════════════════════════════════╣
+  ║                                                                   ║
+  ║  1. DEFINE state:    What represents current progress?            ║
+  ║  2. DEFINE choices:  What options at each step?                   ║
+  ║  3. DEFINE validity: What constraints must be satisfied?          ║
+  ║  4. DEFINE base:     When is a solution complete?                 ║
+  ║  5. ALWAYS undo:     Restore state before returning               ║
+  ║                                                                   ║
+  ║  COMMON BUGS:                                                     ║
+  ║  • Forgot path[:] (copy) → all results share same list           ║
+  ║  • Forgot path.pop() → path keeps growing                        ║
+  ║  • Wrong start index → duplicate solutions                        ║
+  ║  • Missing pruning → TLE on large inputs                          ║
+  ║                                                                   ║
+  ╚═══════════════════════════════════════════════════════════════════╝
+```

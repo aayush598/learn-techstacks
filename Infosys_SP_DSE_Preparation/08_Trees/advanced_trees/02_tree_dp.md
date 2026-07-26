@@ -12,16 +12,105 @@
 
 ---
 
-## 1. DP on Trees Concept
-
-**Core Idea:** Process nodes in post-order (bottom-up). For each node, compute DP values based on children's DP values.
+## Why DP on Trees?
 
 ```
-General Pattern:
-1. Do DFS (post-order: process children BEFORE parent)
-2. For each node, compute dp values from children
-3. Return the dp values to parent
-4. Global answer is updated at each node
+Tree DP = solving problems by making decisions at each node,
+          where decisions depend on children's answers.
+
+Think of it as:
+  "I'm a node. My children already solved their subproblems.
+   Now I use their answers to solve MY problem."
+
+This is just like array DP, but the "dependency graph" is a tree!
+```
+
+---
+
+## 1. DP on Trees Concept
+
+### The Core Idea
+
+**Process nodes in post-order (bottom-up). For each node, compute DP values based on children's DP values.**
+
+```
+Why Post-Order?
+
+Pre-order:  Root → Left → Right     ✗ (parent processed before children)
+In-order:   Left → Root → Right     ✗ (parent between children)
+Post-order: Left → Right → Root     ✓ (children processed first!)
+
+Tree:           1
+               / \
+              2   3
+             / \
+            4   5
+
+Post-order visit: 4, 5, 2, 3, 1
+  → When we process 2, we already know answers for 4 and 5
+  → When we process 1, we already know answers for 2 and 3
+```
+
+### The General Template
+
+```
+╔══════════════════════════════════════════════════════════════════════╗
+║  DFS(node):                                                        ║
+║    1. Base case: if leaf → return initial values                   ║
+║    2. Get children's answers: left = dfs(node.left)                ║
+║                                  right = dfs(node.right)           ║
+║    3. Make decision based on children's answers                    ║
+║    4. Return result to parent                                      ║
+║                                                                    ║
+║  Global answer: updated at each node (if problem asks for global)  ║
+╚══════════════════════════════════════════════════════════════════════╝
+```
+
+### Decision Framework
+
+```
+Question: What decisions does each node make?
+
+"Should I include this node or not?"
+  → Return (include, exclude) pair
+  → Used in: House Robber, Independent Set
+
+"What color should this node be?"
+  → Return (cost_color1, cost_color2, cost_color3)
+  → Used in: Tree Coloring
+
+"What's the best path through this node?"
+  → Return (max_downward, update global)
+  → Used in: Diameter, Max Path Sum
+
+"What info do I need to pass up?"
+  → Return a tuple/array of values
+  → Size of tuple = number of states needed
+```
+
+### Two Approaches
+
+```
+Approach 1: Return value from DFS
+  ┌─────────────────────────────────────────┐
+  │ def dfs(node):                          │
+  │     left = dfs(node.left)               │
+  │     right = dfs(node.right)             │
+  │     # compute from left, right          │
+  │     return result                       │
+  └─────────────────────────────────────────┘
+  → Simpler, good when each node returns one value
+
+Approach 2: Return tuple/array
+  ┌─────────────────────────────────────────┐
+  │ def dfs(node):                          │
+  │     left = dfs(node.left)               │
+  │     right = dfs(node.right)             │
+  │     include = ...                       │
+  │     exclude = ...                       │
+  │     return (include, exclude)           │
+  └─────────────────────────────────────────┘
+  → When each node needs to return multiple states
 ```
 
 ```python
@@ -62,6 +151,69 @@ def tree_dp_template(root):
 ---
 
 ## 2. House Robber III
+
+### Visual Walkthrough
+
+```
+            3
+           / \
+          2   3
+           \   \
+            3   1
+
+For each node, return (rob_this, skip_this):
+
+Node 3 (leaf, left child's right):
+  rob = 3, skip = 0
+  → (3, 0)
+
+Node 3 (leaf, right child's right):
+  rob = 3, skip = 0
+  → (3, 0)
+
+Node 2 (has right child = 3):
+  left = (0, 0)  [no left child]
+  right = (3, 0) [right child]
+  rob = 2 + 0 + 0 = 2       (can't rob children)
+  skip = max(0,0) + max(3,0) = 3  (take best from each child)
+  → (2, 3)
+
+Node 3 (has right child = 1):
+  left = (0, 0)
+  right = (1, 0) [right child leaf with val 1]
+  rob = 3 + 0 + 0 = 3
+  skip = 0 + max(1,0) = 1
+  → (3, 1)
+
+Root Node 3:
+  left = (2, 3) [from node 2's subtree]
+  right = (3, 1) [from node 3's subtree]
+  rob = 3 + 3 + 1 = 7    (rob root, skip both children)
+  skip = max(2,3) + max(3,1) = 3 + 3 = 6  (skip root, best from children)
+  → (7, 6)
+
+Answer: max(7, 6) = 7 ✓
+Path: root(3) + node 2's right(3) + node 3's right(1) = 3+3+1 = 7
+```
+
+### State Transition Diagram
+
+```
+                ┌──────────────┐
+                │  At node X   │
+                └──────┬───────┘
+                       │
+          ┌────────────┼────────────┐
+          │                         │
+    ┌─────▼──────┐          ┌──────▼─────┐
+    │ ROB node X │          │ SKIP node X│
+    └─────┬──────┘          └──────┬─────┘
+          │                         │
+    Can't rob children      Take best from
+    Add: X.val +            each child:
+    left.skip +             add: max(left) +
+    right.skip              max(right)
+```
 
 ```python
 def rob(root):
@@ -582,11 +734,33 @@ def max_width(root):
 | **Contribution** | `max_downward_path` | Path sum, max path problems |
 | **Ancestor info** | Value passed DOWN | Good nodes, range queries |
 
-**Decision Framework:**
+### Problem-to-Pattern Quick Reference
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║  "rob houses" / "no adjacent"    → Include/Exclude pattern             ║
+║  "independent set"               → Include/Exclude pattern             ║
+║  "color nodes" / "paint"         → Multi-color pattern                 ║
+║  "max path sum"                  → Contribution pattern                ║
+║  "diameter"                      → Contribution pattern (depth)        ║
+║  "good nodes" / "max so far"    → Ancestor info (pass down)           ║
+║  "count paths"                   → Prefix sum + contribution           ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+### Decision Framework
+
 1. What decisions does each node make? → determines return tuple size
 2. What info from children is needed? → determines DFS structure
 3. Is answer at node or global? → determines if we return or use nonlocal
 4. Can path go up through parent? → determines if we use contribution pattern
+
+### Common Mistakes
+
+1. **Processing parent before children** — always use post-order DFS
+2. **Forgetting to backtrack** — when using prefix sums, remove entries on return
+3. **Wrong base case** — null node should return (0, 0) for include/exclude
+4. **Overwriting global too early** — update global at each node, not just root
 
 **Time/Space for all tree DP:**
 - Time: O(n) — visit each node once

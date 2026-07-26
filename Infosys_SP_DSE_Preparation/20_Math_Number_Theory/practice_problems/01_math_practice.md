@@ -1,5 +1,18 @@
 # Math & Number Theory Practice Problems for Infosys SP DSE
 
+> **How to Use This File:**
+> ```
+> ┌─────────────────────────────────────────────────────────────┐
+> │  For each problem, you'll find:                             │
+> │  • Clear problem statement                                  │
+> │  • Visual explanation of the approach                       │
+> │  • Step-by-step walkthrough                                 │
+> │  • Clean, commented code                                    │
+> │  • Complexity analysis                                      │
+> │  • Common variations and pitfalls                           │
+> └─────────────────────────────────────────────────────────────┘
+> ```
+
 ---
 
 ## EASY PROBLEMS
@@ -57,6 +70,39 @@ print(fibonacci(1))   # 1
 **Statement:** Given n, return the number of trailing zeroes in n!.
 
 **Approach:** Count factors of 5 in n!. Each factor of 5 pairs with a factor of 2 to make a trailing zero.
+
+```
+Visual: Why Count Factors of 5?
+
+Trailing zeroes come from factors of 10 = 2 × 5.
+In n!, there are ALWAYS more factors of 2 than 5.
+So we just need to count factors of 5.
+
+Example: 25!
+  Numbers with factor 5:  5, 10, 15, 20, 25 → 5 numbers × 1 factor = 5
+  Numbers with factor 25: 25 → 1 number × 1 extra factor = 1
+  
+  Wait, let me be more precise:
+  
+  Floor(25/5)  = 5   ← multiples of 5
+  Floor(25/25) = 1   ← multiples of 25 (each contributes an extra 5)
+  Floor(25/125) = 0  ← stop here
+  
+  Total factors of 5 = 5 + 1 = 6 trailing zeroes
+
+Step-by-step for n=25:
+  ┌───────┬──────────────────────┬──────────┐
+  │   n   │  n/5, n/25, n/125..  │  Count   │
+  ├───────┼──────────────────────┼──────────┤
+  │  25   │  25/5=5, 25/25=1     │  5+1=6   │
+  └───────┴──────────────────────┴──────────┘
+
+Step-by-step for n=100:
+  100/5 = 20
+  100/25 = 4
+  100/125 = 0
+  Total = 24 trailing zeroes
+```
 
 ```python
 def trailing_zeroes(n):
@@ -322,6 +368,37 @@ print(num_decodings_optimized("226"))  # 3
 **Statement:** Count unique paths from top-left to bottom-right of an m×n grid (can only move right or down).
 
 **Approach:** Combinatorics. Answer is C(m+n-2, m-1).
+
+```
+Visual: Grid Paths — Why It's nCr
+
+For a 3×3 grid, you need exactly 2 RIGHT moves and 2 DOWN moves.
+Total moves = 4. Choose which 2 are RIGHT (or DOWN):
+C(4, 2) = 6
+
+All paths for 3×3 grid:
+  R = Right, D = Down
+
+  1. R R D D     ┌───┬───┬───┐
+  2. R D R D     │ → │ → │ ↓ │
+  3. R D D R     ├───┼───┼───┤
+  4. D R R D     │ ↓ │ → │ ↓ │
+  5. D R D R     ├───┼───┼───┤
+  6. D D R R     │ ↓ │ ↓ │ → │
+                  └───┴───┴───┘
+
+Visual path for R D R D:
+  ┌─→─┬───┬───┐
+  │ S │   │ ↓ │    S = Start
+  ├───┼─→─┼─↓─┤    → = Right move
+  │   │   │ ↓ │    ↓ = Down move
+  ├───┼───┼───┤
+  │   │   │ E │    E = End
+  └───┴───┴───┘
+
+For m×n grid: need (m-1) DOWN + (n-1) RIGHT = (m+n-2) total moves
+Answer: C(m+n-2, m-1) or equivalently C(m+n-2, n-1)
+```
 
 ```python
 MOD = 10**9 + 7
@@ -628,18 +705,51 @@ print(integer_break_dp(10))  # 36
 
 ## Summary: Key Patterns
 
-| Pattern | Problems | Key Algorithm |
-|---------|----------|---------------|
-| Bit Manipulation | Power of Two | n & (n-1) == 0 |
-| Fibonacci | Fibonacci Number | Iterative / Matrix Exponentiation |
-| Factor Counting | Trailing Zeroes | Count factors of 5 |
-| Sieve | Count Primes | Sieve of Eratosthenes |
-| Cycle Detection | Happy Number | Floyd's / HashSet |
-| Modular Arithmetic | Large Computations | Binary Exponentiation |
-| Matrix Exponentiation | Nth Fibonacci | O(log n) matrix power |
-| DP | Combination Sum IV, Decode Ways | Bottom-up DP |
-| Combinatorics | Unique Paths | nCr computation |
-| Segmented Sieve | Count Primes Range | Segmented approach |
-| Union-Find | Largest Component | Prime factorization + UF |
-| Greedy | Integer Break | Use as many 3s as possible |
-| Geometry | Max Points on Line | Slope hash map |
+| Pattern | Problems | Key Algorithm | Complexity |
+|---------|----------|---------------|------------|
+| Bit Manipulation | Power of Two | n & (n-1) == 0 | O(1) |
+| Fibonacci | Fibonacci Number | Iterative / Matrix Exponentiation | O(n) / O(log n) |
+| Factor Counting | Trailing Zeroes | Count factors of 5 | O(log₅ n) |
+| Sieve | Count Primes | Sieve of Eratosthenes | O(n log log n) |
+| Cycle Detection | Happy Number | Floyd's / HashSet | O(log n) |
+| Modular Arithmetic | Large Computations | Binary Exponentiation | O(log n) |
+| Matrix Exponentiation | Nth Fibonacci | O(log n) matrix power | O(log n) |
+| DP | Combination Sum IV, Decode Ways | Bottom-up DP | O(target × n) |
+| Combinatorics | Unique Paths | nCr computation | O(min(m,n)) |
+| Segmented Sieve | Count Primes Range | Segmented approach | O((R-L) log log R) |
+| Union-Find | Largest Component | Prime factorization + UF | O(n × √max_val) |
+| Greedy | Integer Break | Use as many 3s as possible | O(n) |
+| Geometry | Max Points on Line | Slope hash map | O(n²) |
+
+### Decision Flowchart: Which Math Technique?
+
+```
+Given a math/number theory problem?
+│
+├── Working with primes?
+│   ├── Need all primes ≤ N → Sieve of Eratosthenes
+│   ├── Need primes in range [L,R] → Segmented Sieve
+│   ├── Check if single n is prime → Trial division (n≤10¹²) / Miller-Rabin (larger)
+│   └── Factorize n → Trial division or SPF sieve (for multiple queries)
+│
+├── Working with combinations/permutations?
+│   ├── Small n → Direct computation
+│   ├── Large n, mod required → Precompute factorials + Fermat's Little Theorem
+│   ├── Grid paths → nCr(m+n-2, m-1)
+│   └── Distribute items → Stars and Bars
+│
+├── Working with Fibonacci-like recurrences?
+│   ├── Small n (≤10⁷) → Iterative DP
+│   └── Huge n (≤10¹⁸) → Matrix Exponentiation
+│
+├── Working with large exponents?
+│   └── Always use Binary Exponentiation O(log n)
+│
+├── Digit manipulation?
+│   ├── Sum of digits → Mod 10 loop
+│   ├── Reverse digits → Mod 10 + multiply by 10
+│   └── Digit root → 1 + (n-1) % 9 (O(1) formula!)
+│
+└── Multiple constraints to count?
+    └── Inclusion-Exclusion Principle
+```

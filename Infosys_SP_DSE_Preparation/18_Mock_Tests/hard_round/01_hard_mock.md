@@ -86,6 +86,80 @@ Output:
     a
 ```
 
+### Step-by-Step Thinking Process
+
+```
+Brainstorming:
+├── Need to find ALL valid sentences, not just one
+├── Each word must be in the dictionary
+├── Can reuse dictionary words
+├── This is a COMBINATORIAL problem → backtracking/recursion
+└── Key: At each position, try all possible word lengths
+
+Approach:
+┌─────────────────────────────────────────────────────────────┐
+│  At position i in string s:                                 │
+│  ├── Try word s[i:i+1] → is it in dict? → recurse on i+1   │
+│  ├── Try word s[i:i+2] → is it in dict? → recurse on i+2   │
+│  ├── Try word s[i:i+3] → is it in dict? → recurse on i+3   │
+│  └── ...                                                    │
+│                                                             │
+│  When reaching end of string (i == len(s)):                 │
+│  └── Found a valid sentence! Add to result                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Walkthrough: Backtracking Tree
+
+```
+s = "catsanddog", dict = {cat, cats, and, sand, dog}
+
+                    "catsanddog"
+                    start=0
+                   /    |     \
+              "cat"   "cats"   "c"... (not in dict)
+              /         |        \
+        "catsand"   "catsand"    ...
+        start=4     start=4
+        /    \        /    \
+    "catsand"  "catsand"  "catsand"
+    + "dog"    + "dog"    + "dog"
+      ✓ FOUND!   ✓ FOUND!
+
+Detailed trace:
+═══════════════════════════════════════════════════════════
+
+backtrack(0): start at index 0
+├── Try "c" (s[0:1]) → not in dict → skip
+├── Try "ca" (s[0:2]) → not in dict → skip
+├── Try "cat" (s[0:3]) → IN DICT ✓
+│   └── backtrack(3): start at index 3
+│       ├── Try "s" → not in dict
+│       ├── Try "sa" → not in dict
+│       ├── Try "san" → not in dict
+│       ├── Try "sand" (s[3:7]) → IN DICT ✓
+│       │   └── backtrack(7): start at index 7
+│       │       ├── Try "d" → not in dict
+│       │       ├── Try "do" → not in dict
+│       │       ├── Try "dog" (s[7:10]) → IN DICT ✓
+│       │       │   └── backtrack(10): start at 10 == len(s)
+│       │       │       └── FOUND: "cat sand dog" ★
+│       │       └── (no more options)
+│       └── (no more valid words from "s")
+├── Try "cats" (s[0:4]) → IN DICT ✓
+│   └── backtrack(4): start at index 4
+│       ├── Try "a" → not in dict
+│       ├── Try "an" → not in dict
+│       ├── Try "and" (s[4:7]) → IN DICT ✓
+│       │   └── backtrack(7): start at index 7
+│       │       └── Try "dog" → IN DICT ✓
+│       │           └── FOUND: "cats and dog" ★
+│       └── (no more valid words from "a")
+└── Try "catsa"... → not in dict (can stop early with max word length)
+
+RESULT: ["cat sand dog", "cats and dog"]
+```
+
 ### Solution 1: Backtracking with Memoization (Optimal)
 
 ```python
@@ -288,6 +362,110 @@ Total: 35
 Actually the correct answer depends on the exact calculation.
 ```
 
+### Step-by-Step Thinking Process
+
+```
+Brainstorming:
+├── Burst balloon i → get coins = nums[i-1] * nums[i] * nums[i+1]
+├── Order of bursting MATTERS (different orders → different coins)
+├── Brute force: Try all N! orderings → too slow
+├── Key insight: Think of which balloon to burst LAST (not first!)
+└── Why last? Because the last balloon's neighbors are fixed!
+
+Interval DP Logic:
+┌─────────────────────────────────────────────────────────────┐
+│  Consider balloons in range [left, right]                   │
+│  If balloon k is the LAST to burst in this range:           │
+│                                                             │
+│  ┌─────────┐ ┌───┐ ┌─────────┐                             │
+│  │ left... │ │ k │ │ ...right│                             │
+│  └─────────┘ └───┘ └─────────┘                             │
+│                                                             │
+│  When k bursts last:                                        │
+│  ├── Left subproblem: [left, k-1] (all burst before k)     │
+│  ├── Right subproblem: [k+1, right] (all burst before k)   │
+│  └── k's coins: nums[left-1] * nums[k] * nums[right+1]    │
+│                                                             │
+│  Total = dp[left][k-1] + dp[k+1][right] + nums[l-1]*nums[k]*nums[r+1] │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Visual Walkthrough: Interval DP
+
+```
+nums = [3, 1, 5, 8]
+Add virtual balloons: nums = [1, 3, 1, 5, 8, 1]
+                       index:  0  1  2  3  4  5
+
+DP Table (dp[left][right] = max coins from bursting balloons left..right):
+
+Step 1: Length 1 intervals (single balloons)
+═══════════════════════════════════════════════
+
+dp[1][1]: Only balloon 1 (value 3)
+  k=1: nums[0]*nums[1]*nums[2] = 1*3*1 = 3
+  dp[1][1] = 3
+
+dp[2][2]: Only balloon 2 (value 1)
+  k=2: nums[1]*nums[2]*nums[3] = 3*1*5 = 15
+  dp[2][2] = 15
+
+dp[3][3]: Only balloon 3 (value 5)
+  k=3: nums[2]*nums[3]*nums[4] = 1*5*8 = 40
+  dp[3][3] = 40
+
+dp[4][4]: Only balloon 4 (value 8)
+  k=4: nums[3]*nums[4]*nums[5] = 5*8*1 = 40
+  dp[4][4] = 40
+
+Step 2: Length 2 intervals (pairs)
+═══════════════════════════════════════════════
+
+dp[1][2]: Balloons 1,2 (values 3,1)
+  k=1: dp[2][2] + nums[0]*nums[1]*nums[3] = 15 + 1*3*5 = 15+15 = 30
+  k=2: dp[1][1] + nums[0]*nums[2]*nums[3] = 3 + 1*1*5 = 3+5 = 8
+  dp[1][2] = max(30, 8) = 30
+
+dp[2][3]: Balloons 2,3 (values 1,5)
+  k=2: dp[3][3] + nums[1]*nums[2]*nums[4] = 40 + 3*1*8 = 40+24 = 64
+  k=3: dp[2][2] + nums[1]*nums[3]*nums[4] = 15 + 3*5*8 = 15+120 = 135
+  dp[2][3] = max(64, 135) = 135
+
+dp[3][4]: Balloons 3,4 (values 5,8)
+  k=3: dp[4][4] + nums[2]*nums[3]*nums[5] = 40 + 1*5*1 = 40+5 = 45
+  k=4: dp[3][3] + nums[2]*nums[4]*nums[5] = 40 + 1*8*1 = 40+8 = 48
+  dp[3][4] = max(45, 48) = 48
+
+Step 3: Length 3 intervals
+═══════════════════════════════════════════════
+
+dp[1][3]: Balloons 1,2,3
+  k=1: dp[2][3] + nums[0]*nums[1]*nums[4] = 135 + 1*3*8 = 135+24 = 159
+  k=2: dp[1][1]+dp[3][3] + 1*1*8 = 3+40+8 = 51
+  k=3: dp[1][2] + nums[0]*nums[3]*nums[4] = 30 + 1*5*8 = 30+40 = 70
+  dp[1][3] = max(159, 51, 70) = 159
+
+dp[2][4]: Balloons 2,3,4
+  k=2: dp[3][4] + nums[1]*nums[2]*nums[5] = 48 + 3*1*1 = 48+3 = 51
+  k=3: dp[2][2]+dp[4][4] + 3*5*1 = 15+40+15 = 70
+  k=4: dp[2][3] + nums[1]*nums[4]*nums[5] = 135 + 3*8*1 = 135+24 = 159
+  dp[2][4] = max(51, 70, 159) = 159
+
+Step 4: Length 4 interval (FULL PROBLEM)
+═══════════════════════════════════════════════
+
+dp[1][4]: Balloons 1,2,3,4 (ALL)
+  k=1: dp[2][4] + 1*3*1 = 159+3 = 162
+  k=2: dp[1][1]+dp[3][4] + 1*1*1 = 3+48+1 = 52
+  k=3: dp[1][2]+dp[4][4] + 1*5*1 = 30+40+5 = 75
+  k=4: dp[1][3] + 1*8*1 = 159+8 = 167
+  dp[1][4] = max(162, 52, 75, 167) = 167 ★
+
+ANSWER: 167 coins!
+Optimal: Burst balloon 4 (value 8) last → gets 1*8*1 = 8 coins
+         Before that, burst in optimal order for remaining [3,1,5]
+```
+
 ### Solution 1: Interval DP (Optimal)
 
 ```python
@@ -444,25 +622,59 @@ def backtrack(path, remaining):
 ```
 
 ### Edge Cases to Test
-- Single element
-- All same values
-- Sorted array
-- No valid combination (Word Break II)
-- Minimum and maximum constraints
 
-### Time Management Tips
-1. Explain approach before coding (5 min)
-2. Code solution (20 min)
-3. Test with sample inputs (5 min)
-4. Test edge cases (5 min)
-5. Optimize if needed (5 min)
+```
+Word Break II:
+├── No valid sentence → output nothing (empty)
+├── Single character in dict → "a" with dict ["a"] → "a"
+├── Entire string is one word → just that word
+├── Very long string → memoization is critical
+├── Repeated patterns → memo prevents recomputation
+└── Lexicographic order → sort output before printing
 
-### Common Mistakes
-1. Not handling boundary conditions (virtual balloons)
-2. Off-by-one errors in DP ranges
-3. Not using memoization in recursion
-4. Forgetting to sort output
-5. Not checking if word break is possible first
+Burst Balloons:
+├── Single balloon → 1*balloon*1 = balloon
+├── All same values → compute carefully
+├── Maximum constraint N=300 → O(N³) is ~27M ops, fine
+├── Virtual balloons [1] at boundaries → simplifies edge cases
+└── Off-by-one errors in DP loops → most common bug!
+```
+
+### Common Mistakes to Avoid
+
+```
+Word Break II:
+├── Forgetting to sort output lexicographically
+├── Not using memoization → exponential time blowup
+├── Not checking if word break is possible first
+├── Off-by-one in string slicing (s[start:end])
+└── Building strings incorrectly (missing spaces)
+
+Burst Balloons:
+├── Not adding virtual balloons at boundaries
+├── Off-by-one: dp indices vs array indices
+├── Wrong DP transition (using first instead of last balloon)
+├── Forgetting that nums[0] and nums[n+1] are virtual
+└── Not iterating intervals in correct length order
+```
+
+### Speed Tips for Hard Round
+
+```
+Time Budget: 45 minutes per question
+├── 0-10 min:  Read, identify pattern, explain approach
+├── 10-30 min: Write solution carefully
+├── 30-40 min: Test with sample inputs + debug
+└── 40-45 min: Optimize edge cases, verify complexity
+
+Key Strategies:
+1. EXPLAIN YOUR APPROACH before coding (interviewers value this)
+2. Start with the optimal approach if you recognize the pattern
+3. Use memoization templates you've memorized
+4. For DP: Draw the table, fill a few cells manually
+5. For backtracking: Draw the recursion tree for small input
+6. Test with the SMALLEST possible input first
+```
 
 ### Post-Test Checklist
 - [ ] Did I explain the approach clearly?
@@ -471,3 +683,5 @@ def backtrack(path, remaining):
 - [ ] Did I test with sample inputs?
 - [ ] Is my code clean and readable?
 - [ ] Did I mention time and space complexity?
+- [ ] Did I sort output for Word Break II?
+- [ ] Did I add virtual balloons for Burst Balloons?

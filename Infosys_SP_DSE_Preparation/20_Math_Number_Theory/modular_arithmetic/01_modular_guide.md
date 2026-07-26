@@ -6,6 +6,41 @@
 
 Modular arithmetic is "clock arithmetic" — numbers wrap around after reaching a modulus.
 
+```
+Visual: The Clock Analogy
+
+Think of a 12-hour clock:
+
+        12
+       /  \
+     11    1
+    /        \
+   10          2
+   |            |
+   9            3
+    \          /
+     8    4
+      \  /
+       6
+       
+  5 and 7 are here too!
+
+  15 o'clock = 3 o'clock (15 = 12 × 1 + 3)
+  27 o'clock = 3 o'clock (27 = 12 × 2 + 3)
+  
+  So: 15 ≡ 27 ≡ 3 (mod 12)
+
+Another visual with mod 5:
+
+Number line:  ... -3  -2  -1   0   1   2   3   4   5   6   7   8   9  10  11  12 ...
+mod 5 result:  ...  2   3   4   0   1   2   3   4   0   1   2   3   4   0   1   2 ...
+                 └───────────────┘   └───────────────┘   └───────────────┘
+                   repeats every 5      repeats every 5      repeats every 5
+
+Key insight: a ≡ b (mod m) means (a - b) is divisible by m
+  17 ≡ 7 (mod 5) because 17 - 7 = 10 = 5 × 2
+```
+
 ```python
 # Basic modulo operation
 print(17 % 5)   # 2 (17 = 3*5 + 2)
@@ -90,11 +125,40 @@ print((10**18 * 10**18) % (10**9 + 7))  # Works fine in Python!
 
 Division in modular arithmetic means multiplying by the **modular inverse**.
 
-```python
-# a / b (mod m) = a * b^(-1) (mod m)
-# where b^(-1) is the modular inverse of b
+```
+Visual: What is a Modular Inverse?
 
-# The modular inverse of b mod m exists if gcd(b, m) = 1
+In regular math:  a / b = a × (1/b) = a × b^(-1)
+
+In modular math:  a / b (mod m) = a × b^(-1) (mod m)
+where b^(-1) is the MODULAR INVERSE of b mod m
+
+What's a modular inverse?  A number x such that: b × x ≡ 1 (mod m)
+
+Example: 3^(-1) mod 7 = ?
+  We need: 3 × x ≡ 1 (mod 7)
+  
+  3 × 1 = 3  ≡ 3 (mod 7)
+  3 × 2 = 6  ≡ 6 (mod 7)
+  3 × 3 = 9  ≡ 2 (mod 7)
+  3 × 4 = 12 ≡ 5 (mod 7)
+  3 × 5 = 15 ≡ 1 (mod 7)  ← Found it!
+  
+  So 3^(-1) ≡ 5 (mod 7)
+
+Visual verification:
+  3 × 5 = 15
+  15 = 7 × 2 + 1
+  15 mod 7 = 1 ✓
+
+When does the inverse exist?
+  b^(-1) mod m exists ⟺ gcd(b, m) = 1
+  
+  gcd(3, 7) = 1  → 3^(-1) exists ✓
+  gcd(4, 6) = 2  → 4^(-1) mod 6 doesn't exist ✗
+  
+  That's why we need MOD to be PRIME in most CP problems!
+  (For prime p: gcd(b, p) = 1 for all 1 ≤ b < p)
 ```
 
 ### When Does Modular Inverse Exist?
@@ -116,6 +180,33 @@ If p is prime and gcd(a, p) = 1, then:
 **a^(p-1) ≡ 1 (mod p)**
 
 Therefore: **a^(-1) ≡ a^(p-2) (mod p)**
+
+```
+Visual: Why Fermat's Little Theorem Works
+
+Example: p = 7 (prime), a = 3
+
+Powers of 3 mod 7:
+  3^1 = 3    mod 7 = 3
+  3^2 = 9    mod 7 = 2
+  3^3 = 27   mod 7 = 6
+  3^4 = 81   mod 7 = 4
+  3^5 = 243  mod 7 = 5
+  3^6 = 729  mod 7 = 1  ← a^(p-1) ≡ 1 (mod p) ✓
+  3^7 = 2187 mod 7 = 3  ← cycle repeats!
+
+The pattern of residues: 3, 2, 6, 4, 5, 1, 3, 2, 6, 4, 5, 1, ...
+                        └─────────────┘
+                          cycle of length 6 = p-1
+
+Since 3^6 ≡ 1 (mod 7), we can find 3^(-1):
+  3 × 3^(-1) ≡ 1 (mod 7)
+  3 × 3^5 ≡ 3^6 ≡ 1 (mod 7)
+  So 3^(-1) ≡ 3^5 ≡ 5 (mod 7)  ✓
+
+General rule: a^(-1) ≡ a^(p-2) (mod p)
+  3^(-1) mod 7 = 3^(7-2) mod 7 = 3^5 mod 7 = 243 mod 7 = 5 ✓
+```
 
 ```python
 def power_mod(base, exp, mod):
@@ -508,15 +599,55 @@ for n, r in queries:
 
 ## Quick Reference Table
 
-| Operation | Formula | Code |
-|-----------|---------|------|
-| (a+b) mod m | ((a%m)+(b%m))%m | `(a+b) % m` |
-| (a-b) mod m | ((a%m)-(b%m)+m)%m | `(a-b) % m` |
-| (a*b) mod m | ((a%m)*(b%m))%m | `(a*b) % m` |
-| (a/b) mod m | a * b^(m-2) mod m | `a * pow(b, m-2, m) % m` |
-| a^n mod m | Binary exponentiation | `pow(a, n, m)` |
-| a^(-1) mod m (prime) | a^(m-2) mod m | `pow(a, m-2, m)` |
-| nCr mod p | fact[n]/(fact[r]*fact[n-r]) | See Combinatorics class |
+| Operation | Formula | Code | When to Use |
+|-----------|---------|------|-------------|
+| (a+b) mod m | ((a%m)+(b%m))%m | `(a+b) % m` | Always safe in Python |
+| (a-b) mod m | ((a%m)-(b%m)+m)%m | `(a-b) % m` | Python auto-handles negatives |
+| (a*b) mod m | ((a%m)*(b%m))%m | `(a*b) % m` | Python big integers handle overflow |
+| (a/b) mod m | a * b^(m-2) mod m | `a * pow(b, m-2, m) % m` | **NEVER use `/` in modular math!** |
+| a^n mod m | Binary exponentiation | `pow(a, n, m)` | Built-in is fastest |
+| a^(-1) mod m (prime) | a^(m-2) mod m | `pow(a, m-2, m)` | mod must be prime |
+| a^(-1) mod m (general) | Extended Euclidean | See code | Works when gcd(a,m)=1 |
+| nCr mod p | fact[n]/(fact[r]*fact[n-r]) | See Combinatorics class | Need precomputed factorials |
+
+### Decision Flowchart: Which Modular Technique?
+
+```
+Need to compute something mod m?
+│
+├── Addition/Subtraction?
+│   └── Just use % at the end (or after each step)
+│
+├── Multiplication?
+│   └── Use % after each multiplication
+│
+├── Division?
+│   ├── Is m prime?
+│   │   └── YES: Use Fermat's Little Theorem (a^(m-2) mod m)
+│   └── Is m NOT prime?
+│       └── Use Extended Euclidean Algorithm
+│
+├── Power (a^n mod m)?
+│   └── Use pow(a, n, m) — Python built-in
+│
+├── Combination (nCr mod m)?
+│   ├── Multiple queries?
+│   │   └── Precompute factorials + inverse factorials
+│   └── Single query?
+│       └── Compute on the fly with Fermat's Little Theorem
+│
+└── Large numbers involved?
+    └── Apply mod at EVERY step, not just at the end
+```
+
+### Complexity Comparison
+
+| Operation | Naive | Optimized | When to Switch |
+|-----------|-------|-----------|----------------|
+| a^n mod m | O(n) | O(log n) | Always use binary exp |
+| nCr mod m | O(n) per query | O(1) after O(n) preprocessing | >10 queries |
+| Modular inverse | O(m) | O(log m) | Always use optimized |
+| Factorial mod m | O(n) | O(1) after O(n) preprocessing | >1 query |
 
 ---
 

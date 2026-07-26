@@ -12,6 +12,38 @@
 
 **Use Case**: Finding maximum/minimum of a unimodal function (increases then decreases, or vice versa).
 
+### How Ternary Search Works
+
+Unlike binary search which divides into 2 parts, ternary search divides into 3 parts.
+
+```
+UNIMODAL FUNCTION (one peak):
+
+f(x)
+  |        *  *
+  |      *      *
+  |    *          *
+  |  *              *
+  | *                 *
+  |*                    *
+  └──────────────────────── x
+  L      M1    M2      R
+
+We pick TWO midpoints: M1 and M2
+  M1 = L + (R - L) / 3      (one-third from left)
+  M2 = R - (R - L) / 3      (one-third from right)
+
+If f(M1) < f(M2):
+  The peak CANNOT be in [L, M1] → eliminate left third
+  New range: [M1, R]
+
+If f(M1) > f(M2):
+  The peak CANNOT be in [M2, R] → eliminate right third
+  New range: [L, M2]
+
+Each step eliminates 1/3 of the search space!
+```
+
 ### For Maximum of Unimodal Function
 
 ```python
@@ -64,31 +96,83 @@ print(f"Minimum at x = {min_x:.6f}, f(x) = {g(min_x):.6f}")
 
 ### Ternary Search on Discrete Array
 
+```
+BITONIC ARRAY (increases then decreases):
+arr = [1, 3, 5, 7, 9, 8, 6, 4, 2]
+Index: 0  1  2  3  4  5  6  7  8
+
+Step 1: L=0, R=8, M1=2, M2=6
+        arr = [1, 3, 5, 7, 9, 8, 6, 4, 2]
+               L        M1       M2       R
+        arr[M1]=5 < arr[M2]=6 -> eliminate [L, M1]
+        New: L=3
+
+Step 2: L=3, R=8, M1=5, M2=6
+        arr = [1, 3, 5, 7, 9, 8, 6, 4, 2]
+                     L     M1  M2       R
+        arr[M1]=8 > arr[M2]=6 -> eliminate [M2, R]
+        New: R=6
+
+Step 3: L=3, R=6, M1=4, M2=5
+        arr = [1, 3, 5, 7, 9, 8, 6, 4, 2]
+                     L  M1  M2     R
+        arr[M1]=9 > arr[M2]=8 -> eliminate [M2, R]
+        New: R=5
+
+Step 4: L=3, R=5, M1=3, M2=5
+        arr = [1, 3, 5, 7, 9, 8, 6, 4, 2]
+                     L  M1     M2  R
+        arr[M1]=7 < arr[M2]=8 -> eliminate [L, M1]
+        New: L=4
+
+R - L = 5 - 4 = 1 <= 2 -> Check remaining elements
+        arr[4]=9, arr[5]=8 -> max at index 4 (value=9)
+
+Answer: 4 ✓
+```
+
 ```python
 def ternary_search_discrete(arr):
     """Find maximum in a bitonic array (increases then decreases)."""
     left, right = 0, len(arr) - 1
-    
+
     while right - left > 2:
         mid1 = left + (right - left) // 3
         mid2 = right - (right - left) // 3
-        
+
         if arr[mid1] < arr[mid2]:
             left = mid1
         else:
             right = mid2
-    
-    # Check remaining elements
+
+    # Check remaining elements (at most 3)
     max_idx = left
     for i in range(left + 1, right + 1):
         if arr[i] > arr[max_idx]:
             max_idx = i
-    
+
     return max_idx
 
 # Example
 arr = [1, 3, 5, 7, 9, 8, 6, 4, 2]
 print(ternary_search_discrete(arr))  # 4 (index of 9)
+```
+
+### Ternary Search vs Binary Search
+
+```
+                    Ternary Search           Binary Search
+                    ─────────────            ─────────────
+Divides into:       3 parts                  2 parts
+Comparisons/step:   2 (f(M1) vs f(M2))      1 (arr[mid] vs target)
+Eliminates:         1/3 of space             1/2 of space
+Time complexity:    O(log₃ n)               O(log₂ n)
+
+Since log₃ n = log₂ n / log₂ 3 ≈ 0.63 * log₂ n
+Ternary does FEWER iterations but MORE work per iteration.
+Overall: Binary search is faster for simple comparisons.
+Ternary is only better when evaluation is "cheap" and you
+need to minimize the number of function evaluations.
 ```
 
 ### Properties
@@ -102,36 +186,87 @@ print(ternary_search_discrete(arr))  # 4 (index of 9)
 
 **Use Case**: Finding element in unbounded or infinite sorted array.
 
+### How Exponential Search Works
+
+The problem: You don't know the array size. Binary search needs bounds.
+Solution: Find the bounds FIRST using exponential jumps!
+
+```
+arr = [2, 3, 4, 10, 40, 50, 60, 70, 80, 90, 100, ...]
+target = 40
+
+PHASE 1: Find the range by doubling index
+═══════════════════════════════════════════
+
+Check index 1:  arr[1]=3 <= 40 ✓ -> continue
+Check index 2:  arr[2]=4 <= 40 ✓ -> continue
+Check index 4:  arr[4]=40 <= 40 ✓ -> continue
+Check index 8:  arr[8]=80 > 40 ✗ -> STOP!
+
+Range found: [index 4/2 .. min(8, n-1)] = [4..8]
+             = [40, 50, 60, 70, 80]
+
+PHASE 2: Binary search in the found range
+═══════════════════════════════════════════
+
+Binary search [40, 50, 60, 70, 80] for 40
+  → Found at index 0 of subarray → index 4 of original
+
+Total work: O(log(4)) to find range + O(log(4)) to search = O(log n)
+```
+
+### Visual Timeline
+
+```
+Index:  0    1    2    3    4    5    6    7    8    9   10
+Value:  2    3    4   10   40   50   60   70   80   90  100
+
+Doubling phase:
+  Check idx=1: ✓ (arr[1]=3 <= 40)
+  Check idx=2: ✓ (arr[2]=4 <= 40)
+  Check idx=4: ✓ (arr[4]=40 <= 40)
+  Check idx=8: ✗ (arr[8]=80 > 40) -> STOP
+
+  Range: [4, 8]
+         ┌────────────────────────┐
+         │ 40   50   60   70   80│
+         └────────────────────────┘
+
+Binary search in [4, 5, 6, 7, 8]:
+  L=4, R=8, M=6 -> arr[6]=60 > 40 -> R=5
+  L=4, R=5, M=4 -> arr[4]=40 == 40 -> FOUND at index 4!
+```
+
 ```python
 def exponential_search(arr, target):
     """Search in unbounded sorted array."""
     n = len(arr)
-    
+
     if n == 0:
         return -1
-    
+
     if arr[0] == target:
         return 0
-    
-    # Find range by doubling
+
+    # Phase 1: Find range by doubling
     index = 1
     while index < n and arr[index] <= target:
         index *= 2
-    
-    # Binary search in the found range
+
+    # Phase 2: Binary search in found range [index/2, min(index, n-1)]
     left = index // 2
     right = min(index, n - 1)
-    
+
     while left <= right:
         mid = left + (right - left) // 2
-        
+
         if arr[mid] == target:
             return mid
         elif arr[mid] < target:
             left = mid + 1
         else:
             right = mid - 1
-    
+
     return -1
 
 # Example
@@ -188,6 +323,50 @@ print(exponential_search_first(arr, 4))  # 2
 ## 3. Interpolation Search
 
 **Use Case**: Uniformly distributed sorted arrays. Improved binary search.
+
+### How Interpolation Search Works
+
+Binary search always checks the MIDDLE. Interpolation search ESTIMATES
+where the target might be based on its value.
+
+```
+BINARY SEARCH: Always picks middle
+arr = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+       L                   M                    R
+       Always mid = (L+R)/2 regardless of target
+
+INTERPOLATION SEARCH: Picks position based on value
+arr = [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+
+To find target=90:
+  Binary: starts at index 4 (value=50) -> 5 steps
+  Interpolation: estimates position near the end -> 1-2 steps!
+
+Formula:
+  pos = L + ((target - arr[L]) * (R - L)) / (arr[R] - arr[L])
+
+For target=90, L=0, R=9:
+  pos = 0 + ((90-10) * (9-0)) / (100-10)
+      = 0 + (80 * 9) / 90
+      = 0 + 720/90
+      = 8
+  arr[8] = 90 -> FOUND in 1 step!
+```
+
+### When It Works Well vs Poorly
+
+```
+UNIFORM DISTRIBUTION (works great):
+Value:  10  20  30  40  50  60  70  80  90  100
+        ──  ──  ──  ──  ──  ──  ──  ──  ──  ──
+        Even spacing → interpolation estimates well
+
+EXPONENTIAL DISTRIBUTION (works poorly):
+Value:  1   2   4   8  16  32  64  128  256  512
+        ─ ─ ─  ──  ── ─── ──── ───── ──────
+        Uneven spacing → interpolation estimates poorly
+        Could degenerate to O(n)!
+```
 
 ```python
 def interpolation_search(arr, target):
@@ -255,6 +434,54 @@ print(interpolation_search_recursive(arr, target, 0, len(arr) - 1))  # 6
 ## 4. Jump Search
 
 **Use Case**: Sorted array, when jumping ahead is more efficient than linear scan.
+
+### How Jump Search Works
+
+Instead of checking every element (linear) or halving (binary),
+we JUMP ahead by fixed blocks, then do linear search within the block.
+
+```
+arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]     target = 7
+n = 10, jump = sqrt(10) ≈ 3
+
+PHASE 1: Jump to find the block containing target
+════════════════════════════════════════════════════
+
+Block size = 3
+
+Jump 0: Check arr[2] = 3  < 7 -> Jump forward
+Jump 1: Check arr[5] = 6  < 7 -> Jump forward
+Jump 2: Check arr[8] = 9  >= 7 -> STOP! Target is in block [5, 8]
+
+Index: 0  1  2  3  4  5  6  7  8  9
+Value: 1  2  3  4  5  6  7  8  9  10
+                │  BLOCK  │
+Jump 0→        Jump 1→        Jump 2→ (stop, 9 >= 7)
+     arr[2]=3       arr[5]=6       arr[8]=9
+
+PHASE 2: Linear search within the block [5, 8]
+═════════════════════════════════════════════════
+
+Check arr[5]=6 < 7 -> next
+Check arr[6]=7 == 7 -> FOUND at index 6!
+```
+
+### Why Optimal Jump Size is sqrt(n)
+
+```
+Total cost = (number of jumps) + (linear search in block)
+           = (n / jump_size) + (jump_size - 1)
+
+To minimize: take derivative, set to 0
+  d/d(jump_size) [n/jump_size + jump_size] = 0
+  -n/jump_size^2 + 1 = 0
+  jump_size = sqrt(n)
+
+For n=100: jump_size = 10
+  Jumps: 100/10 = 10
+  Linear: 10 - 1 = 9
+  Total: ~19 (vs 100 for linear, vs ~7 for binary)
+```
 
 ```python
 import math

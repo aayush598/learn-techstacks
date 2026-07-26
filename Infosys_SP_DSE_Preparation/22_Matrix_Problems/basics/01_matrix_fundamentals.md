@@ -1,6 +1,54 @@
 # Matrix Fundamentals - Python Implementation
 
+> **Matrix Topics Roadmap:**
+> ```
+> ┌───────────────────────────────────────────────────────────────┐
+> │                 MATRIX FUNDAMENTALS ROADMAP                   │
+> ├───────────────────────────────────────────────────────────────┤
+> │                                                               │
+> │  ┌──────────┐    ┌──────────┐    ┌──────────────────────┐   │
+> │  │ Creation │───▶│ Traversal│───▶│  Spiral / Diagonal   │   │
+> │  │ & Access │    │ Patterns │    │     Traversals       │   │
+> │  └──────────┘    └──────────┘    └──────────────────────┘   │
+> │       │               │                     │                │
+> │       ▼               ▼                     ▼                │
+> │  ┌──────────┐    ┌──────────┐    ┌──────────────────────┐   │
+> │  │ Transpose│    │ Rotation │    │  Search in Matrix    │   │
+> │  │  of Mtx  │    │ 90°/180° │    │ (sorted rows/cols)   │   │
+> │  └──────────┘    └──────────┘    └──────────────────────┘   │
+> │                       │                                       │
+> │                       ▼                                       │
+> │              ┌──────────────────┐                            │
+> │              │ Set Matrix       │                            │
+> │              │ Zeros (in-place) │                            │
+> │              └──────────────────┘                            │
+> └───────────────────────────────────────────────────────────────┘
+> ```
+
 ## 1. Matrix Creation in Python (List of Lists)
+
+```
+Visual: Matrix Indexing
+
+For a 3×4 matrix:
+         col 0   col 1   col 2   col 3
+        ┌───────┬───────┬───────┬───────┐
+row 0   │ [0][0]│ [0][1]│ [0][2]│ [0][3]│
+        ├───────┼───────┼───────┼───────┤
+row 1   │ [1][0]│ [1][1]│ [1][2]│ [1][3]│
+        ├───────┼───────┼───────┼───────┤
+row 2   │ [2][0]│ [2][1]│ [2][2]│ [2][3]│
+        └───────┴───────┴───────┴───────┘
+
+matrix[i][j] = element at row i, column j
+
+Common patterns:
+  • All rows:    for i in range(len(matrix))
+  • All columns: for j in range(len(matrix[0]))
+  • All cells:   for i in range(m): for j in range(n)
+  • Diagonal:    matrix[i][i]
+  • Anti-diag:   matrix[i][n-1-i]
+```
 
 ```python
 # Creating a matrix using list of lists
@@ -85,6 +133,68 @@ print(column_major_traversal(matrix))   # [1, 4, 7, 2, 5, 8, 3, 6, 9]
 
 ## 3. Spiral Order Traversal
 
+```
+Visual: How Spiral Traversal Works
+
+For a 3×4 matrix:
+        ┌───┬───┬───┬───┐
+        │ 1 │ 2 │ 3 │ 4 │  ← Step 1: Go RIGHT
+        ├───┼───┼───┼───┤
+        │ 5 │ 6 │ 7 │ 8 │  ← Step 3: Go LEFT (skipping visited)
+        ├───┼───┼───┼───┤
+        │ 9 │10 │11 │12 │
+        └───┴───┴───┴───┘
+
+Spiral order: 1 → 2 → 3 → 4 → 8 → 12 → 11 → 10 → 9 → 5 → 6 → 7
+
+Step-by-step boundary movement:
+  
+  Initial: top=0, bottom=2, left=0, right=3
+  
+  ┌─────────────────────────────────────────────┐
+  │  Step 1: RIGHT along top row                │
+  │  ┌───┬───┬───┬───┐                          │
+  │  │→→→→→→→→→→→→→│                          │
+  │  └─────────────┘                            │
+  │  Visit: [0,0]=1, [0,1]=2, [0,2]=3, [0,3]=4│
+  │  Then: top++ (top becomes 1)                │
+  └─────────────────────────────────────────────┘
+  
+  ┌─────────────────────────────────────────────┐
+  │  Step 2: DOWN along right column            │
+  │           ┌───┐                             │
+  │           │ ↓ │                             │
+  │           │ ↓ │                             │
+  │           └───┘                             │
+  │  Visit: [1,3]=8, [2,3]=12                   │
+  │  Then: right-- (right becomes 2)            │
+  └─────────────────────────────────────────────┘
+  
+  ┌─────────────────────────────────────────────┐
+  │  Step 3: LEFT along bottom row              │
+  │  ┌─────────────┐                            │
+  │  │←←←←←←←←←←←←│                          │
+  │  └───┬───┬───┬───┘                          │
+  │  Visit: [2,2]=11, [2,1]=10, [2,0]=9        │
+  │  Then: bottom-- (bottom becomes 1)          │
+  └─────────────────────────────────────────────┘
+  
+  ┌─────────────────────────────────────────────┐
+  │  Step 4: UP along left column               │
+  │  ┌───┐                                      │
+  │  │ ↑ │                                      │
+  │  └───┘                                      │
+  │  Visit: [1,0]=5                             │
+  │  Then: left++ (left becomes 1)              │
+  └─────────────────────────────────────────────┘
+  
+  Now the inner 1×2 submatrix: [6, 7]
+  Repeat the process...
+  Visit: 6 → 7
+  
+  Final result: [1, 2, 3, 4, 8, 12, 11, 10, 9, 5, 6, 7]
+```
+
 ```python
 def spiral_order(matrix):
     if not matrix:
@@ -132,6 +242,39 @@ print(spiral_order(matrix))
 ---
 
 ## 4. Rotate Matrix 90 Degrees Clockwise (In-Place)
+
+```
+Visual: Two-Step Rotation — Transpose then Reverse
+
+Step 1: Transpose (swap rows and columns)
+  Before:                  After:
+  ┌───┬───┬───┐           ┌───┬───┬───┐
+  │ 1 │ 2 │ 3 │           │ 1 │ 4 │ 7 │
+  ├───┼───┼───┤   ───▶    ├───┼───┼───┤
+  │ 4 │ 5 │ 6 │           │ 2 │ 5 │ 8 │
+  ├───┼───┼───┤           ├───┼───┼───┤
+  │ 7 │ 8 │ 9 │           │ 3 │ 6 │ 9 │
+  └───┴───┴───┘           └───┴───┴───┘
+  
+  Transpose swaps: matrix[i][j] ↔ matrix[j][i]
+  
+  Swap pairs:
+    (0,1)↔(1,0): 2 ↔ 4
+    (0,2)↔(2,0): 3 ↔ 7
+    (1,2)↔(2,1): 6 ↔ 8
+
+Step 2: Reverse each row
+  Before:                  After:
+  ┌───┬───┬───┐           ┌───┬───┬───┐
+  │ 1 │ 4 │ 7 │           │ 7 │ 4 │ 1 │
+  ├───┼───┼───┤   ───▶    ├───┼───┼───┤
+  │ 2 │ 5 │ 8 │           │ 8 │ 5 │ 2 │
+  ├───┼───┼───┤           ├───┼───┼───┤
+  │ 3 │ 6 │ 9 │           │ 9 │ 6 │ 3 │
+  └───┴───┴───┘           └───┴───┴───┘
+  
+  Result: 90° clockwise rotation! ✓
+```
 
 ```python
 def rotate_90_clockwise(matrix):
@@ -253,6 +396,55 @@ print(transpose(matrix))
 ---
 
 ## 7. Set Matrix Zeros (In-Place)
+
+```
+Visual: Using First Row/Column as Markers (O(1) extra space)
+
+Original Matrix:
+  ┌───┬───┬───┬───┐
+  │ 1 │ 1 │ 1 │ 1 │
+  ├───┼───┼───┼───┤
+  │ 1 │ 0 │ 1 │ 1 │  ← Zero at (1,1)
+  ├───┼───┼───┼───┤
+  │ 1 │ 1 │ 1 │ 1 │
+  └───┴───┴───┴───┘
+
+Step 1: Check if first row/col has zeros
+  first_row_zero = False
+  first_col_zero = False
+
+Step 2: Mark zeros in first row/col
+  For each zero at (i,j), set matrix[i][0]=0 and matrix[0][j]=0
+  
+  ┌───┬───┬───┬───┐
+  │ 1 │ 0 │ 1 │ 1 │  ← matrix[0][1] = 0 (marked!)
+  ├───┼───┼───┼───┤
+  │ 0 │ 0 │ 1 │ 1 │  ← matrix[1][0] = 0 (marked!)
+  ├───┼───┼───┼───┤
+  │ 1 │ 1 │ 1 │ 1 │
+  └───┴───┴───┴───┘
+
+Step 3: Set cells to zero based on markers
+  If matrix[i][0] == 0 OR matrix[0][j] == 0, set matrix[i][j] = 0
+  
+  ┌───┬───┬───┬───┐
+  │ 1 │ 0 │ 1 │ 1 │
+  ├───┼───┼───┼───┤
+  │ 0 │ 0 │ 0 │ 0 │  ← Row 1 zeroed (matrix[1][0]==0)
+  ├───┼───┼───┼───┤
+  │ 1 │ 0 │ 1 │ 1 │  ← Col 1 zeroed (matrix[0][1]==0)
+  └───┴───┴───┴───┘
+
+Step 4: Handle first row/col (using saved flags)
+  Result:
+  ┌───┬───┬───┬───┐
+  │ 1 │ 0 │ 1 │ 1 │
+  ├───┼───┼───┼───┤
+  │ 0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┼───┤
+  │ 1 │ 0 │ 1 │ 1 │
+  └───┴───┴───┴───┘
+```
 
 ```python
 def set_zeroes(matrix):
@@ -532,17 +724,46 @@ def find_diagonal_order(matrix):
 
 ## Quick Reference Cheat Sheet
 
-| Operation | Time | Space |
-|-----------|------|-------|
-| Create NxN | O(n²) | O(n²) |
-| Row-Major Traverse | O(m*n) | O(1) |
-| Column-Major Traverse | O(m*n) | O(1) |
-| Spiral Order | O(m*n) | O(1) |
-| Rotate 90° CW (in-place) | O(n²) | O(1) |
-| Rotate 90° CCW (in-place) | O(n²) | O(1) |
-| Transpose (NxN) | O(n²) | O(1) |
-| Set Matrix Zeroes | O(m*n) | O(1) |
-| Search (sorted rows/cols) | O(m+n) | O(1) |
-| Search (binary search) | O(log(m*n)) | O(1) |
-| Diagonal Traversal | O(m*n) | O(m*n) |
-| Zigzag Diagonal | O(m*n) | O(m*n) |
+| Operation | Time | Space | When to Use |
+|-----------|------|-------|-------------|
+| Create NxN | O(n²) | O(n²) | Always needed |
+| Row-Major Traverse | O(m*n) | O(1) | Visit all elements |
+| Column-Major Traverse | O(m*n) | O(1) | Column-wise processing |
+| Spiral Order | O(m*n) | O(1) | Interview favorite, boundary simulation |
+| Rotate 90° CW (in-place) | O(n²) | O(1) | Image processing, puzzles |
+| Rotate 90° CCW (in-place) | O(n²) | O(1) | Reverse of clockwise |
+| Transpose (NxN) | O(n²) | O(1) | Row↔Column swap |
+| Set Matrix Zeroes | O(m*n) | O(1) | Marker technique, in-place constraint |
+| Search (sorted rows/cols) | O(m+n) | O(1) | Staircase search pattern |
+| Search (binary search) | O(log(m*n)) | O(1) | Fully sorted matrix |
+| Diagonal Traversal | O(m*n) | O(m*n) | Diagonal processing |
+| Zigzag Diagonal | O(m*n) | O(m*n) | Diagonal with alternating direction |
+
+### Decision Flowchart: Which Matrix Technique?
+
+```
+Need to process a matrix?
+│
+├── Traverse all elements?
+│   ├── Normal order → Row-major
+│   ├── Column by column → Column-major
+│   ├── Spiral pattern → Spiral traversal
+│   └── Diagonal pattern → Diagonal/Zigzag traversal
+│
+├── Transform the matrix?
+│   ├── Rotate 90° CW → Transpose + Reverse rows
+│   ├── Rotate 90° CCW → Reverse rows + Transpose
+│   ├── Rotate 180° → Reverse rows + Reverse each row
+│   ├── Transpose → Swap matrix[i][j] with matrix[j][i]
+│   └── Set zeros → Use first row/col as markers
+│
+├── Search in matrix?
+│   ├── Both row & col sorted → Top-right corner walk O(m+n)
+│   ├── Fully sorted (row-wise) → Binary search O(log(mn))
+│   └── Unsorted → Brute force O(mn) or hash map
+│
+└── Special patterns?
+    ├── Diagonal same elements → Toeplitz check
+    ├── 2D DFS/Backtracking → Word search, path finding
+    └── Constraint satisfaction → Sudoku solver
+```

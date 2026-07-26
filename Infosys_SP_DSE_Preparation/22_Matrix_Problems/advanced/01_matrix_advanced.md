@@ -2,6 +2,49 @@
 
 ## 1. Multiply Two Matrices
 
+```
+Visual: How Matrix Multiplication Works
+
+For A (m×n) × B (n×p) = C (m×p):
+
+  A (2×3):          B (3×2):          C = A × B (2×2):
+  ┌───┬───┬───┐     ┌───┬───┐         ┌──────┬──────┐
+  │ 1 │ 2 │ 3 │     │ 7 │ 8 │         │  58  │  64  │
+  ├───┼───┼───┤  ×  ├───┼───┤   =     ├──────┼──────┤
+  │ 4 │ 5 │ 6 │     │ 9 │10 │         │ 139  │ 154  │
+  └───┴───┴───┘     │11 │12 │         └──────┴──────┘
+                    └───┴───┘
+
+How each element is computed:
+  C[0][0] = A[0][0]×B[0][0] + A[0][1]×B[1][0] + A[0][2]×B[2][0]
+          = 1×7 + 2×9 + 3×11
+          = 7 + 18 + 33
+          = 58
+
+  C[0][1] = A[0][0]×B[0][1] + A[0][1]×B[1][1] + A[0][2]×B[2][1]
+          = 1×8 + 2×10 + 3×12
+          = 8 + 20 + 36
+          = 64
+
+  C[1][0] = A[1][0]×B[0][0] + A[1][1]×B[1][0] + A[1][2]×B[2][0]
+          = 4×7 + 5×9 + 6×11
+          = 28 + 45 + 66
+          = 139
+
+  C[1][1] = A[1][0]×B[0][1] + A[1][1]×B[1][1] + A[1][2]×B[2][1]
+          = 4×8 + 5×10 + 6×12
+          = 32 + 50 + 72
+          = 154
+
+Visual: Dot product of row × column
+  C[i][j] = row_i of A • column_j of B
+  
+  Row 0 of A:  [1, 2, 3]
+  Col 0 of B:  [7, 9, 11]
+               ↓  ↓  ↓
+  Dot product: 7 + 18 + 33 = 58
+```
+
 ```python
 def multiply_matrices(A, B):
     """Multiply matrix A (m x n) with matrix B (n x p).
@@ -267,6 +310,59 @@ print(pascal_element(5, 2))  # 10
 ---
 
 ## 5. Game of Life
+
+```
+Visual: Conway's Game of Life Rules
+
+Rules:
+  1. Live cell with < 2 live neighbors  → DIES (lonely)
+  2. Live cell with 2-3 live neighbors  → LIVES (happy)
+  3. Live cell with > 3 live neighbors  → DIES (overcrowded)
+  4. Dead cell with exactly 3 neighbors → BIRTH (reproduction)
+
+Visual: Neighbor counting (8 surrounding cells)
+  ┌───┬───┬───┐
+  │NW │ N │NE │    NW = North-West
+  ├───┼───┼───┤    N  = North
+  │ W │ C │ E │    NE = North-East
+  ├───┼───┼───┤    W  = West
+  │SW │ S │SE │    C  = Current cell
+  └───┴───┴───┘    E  = East
+                    SW = South-West
+                    S  = South
+                    SE = South-East
+
+Example: One step of the Game of Life
+
+  Before:                    After:
+  ┌───┬───┬───┬───┬───┐     ┌───┬───┬───┬───┬───┐
+  │   │   │   │   │   │     │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┤     ├───┼───┼───┼───┼───┤
+  │   │   │ ● │   │   │     │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┤     ├───┼───┼───┼───┼───┤
+  │   │ ● │ ● │ ● │   │ →   │   │ ● │ ● │ ● │   │
+  ├───┼───┼───┼───┼───┤     ├───┼───┼───┼───┼───┤
+  │   │   │ ● │   │   │     │   │   │   │   │   │
+  ├───┼───┼───┼───┼───┤     ├───┼───┼───┼───┼───┤
+  │   │   │   │   │   │     │   │   │   │   │   │
+  └───┴───┴───┴───┴───┘     └───┴───┴───┴───┴───┘
+  
+  Cell at (1,2): LIVE, has 3 neighbors → DIES (wait, 3 is okay!)
+  Actually: (1,2) has neighbors at (2,1),(2,2),(2,3) = 3 → LIVES
+  
+  Cell at (2,0): DEAD, has 2 neighbors → stays DEAD
+  
+  This is actually the "blinker" oscillator!
+  After next step it returns to original state.
+
+State encoding trick for in-place update:
+  0 → 0 (dead stays dead)
+  1 → 1 (alive stays alive)  
+  0 → 2 (dead becoming alive)
+  1 → 3 (alive becoming dead)
+  
+  When checking original state: use (val % 2 == 1) or (val in {1,3})
+```
 
 ```python
 def game_of_life(board):
@@ -619,15 +715,43 @@ print(median_in_row_sorted_matrix(matrix))  # 5
 
 ## Quick Reference - Advanced Matrix Techniques
 
-| Problem | Technique | Time | Space |
-|---------|-----------|------|-------|
-| Matrix Multiplication | Triple loop | O(m*n*p) | O(m*p) |
-| Strassen's | Divide & conquer | O(n^2.807) | O(n²) |
-| Rotate (4 ways) | Transpose/Reverse | O(n²) | O(1) |
-| Spiral Generation | Layer-by-layer | O(n²) | O(n²) |
-| Pascal's Triangle | Iterative | O(n²) | O(n) or O(1) |
-| Game of Life | State encoding | O(m*n) | O(1) |
-| Valid Sudoku | Hash sets | O(1) fixed | O(1) fixed |
-| Sudoku Solver | Backtracking | O(9^(empty)) | O(empty) |
-| Smallest Range (K lists) | Min-heap | O(N log k) | O(k) |
-| Median Row-Sorted | Binary search | O(m * log n * log(max-min)) | O(1) |
+| Problem | Technique | Time | Space | When to Use |
+|---------|-----------|------|-------|-------------|
+| Matrix Multiplication | Triple loop | O(m*n*p) | O(m*p) | Default for small matrices |
+| Strassen's | Divide & conquer | O(n^2.807) | O(n²) | Large matrices (n>64) |
+| Rotate (4 ways) | Transpose/Reverse | O(n²) | O(1) | In-place rotation needed |
+| Spiral Generation | Layer-by-layer | O(n²) | O(n²) | Fill matrix in spiral |
+| Pascal's Triangle | Iterative | O(n²) | O(n) or O(1) | Combinatorics on matrices |
+| Game of Life | State encoding | O(m*n) | O(1) | In-place simulation |
+| Valid Sudoku | Hash sets | O(1) fixed | O(1) fixed | Constraint checking |
+| Sudoku Solver | Backtracking | O(9^(empty)) | O(empty) | Constraint satisfaction |
+| Smallest Range (K lists) | Min-heap | O(N log k) | O(k) | Merge k sorted sources |
+| Median Row-Sorted | Binary search | O(m * log n * log(max-min)) | O(1) | Sorted matrix statistics |
+
+### Advanced Technique Decision Guide
+
+```
+Need advanced matrix operations?
+│
+├── Multiply matrices?
+│   ├── Small (n < 64) → Triple loop O(n³)
+│   └── Large (n > 64) → Strassen's O(n^2.807)
+│
+├── Rotate matrix?
+│   ├── 90° CW → Transpose + Reverse rows
+│   ├── 90° CCW → Reverse rows + Transpose
+│   └── 180° → Reverse rows + Reverse each row
+│
+├── Fill in spiral pattern?
+│   └── Layer-by-layer boundary simulation
+│
+├── Constraint satisfaction (Sudoku)?
+│   ├── Simple → Backtracking
+│   └── Optimized → Backtracking + constraint sets
+│
+├── Merge k sorted lists/arrays?
+│   └── Min-heap approach O(N log k)
+│
+└── Find median in sorted matrix?
+    └── Binary search on answer space
+```

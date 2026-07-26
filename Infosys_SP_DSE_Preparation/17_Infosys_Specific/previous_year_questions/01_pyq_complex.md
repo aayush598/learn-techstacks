@@ -2,13 +2,82 @@
 
 > 10 most challenging questions from Infosys SP L3 rounds.
 
+## Quick Reference: All Complex Problems
+
+```
+┌────┬──────────────────────────────┬─────────────┬────────────┬───────────────────┐
+│  # │ Problem                      │ Time        │ Space      │ Category          │
+├────┼──────────────────────────────┼─────────────┼────────────┼───────────────────┤
+│  1 │ Assignment (Bitmask DP)      │ O(n * 2^n)  │ O(2^n)     │ Bitmask DP        │
+│  2 │ Tree Range Queries           │ O(n log n)  │ O(n)       │ Tree + Segment    │
+│  3 │ TSP Variant                  │ O(2^n * n^2)│ O(2^n * n) │ Bitmask DP        │
+│  4 │ Interval Scheduling          │ O(n log n)  │ O(n)       │ DP + Binary Search│
+│  5 │ Graph Coloring               │ O(m^n)      │ O(n)       │ Backtracking      │
+│  6 │ Aho-Corasick                 │ O(n+m+z)    │ O(m)       │ String Matching   │
+│  7 │ Matrix Chain                 │ O(n^3)      │ O(n^2)     │ Interval DP       │
+│  8 │ Egg Dropping                 │ O(eggs*n*lg)│ O(eggs*n)  │ DP + Binary Search│
+│  9 │ Connect Cities (MST)         │ O(E log E)  │ O(N)       │ Union-Find        │
+│ 10 │ MWIS Tree                    │ O(n)        │ O(n)       │ Tree DP           │
+└────┴──────────────────────────────┴─────────────┴────────────┴───────────────────┘
+
+SP L3 STRATEGY:
+  - These problems combine MULTIPLE concepts
+  - Always identify the core pattern first
+  - Partial solutions earn partial marks
+  - Explain your approach clearly before coding
+```
+
 ---
 
 ## 1. DP + Bitmask State Compression
 
 **Problem Statement:** Given N jobs and N workers, each worker has different skill level for each job. Assign each worker exactly one job to minimize total cost. This is the Assignment Problem using bitmask DP.
 
-**Approach:** dp[mask] = minimum cost to assign workers represented by set bits in mask. mask is a bitmask of assigned workers.
+### Visual: Bitmask State Explanation
+
+```
+N = 3 workers, 3 jobs
+cost = [[3, 7, 5],    Worker 0: job costs 3, 7, 5
+        [5, 2, 9],    Worker 1: job costs 5, 2, 9
+        [6, 1, 4]]    Worker 2: job costs 6, 1, 4
+
+BITMASK REPRESENTATION:
+  mask = binary number where bit i = 1 means job i is assigned
+  
+  mask=000 (0): no jobs assigned
+  mask=001 (1): job 0 assigned
+  mask=010 (2): job 1 assigned
+  mask=011 (3): jobs 0,1 assigned
+  mask=100 (4): job 2 assigned
+  mask=111 (7): all jobs assigned (FULL MASK!)
+
+DP TRANSITION:
+  dp[mask] = min cost to assign workers for jobs in mask
+  
+  For each state 'mask':
+    worker = count of set bits in mask (= which worker we're assigning)
+    For each unassigned job j:
+      new_mask = mask | (1 << j)
+      dp[new_mask] = min(dp[new_mask], dp[mask] + cost[worker][j])
+
+VISUAL DP TABLE (N=3):
+  mask=000: dp=0 (start)
+    → assign job 0: dp[001] = min(inf, 0+3) = 3
+    → assign job 1: dp[010] = min(inf, 0+7) = 7
+    → assign job 2: dp[100] = min(inf, 0+5) = 5
+    
+  mask=001: dp=3 (job 0 done, worker 1 next)
+    → assign job 1: dp[011] = min(inf, 3+2) = 5
+    → assign job 2: dp[101] = min(inf, 3+9) = 12
+    
+  mask=010: dp=7 (job 1 done, worker 1 next)
+    → assign job 0: dp[011] = min(5, 7+5) = 5 (keep 5)
+    → assign job 2: dp[110] = min(inf, 7+9) = 16
+    
+  ... continue until mask=111
+
+  Answer: dp[111] = minimum cost ✅
+```
 
 ```python
 def min_cost_assignment(cost):
@@ -153,7 +222,40 @@ print(tsp_max_profit(dist, profit, 0, 50, 3))
 
 **Problem Statement:** Given N intervals with start, end time and profit, find maximum profit such that no two selected intervals overlap.
 
-**Approach:** Sort by end time + DP with binary search.
+### Visual: Sort + DP + Binary Search
+
+```
+Intervals: [(1,3,5), (2,4,6), (3,5,4), (4,6,3)]
+            start,end,profit
+
+SORT BY END TIME:
+  (1,3,5), (2,4,6), (3,5,4), (4,6,3)
+   end=3   end=4   end=5   end=6
+
+DP TABLE:
+  dp[i] = max profit considering first i intervals
+  
+  dp[0] = 0 (no intervals)
+  dp[1] = max(dp[0], profit_1) = max(0, 5) = 5
+  dp[2] = max(dp[1], dp[prev_non_overlap] + profit_2)
+        = max(5, 0+6) = 6  (interval 2 starts at 2, prev non-overlap is 0)
+  dp[3] = max(dp[2], dp[prev] + profit_3)
+        = max(6, dp[1]+4) = max(6, 5+4) = 9  (interval 3 starts at 3, prev is interval 1)
+  dp[4] = max(dp[3], dp[prev] + profit_4)
+        = max(9, dp[2]+3) = max(9, 6+3) = 9  (interval 4 starts at 4, prev is interval 2)
+
+VISUAL:
+  Time:  1  2  3  4  5  6
+         ├──────┤           Interval 1: profit 5
+            ├──────┤        Interval 2: profit 6
+               ├──────┤     Interval 3: profit 4
+                  ├──────┤  Interval 4: profit 3
+                  
+  Best selection: (1,3,5) + (3,5,4) = profit 9
+  OR: (2,4,6) + (4,6,3) = profit 9
+```
+
+---
 
 ```python
 import bisect

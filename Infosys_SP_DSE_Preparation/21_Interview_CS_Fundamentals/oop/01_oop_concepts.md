@@ -883,6 +883,327 @@ print(AnotherClass.class_id)  # anotherclass
 
 ---
 
+## Real-World Analogies for OOP Concepts
+
+```
+╔══════════════════════════════════════════════════════════════════╗
+║               OOP CONCEPT -> REAL WORLD ANALOGY                ║
+╠══════════════════════════════════════════════════════════════════╣
+║                                                                ║
+║  ENCAPSULATION = ATM Machine                                   ║
+║  - You see buttons (public interface)                          ║
+║  - Internal wiring is hidden (private)                         ║
+║  - You can't bypass the screen to access money directly        ║
+║                                                                ║
+║  INHERITANCE = Family Traits                                   ║
+║  - Child inherits eye color, height from parents               ║
+║  - Child can also have unique traits (own methods)             ║
+║  - Dog inherits from Animal, adds breed-specific behavior      ║
+║                                                                ║
+║  POLYMORPHISM = Remote Control                                 ║
+║  - Same "power" button turns on TV, AC, or fan                ║
+║  - Same method name, different behavior per device             ║
+║                                                                ║
+║  ABSTRACTION = Car Driving                                     ║
+║  - You use steering wheel and pedals (interface)               ║
+║  - You don't need to know engine internals (implementation)   ║
+║                                                                ║
+║  SINGLETON = President of a Country                            ║
+║  - Only ONE instance can exist at a time                       ║
+║  - Everyone refers to the same president                       ║
+║                                                                ║
+║  FACTORY = Car Factory                                         ║
+║  - You request a "car" and get Sedan, SUV, or Truck           ║
+║  - Factory decides which specific class to create              ║
+║                                                                ║
+║  OBSERVER = YouTube Subscriptions                              ║
+║  - You subscribe (attach) to a channel                         ║
+║  - New video uploaded -> all subscribers get notified          ║
+║  - You unsubscribe (detach) anytime                            ║
+╚══════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Visual: Inheritance Hierarchy
+
+```
+                    ┌──────────┐
+                    │  Object  │  (base of everything in Python)
+                    └────┬─────┘
+                         │
+                    ┌────┴─────┐
+                    │  Animal  │  (has: name, sound, speak())
+                    └────┬─────┘
+                 ┌───────┴───────┐
+            ┌────┴────┐     ┌────┴────┐
+            │   Dog   │     │   Cat   │
+            │ (breed) │     │ (indoor)│
+            │ fetch() │     │ purr()  │
+            └─────────┘     └─────────┘
+                 │
+            ┌────┴────┐
+            │  Puppy  │  (inherits from Dog)
+            └─────────┘
+
+Method Resolution Order (MRO):
+Puppy.mro() = [Puppy, Dog, Animal, object]
+When calling speak(), Python checks:
+1. Puppy -> not found
+2. Dog -> not found
+3. Animal -> found! Uses Animal.speak()
+```
+
+---
+
+## Visual: Polymorphism in Action
+
+```
+Same method name, different behavior per class:
+
+  shapes = [Circle(5), Rectangle(4,6), Triangle(3,8)]
+
+  shape.describe() calls:
+  ┌─────────────────────────────────────────────────┐
+  │  shape is Circle?     -> area = pi*r^2 = 78.54  │
+  │  shape is Rectangle?  -> area = w*h = 24.00      │
+  │  shape is Triangle?   -> area = 0.5*b*h = 12.00  │
+  └─────────────────────────────────────────────────┘
+
+  The SAME for loop works for ALL shapes!
+  No if/else checking type - that's polymorphism!
+```
+
+---
+
+## Visual: Encapsulation Access Levels
+
+```
+┌─────────────────────────────────────────────────────┐
+│                 BankAccount Class                    │
+├─────────────────────────────────────────────────────┤
+│ PUBLIC (self.owner)     -> Anyone can access        │
+│   owner = "Alice"       -> acc.owner works          │
+│                                                     │
+│ PROTECTED (self._pin)   -> Class + subclasses       │
+│   _pin = 1234           -> acc._pin works (by conv) │
+│                                                     │
+│ PRIVATE (self.__secret) -> Only this class          │
+│   __secret = "xyz"      -> acc.__secret FAILS!      │
+│                             Need: acc._Bank__secret  │
+│                                                     │
+│ PROPERTY (@property)    -> Controlled access        │
+│   acc.balance            -> Getter (read-only)      │
+│   acc.balance = 1000     -> Setter (with validation)│
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+## Design Patterns Visual Guide
+
+### Singleton Pattern
+
+```
+Normal Class:                Singleton:
+  obj1 = A()                  obj1 = A()
+  obj2 = A()                  obj2 = A()
+  obj1 != obj2                obj1 is obj2  (same object!)
+
+Memory:
+┌──────────┐                ┌──────────┐
+│  obj1    │                │  obj1    │
+│  [A] ────┼──> obj1 data   │  [A] ────┼──> ONE copy
+└──────────┘                │          │
+┌──────────┐                │  obj2 ───┼──> (same!)
+│  obj2    │                └──────────┘
+│  [A] ────┼──> obj2 data
+└──────────┘
+```
+
+### Factory Pattern
+
+```
+Client Code                    Factory
+─────────────                  ──────────────
+notification =                 NotificationFactory.create("email")
+  Factory.create("email")        ├──> EmailNotification
+  Factory.create("sms")          ├──> SMSNotification
+  Factory.create("push")         └──> PushNotification
+
+Client doesn't know which class it gets!
+Just says "give me a notification of type X"
+```
+
+### Observer Pattern
+
+```
+          ┌──────────┐
+          │ Subject  │
+          │ (Stock)  │
+          └────┬─────┘
+               │ notify()
+       ┌───────┼───────┐
+       ▼       ▼       ▼
+  ┌────────┐┌────────┐┌────────┐
+  │Observer││Observer││Observer│
+  │ (Email)││ (SMS)  ││ (Push) │
+  └────────┘└────────┘└────────┘
+
+When stock price changes:
+1. Subject.price = 150
+2. Subject calls notify() on ALL observers
+3. Each observer reacts independently
+```
+
+---
+
+## MRO (Method Resolution Order) Deep Dive
+
+```
+Diamond Problem:
+
+        ┌─────────┐
+        │    A    │
+        └────┬────┘
+         ┌───┴───┐
+    ┌────┴──┐ ┌──┴────┐
+    │   B   │ │   C   │
+    └───┬───┘ └───┬───┘
+        └────┬────┘
+        ┌────┴────┐
+        │    D    │
+        └─────────┘
+
+D.__mro__ = (D, B, C, A, object)
+
+C3 Linearization Rules:
+1. Children before parents
+2. Left before right (in class definition)
+3. Preserves local precedence order
+
+Python code:
+class D(B, C): pass
+# MRO: D -> B -> C -> A -> object
+# Not D -> B -> A -> C -> A (no duplication!)
+```
+
+---
+
+## Common Interview Questions (Extended)
+
+### Q6: Explain the diamond problem and how Python resolves it.
+
+**Answer:** Diamond problem occurs when a class inherits from two classes that share a common parent.
+
+```
+        ┌─────┐
+        │  A  │  <- has method()
+        └──┬──┘
+       ┌───┴───┐
+   ┌───┴──┐ ┌──┴───┐
+   │  B   │ │  C   │  <- both override method()
+   └──┬───┘ └──┬───┘
+      └───┬────┘
+      ┌───┴───┐
+      │   D   │  <- which method() does D call?
+      └───────┘
+
+Python resolves with MRO (C3 Linearization):
+D.mro() = [D, B, C, A, object]
+
+So D().method() calls B.method() (left parent first)
+```
+
+### Q7: What is the Liskov Substitution Principle?
+
+**Answer:** Subtypes must be substitutable for their base types without breaking the program.
+
+```python
+# BAD Example (violates LSP):
+class Bird:
+    def fly(self):
+        return "Flying"
+
+class Penguin(Bird):
+    def fly(self):
+        raise Exception("Penguins can't fly!")  # Breaks expectation!
+
+# If code expects Bird.fly() to work, Penguin breaks it.
+
+# GOOD Example:
+class Bird:
+    def move(self):
+        return "Moving"
+
+class FlyingBird(Bird):
+    def move(self):
+        return "Flying"
+
+class Penguin(Bird):
+    def move(self):
+        return "Swimming"  # Still valid - penguin moves, just differently
+```
+
+### Q8: Explain Shallow vs Deep Copy with a diagram.
+
+```
+Original List: [[1,2,3], [4,5,6]]
+
+Shallow Copy:
+  shallow = copy.copy(original)
+  ┌──────────────┐     ┌──────────────┐
+  │ shallow list │     │original list │
+  │  [0] ────────┼─────┼──> [1,2,3]  │  <- SAME inner list!
+  │  [1] ────────┼─────┼──> [4,5,6]  │  <- SAME inner list!
+  └──────────────┘     └──────────────┘
+  Changing shallow[0][0] = 999 affects original too!
+
+Deep Copy:
+  deep = copy.deepcopy(original)
+  ┌──────────────┐
+  │ deep list    │
+  │  [0] ────────┼──> [1,2,3]  (NEW copy)
+  │  [1] ────────┼──> [4,5,6]  (NEW copy)
+  └──────────────┘
+  ┌──────────────┐
+  │original list │
+  │  [0] ────────┼──> [1,2,3]  (separate)
+  │  [1] ────────┼──> [4,5,6]  (separate)
+  └──────────────┘
+  Changing deep[0][0] = 999 does NOT affect original!
+```
+
+### Q9: What is the difference between `__str__` and `__repr__`?
+
+```python
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        """Human-readable: for print(), str(), f-strings"""
+        return f"({self.x}, {self.y})"
+
+    def __repr__(self):
+        """Developer string: for debugging, repr(), containers"""
+        return f"Point(x={self.x}, y={self.y})"
+
+p = Point(3, 4)
+
+print(str(p))     # (3, 4)       <- uses __str__
+print(repr(p))    # Point(x=3, y=4) <- uses __repr__
+print(p)          # (3, 4)       <- uses __str__
+print([p])        # [Point(x=3, y=4)] <- list uses __repr__
+
+Rule of thumb:
+- __str__: focus on readability
+- __repr__: focus on unambiguous representation
+```
+
+---
+
 ## Quick Reference Cheat Sheet
 
 | Concept | Key Points |
@@ -901,3 +1222,5 @@ print(AnotherClass.class_id)  # anotherclass
 | `__repr__` | Developer string (debugging) |
 | `__eq__` | Custom equality comparison |
 | `__hash__` | Required if objects used in sets/dicts |
+| LSP | Subtypes must be substitutable for base types |
+| Diamond | Two parents share common ancestor; resolved by MRO |

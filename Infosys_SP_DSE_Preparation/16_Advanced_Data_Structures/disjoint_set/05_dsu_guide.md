@@ -1,32 +1,110 @@
 # Disjoint Set Union (Union-Find) Guide
 
-## What is Disjoint Set Union?
+> **What is DSU?** A data structure that tracks elements partitioned into disjoint (non-overlapping) sets. It supports near-constant-time `find` and `union` operations — making it perfect for connected component problems.
 
-DSU (also called Union-Find) is a data structure that tracks a set of elements partitioned into disjoint (non-overlapping) subsets. It supports two main operations:
-1. **Find:** Determine which set an element belongs to
-2. **Union:** Merge two sets into one
+---
 
-**When to use:**
-- Tracking connected components in a graph
-- Detecting cycles in undirected graphs
-- Kruskal's Minimum Spanning Tree
-- Dynamic connectivity problems
-- Accounts merge problems
+## Visual: What DSU Looks Like in Memory
 
-**Key Properties:**
-- Each set is represented by a representative element (root)
-- Elements point to their parent until they reach the root
-- Path compression and union by rank optimize operations
+```
+  Initial state (n=7): Each element is its own set
 
-**Comparison with DFS/BFS:**
-| Feature | DSU | DFS/BFS |
-|---------|-----|---------|
-| Find connected components | O(α(n)) amortized | O(V + E) |
-| Dynamic connectivity | O(α(n)) | O(V + E) |
-| Space | O(V) | O(V + E) |
-| Implementation complexity | Simple | Moderate |
+  Parent array: [0, 1, 2, 3, 4, 5, 6]
+                 ↑  ↑  ↑  ↑  ↑  ↑  ↑
+                 |  |  |  |  |  |  └── 6 is root of {6}
+                 |  |  |  |  |  └──── 5 is root of {5}
+                 |  |  |  |  └─────── 4 is root of {4}
+                 |  |  |  └────────── 3 is root of {3}
+                 |  |  └───────────── 2 is root of {2}
+                 |  └──────────────── 1 is root of {1}
+                 └─────────────────── 0 is root of {0}
 
-Where α is the inverse Ackermann function (practically constant)
+  Visual forest:
+    (0)  (1)  (2)  (3)  (4)  (5)  (6)    ← 7 separate sets
+
+  After union(0,1), union(1,2), union(3,4), union(5,6), union(4,5):
+
+  Parent array: [0, 0, 0, 3, 3, 3, 3]
+                 ↑  |  |  ↑  |  |  |
+                 |  └──┘  |  └──┘  |
+                 0 is root  3 is root
+
+  Visual forest:
+       (0)         (3)
+      / |          /| \
+    (1) (2)     (4)(5)(6)
+
+  Two connected components: {0,1,2} and {3,4,5,6}
+```
+
+---
+
+## Visual: Path Compression
+
+```
+  Before path compression:
+       0              find(4) would follow: 4→3→1→0
+  
+      / \             
+    (1)   (2)         This is SLOW — O(depth) per query!
+    /                  
+  (3)                  
+  /                    
+(4)                    
+
+  After path compression:
+  find(4) makes ALL nodes on the path point directly to root:
+
+       0              Now find(4) is O(1)!
+      /|\ \           
+    (1)(2)(3)(4)      Every node points directly to root.
+                      
+  Path compression "flattens" the tree dramatically.
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Code:                                               │
+  │    def find(x):                                      │
+  │        if parent[x] != x:                           │
+  │            parent[x] = find(parent[x])  ← key line! │
+  │        return parent[x]                              │
+  │                                                      │
+  │  The "parent[x] = find(parent[x])" line makes       │
+  │  every visited node point DIRECTLY to the root.      │
+  └──────────────────────────────────────────────────────┘
+```
+
+---
+
+## Visual: Union by Rank
+
+```
+  Without union by rank — can create long chains:
+       0
+       |
+      (1)
+       |
+      (2)
+       |
+      (3)          depth = 3! Bad for performance.
+
+  With union by rank — always attach smaller tree under larger:
+
+  union(3, 4):     union(0, 3):
+       3                0
+       |              / | \
+      (4)           (1)(2)(3)
+                               \
+                               (4)
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Union by rank ensures the tree stays shallow.        │
+  │  With BOTH path compression + union by rank:          │
+  │  find/union are O(α(n)) ≈ O(1) amortized!           │
+  │                                                      │
+  │  α(n) = inverse Ackermann function                   │
+  │  For all practical n (up to 10^8000), α(n) ≤ 4!     │
+  └──────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -329,6 +407,35 @@ print(f"All components: {get_all_components(n, edges)}")  # [[0, 1, 2], [3, 4]]
 
 ### 3.5 Detect Cycle in Undirected Graph
 
+### Visual: How DSU Detects Cycles
+
+```
+  Edges: [(0,1), (1,2), (2,0)]
+
+  Edge (0,1): union(0,1) → success
+    (0)
+     |
+    (1)            Sets: {0,1}, {2}
+
+  Edge (1,2): union(1,2) → success
+    (0)
+     |
+    (1)            Sets: {0,1,2}
+     |
+    (2)
+
+  Edge (2,0): union(2,0) → FAILS! (2 and 0 already connected)
+    (0)---(2)      CYCLE DETECTED!
+     \   /
+      (1)
+
+  ┌──────────────────────────────────────────────────────┐
+  │  RULE: If union(u, v) returns False,                  │
+  │        then u and v are ALREADY in the same set,      │
+  │        which means adding edge (u,v) creates a cycle! │
+  └──────────────────────────────────────────────────────┘
+```
+
 ```python
 def has_cycle(n, edges):
     """Detect if undirected graph has a cycle using DSU"""
@@ -386,6 +493,65 @@ print(f"Has cycle: {has_cycle(n, edges2)}")  # True
 ---
 
 ### 3.6 Kruskal's Minimum Spanning Tree
+
+### Visual: Kruskal's Algorithm Step-by-Step
+
+```
+  Graph with edges:
+  (0,1,10), (0,2,6), (0,3,5), (1,3,15), (2,3,4)
+
+  Step 1: Sort edges by weight:
+  ┌──────┬────────────┬────────┐
+  │ Step │   Edge     │ Weight │
+  ├──────┼────────────┼────────┤
+  │  1   │  (2,3)     │   4    │
+  │  2   │  (0,3)     │   5    │
+  │  3   │  (0,2)     │   6    │
+  │  4   │  (0,1)     │  10    │
+  │  5   │  (1,3)     │  15    │
+  └──────┴────────────┴────────┘
+
+  Step 2: Process edges in order:
+
+  Edge (2,3) weight 4:  union(2,3) → success (different sets)
+       2                 MST: {(2,3)}
+       |
+      (3)
+
+  Edge (0,3) weight 5:  union(0,3) → success
+       0
+       |
+      (3)               MST: {(2,3), (0,3)}
+       |
+      (2)
+
+  Edge (0,2) weight 6:  union(0,2) → FAIL! (same set!)
+       0                 0 and 2 already connected.
+       |                 SKIP this edge.
+      (3)
+       |
+      (2)
+
+  Edge (0,1) weight 10: union(0,1) → success
+         0
+       / | \             MST: {(2,3), (0,3), (0,1)}
+     (1)(3)
+          |
+         (2)
+
+  Edge (1,3) weight 15: union(1,3) → FAIL! (same set!)
+  SKIP.
+
+  MST weight = 4 + 5 + 10 = 19 ✓
+  MST edges = [(2,3,4), (0,3,5), (0,1,10)]
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Key: union returns False when both nodes are in     │
+  │  the same set → this would create a cycle → skip!    │
+  │                                                      │
+  │  This is exactly how DSU detects cycles in Kruskal's │
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 def kruskal_mst(n, edges):
@@ -678,6 +844,35 @@ print(f"Regions: {regions_by_slashes(grid)}")  # 5
 ---
 
 ## 5. Weighted DSU
+
+### Visual: What Weighted DSU Tracks
+
+```
+  Weighted DSU tracks the WEIGHT (distance) between nodes.
+
+  union(0, 1, 5): weight(1) - weight(0) = 5
+  union(1, 2, 3): weight(2) - weight(1) = 3
+
+  Visual:
+    (0)          root = 0
+     | 5
+    (1)          weight from 0 to 1 = 5
+     | 3
+    (2)          weight from 1 to 2 = 3
+
+  Query: diff(0, 2) = weight(2) - weight(0) = 5 + 3 = 8
+
+  ┌──────────────────────────────────────────────────────┐
+  │  When to use Weighted DSU:                            │
+  │  • "The employee with ID x earns $y more than ID z"  │
+  │  • "Node x is y units above node z"                  │
+  │  • Check if a set of equations is CONSISTENT         │
+  │  • Detect contradictory information                  │
+  │                                                      │
+  │  Example: If we get union(0, 2, 7) but diff(0,2) = 8│
+  │  → CONTRADICTION! The equations are inconsistent.    │
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 class WeightedDSU:

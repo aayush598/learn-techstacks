@@ -12,7 +12,69 @@
 
 ---
 
+## Path Problem Taxonomy
+
+```
+Not all path problems are the same! Understand the constraints:
+
+╔══════════════════════════════════════════════════════════════════════════╗
+║  Path type          │ Constraint                                       ║
+║ ────────────────────┼────────────────────────────────────────────────── ║
+║  Root-to-leaf       │ Must start at root, end at leaf                  ║
+║  Any-to-any         │ Can start and end at any node                   ║
+║  Downward only      │ Must go parent → child (no going up)            ║
+║  Through any node   │ Can pass through any node (like a road)         ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+Quick identification:
+  "root to leaf sum"     → Path Sum I/II (DFS with remaining sum)
+  "any path sum"         → Path Sum III (prefix sum trick)
+  "max path sum"         → Max Path Sum (contribution pattern)
+  "longest path"         → Diameter (depth of left + right)
+  "consecutive"          → Longest Consecutive (DFS with parent tracking)
+```
+
+---
+
 ## 1. Path Sum I
+
+### Concept Walkthrough
+
+**Does any root-to-leaf path sum equal targetSum?**
+
+```
+            5
+           / \
+          4   8
+         /   / \
+        11  13  4
+       / \       \
+      7   2       1
+
+targetSum = 22
+
+Path 1: 5 → 4 → 11 → 7 = 27 ✗
+Path 2: 5 → 4 → 11 → 2 = 22 ✓ ← FOUND!
+Path 3: 5 → 8 → 13 = 26 ✗
+Path 4: 5 → 8 → 4 → 1 = 18 ✗
+```
+
+### DFS with Remaining Sum
+
+```
+At each node, subtract node value from remaining sum.
+At leaf, check if remaining sum equals leaf value.
+
+Start: remaining = 22
+
+5: remaining = 22 - 5 = 17
+  4: remaining = 17 - 4 = 13
+    11: remaining = 13 - 11 = 2
+      7: leaf! 7 == 2? No ✗
+      2: leaf! 2 == 2? Yes ✓ → return True
+
+Answer: True
+```
 
 ```python
 class TreeNode:
@@ -101,6 +163,92 @@ def path_sum_ii(root, target_sum):
 
 ## 3. Path Sum III
 
+### Concept: The Prefix Sum Trick
+
+**Paths can start and end at ANY node (not just root/leaf). Must go downward.**
+
+```
+This is the same as "Subarray Sum Equals K" but on a tree!
+
+Array version:  [1, 2, 3] → prefix_sum[i] - prefix_sum[j] = target
+Tree version:   root-to-node sum - some ancestor sum = target
+
+prefix_sum = running sum from root to current node
+If (prefix_sum - target) was seen before, we found a valid path!
+```
+
+### Visual Walkthrough
+
+```
+            10
+           /  \
+          5   -3
+         / \    \
+        3   2   11
+       / \   \
+      3  -2   1
+
+targetSum = 8
+
+DFS traversal with prefix sums:
+─────────────────────────────────────────────────
+Node 10: prefix = 10
+  needed = 10 - 8 = 2 → not in prefix_sums → count = 0
+  prefix_sums = {0:1, 10:1}
+
+Node 5: prefix = 10+5 = 15
+  needed = 15 - 8 = 7 → not in prefix_sums → count = 0
+  prefix_sums = {0:1, 10:1, 15:1}
+
+Node 3: prefix = 15+3 = 18
+  needed = 18 - 8 = 10 → 10 is in prefix_sums! count = 1
+  (Path: 5 → 3, sum = 8) ✓
+  prefix_sums = {0:1, 10:1, 15:1, 18:1}
+
+Node 3: prefix = 18+3 = 21
+  needed = 21 - 8 = 13 → not found → count = 0
+  prefix_sums = {0:1, 10:1, 15:1, 18:1, 21:1}
+  Backtrack: remove 21
+
+Node -2: prefix = 18+(-2) = 16
+  needed = 16 - 8 = 8 → not found → count = 0
+  Backtrack: remove 16
+
+Node 2: prefix = 15+2 = 17
+  needed = 17 - 8 = 9 → not found → count = 0
+
+Node 1: prefix = 17+1 = 18
+  needed = 18 - 8 = 10 → 10 is in prefix_sums! count = 1
+  (Path: 5 → 2 → 1, sum = 8) ✓
+
+Node -3: prefix = 10+(-3) = 7
+  needed = 7 - 8 = -1 → not found → count = 0
+
+Node 11: prefix = 7+11 = 18
+  needed = 18 - 8 = 10 → 10 is in prefix_sums! count = 1
+  (Path: -3 → 11, sum = 8) ✓
+
+Total count = 3 paths: [5,3], [5,2,1], [-3,11]
+─────────────────────────────────────────────────
+```
+
+### Why Backtracking Is Essential
+
+```
+Without backtracking: prefix_sums keeps ALL ancestors' sums
+With backtracking: only sums from root-to-current path
+
+Without backtracking (WRONG):
+  After visiting left subtree of 10, prefix_sums has sums from left.
+  When visiting right subtree, those left subtree sums are still there.
+  This would count paths through the left subtree from the right subtree,
+  which is NOT valid (paths must go downward).
+
+With backtracking (CORRECT):
+  When we return from a subtree, we remove its prefix sums.
+  This ensures only ancestor sums remain in the map.
+```
+
 ```python
 def path_sum_iii(root, target_sum):
     """Count paths (any start, any end) that sum to targetSum.
@@ -188,6 +336,73 @@ def path_sum_iii_optimized(root, target_sum):
 
 ## 4. Binary Tree Maximum Path Sum
 
+### The Two Calculations Pattern
+
+**Each node calculates TWO different things:**
+
+```
+            1
+           / \
+          2   3
+
+At node 2:
+  1. Path THROUGH this node (can go both left and right):
+     2 + 0 + 0 = 2  (no children contribute positively)
+     → This is a CANDIDATE for global max
+
+  2. Max gain going DOWNWARD (for parent's use):
+     2 + max(0, 0) = 2
+     → Parent can only extend ONE direction
+
+At node 1:
+  1. Path through 1: 1 + max(2,0) + max(3,0) = 1 + 2 + 3 = 6
+     → global_max = 6 ✓
+
+  2. Max gain going downward: 1 + max(2, 3) = 4
+     → Not used (root has no parent)
+```
+
+### Visual Walkthrough
+
+```
+         -10
+         /  \
+        9   20
+           /  \
+          15   7
+
+Node 9:  left_gain=0, right_gain=0
+  path_through = 9 + 0 + 0 = 9
+  max_sum = 9
+  return 9 (contribution to parent)
+
+Node 15: left_gain=0, right_gain=0
+  path_through = 15 + 0 + 0 = 15
+  max_sum = 15
+  return 15
+
+Node 7: left_gain=0, right_gain=0
+  path_through = 7 + 0 + 0 = 7
+  max_sum = 15 (unchanged)
+  return 7
+
+Node 20: left_gain=15, right_gain=7
+  path_through = 20 + 15 + 7 = 42
+  max_sum = 42 ✓ ← THE ANSWER!
+  return 20 + max(15, 7) = 35
+
+Node -10: left_gain=9, right_gain=35
+  path_through = -10 + 9 + 35 = 34
+  max_sum = 42 (unchanged)
+  return -10 + max(9, 35) = 25
+
+Final answer: 42 (path: 15 → 20 → 7)
+```
+
+**Key Insight:** Each node calculates two things:
+1. **Path through this node** (for global answer): `node + left_gain + right_gain`
+2. **Max gain downward** (for parent): `node + max(left, right)`
+
 ```python
 def max_path_sum(root):
     """Maximum path sum where path can start and end at ANY node.
@@ -240,6 +455,46 @@ def max_path_sum(root):
 ---
 
 ## 5. Diameter of Binary Tree
+
+### Concept
+
+**Longest path between any two nodes (number of edges).**
+
+```
+            1
+           / \
+          2   3
+         / \
+        4   5
+
+Possible paths:
+  4 → 2 → 1 → 3  (3 edges) ← LONGEST
+  5 → 2 → 1 → 3  (3 edges) ← also longest
+  4 → 2 → 5      (2 edges)
+  1 → 2 → 4      (2 edges)
+
+Diameter = 3
+```
+
+### Same Pattern as Max Path Sum
+
+```
+At each node:
+  diameter_through_node = left_depth + right_depth
+
+At node 2:
+  left_depth = 1 (node 4)
+  right_depth = 1 (node 5)
+  diameter = 1 + 1 = 2
+
+At node 1:
+  left_depth = 2 (2→4 or 2→5)
+  right_depth = 1 (node 3)
+  diameter = 2 + 1 = 3 ← ANSWER!
+
+The diameter may or may not pass through root!
+We track the GLOBAL max at every node.
+```
 
 ```python
 def diameter_of_binary_tree(root):
@@ -520,6 +775,28 @@ def longest_consecutive_v2(root):
 | Root to Leaf Paths | DFS + backtrack | O(n^2) | O(n) |
 | Path via LCA | Find LCA + find paths | O(n) | O(h) |
 | Longest Consecutive | DFS with parent tracking | O(n) | O(h) |
+
+### Problem Identification Guide
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║  "root to leaf" + "sum"     → Path Sum I/II (DFS with subtraction)    ║
+║  "any path" + "sum"         → Path Sum III (prefix sum)               ║
+║  "max path sum"             → Max Path Sum (contribution pattern)     ║
+║  "longest path" / "diameter"→ Diameter (depth of left + right)        ║
+║  "all root-to-leaf paths"   → DFS + backtracking                      ║
+║  "path between two nodes"   → LCA + find paths from LCA               ║
+║  "consecutive sequence"     → DFS with parent value tracking          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+### Common Patterns
+
+1. **Subtract from target** — Path Sum I/II: pass remaining sum down
+2. **Prefix sum** — Path Sum III: same as subarray sum = k on arrays
+3. **Two calculations** — Max Path Sum: path-through-node AND downward-gain
+4. **Backtracking** — Path Sum II/Root-to-Leaf: build path, pop on return
+5. **Global variable** — Diameter/Max Path Sum: update max at each node
 
 **Interview Tips:**
 - Path Sum III prefix sum trick is the same as subarray sum = k

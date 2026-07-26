@@ -8,6 +8,11 @@ for every directed edge (u, v), vertex u comes before vertex v.
 
 Only possible for Directed Acyclic Graphs (DAGs).
 
+REAL-WORLD ANALOGY:
+  Imagine getting dressed — you MUST put on socks before shoes,
+  shirt before jacket, etc. Topological sort gives you a valid
+  order to do everything respecting dependencies.
+
 Example:
     5 → 0 → 4
     5 → 2 → 3 → 1
@@ -17,10 +22,67 @@ Example:
     [5, 2, 0, 3, 4, 1]
     [5, 2, 3, 0, 4, 1]
     
-    Invalid: [0, 5, ...] because 5 must come before 0
+    INVALID: [0, 5, ...] because 5 must come before 0!
+
+VISUAL — Kahn's Algorithm Step-by-Step:
+
+  Graph:                In-degrees:
+  5→0, 5→2, 4→0,       Node │ In-degree
+  4→1, 2→3, 3→1        ─────┼──────────
+                            0 │ 2 (from 5,4)
+    5 → 0 → 4           1 │ 2 (from 4,3)
+    ↓   ↑   ↓           2 │ 1 (from 5)
+    2 → 3   1           3 │ 1 (from 2)
+                        4 │ 0 (no incoming!)
+                        5 │ 0 (no incoming!)
+
+Step │ Queue     │ Pop │ In-degrees (remaining)  │ Order
+─────│───────────│─────│─────────────────────────│──────────
+  1  │ [5, 4]    │  5  │ 0:2, 1:2, 2:0, 3:1, 4:0│ [5]
+  2  │ [4, 2]    │  4  │ 0:1, 1:1, 2:0, 3:1     │ [5, 4]
+  3  │ [2, 0, 1] │  2  │ 0:1, 1:1, 3:0           │ [5, 4, 2]
+  4  │ [0, 1, 3] │  0  │ 1:1, 3:0               │ [5, 4, 2, 0]
+  5  │ [1, 3]    │  3  │ 1:0                     │ [5, 4, 2, 0, 3]
+  6  │ [1]       │  1  │ (empty)                 │ [5, 4, 2, 0, 3, 1]
+  DONE! All 6 nodes processed → Valid topological order!
+
+KEY INSIGHT: We can ONLY process nodes with in-degree 0
+(no unprocessed prerequisites remaining).
 ```
 
 ## DFS-Based Topological Sort
+
+### Visual: DFS Reverse Post-Order
+
+```
+DFS Topological Sort = Reverse Post-Order of DFS
+
+Post-order means: Add node AFTER all children are processed.
+Reverse: Reverse the post-order list.
+
+Graph: 5→0, 5→2, 4→0, 4→1, 2→3, 3→1
+
+DFS from 5:
+  dfs(5) → dfs(0) → dfs(4) → dfs(1)
+  1 has no unvisited children → post-order: [1]
+  4 done → post-order: [1, 4]
+  0 done → post-order: [1, 4, 0]
+  dfs(2) → dfs(3) → 3→1 already visited
+  3 done → post-order: [1, 4, 0, 3]
+  2 done → post-order: [1, 4, 0, 3, 2]
+  5 done → post-order: [1, 4, 0, 3, 2, 5]
+
+REVERSE post-order: [5, 2, 3, 0, 4, 1]  ← TOPOLOGICAL ORDER!
+
+WHY does reverse post-order work?
+┌─────────────────────────────────────────────────────────┐
+│ DFS explores deeper nodes first.                        │
+│ A node is added to post-order only AFTER all descendants│
+│ are done. So in post-order, children come BEFORE       │
+│ parents. Reversing gives parents before children =     │
+│ valid topological order!                                │
+└─────────────────────────────────────────────────────────┘
+```
 
 ```python
 from collections import defaultdict
@@ -33,22 +95,22 @@ def topological_sort_dfs(n, edges):
     graph = defaultdict(list)
     for u, v in edges:
         graph[u].append(v)
-    
+
     visited = set()
     order = []
-    
+
     def dfs(node):
         visited.add(node)
         for neighbor in graph[node]:
             if neighbor not in visited:
                 dfs(neighbor)
-        order.append(node)
-    
+        order.append(node)   # Add AFTER all children processed
+
     for i in range(n):
         if i not in visited:
             dfs(i)
-    
-    return order[::-1]
+
+    return order[::-1]  # REVERSE to get topological order
 
 
 # With cycle detection
@@ -57,11 +119,11 @@ def topological_sort_with_cycle_check(n, edges):
     graph = defaultdict(list)
     for u, v in edges:
         graph[u].append(v)
-    
+
     WHITE, GRAY, BLACK = 0, 1, 2
     color = [WHITE] * n
     order = []
-    
+
     def dfs(node):
         color[node] = GRAY
         for neighbor in graph[node]:
@@ -73,12 +135,12 @@ def topological_sort_with_cycle_check(n, edges):
         color[node] = BLACK
         order.append(node)
         return True
-    
+
     for i in range(n):
         if color[i] == WHITE:
             if not dfs(i):
                 return []
-    
+
     return order[::-1]
 
 
@@ -405,16 +467,53 @@ print(longest_path(4, edges))  # 2 (0 → 1 → 3 or 0 → 2 → 3)
 3. BFS: Process nodes with in-degree 0 (Kahn's)
 4. Cycle detection: If order size < V → cycle exists
 5. Level-based: Track which nodes are processed together
-6. Applications:
-   - Course scheduling
-   - Build systems (make)
-   - Task scheduling with dependencies
-   - Compilation order
-   - Alien dictionary
-   - Parallel execution planning
-7. When to use:
-   - "Order of tasks" → Topological sort
-   - "Can finish all tasks" → Check for cycles
-   - "Minimum time with parallelism" → Level-based topo sort
-   - "All possible orders" → DFS with backtracking
+
+DFS vs Kahn's Algorithm:
+┌──────────────────────┬──────────────────────────────────┐
+│ DFS Topo Sort        │ Kahn's Algorithm (BFS)           │
+├──────────────────────┼──────────────────────────────────┤
+│ Reverse post-order   │ Process in-degree 0 nodes        │
+│ Recursive (stack)    │ Iterative (queue)                │
+│ Harder to level-ize  │ Easy level tracking              │
+│ Simpler code         │ More intuitive                   │
+│ Can detect cycles    │ Can detect cycles                │
+│ Time: O(V+E)         │ Time: O(V+E)                     │
+│ Space: O(V)          │ Space: O(V)                      │
+└──────────────────────┴──────────────────────────────────┘
+
+When to use Kahn's over DFS:
+  ✓ When you need LEVEL information (parallel execution)
+  ✓ When you want a more intuitive algorithm
+  ✓ When recursion depth is a concern
+
+When to use DFS over Kahn's:
+  ✓ When you need 3-color cycle detection
+  ✓ When you want slightly simpler code
+  ✓ When you also need finish-time info for other algorithms
+
+APPLICATIONS — How to Recognize Topo Sort Problems:
+┌─────────────────────────────────────────────────────────┐
+│                                                         │
+│  Keywords that signal TOPOLOGICAL SORT:                 │
+│                                                         │
+│  • "Order of tasks" / "valid sequence"                  │
+│  • "Dependencies" / "prerequisites"                     │
+│  • "Build system" / "compilation order"                 │
+│  • "Can finish all tasks?" → Check for cycles           │
+│  • "Minimum time with parallelism" → Level-based topo   │
+│  • "Alien dictionary" → Build graph from word order     │
+│  • "All possible orders" → DFS with backtracking        │
+│                                                         │
+│  PATTERN: If A must come before B → edge A→B            │
+│           Then topological sort gives valid order       │
+│                                                         │
+└─────────────────────────────────────────────────────────┘
+
+Common Mistakes:
+┌─────────────────────────────────────────────────────────┐
+│ ✗ Forgetting to check if order size == V (cycle check)  │
+│ ✗ Building graph in wrong direction (prereq vs course)  │
+│ ✗ Using topo sort on a graph with cycles                │
+│ ✗ Not handling disconnected components                  │
+└─────────────────────────────────────────────────────────┘
 ```

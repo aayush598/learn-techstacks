@@ -48,8 +48,42 @@ def climbStairs(n: int) -> int:
 - **Time**: O(n)
 - **Space**: O(1)
 
-### Trick/Tip
-This is the gateway DP problem. If you can't solve this, you need to revisit fundamentals. The pattern `dp[i] = dp[i-1] + dp[i-2]` appears everywhere.
+### Visual Walkthrough (n=5)
+```
+Step:     0    1    2    3    4    5
+dp:      [1,   1,   2,   3,   5,   8]
+          ↑    ↑    ↑    ↑    ↑    ↑
+          base base 1+1  1+2  2+3  3+5
+
+Ways to reach each step:
+  Step 0: 1 way (stay at ground)
+  Step 1: 1 way (1 step)
+  Step 2: 2 ways (1+1 or 2)
+  Step 3: 3 ways (1+1+1, 1+2, 2+1)
+  Step 4: 5 ways (Fibonacci!)
+  Step 5: 8 ways → ANSWER
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Recursive | O(2^n) | O(n) | Explores all paths, massive overlap |
+| Memoized | O(n) | O(n) | Top-down DP, avoids recomputation |
+| Tabulation | O(n) | O(n) | Bottom-up, fills table left to right |
+| **Space Optimized** | **O(n)** | **O(1)** | **Only need last 2 values** |
+
+### Common Mistakes
+- Off-by-one: `dp[0] = 1` not `dp[0] = 0` (there IS one way to be at step 0)
+- Forgetting base cases for small n (n=1, n=2)
+- Using recursion without memoization → exponential blowup
+
+### Edge Cases
+- n = 0 → return 1 (one way: do nothing)
+- n = 1 → return 1
+- n = 2 → return 2
+
+### Pattern Recognition
+This is the **Fibonacci pattern**. Recognize it whenever: "from position i, you can move i+1 or i+2 steps." Appears in climbing stairs, decoding ways, and many others.
 
 ---
 
@@ -120,8 +154,41 @@ def rob(nums: list[int]) -> int:
 - **Time**: O(n)
 - **Space**: O(1)
 
-### Trick/Tip
-This is the classic "skip or take" pattern. The recurrence `max(take, skip)` appears in many DP problems including stock problems, knapsack variants, etc.
+### Visual Walkthrough (nums = [2, 7, 9, 3, 1])
+```
+House:     0    1    2    3    4
+Money:    [2,   7,   9,   3,   1]
+
+dp[0] = 2 (only house 0)
+dp[1] = max(2, 7) = 7 (can't take both)
+dp[2] = max(dp[1], dp[0]+9) = max(7, 11) = 11 ✓
+dp[3] = max(dp[1], dp[1]+3) = max(11, 10) = 11
+         skip    take h3     
+dp[4] = max(dp[2], dp[2]+1) = max(11, 12) = 12 ✓
+
+Answer: 12 (houses 0, 2, 4 → 2+9+1 = 12)
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Recursive | O(2^n) | O(n) | Try all subsets of non-adjacent |
+| Memoized | O(n) | O(n) | Cache subproblems |
+| Tabulation | O(n) | O(n) | Build dp array |
+| **Space Optimized** | **O(n)** | **O(1)** | **Only track prev2, prev1** |
+
+### Common Mistakes
+- Forgetting `n == 1` case → index error
+- Off-by-one in recurrence (using `dp[i-2]` incorrectly)
+- Not handling negative numbers (all houses could have negative values)
+
+### Edge Cases
+- All negative → return the least negative (or 0 if empty allowed)
+- Single house → return that house's value
+- Two houses → return max of two
+
+### Pattern Recognition
+The **"skip or take"** pattern: `dp[i] = max(dp[i-1], dp[i-2] + val[i])`. This exact recurrence appears in: House Robber I & II, Paint House, Delete and Earn, and many variants.
 
 ---
 
@@ -214,8 +281,44 @@ def maxSubArrayWithIndices(nums: list[int]) -> tuple[int, int, int]:
 - **Time**: O(n)
 - **Space**: O(1)
 
-### Trick/Tip
-Kadane's algorithm is greedy-DP hybrid. The key insight: if the running sum becomes negative, it's never beneficial to carry it forward. This is THE most frequently asked easy DP.
+### Visual Walkthrough (nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4])
+```
+Index:  0   1   2   3   4   5   6   7   8
+Nums: -2   1  -3   4  -1   2   1  -5   4
+
+dp[0] = -2
+dp[1] = max(1, -2+1) = max(1, -1) = 1  → start fresh
+dp[2] = max(-3, 1-3) = max(-3, -2) = -2 → extend
+dp[3] = max(4, -2+4) = max(4, 2) = 4   → start fresh!
+dp[4] = max(-1, 4-1) = max(-1, 3) = 3  → extend
+dp[5] = max(2, 3+2) = max(2, 5) = 5    → extend
+dp[6] = max(1, 5+1) = max(1, 6) = 6    → extend → MAX!
+dp[7] = max(-5, 6-5) = max(-5, 1) = 1  → extend
+dp[8] = max(4, 1+4) = max(4, 5) = 5    → extend
+
+Answer: 6 (subarray [4, -1, 2, 1])
+max running: -2, 1, 1, 4, 4, 5, 6, 6, 6 ✓
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Brute Force | O(n²) | O(1) | Check every subarray |
+| Divide & Conquer | O(n log n) | O(log n) | Split and merge |
+| **Kadane's** | **O(n)** | **O(1)** | **Single pass, track current sum** |
+
+### Common Mistakes
+- Forgetting `curr_sum = nums[i]` when current element alone is bigger than extending
+- Not initializing `max_sum` to `nums[0]` (can't use 0 if all elements are negative)
+- Confusing with "Maximum Product Subarray" — different approach needed for products
+
+### Edge Cases
+- All negative → return the maximum (least negative) element
+- Single element → return that element
+- All positive → sum of entire array
+
+### Pattern Recognition
+**Kadane's Algorithm** = Greedy + DP hybrid. Key idea: "if running sum drops below current element, start fresh." Template for: Maximum Subarray, Maximum Product Subarray, Maximum Sum Circular Subarray, Maximum Subarray Sum After One Deletion.
 
 ---
 
@@ -252,6 +355,45 @@ def maxProduct(nums: list[int]) -> int:
 
 ### Trick/Tip
 The trick is tracking BOTH min and max because a large negative can become the largest when multiplied by another negative. When current number is negative, swap max and min.
+
+### Visual Walkthrough (nums = [2, 3, -2, 4])
+```
+Index:  0   1   2   3
+Nums:  2   3  -2   4
+
+i=0: max_val=2, min_val=2
+i=1: num=3 (positive)
+  max_val = max(3, 2*3) = 6
+  min_val = min(3, 2*3) = 3
+i=2: num=-2 (negative → SWAP first!)
+  max_val=3, min_val=6 (swapped)
+  max_val = max(-2, 3*-2) = max(-2, -6) = -2
+  min_val = min(-2, 6*-2) = min(-2, -12) = -12
+i=3: num=4 (positive)
+  max_val = max(4, -2*4) = max(4, -8) = 4
+  min_val = min(4, -12*4) = min(4, -48) = -48
+
+Answer: 6 (subarray [2, 3])
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Brute Force | O(n²) | O(1) | Check every subarray product |
+| **Two-Track DP** | **O(n)** | **O(1)** | **Track min AND max at each step** |
+
+### Common Mistakes
+- Forgetting to swap min/max when encountering negative numbers
+- Only tracking max (misses negative × negative = positive)
+- Integer overflow with large products (not an issue in Python)
+
+### Edge Cases
+- Contains zero → resets product chain (start fresh after zero)
+- Single negative → return that negative
+- All negatives in odd count → return the largest (closest to zero)
+
+### Pattern Recognition
+**Min-Max Tracking Pattern**: When dealing with products, track both min and max because negatives flip signs. Used in: Maximum Product Subarray, Maximum Product of Three Numbers.
 
 ---
 
@@ -491,6 +633,41 @@ def lengthOfLIS_memo(nums: list[int]) -> int:
 ### Trick/Tip
 The O(n²) solution is the standard approach. For each element, look back at all previous elements. If you need O(n log n), see Problem 13.
 
+### Visual Walkthrough (nums = [10, 9, 2, 5, 3, 7, 101, 18])
+```
+Nums:  10   9   2   5   3   7  101  18
+dp:     1   1   1   2   2   4    5    5
+        ↑   ↑   ↑   ↑   ↑   ↑    ↑    ↑
+        10  9   2  2+5 2+3 2+3+7 +101  +18
+
+Building dp step by step:
+i=0: dp[0]=1 (just 10)
+i=1: 9<10? No → dp[1]=1
+i=2: 2<10? No, 2<9? No → dp[2]=1
+i=3: 5>2? Yes → dp[3]=dp[2]+1=2 (subseq: 2,5)
+i=4: 3>2? Yes → dp[4]=dp[2]+1=2 (subseq: 2,3)
+i=5: 7>2? Yes, 7>5? Yes, 7>3? Yes → dp[5]=max(dp[2],dp[3],dp[4])+1=4 (2,3,5,7 or 2,5,7,?)
+i=6: 101>all → dp[6]=dp[5]+1=5 (2,3,5,7,101)
+i=7: 18>7? Yes → dp[7]=dp[5]+1=5 (2,3,5,7,18)
+
+Answer: max(dp) = 5
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Brute Force | O(2^n) | O(n) | Try all subsequences |
+| **DP O(n²)** | **O(n²)** | **O(n)** | **Standard DP approach** |
+| Patience Sort | O(n log n) | O(n) | Binary search + tails array |
+
+### Common Mistakes
+- Using `<` instead of `<=` for strictly increasing
+- Not initializing dp array to 1 (every element is LIS of length 1)
+- Trying to reconstruct LIS from tails array (tails doesn't store actual LIS)
+
+### Pattern Recognition
+**LIS Pattern**: For each element, look at all previous elements and extend the best subsequence. Variants: Longest Increasing Subsequence II, Number of LIS, Russian Doll Envelopes.
+
 ---
 
 ## Problem 13: Longest Increasing Subsequence (O(n log n))
@@ -527,6 +704,42 @@ def lengthOfLIS(nums: list[int]) -> int:
 
 ### Trick/Tip
 The `tails` array is NOT the actual LIS — it's a structure that helps us determine the length efficiently. To reconstruct the actual LIS, you need parent pointers. The binary search replaces linear scan.
+
+### Visual Walkthrough (nums = [10, 9, 2, 5, 3, 7, 101, 18])
+```
+Processing each number, maintaining tails array:
+
+num=10:  tails = [10]
+num=9:   replace 10 → tails = [9]
+num=2:   replace 9 → tails = [2]
+num=5:   append → tails = [2, 5]
+num=3:   replace 5 → tails = [2, 3]
+num=7:   append → tails = [2, 3, 7]
+num=101: append → tails = [2, 3, 7, 101]
+num=18:  replace 101 → tails = [2, 3, 7, 18]
+
+Length of tails = 4 → ANSWER
+Actual LIS: [2, 3, 7, 18] or [2, 5, 7, 18] or [2, 3, 7, 101]
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| DP O(n²) | O(n²) | O(n) | Standard approach |
+| **Binary Search** | **O(n log n)** | **O(n)** | **Patience sorting** |
+
+### Common Mistakes
+- Confusing tails with actual LIS (tails is just for length calculation)
+- Using `bisect_right` instead of `bisect_left` (affects strict vs non-strict increasing)
+- Not handling duplicate elements correctly
+
+### Edge Cases
+- All same elements → LIS length = 1
+- Already sorted → LIS = entire array
+- Reverse sorted → LIS = 1
+
+### Pattern Recognition
+**Patience Sorting / Binary Search Optimization**: When you need to find optimal subsequences, maintaining a sorted helper array with binary search is a powerful technique. Used in LIS, Russian Doll Envelopes, Longest Chain of Pairs.
 
 ---
 
@@ -581,6 +794,47 @@ def coinChange_memo(coins: list[int], amount: int) -> int:
 
 ### Trick/Tip
 This is the classic unbounded knapsack variant. The order of loops matters: outer loop over amounts ensures each coin is counted once per subproblem. Initialize with `amount + 1` as infinity sentinel.
+
+### Visual Walkthrough (coins = [1, 5, 11], amount = 15)
+```
+dp[i] = min coins to make amount i
+Initialize: dp = [0, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16, 16]
+            idx:  0   1   2   3   4   5   6   7   8   9  10  11  12  13  14  15
+
+i=1:  coin 1: dp[1]=min(16, dp[0]+1)=1
+i=2:  coin 1: dp[2]=min(16, dp[1]+1)=2
+...
+i=5:  coin 5: dp[5]=min(5, dp[0]+1)=1 ✓ (use one 5)
+i=6:  coin 5: dp[6]=min(6, dp[1]+1)=2 (5+1)
+...
+i=10: coin 5: dp[10]=min(10, dp[5]+1)=2 (5+5)
+i=11: coin 11: dp[11]=min(11, dp[0]+1)=1 ✓ (use one 11)
+i=12: coin 11: dp[12]=min(12, dp[1]+1)=2 (11+1)
+...
+i=15: coin 11: dp[15]=min(15, dp[4]+1)=5, then coin 5: dp[15]=min(5, dp[10]+1)=3 ✓
+
+Answer: dp[15] = 3 (5+5+5 or 11+1+1+1+1)
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Recursive | O(n^amount) | O(amount) | Try all combinations |
+| Memoized | O(amount × coins) | O(amount) | Cache results |
+| **Tabulation** | **O(amount × coins)** | **O(amount)** | **Bottom-up DP** |
+
+### Common Mistakes
+- Using `float('inf')` vs `amount + 1` (both work, but `amount+1` is safer for integer comparisons)
+- Not checking `if dp[amount] > amount` to detect impossible case
+- Loop order: amount must be outer loop for unbounded knapsack
+
+### Edge Cases
+- amount = 0 → return 0 (no coins needed)
+- No coins that can make amount → return -1
+- Single coin → check if it divides amount evenly
+
+### Pattern Recognition
+**Unbounded Knapsack Pattern**: "Given items with costs, find minimum/maximum to reach a target." Appears in: Coin Change, Coin Change II, Minimum Cost For Tickets, Perfect Squares.
 
 ---
 
@@ -810,6 +1064,45 @@ def longestCommonSubsequence(text1: str, text2: str) -> int:
 
 ### Trick/Tip
 LCS is the foundation of many string DP problems (Edit Distance, Shortest Common Supersequence). The space optimization requires careful handling of the diagonal value (prev).
+
+### Visual Walkthrough (text1 = "abcde", text2 = "ace")
+```
+      ""  a  c  e
+  ""   0  0  0  0
+  a    0  1  1  1
+  b    0  1  1  1
+  c    0  1  2  2
+  d    0  1  2  2
+  e    0  1  2  3
+
+Building:
+- 'a'=='a' → dp[1][1] = dp[0][0]+1 = 1
+- 'b'!='c' → dp[2][2] = max(dp[1][2], dp[2][1]) = 1
+- 'c'=='c' → dp[3][2] = dp[2][1]+1 = 2
+- 'e'=='e' → dp[5][3] = dp[4][2]+1 = 3
+
+LCS = "ace", length = 3
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Recursive | O(2^(m+n)) | O(m+n) | Try all alignments |
+| **2D DP** | **O(m×n)** | **O(m×n)** | **Standard approach** |
+| **Space Optimized** | **O(m×n)** | **O(min(m,n))** | **Rolling array** |
+
+### Common Mistakes
+- Confusing Subsequence (non-contiguous) with Substring (contiguous)
+- Off-by-one in indexing (`text1[i-1]` not `text1[i]`)
+- Not handling empty string cases properly
+
+### Edge Cases
+- One string empty → LCS = 0
+- Both strings same → LCS = length of string
+- No common characters → LCS = 0
+
+### Pattern Recognition
+**2D String DP Pattern**: Compare two strings character by character. If match: extend diagonal. If no match: take max of top or left. Used in: LCS, Edit Distance, Shortest Common Supersequence, Distinct Subsequences.
 
 ---
 
@@ -1463,6 +1756,51 @@ def minDistance(word1: str, word2: str) -> int:
 
 ### Trick/Tip
 Edit Distance is the king of string DP. The three operations map to three directions in the DP table: diagonal (replace), up (delete), left (insert).
+
+### Visual Walkthrough (word1 = "horse", word2 = "ros")
+```
+        ""  r  o  s
+    ""   0  1  2  3
+    h    1  1  2  3
+    o    2  2  1  2
+    r    3  2  2  2
+    s    4  3  3  2
+    e    5  4  4  3
+
+Step-by-step for dp[4][3] (word1[0:4]="hors", word2[0:3]="ros"):
+'s' == 's' → dp[4][3] = dp[3][2] = 2 ✓
+
+dp[5][3] (word1="horse", word2="ros"):
+'e' != 's' → dp[5][3] = 1 + min(
+    dp[4][3] = 2  (delete 'e')
+    dp[5][2] = 4  (insert 's')
+    dp[4][2] = 3  (replace 'e' with 's')
+) = 1 + 2 = 3
+
+Operations: h→r (replace), r→o (replace), o→r (insert) 
+or: delete h, replace o, delete r → actually: 
+horse → rorse (replace h) → ros (delete r, delete e) = 3 ops
+```
+
+### Brute Force vs Optimal
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Recursive | O(3^(m+n)) | O(m+n) | Try all operations |
+| **2D DP** | **O(m×n)** | **O(m×n)** | **Standard approach** |
+| **Space Optimized** | **O(m×n)** | **O(min(m,n))** | **Rolling array** |
+
+### Common Mistakes
+- Confusing insert vs delete directions (insert corresponds to moving right in dp table)
+- Not handling base cases correctly: dp[i][0] = i (delete all chars), dp[0][j] = j (insert all chars)
+- Off-by-one errors in character comparison
+
+### Edge Cases
+- One string empty → return length of other string
+- Both strings same → return 0
+- No common characters → return max(m, n)
+
+### Pattern Recognition
+**String Edit DP Pattern**: Three operations (insert, delete, replace) map to three directions in DP table. This pattern extends to: Longest Common Subsequence (when operations have different costs), Longest Common Subsequence (2D DP with 3 choices), Delete Operation for Two Strings.
 
 ---
 

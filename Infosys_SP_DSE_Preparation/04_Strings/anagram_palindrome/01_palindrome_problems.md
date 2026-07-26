@@ -1,5 +1,60 @@
 # Palindrome Problems
 
+## What is a Palindrome?
+
+A **palindrome** is a string that reads the **same forwards and backwards**.
+
+```
+  "racecar" -> reads same both ways:  r a c e c a r
+                                               ^
+                                          center
+
+  "madam"   -> m a d a m
+                  ^
+                 center
+
+  "abba"    -> a b b a    (even length, no single center)
+```
+
+## Approaches Overview
+
+| Problem                          | Approach           | Time    | Space   | Difficulty |
+|---------------------------------|-------------------|---------|---------|------------|
+| Basic palindrome check          | Two pointers      | O(n)    | O(1)    | Easy       |
+| Longest palindromic substring   | Expand around center| O(n^2) | O(1)  | Medium     |
+| Longest palindromic substring   | Manacher's        | O(n)    | O(n)    | Hard       |
+| Longest palindromic subsequence | DP                | O(n^2)  | O(n^2)  | Medium     |
+| Valid palindrome (1 removal)    | Two pointers      | O(n)    | O(1)    | Medium     |
+| Palindrome partitioning         | Backtracking + DP | O(n*2^n)| O(n^2) | Hard       |
+| Min cuts for palindrome parts   | DP                | O(n^2)  | O(n)    | Hard       |
+
+## Quick Reference: When to Use What
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │          PALINDROME PROBLEM DECISION TREE               │
+  ├──────────────────────────────────────────────────────────┤
+  │                                                          │
+  │  Check if string is palindrome?                          │
+  │  └── Two pointers from both ends                        │
+  │                                                          │
+  │  Longest palindromic SUBSTRING (contiguous)?             │
+  │  └── Expand around center (O(n^2)) or Manacher's (O(n)) │
+  │                                                          │
+  │  Longest palindromic SUBSEQUENCE (not contiguous)?       │
+  │  └── DP: dp[i][j] = best for s[i..j]                   │
+  │                                                          │
+  │  Partition into minimum palindromes?                     │
+  │  └── DP + palindrome precomputation                      │
+  │                                                          │
+  │  Generate all palindrome partitions?                     │
+  │  └── Backtracking with palindrome check                  │
+  │                                                          │
+  └──────────────────────────────────────────────────────────┘
+```
+
+---
+
 ## 1. Palindrome Checking
 
 ```python
@@ -110,6 +165,55 @@ print(longest_palindrome_expand("babad"))   # "bab" or "aba"
 print(longest_palindrome_dp("cbbd"))        # "bb"
 ```
 
+### Visual: Expand Around Center
+
+```
+  s = "babad"
+
+  For each index, try expanding as center:
+
+  i=0: center='b' (odd)     -> "b" only
+       center='ba' (even)   -> no match
+
+  i=1: center='a' (odd)     -> expand: "bab" -> MATCH!
+       center='ab' (even)   -> no match
+
+  i=2: center='b' (odd)     -> expand: "aba" -> MATCH!
+       center='ba' (even)   -> no match
+
+  i=3: center='a' (odd)     -> "a" only
+       center='ab' (even)   -> no match
+
+  i=4: center='d' (odd)     -> "d" only
+
+  Longest found: "bab" (or "aba")
+```
+
+### Visual: DP Table for Longest Palindromic Substring
+
+```
+  s = "cbbd"
+  dp[i][j] = True if s[i..j] is palindrome
+
+       j=0  j=1  j=2  j=3
+       'c'  'b'  'b'  'd'
+  ┌────┬────┬────┬────┬────┐
+  │    │  c │  b │  b │  d │
+  ├────┼────┼────┼────┼────┤
+  │ c  │ T  │ F  │ F  │ F  │  (single chars = True)
+  │ b  │    │ T  │ T  │ F  │  (s[1]==s[2] -> bb=True)
+  │ b  │    │    │ T  │ F  │
+  │ d  │    │    │    │ T  │
+  └────┴────┴────┴────┴────┘
+
+  Fill order: diagonals from bottom-left
+  Length 1: [T, T, T, T] (all singles)
+  Length 2: s[1]=='b'==s[2] -> dp[1][2]=True
+  Length 3: s[0]=='c'!=s[3] -> dp[0][3]=False
+
+  Answer: "bb" (length 2 at indices 1-2)
+```
+
 ## 3. Manacher's Algorithm - O(n)
 
 ```python
@@ -195,6 +299,30 @@ print(f"\nLongest palindrome: {result}")
 print(f"Manacher's result: {manachers_algorithm('cbbd')}")
 ```
 
+### Visual: How Manacher's Algorithm Works
+
+```
+  Original: "babad"
+  Transformed: "^#b#a#b#a#d#$"
+               (sentinel chars prevent boundary issues)
+
+  Key Idea: Use a "mirror" property to avoid redundant work.
+
+  At index i=4 (char 'a' in transformed):
+    Current known palindrome center = index 2 (char 'b')
+    Current right boundary = 5
+    Mirror of i=4 about center=2 is: 2*2-4 = 0
+
+    Since i=4 < right=5, we can use mirror value:
+    p[4] = min(right-i, p[mirror]) = min(5-4, p[0]) = min(1,0) = 0
+
+  This avoids re-checking characters already covered!
+
+  The P array stores palindrome lengths:
+    p[i] = radius of palindrome centered at i
+    Longest palindrome = max(p[i])
+```
+
 ## 4. Longest Palindromic Subsequence (LeetCode 516)
 
 ```python
@@ -246,6 +374,33 @@ def lps_optimized(s):
 # Test
 print(longest_palindromic_subsequence("bbbab"))  # 4
 print(lps_optimized("cbbd"))                     # 2
+```
+
+### Visual: LPS DP Table
+
+```
+  s = "bbbab"
+  dp[i][j] = length of LPS in s[i..j]
+
+       j=0  j=1  j=2  j=3  j=4
+       'b'  'b'  'b'  'a'  'b'
+  ┌────┬────┬────┬────┬────┬────┐
+  │    │  b │  b │  b │  a │  b │
+  ├────┼────┼────┼────┼────┼────┤
+  │ b  │ 1  │ 2  │ 3  │ 3  │ 4  │
+  │ b  │    │ 1  │ 2  │ 2  │ 3  │
+  │ b  │    │    │ 1  │ 1  │ 3  │
+  │ a  │    │    │    │ 1  │ 1  │
+  │ b  │    │    │    │    │ 1  │
+  └────┴────┴────┴────┴────┴────┘
+
+  Fill order: bottom-left to top-right (by increasing length)
+
+  dp[0][4] = 4 (LPS = "bbbb" or "bbbb")
+
+  Recurrence:
+  if s[i] == s[j]: dp[i][j] = dp[i+1][j-1] + 2
+  else:            dp[i][j] = max(dp[i+1][j], dp[i][j-1])
 ```
 
 ## 5. Valid Palindrome with Removal (LeetCode 680)
@@ -650,4 +805,48 @@ print(shortest_palindrome("aacecaaa"))  # "aaacecaaa"
 print(is_palindrome_number(121))         # True
 print(remove_palindromic_subsequences("ababa"))  # 1
 print(remove_palindromic_subsequences("abb"))    # 2
+```
+
+---
+
+## Summary: Palindrome Problem Patterns
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │              PALINDROME PROBLEM CHEAT SHEET                      │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  PATTERN 1: Two Pointers (Basic Check)                           │
+  │  └── Use for: is_palindrome, valid_palindrome_ii                │
+  │  └── Key: left=0, right=n-1, move inward comparing             │
+  │                                                                  │
+  │  PATTERN 2: Expand Around Center                                 │
+  │  └── Use for: longest_palindromic_substring                     │
+  │  └── Key: For each i, expand from (i,i) and (i,i+1)            │
+  │  └── Time: O(n^2), Space: O(1)                                 │
+  │                                                                  │
+  │  PATTERN 3: Manacher's Algorithm                                │
+  │  └── Use for: longest_palindromic_substring in O(n)            │
+  │  └── Key: Transform string, use mirror property                 │
+  │  └── Time: O(n), Space: O(n)                                   │
+  │                                                                  │
+  │  PATTERN 4: 2D DP (Substring/Subsequence)                       │
+  │  └── Use for: LPS (subsequence), palindrome partition           │
+  │  └── Key: dp[i][j] = palindrome info for s[i..j]              │
+  │  └── Fill: by increasing length                                 │
+  │                                                                  │
+  │  PATTERN 5: DP + Backtracking                                   │
+  │  └── Use for: palindrome partitioning (all solutions)           │
+  │  └── Key: Precompute palindrome table, then backtrack          │
+  │                                                                  │
+  │  PATTERN 6: KMP for Shortest Palindrome                        │
+  │  └── Use for: shortest_palindrome (LeetCode 214)               │
+  │  └── Key: s + '#' + rev(s), compute LPS, use suffix length    │
+  │                                                                  │
+  │  REMEMBER:                                                       │
+  │  - Substring = contiguous, Subsequence = not necessarily        │
+  │  - LPS = O(n^2) DP or O(n) Manacher's                         │
+  │  - Palindrome partitioning = O(n * 2^n) backtracking           │
+  │                                                                  │
+  └──────────────────────────────────────────────────────────────────┘
 ```

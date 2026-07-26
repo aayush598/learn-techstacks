@@ -2,11 +2,82 @@
 
 > Quick reference for all algorithm complexities and decision guide.
 
+## Growth Rate Visualization (Must Memorize!)
+
+```
+N=1000000 (10^6) - Common constraint in Infosys
+
+┌─────────────────────────────────────────────────────────────────────┐
+│  O(1)        = 1 operation                          ✅ INSTANT    │
+│  O(log n)    = ~20 operations                       ✅ INSTANT    │
+│  O(n)        = 1,000,000 operations                 ✅ ~0.01s     │
+│  O(n log n)  = ~20,000,000 operations               ✅ ~0.1s      │
+│  O(n²)       = 1,000,000,000,000 operations         ❌ ~1000s     │
+│  O(2^n)      = ∞                                    ❌ IMPOSSIBLE │
+│  O(n!)       = ∞                                    ❌ IMPOSSIBLE │
+└─────────────────────────────────────────────────────────────────────┘
+
+Growth Rate Graph (Logarithmic Scale):
+ops │
+10¹²│                                    ╱ O(n²)
+    │                                ╱
+10⁹ │                            ╱
+    │                        ╱
+10⁶ │              ╱──────────── O(n log n)
+    │          ╱────────── O(n)
+10³ │      ╱──────── O(log n)
+    │  ╱──────── O(1)
+10⁰ └──────────────────────────────────── N
+    1    10    100   1K    10K   100K  1M
+```
+
+## Operations Per Second Rule (For Infosys Time Limit ~1 sec)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  CONSTRAINT (N)     →  MAX COMPLEXITY   →  ALGORITHM            │
+├─────────────────────────────────────────────────────────────────┤
+│  N ≤ 10            →  O(N!)            →  Backtracking         │
+│  N ≤ 20            →  O(2^N)           →  Bitmask DP           │
+│  N ≤ 25            →  O(N * 2^N)       →  DP + Bitmask         │
+│  N ≤ 500           →  O(N³)            →  Floyd-Warshall       │
+│  N ≤ 5,000         →  O(N²)            →  2D DP, Nested loops  │
+│  N ≤ 100,000       →  O(N log N)       →  Sorting, BS, SegTree │
+│  N ≤ 10,000,000    →  O(N)             →  Two Pointer, HashMap │
+│  N > 10,000,000    →  O(log N)         →  Binary Search, Math  │
+└─────────────────────────────────────────────────────────────────┘
+
+MEMORY LIMIT: Usually 256 MB
+  → 10^8 integers = ~800 MB → TOO MUCH
+  → 10^7 integers = ~80 MB  → OK
+  → 10^6 integers = ~8 MB   → VERY SAFE
+```
+
 ---
 
 ## Common Algorithms
 
 ### Sorting Algorithms
+
+```
+ALGORITHM COMPARISON VISUAL:
+
+Bubble Sort (O(n²)):
+  [5, 3, 1, 4] → Compare adjacent, swap if wrong order
+  [3, 5, 1, 4] → [3, 1, 5, 4] → [3, 1, 4, 5] → largest "bubbles" to end
+  
+Merge Sort (O(n log n)):
+  [5, 3, 1, 4] → Split: [5,3] [1,4] → Split: [5][3] [1][4]
+  → Merge: [3,5] [1,4] → Merge: [1,3,4,5]
+
+Quick Sort (O(n log n) avg):
+  Pivot = 3: [5,3,1,4] → [1] [3] [5,4] → [1] [3] [4,5] → [1,3,4,5]
+
+WHICH TO USE IN CP:
+  Python's built-in sorted() uses TimSort = O(n log n) always ✅
+  → Just use: arr.sort() or sorted(arr)
+  → Don't implement your own sort unless asked!
+```
 
 | Algorithm | Best | Average | Worst | Space | Stable |
 |-----------|------|---------|-------|-------|--------|
@@ -156,6 +227,39 @@ s.endswith(t)       # Check suffix
 ---
 
 ## Decision Tree: What Algorithm to Use
+
+### Visual: Constraint-to-Algorithm Decision Map
+
+```
+START: Read the constraints!
+
+N ≤ 10?
+  YES → Try ALL possibilities: Brute Force, Backtracking, Permutations
+        Time: O(N!) = O(10!) = 3.6M operations ✅
+
+N ≤ 20?
+  YES → Bitmask DP: 2^20 = 1M states, each takes O(N) → 20M ops ✅
+
+N ≤ 500?
+  YES → O(N³) OK: Floyd-Warshall, Matrix Chain, 3 nested loops ✅
+        500³ = 125M operations
+
+N ≤ 5000?
+  YES → O(N²) OK: 2D DP, nested loops ✅
+        5000² = 25M operations
+
+N ≤ 10^5?
+  YES → O(N log N) required: Sorting, Binary Search, Segment Tree ✅
+        10^5 × 17 ≈ 1.7M operations
+
+N ≤ 10^6?
+  YES → O(N) required: Linear scan, HashMap, Two Pointer ✅
+        10^6 operations
+
+N > 10^6?
+  YES → O(log N) required: Binary Search, Math formulas ✅
+        20-30 operations
+```
 
 ### Based on Constraints
 

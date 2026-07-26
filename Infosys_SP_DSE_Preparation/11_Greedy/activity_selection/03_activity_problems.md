@@ -13,6 +13,50 @@
 
 **Problem**: Select maximum number of non-overlapping activities.
 
+### Visual Walkthrough
+
+```
+  INPUT: [(1,4), (3,5), (0,6), (5,7), (3,9), (5,9), (6,10), (8,11), (8,12), (2,14), (12,16)]
+  
+  STEP 1: Sort by finish time:
+  ┌─────┬───────┬────────┐
+  │ Act │ Start │ Finish │
+  ├─────┼───────┼────────┤
+  │  1  │   1   │    4   │
+  │  2  │   3   │    5   │
+  │  3  │   0   │    6   │
+  │  4  │   5   │    7   │
+  │  5  │   3   │    9   │
+  │  6  │   5   │    9   │
+  │  7  │   6   │   10   │
+  │  8  │   8   │   11   │
+  │  9  │   8   │   12   │
+  │ 10  │   2   │   14   │
+  │ 11  │  12   │   16   │
+  └─────┴───────┴────────┘
+  
+  STEP 2: Greedy selection:
+  ┌──────────────────────────────────────────────────────────┐
+  │ Pick Act 1 (1,4): last_finish=4                         │
+  │   Act 2 (3,5): 3 < 4 → SKIP                             │
+  │   Act 3 (0,6): 0 < 4 → SKIP                             │
+  │   Act 4 (5,7): 5 >= 4 → PICK ✓  last_finish=7          │
+  │   Act 5 (3,9): 3 < 7 → SKIP                             │
+  │   Act 6 (5,9): 5 < 7 → SKIP                             │
+  │   Act 7 (6,10): 6 < 7 → SKIP                            │
+  │   Act 8 (8,11): 8 >= 7 → PICK ✓  last_finish=11        │
+  │   Act 9 (8,12): 8 < 11 → SKIP                           │
+  │   Act 10 (2,14): 2 < 11 → SKIP                          │
+  │   Act 11 (12,16): 12 >= 11 → PICK ✓  last_finish=16    │
+  └──────────────────────────────────────────────────────────┘
+  
+  SELECTED: [(1,4), (5,7), (8,11), (12,16)] → 4 activities
+  
+  WHY SORT BY FINISH TIME?
+  Picking the activity that finishes earliest leaves
+  MAXIMUM remaining time for other activities.
+```
+
 ```python
 def activity_selection(activities):
     """
@@ -104,6 +148,56 @@ def activity_selection_proof(activities):
 ## 2. Job Sequencing Problem
 
 **Problem**: Given jobs with deadlines and profits, maximize profit by scheduling at most one job per unit time.
+
+### Visual Walkthrough
+
+```
+  INPUT: [(1, 2, 100), (2, 1, 19), (3, 2, 27), (4, 1, 25), (5, 3, 15)]
+  
+  STEP 1: Sort by PROFIT descending:
+  ┌───────┬──────────┬──────────┬────────┐
+  │  Job  │ Deadline │  Profit  │ Order  │
+  ├───────┼──────────┼──────────┼────────┤
+  │   1   │    2     │   100    │   1st  │
+  │   3   │    2     │    27    │   2nd  │
+  │   4   │    1     │    25    │   3rd  │
+  │   2   │    1     │    19    │   4th  │
+  │   5   │    3     │    15    │   5th  │
+  └───────┴──────────┴──────────┴────────┘
+  
+  STEP 2: Schedule jobs (find latest available slot):
+  ┌──────────────────────────────────────────────────────┐
+  │ Time Slots: [_, _, _]  (indices 1, 2, 3)            │
+  │                                                       │
+  │ Job 1 (deadline=2):                                  │
+  │   Slot 2 is free → schedule at slot 2 ✓              │
+  │   Slots: [_, J1, _]                                  │
+  │                                                       │
+  │ Job 3 (deadline=2):                                  │
+  │   Slot 2 taken, slot 1 free → schedule at slot 1 ✓   │
+  │   Slots: [J3, J1, _]                                 │
+  │                                                       │
+  │ Job 4 (deadline=1):                                  │
+  │   Slot 1 taken → NO SLOT AVAILABLE ✗                 │
+  │                                                       │
+  │ Job 2 (deadline=1):                                  │
+  │   Slot 1 taken → NO SLOT AVAILABLE ✗                 │
+  │                                                       │
+  │ Job 5 (deadline=3):                                  │
+  │   Slot 3 free → schedule at slot 3 ✓                 │
+  │   Slots: [J3, J1, J5]                                │
+  └──────────────────────────────────────────────────────┘
+  
+  RESULT:
+  Time Slot 1: Job 3 (profit 27)
+  Time Slot 2: Job 1 (profit 100)
+  Time Slot 3: Job 5 (profit 15)
+  Total Profit: 142
+  
+  KEY INSIGHT: Always try to place high-profit jobs in
+  the LATEST possible slot before their deadline.
+  This preserves earlier slots for jobs with tighter deadlines.
+```
 
 ```python
 def job_sequencing(jobs):
@@ -309,6 +403,54 @@ print(f"Scheduled: {scheduled}")
 
 **Problem**: Given jobs with start time, finish time, and profit, find maximum profit subset of non-overlapping jobs.
 
+### Visual Walkthrough
+
+```
+  INPUT: [(1, 3, 50), (2, 5, 20), (4, 6, 70), (6, 7, 60), (5, 8, 30), (7, 9, 40)]
+  
+  STEP 1: Sort by finish time:
+  ┌───────┬───────┬────────┬────────┐
+  │  Job  │ Start │ Finish │ Profit │
+  ├───────┼───────┼────────┼────────┤
+  │  J1   │   1   │    3   │   50   │
+  │  J2   │   2   │    5   │   20   │
+  │  J3   │   4   │    6   │   70   │
+  │  J4   │   6   │    7   │   60   │
+  │  J5   │   5   │    8   │   30   │
+  │  J6   │   7   │    9   │   40   │
+  └───────┴───────┴────────┴────────┘
+  
+  STEP 2: DP with binary search:
+  ┌──────────────────────────────────────────────────────────────┐
+  │ dp[i] = max profit using first i jobs                        │
+  │                                                              │
+  │ dp[0] = 0                                                   │
+  │ dp[1] = 50  (include J1: 50, or skip: 0) → 50              │
+  │ dp[2] = 50  (include J2: 20+dp[0]=20, or skip: 50) → 50    │
+  │ dp[3] = 120 (include J3: 70+dp[1]=120, or skip: 50) → 120  │
+  │ dp[4] = 130 (include J4: 60+dp[3]=130, or skip: 120) → 130 │
+  │ dp[5] = 130 (include J5: 30+dp[2]=80, or skip: 130) → 130  │
+  │ dp[6] = 170 (include J6: 40+dp[4]=170, or skip: 130) → 170 │
+  └──────────────────────────────────────────────────────────────┘
+  
+  BINARY SEARCH for "latest non-overlapping job":
+  For J3 (start=4): find rightmost job with finish <= 4
+  Finish times: [3, 5, 6, 7, 8, 9]
+  Binary search: 3 <= 4 ✓, 5 > 4 → J1 is the latest
+  
+  RESULT: Maximum profit = 170
+  Selected jobs: J3 (profit 70) + J4 (profit 60) + J6 (profit 40)
+  
+  VISUAL OF SELECTED JOBS:
+  Time: 1  2  3  4  5  6  7  8  9
+         [J1──3]
+                  [J3──6][J4─7]  [J6─9]
+  
+  NOTE: This is NOT a pure greedy problem — it needs DP!
+  Greedy doesn't work because high-profit jobs might block
+  combinations of medium-profit jobs that sum to more.
+```
+
 ```python
 def weighted_job_scheduling(jobs):
     """
@@ -467,6 +609,46 @@ print(weighted_job_scheduling_optimized(jobs))  # 120
 
 **Problem**: Given train arrival and departure times, find minimum platforms needed at any time.
 
+### Visual Walkthrough
+
+```
+  INPUT:
+  Arrivals:    [900, 940, 950, 1100, 1500, 1800]
+  Departures:  [910, 1200, 1120, 1130, 1900, 2000]
+  
+  TRAIN SCHEDULE:
+  Time:  900  910  940  950  1100 1120 1130 1200 1500 1800 1900 2000
+         T1   T1   T2   T3   T4        T4   T2   T5   T6   T5   T6
+         ARR  DEP  ARR  ARR  ARR  T3   DEP  DEP  ARR  ARR  DEP  DEP
+                             T3   DEP               T6   T5
+                             DEP
+  
+  LINE SWEEP APPROACH:
+  ┌────────────────────────────────────────────────────────────────┐
+  │ Events sorted by time (arrivals=+1, departures=-1):           │
+  │                                                                │
+  │ Time  │ Event │ Count │ Platforms                            │
+  │───────┼───────┼───────┼──────────────────────────────────────│
+  │  900  │  +1   │   1   │ █                                    │
+  │  910  │  -1   │   0   │                                      │
+  │  940  │  +1   │   1   │ █                                    │
+  │  950  │  +1   │   2   │ ██                                   │
+  │ 1100  │  +1   │   3   │ ███  ◄── MAXIMUM                    │
+  │ 1120  │  -1   │   2   │ ██                                   │
+  │ 1130  │  -1   │   1   │ █                                    │
+  │ 1200  │  -1   │   0   │                                      │
+  │ 1500  │  +1   │   1   │ █                                    │
+  │ 1800  │  +1   │   2   │ ██                                   │
+  │ 1900  │  -1   │   1   │ █                                    │
+  │ 2000  │  -1   │   0   │                                      │
+  └────────────────────────────────────────────────────────────────┘
+  
+  RESULT: 3 platforms needed (at time 1100)
+  
+  KEY INSIGHT: This is the same as Meeting Rooms II!
+  Maximum concurrent intervals = minimum resources needed.
+```
+
 ```python
 def min_platforms(arrivals, departures):
     """
@@ -610,3 +792,47 @@ print(min_platforms_sorted(arrivals, departures))  # 3
 3. **Binary search** optimizes finding non-overlapping jobs
 4. **Union-Find** can optimize job scheduling
 5. **Line sweep** is powerful for platform/resource allocation
+
+### Activity Selection vs Job Scheduling Comparison
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │              PROBLEM COMPARISON CHEAT SHEET                       │
+  ├────────────────────────────┬─────────────────────────────────────┤
+  │ Activity Selection         │ Job Sequencing                      │
+  ├────────────────────────────┼─────────────────────────────────────┤
+  │ Goal: Max COUNT of jobs    │ Goal: Max PROFIT of jobs            │
+  │ Weight: All jobs = 1       │ Weight: Each job has profit         │
+  │ Approach: Pure greedy      │ Approach: Greedy + Union-Find       │
+  │ Sort by: Finish time       │ Sort by: Profit (descending)        │
+  │ Time: O(n log n)           │ Time: O(n²) or O(n log n) with DS  │
+  ├────────────────────────────┼─────────────────────────────────────┤
+  │ Activity Selection         │ Weighted Job Scheduling             │
+  ├────────────────────────────┼─────────────────────────────────────┤
+  │ Goal: Max COUNT of jobs    │ Goal: Max PROFIT of non-overlapping │
+  │ Approach: Pure greedy      │ Approach: DP + Binary Search        │
+  │ Time: O(n log n)           │ Time: O(n log n)                    │
+  │ Sort by: Finish time       │ Sort by: Finish time + binary search│
+  └────────────────────────────┴─────────────────────────────────────┘
+```
+
+### Problem Pattern Quick Reference
+
+```
+  ┌──────────────────────────────────────────────────────────────┐
+  │  "Max number of non-overlapping activities?"                 │
+  │    → Sort by finish, greedy selection                        │
+  │                                                              │
+  │  "Max profit from jobs with deadlines?"                      │
+  │    → Sort by profit desc, place in latest available slot     │
+  │                                                              │
+  │  "Max profit from weighted non-overlapping jobs?"            │
+  │    → Sort by finish, DP + binary search                      │
+  │                                                              │
+  │  "Min platforms / rooms for concurrent events?"              │
+  │    → Line sweep or min-heap of end times                     │
+  │                                                              │
+  │  "Partition into min non-overlapping groups?"                │
+  │    → Same as min platforms (Meeting Rooms II pattern)        │
+  └──────────────────────────────────────────────────────────────┘
+```

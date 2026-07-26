@@ -1,17 +1,26 @@
-# Binary Tree Basics
+# Binary Tree Basics - Complete Guide
 
-## Table of Contents
-1. [TreeNode Class Definition](#1-treenode-class-definition)
-2. [Building a Tree from Array](#2-building-a-tree-from-array)
-3. [Tree Traversals - Recursive](#3-tree-traversals---recursive)
-4. [Tree Traversals - Iterative](#4-tree-traversals---iterative)
-5. [Level Order Traversal (BFS)](#5-level-order-traversal-bfs)
-6. [Zigzag Level Order Traversal](#6-zigzag-level-order-traversal)
-7. [Maximum Depth of Binary Tree](#7-maximum-depth-of-binary-tree)
-8. [Minimum Depth of Binary Tree](#8-minimum-depth-of-binary-tree)
-9. [Same Tree / Identical Tree](#9-same-tree--identical-tree)
-10. [Invert/Flip Binary Tree](#10-invertflip-binary-tree)
-11. [Subtree of Another Tree](#11-subtree-of-another-tree)
+## What is a Binary Tree?
+
+A binary tree is a hierarchical data structure where each node has at most TWO children (left and right).
+
+### Visual:
+
+```
+        1          ← Root node (no parent)
+       / \
+      2   3        ← Children of 1
+     / \ / \
+    4  5 6  7      ← Leaf nodes (no children)
+
+Properties:
+- Root: 1 (top node)
+- Parent: 1 is parent of 2 and 3
+- Child: 2 and 3 are children of 1
+- Leaf: 4, 5, 6, 7 (no children)
+- Height: 3 (longest path from root to leaf)
+- Depth of node 5: 2 (distance from root)
+```
 
 ---
 
@@ -20,37 +29,99 @@
 ```python
 class TreeNode:
     def __init__(self, val=0, left=None, right=None):
-        self.val = val
-        self.left = left
-        self.right = right
+        self.val = val      # The value stored in node
+        self.left = left    # Pointer to left child
+        self.right = right  # Pointer to right child
 ```
 
-**Key Points:**
-- Each node has a value, a left child pointer, and a right child pointer
-- `None` represents absence of a child
-- A tree with only root node: `TreeNode(1)`
-- Time to create a node: O(1)
-- Space for one node: O(1)
+### Visual: Creating Nodes
+
+```python
+# Create leaf nodes
+node4 = TreeNode(4)    # 4 (no children)
+node5 = TreeNode(5)    # 5 (no children)
+
+# Create internal node
+node2 = TreeNode(2)    # 2
+node2.left = node4     # 2 → left = 4
+node2.right = node5    # 2 → right = 5
+
+# Create root
+root = TreeNode(1)     # 1
+root.left = node2      # 1 → left = 2
+```
+
+```
+Result:
+    1
+   / \
+  2   None
+ / \
+4   5
+```
 
 ---
 
 ## 2. Building a Tree from Array
 
-Given a level-order array where `None` represents missing nodes:
+Given level-order array where `None` represents missing nodes:
 
+```python
+arr = [1, 2, 3, None, 4, 5, None]
+```
+
+### Visual: Building from Array
+
+```
+Array: [1, 2, 3, None, 4, 5, None]
+
+Level 0: 1
+Level 1: 2, 3
+Level 2: None, 4, 5, None
+
+Tree:
+        1
+       / \
+      2   3
+       \ /
+       4 5
+```
+
+### Step-by-Step Build:
+
+```
+Step 1: Create root = TreeNode(1)
+        Queue: [1]
+
+Step 2: Process 1, add children 2, 3
+        Queue: [2, 3]
+
+Step 3: Process 2, add children None, 4
+        Queue: [3, 4]
+
+Step 4: Process 3, add children 5, None
+        Queue: [4, 5]
+
+Step 5: Process 4, add children None, None
+        Queue: [5]
+
+Step 6: Process 5, add children None, None
+        Queue: []
+
+Result:
+        1
+       / \
+      2   3
+       \ /
+       4 5
+```
+
+### The Code:
 ```python
 from collections import deque
 
 def build_tree_from_array(arr):
-    """Build binary tree from level-order array.
-    
-    Example: [1, 2, 3, None, 4, 5, None] creates:
-            1
-           / \
-          2   3
-           \ / 
-            4 5
-    """
+    """Build binary tree from level-order array."""
     if not arr or arr[0] is None:
         return None
     
@@ -74,41 +145,9 @@ def build_tree_from_array(arr):
         i += 1
     
     return root
-
-
-def tree_to_array(root):
-    """Convert tree back to level-order array for verification."""
-    if not root:
-        return []
-    
-    result = []
-    queue = deque([root])
-    
-    while queue:
-        node = queue.popleft()
-        if node:
-            result.append(node.val)
-            queue.append(node.left)
-            queue.append(node.right)
-        else:
-            result.append(None)
-    
-    # Remove trailing Nones
-    while result and result[-1] is None:
-        result.pop()
-    
-    return result
-
-
-# Usage
-arr = [1, 2, 3, None, 4, 5]
-root = build_tree_from_array(arr)
-print(tree_to_array(root))  # [1, 2, 3, None, 4, 5]
 ```
 
-**Complexity:**
-- Time: O(n) — visit each element once
-- Space: O(n) — queue can hold up to n/2 nodes
+**Time:** O(n) | **Space:** O(n)
 
 ---
 
@@ -116,11 +155,60 @@ print(tree_to_array(root))  # [1, 2, 3, None, 4, 5]
 
 ### Inorder (Left → Root → Right)
 
+**Use case:** For BST, gives sorted order!
+
+```
+Tree:
+        1
+       / \
+      2   3
+     / \ / \
+    4  5 6  7
+
+Inorder traversal:
+1. Go left from 1 → reach 2
+2. Go left from 2 → reach 4
+3. 4 has no left, visit 4
+4. Back to 2, visit 2
+5. Go right from 2 → reach 5
+6. 5 has no left, visit 5
+7. Back to 1, visit 1
+8. Go right from 1 → reach 3
+9. Go left from 3 → reach 6
+10. 6 has no left, visit 6
+11. Back to 3, visit 3
+12. Go right from 3 → reach 7
+13. 7 has no left, visit 7
+
+Result: [4, 2, 5, 1, 6, 3, 7]
+```
+
+### Visual:
+
+```
+        1
+       / \
+      2   3
+     / \ / \
+    4  5 6  7
+
+Visit order: 4 → 2 → 5 → 1 → 6 → 3 → 7
+
+       (1)
+      /   \
+    (2)   (3)
+    / \   / \
+  (4)(5)(6)(7)
+  
+Path: 4→2→5→1→6→3→7
+      ↑     ↑     ↑
+     Left  Root  Right
+```
+
+### The Code:
 ```python
 def inorder_traversal(root):
-    """Inorder traversal: Left, Root, Right.
-    For BST, gives sorted order.
-    """
+    """Inorder: Left, Root, Right"""
     result = []
     
     def dfs(node):
@@ -133,43 +221,113 @@ def inorder_traversal(root):
     dfs(root)
     return result
 
-# Example:     1
-#            /   \
-#           2     3
-#          / \   / \
-#         4   5 6   7
-# Inorder: [4, 2, 5, 1, 6, 3, 7]
+# For BST [2,1,3]: inorder gives [1,2,3] (sorted!)
 ```
+
+---
 
 ### Preorder (Root → Left → Right)
 
+**Use case:** Copy/serialize tree structure!
+
+```
+Tree:
+        1
+       / \
+      2   3
+     / \ / \
+    4  5 6  7
+
+Preorder traversal:
+1. Visit root 1
+2. Go left to 2, visit 2
+3. Go left to 4, visit 4
+4. Back to 2, go right to 5, visit 5
+5. Back to 1, go right to 3, visit 3
+6. Go left to 6, visit 6
+7. Back to 3, go right to 7, visit 7
+
+Result: [1, 2, 4, 5, 3, 6, 7]
+```
+
+### Visual:
+
+```
+        (1)        ← Visit 1st
+       /   \
+     (2)   (3)     ← Visit 2nd, 5th
+     / \   / \
+   (4)(5)(6)(7)    ← Visit 3rd, 4th, 6th, 7th
+
+Path: 1→2→4→5→3→6→7
+      ↑           ↑
+     Root      Left→Right
+```
+
+### The Code:
 ```python
 def preorder_traversal(root):
-    """Preorder traversal: Root, Left, Right.
-    Used to copy/serialize tree structure.
-    """
+    """Preorder: Root, Left, Right"""
     result = []
     
     def dfs(node):
         if not node:
             return
-        result.append(node.val)  # Root
+        result.append(node.val)  # Root (first!)
         dfs(node.left)       # Left
         dfs(node.right)      # Right
     
     dfs(root)
     return result
-
-# Preorder: [1, 2, 4, 5, 3, 6, 7]
 ```
+
+---
 
 ### Postorder (Left → Right → Root)
 
+**Use case:** Delete tree, evaluate expressions!
+
+```
+Tree:
+        1
+       / \
+      2   3
+     / \ / \
+    4  5 6  7
+
+Postorder traversal:
+1. Go left to 2, then left to 4
+2. 4 has no children, visit 4
+3. Back to 2, go right to 5
+4. 5 has no children, visit 5
+5. Back to 2, both children done, visit 2
+6. Back to 1, go right to 3
+7. Go left to 6, visit 6
+8. Back to 3, go right to 7, visit 7
+9. Back to 3, both children done, visit 3
+10. Back to 1, both children done, visit 1
+
+Result: [4, 5, 2, 6, 7, 3, 1]
+```
+
+### Visual:
+
+```
+        (1)        ← Visit 7th (last)
+       /   \
+     (2)   (3)     ← Visit 3rd, 6th
+     / \   / \
+   (4)(5)(6)(7)    ← Visit 1st, 2nd, 4th, 5th
+
+Path: 4→5→2→6→7→3→1
+      ↑     ↑     ↑
+    Left  Right  Root
+```
+
+### The Code:
 ```python
 def postorder_traversal(root):
-    """Postorder traversal: Left, Right, Root.
-    Used for deletion, expression evaluation.
-    """
+    """Postorder: Left, Right, Root"""
     result = []
     
     def dfs(node):
@@ -177,17 +335,11 @@ def postorder_traversal(root):
             return
         dfs(node.left)       # Left
         dfs(node.right)      # Right
-        result.append(node.val)  # Root
+        result.append(node.val)  # Root (last!)
     
     dfs(root)
     return result
-
-# Postorder: [4, 5, 2, 6, 7, 3, 1]
 ```
-
-**Complexity for all recursive traversals:**
-- Time: O(n) — visit each node exactly once
-- Space: O(h) — recursion stack, h = height of tree (O(log n) balanced, O(n) skewed)
 
 ---
 
@@ -216,108 +368,103 @@ def inorder_iterative(root):
         current = current.right
     
     return result
-
-# Time: O(n), Space: O(h)
 ```
 
-### Iterative Preorder
+### Visual: Iterative Inorder
 
-```python
-def preorder_iterative(root):
-    """Iterative preorder using stack."""
-    if not root:
-        return []
-    
-    result = []
-    stack = [root]
-    
-    while stack:
-        node = stack.pop()
-        result.append(node.val)
-        
-        # Push right first so left is processed first (LIFO)
-        if node.right:
-            stack.append(node.right)
-        if node.left:
-            stack.append(node.left)
-    
-    return result
-
-# Time: O(n), Space: O(h)
 ```
+Tree:
+        1
+       / \
+      2   3
+     / \
+    4   5
 
-### Iterative Postorder (Two Stack Method)
+Step 1: Push 1, go left to 2
+        Stack: [1, 2]
 
-```python
-def postorder_iterative(root):
-    """Iterative postorder using two stacks."""
-    if not root:
-        return []
-    
-    stack1 = [root]
-    stack2 = []
-    
-    while stack1:
-        node = stack1.pop()
-        stack2.append(node.val)
-        
-        if node.left:
-            stack1.append(node.left)
-        if node.right:
-            stack1.append(node.right)
-    
-    return stack2[::-1]
+Step 2: Push 2, go left to 4
+        Stack: [1, 2, 4]
 
-# Time: O(n), Space: O(n)
-```
+Step 3: 4 has no left, pop 4
+        Stack: [1, 2]
+        Result: [4]
 
-### Iterative Postorder (One Stack Method)
+Step 4: 4 has no right, pop 2
+        Stack: [1]
+        Result: [4, 2]
 
-```python
-def postorder_one_stack(root):
-    """Iterative postorder using single stack with tracking."""
-    result = []
-    stack = []
-    current = root
-    last_visited = None
-    
-    while current or stack:
-        # Go as far left as possible
-        while current:
-            stack.append(current)
-            current = current.left
-        
-        peek = stack[-1]
-        
-        # If right child exists and hasn't been visited yet
-        if peek.right and peek.right != last_visited:
-            current = peek.right
-        else:
-            result.append(peek.val)
-            last_visited = stack.pop()
-    
-    return result
+Step 5: 2 has right (5), go to 5
+        Stack: [1]
 
-# Time: O(n), Space: O(h)
+Step 6: 5 has no left, pop 5
+        Stack: [1]
+        Result: [4, 2, 5]
+
+Step 7: 5 has no right, pop 1
+        Stack: []
+        Result: [4, 2, 5, 1]
+
+Step 8: 1 has right (3), go to 3
+        Stack: []
+
+Step 9: 3 has no left, pop 3
+        Stack: []
+        Result: [4, 2, 5, 1, 3]
+
+Final: [4, 2, 5, 1, 3] ✓
 ```
 
 ---
 
 ## 5. Level Order Traversal (BFS)
 
+**Visit nodes level by level, left to right.**
+
+```
+Tree:
+        3
+       / \
+      9  20
+        /  \
+       15   7
+
+Level 0: [3]
+Level 1: [9, 20]
+Level 2: [15, 7]
+
+Output: [[3], [9, 20], [15, 7]]
+```
+
+### Step-by-Step BFS:
+
+```
+Step 1: Queue: [3]
+        Visit 3, add children 9, 20
+        Queue: [9, 20]
+        Level 0: [3]
+
+Step 2: Queue: [9, 20]
+        Visit 9 (no children)
+        Visit 20, add children 15, 7
+        Queue: [15, 7]
+        Level 1: [9, 20]
+
+Step 3: Queue: [15, 7]
+        Visit 15 (no children)
+        Visit 7 (no children)
+        Queue: []
+        Level 2: [15, 7]
+
+Result: [[3], [9, 20], [15, 7]]
+```
+
+### The Code:
 ```python
 from collections import deque
 
 def level_order_traversal(root):
-    """BFS level order traversal.
-    
-    Example:     3
-                / \
-               9  20
-                  /  \
-                 15   7
-    Output: [[3], [9, 20], [15, 7]]
-    """
+    """BFS level order traversal."""
     if not root:
         return []
     
@@ -340,93 +487,36 @@ def level_order_traversal(root):
         result.append(level)
     
     return result
-
-# Time: O(n), Space: O(n)
 ```
 
-### Level Order Traversal — Return as Single List
-
-```python
-def level_order_flat(root):
-    """Return all values in level order as a flat list."""
-    if not root:
-        return []
-    
-    result = []
-    queue = deque([root])
-    
-    while queue:
-        node = queue.popleft()
-        result.append(node.val)
-        
-        if node.left:
-            queue.append(node.left)
-        if node.right:
-            queue.append(node.right)
-    
-    return result
-
-# [3, 9, 20, 15, 7]
-```
+**Time:** O(n) | **Space:** O(n)
 
 ---
 
-## 6. Zigzag Level Order Traversal
+## 6. Maximum Depth of Binary Tree
 
-```python
-from collections import deque
+**Depth = number of nodes on longest path from root to leaf.**
 
-def zigzag_level_order(root):
-    """Zigzag (alternating left-to-right, right-to-left).
-    
-    Example:     3
-                / \
-               9  20
-                  /  \
-                 15   7
-    Output: [[3], [20, 9], [15, 7]]
-    """
-    if not root:
-        return []
-    
-    result = []
-    queue = deque([root])
-    left_to_right = True
-    
-    while queue:
-        level_size = len(queue)
-        level = deque()  # Use deque for O(1) appendleft
-        
-        for _ in range(level_size):
-            node = queue.popleft()
-            
-            if left_to_right:
-                level.append(node.val)
-            else:
-                level.appendleft(node.val)
-            
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
-        
-        result.append(list(level))
-        left_to_right = not left_to_right
-    
-    return result
+```
+Tree:
+        1
+       / \
+      2   3
+     / \
+    4   5
 
-# Time: O(n), Space: O(n)
+Path 1→2→4: length 3
+Path 1→2→5: length 3
+Path 1→3: length 2
+
+Maximum depth = 3
 ```
 
----
-
-## 7. Maximum Depth of Binary Tree
+### Recursive Approach:
 
 ```python
 def max_depth_recursive(root):
-    """Maximum depth using recursion.
-    Depth = number of nodes on longest path from root to leaf.
-    """
+    """Maximum depth using recursion."""
     if not root:
         return 0
     
@@ -434,46 +524,50 @@ def max_depth_recursive(root):
     right_depth = max_depth_recursive(root.right)
     
     return 1 + max(left_depth, right_depth)
-
-# Time: O(n), Space: O(h)
 ```
 
-```python
-from collections import deque
+### Visual: Recursive Call Stack
 
-def max_depth_bfs(root):
-    """Maximum depth using BFS level order."""
-    if not root:
-        return 0
-    
-    depth = 0
-    queue = deque([root])
-    
-    while queue:
-        depth += 1
-        for _ in range(len(queue)):
-            node = queue.popleft()
-            if node.left:
-                queue.append(node.left)
-            if node.right:
-                queue.append(node.right)
-    
-    return depth
+```
+max_depth(1)
+├── max_depth(2)
+│   ├── max_depth(4)
+│   │   └── return 0 (no children)
+│   │   → return 1 + max(0, 0) = 1
+│   └── max_depth(5)
+│       └── return 0 (no children)
+│       → return 1 + max(0, 0) = 1
+│   → return 1 + max(1, 1) = 2
+└── max_depth(3)
+    └── return 0 (no children)
+    → return 1 + max(0, 0) = 1
+→ return 1 + max(2, 1) = 3
 
-# Time: O(n), Space: O(n)
+Result: 3 ✓
 ```
 
 ---
 
-## 8. Minimum Depth of Binary Tree
+## 7. Minimum Depth of Binary Tree
 
+**Minimum depth = shortest path from root to a LEAF node.**
+
+```
+Tree:
+        2
+         \
+          3
+         /
+        4
+
+Minimum depth = 3 (path 2→3→4)
+NOT 2! (3 is not a leaf, it has child 4)
+```
+
+### The Code:
 ```python
 def min_depth(root):
-    """Minimum depth = shortest path from root to a leaf node.
-    
-    Note: A leaf node has NO children.
-    If tree is [2, None, 3], min depth is 2 (2->3), not 1.
-    """
+    """Minimum depth = shortest path to a leaf."""
     if not root:
         return 0
     
@@ -481,231 +575,104 @@ def min_depth(root):
     if not root.left and not root.right:
         return 1
     
-    # If only right child exists, go right
+    # If only right child exists
     if not root.left:
         return 1 + min_depth(root.right)
     
-    # If only left child exists, go left
+    # If only left child exists
     if not root.right:
         return 1 + min_depth(root.left)
     
     # Both children exist
     return 1 + min(min_depth(root.left), min_depth(root.right))
-
-# Time: O(n), Space: O(h)
-```
-
-### BFS Approach (Faster — Stops at First Leaf)
-
-```python
-from collections import deque
-
-def min_depth_bfs(root):
-    """BFS stops at the first leaf found (shallowest)."""
-    if not root:
-        return 0
-    
-    queue = deque([(root, 1)])
-    
-    while queue:
-        node, depth = queue.popleft()
-        
-        # First leaf we encounter is at minimum depth
-        if not node.left and not node.right:
-            return depth
-        
-        if node.left:
-            queue.append((node.left, depth + 1))
-        if node.right:
-            queue.append((node.right, depth + 1))
-    
-    return 0
-
-# Time: O(n) worst case, Space: O(n)
 ```
 
 ---
 
-## 9. Same Tree / Identical Tree
+## 8. Invert/Flip Binary Tree
 
-```python
-def is_same_tree(p, q):
-    """Check if two binary trees are structurally identical with same values."""
-    
-    # Both empty
-    if not p and not q:
-        return True
-    
-    # One empty, one not
-    if not p or not q:
-        return False
-    
-    # Both non-empty: check value and recurse
-    return (p.val == q.val and
-            is_same_tree(p.left, q.left) and
-            is_same_tree(p.right, q.right))
+**Swap left and right children at every node (mirror the tree).**
 
-# Time: O(n), Space: O(h)
 ```
-
-### Iterative Approach
-
-```python
-from collections import deque
-
-def is_same_tree_iterative(p, q):
-    """BFS/iterative approach using queue."""
-    queue = deque([(p, q)])
-    
-    while queue:
-        node1, node2 = queue.popleft()
-        
-        if not node1 and not node2:
-            continue
-        if not node1 or not node2:
-            return False
-        if node1.val != node2.val:
-            return False
-        
-        queue.append((node1.left, node2.left))
-        queue.append((node1.right, node2.right))
-    
-    return True
-
-# Time: O(n), Space: O(n)
-```
-
----
-
-## 10. Invert/Flip Binary Tree
-
-```python
-def invert_tree(root):
-    """Mirror the tree: swap left and right children at every node.
-    
-    Input:      4              Output:      4
+Input:          4              Output:      4
                / \                        / \
               2   7                      7   2
              / \ / \                    / \ / \
             1  3 6  9                  9  6 3  1
-    """
+```
+
+### The Code:
+```python
+def invert_tree(root):
+    """Mirror the tree: swap left and right at every node."""
     if not root:
         return None
     
-    # Swap
+    # Swap left and right
     root.left, root.right = root.right, root.left
     
-    # Recurse
+    # Recurse on children
     invert_tree(root.left)
     invert_tree(root.right)
     
     return root
-
-# Time: O(n), Space: O(h)
 ```
 
-### Iterative Approach (BFS)
+### Visual: Step-by-Step
 
-```python
-from collections import deque
-
-def invert_tree_bfs(root):
-    """BFS approach: swap at each level."""
-    if not root:
-        return None
-    
-    queue = deque([root])
-    
-    while queue:
-        node = queue.popleft()
-        node.left, node.right = node.right, node.left
+```
+Step 1: Start at root (4)
+        Swap 2 and 7
         
-        if node.left:
-            queue.append(node.left)
-        if node.right:
-            queue.append(node.right)
-    
-    return root
+        4          →        4
+       / \                 / \
+      2   7               7   2
+     / \ / \             / \ / \
+    1  3 6  9           1  3 6  9
 
-# Time: O(n), Space: O(n)
+Step 2: Go to 7 (new left)
+        Swap 1 and 3
+        
+        4                 4
+       / \               / \
+      7   2             7   2
+     / \ / \           / \ / \
+    1  3 6  9         3  1 6  9
+
+Step 3: Go to 2 (new right)
+        Swap 6 and 9
+        
+        4                 4
+       / \               / \
+      7   2             7   2
+     / \ / \           / \ / \
+    3  1 6  9         3  1 9  6
+
+Done! Tree is mirrored ✓
 ```
 
 ---
 
-## 11. Subtree of Another Tree
+## Quick Reference
 
-```python
-def is_subtree(root, subRoot):
-    """Check if subRoot is a subtree of root.
-    
-    A subtree must be a complete downward tree, not just a fragment.
-    """
-    
-    def is_same(p, q):
-        if not p and not q:
-            return True
-        if not p or not q:
-            return False
-        return (p.val == q.val and
-                is_same(p.left, q.left) and
-                is_same(p.right, q.right))
-    
-    if not root:
-        return False
-    
-    if is_same(root, subRoot):
-        return True
-    
-    return is_subtree(root.left, subRoot) or is_subtree(root.right, subRoot)
-
-# Time: O(m * n) where m = root nodes, n = subRoot nodes
-# Space: O(h) for recursion stack
-```
-
-### Optimized with Hashing (O(m + n))
-
-```python
-def is_subtree_optimized(root, subRoot):
-    """Optimized using tree hashing."""
-    
-    def hash_tree(node, hash_map):
-        if not node:
-            return "#"
-        
-        left = hash_tree(node.left, hash_map)
-        right = hash_tree(node.right, hash_map)
-        
-        tree_hash = f"({node.val},{left},{right})"
-        hash_map.add(tree_hash)
-        return tree_hash
-    
-    root_hashes = set()
-    hash_tree(root, root_hashes)
-    
-    sub_hash = hash_tree(subRoot, set())
-    
-    return sub_hash in root_hashes
-
-# Time: O(m + n), Space: O(m + n)
-```
-
----
-
-## Quick Reference Table
-
-| Operation | Time | Space | Method |
-|-----------|------|-------|--------|
-| Create node | O(1) | O(1) | — |
-| Build from array | O(n) | O(n) | BFS with queue |
-| Inorder (recursive) | O(n) | O(h) | DFS |
-| Preorder (recursive) | O(n) | O(h) | DFS |
-| Postorder (recursive) | O(n) | O(h) | DFS |
-| Inorder (iterative) | O(n) | O(h) | Stack |
-| Level order | O(n) | O(n) | BFS with queue |
-| Max depth | O(n) | O(h) | DFS or BFS |
-| Min depth | O(n) | O(h) | DFS or BFS |
-| Same tree | O(n) | O(h) | DFS |
-| Invert tree | O(n) | O(h) | DFS |
-| Subtree check | O(m*n) | O(h) | DFS |
+| Operation | Time | Space | When to Use |
+|-----------|------|-------|-------------|
+| Inorder | O(n) | O(h) | BST sorted order |
+| Preorder | O(n) | O(h) | Copy/serialize tree |
+| Postorder | O(n) | O(h) | Delete tree, expressions |
+| Level order | O(n) | O(n) | Level-by-level processing |
+| Max depth | O(n) | O(h) | Height-related problems |
+| Min depth | O(n) | O(h) | Shortest path to leaf |
+| Invert tree | O(n) | O(h) | Mirror tree |
+| Subtree check | O(m×n) | O(h) | Tree comparison |
 
 > **h** = height of tree (O(log n) balanced, O(n) worst case skewed)
+
+## Key Insights
+
+1. **Inorder on BST** gives sorted order!
+2. **Preorder** is great for serialization (reconstruct tree from preorder)
+3. **Postorder** processes children before parent (useful for deletion)
+4. **Level order** uses BFS (queue), others use DFS (stack/recursion)
+5. **Recursive solutions** are elegant but may cause stack overflow for deep trees
+6. **Iterative solutions** use explicit stack/queue, safer for large trees

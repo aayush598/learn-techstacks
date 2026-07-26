@@ -1,103 +1,262 @@
 # DFS Complete Guide
 
+## What is DFS? — Visual Intuition
+
+```
+DFS = Depth-First Search
+Goes as deep as possible before backtracking.
+
+Think of it as: A mouse exploring a maze — it runs down
+one path until it hits a dead end, then backtracks.
+
+        0
+       / \
+      1   2          DFS from 0:
+     / \   \         0 → 1 → 3 → 5 (dead end)
+    3   4   5        backtrack → 4 (dead end)
+                     backtrack → 2
+  DFS Order: [0, 1, 3, 5, 4, 2]
+
+  BFS Order: [0, 1, 2, 3, 4, 5]  (for comparison)
+
+DFS uses a STACK (LIFO):
+  Push 0:  [0]
+  Pop 0:   []     → process 0, push children [2, 1]
+  Pop 1:   [2]    → process 1, push children [2, 4, 3]
+  Pop 3:   [2, 4] → process 3, push children [2, 4, 5]
+  Pop 5:   [2, 4] → process 5, no children
+  Pop 4:   [2]    → process 4, no new children
+  Pop 2:   []     → process 2, no new children
+  Done!
+
+BFS vs DFS:
+  BFS: "Visit all neighbors first" → LEVEL by level
+  DFS: "Visit one neighbor deeply" → BRANCH by branch
+```
+
 ## DFS Recursive Template
+
+### Step-by-Step: Recursive DFS Walkthrough
+
+```
+Graph:
+    0 → [1, 2]
+    1 → [0, 3, 4]
+    2 → [0, 4]
+    3 → [1, 5]
+    4 → [1, 2]
+    5 → [3]
+
+DFS(0) call stack visualization:
+
+  dfs(0)                    ← Enter node 0
+  ├─ visited = {0}
+  ├─ neighbor 1 not visited
+  │   └─ dfs(1)             ← Go deep into node 1
+  │       ├─ visited = {0, 1}
+  │       ├─ neighbor 0 already visited, skip
+  │       ├─ neighbor 3 not visited
+  │       │   └─ dfs(3)     ← Go deep into node 3
+  │       │       ├─ visited = {0, 1, 3}
+  │       │       ├─ neighbor 1 already visited
+  │       │       ├─ neighbor 5 not visited
+  │       │       │   └─ dfs(5)
+  │       │       │       ├─ visited = {0, 1, 3, 5}
+  │       │       │       ├─ neighbor 3 already visited
+  │       │       │       └─ return [5]        ← Dead end!
+  │       │       └─ return [3, 5]
+  │       ├─ neighbor 4 not visited
+  │       │   └─ dfs(4)     ← Go deep into node 4
+  │       │       ├─ visited = {0, 1, 3, 5, 4}
+  │       │       ├─ neighbor 1 already visited
+  │       │       ├─ neighbor 2 not visited... BUT wait
+  │       │       │   Actually let's check: visited = {0,1,3,5,4}
+  │       │       │   2 is NOT in visited, so:
+  │       │       │   └─ dfs(2)
+  │       │       │       ├─ visited = {0, 1, 3, 5, 4, 2}
+  │       │       │       ├─ neighbor 0 already visited
+  │       │       │       ├─ neighbor 4 already visited
+  │       │       │       └─ return [2]
+  │       │       └─ return [4, 2]
+  │       └─ return [1, 3, 5, 4, 2]
+  ├─ neighbor 2 already visited (added by dfs(4))
+  └─ return [0, 1, 3, 5, 4, 2]
+
+FINAL DFS ORDER: [0, 1, 3, 5, 4, 2]
+```
 
 ```python
 def dfs_recursive(graph, node, visited=None):
     """
     Standard DFS recursive template
     Time: O(V + E) | Space: O(V) - recursion stack
+
+    ALGORITHM:
+    1. Mark current node as visited
+    2. For each unvisited neighbor, recursively call DFS
+    3. Return the list of visited nodes
     """
     if visited is None:
         visited = set()
-    
+
     visited.add(node)
     result = [node]
-    
+
     for neighbor in graph[node]:
         if neighbor not in visited:
             result.extend(dfs_recursive(graph, neighbor, visited))
-    
+
     return result
 
 
 # DFS with return value (for searching)
 def dfs_search(graph, node, target, visited=None):
-    """Returns True if target found"""
+    """Returns True if target found in the graph"""
     if visited is None:
         visited = set()
-    
+
     if node == target:
         return True
-    
+
     visited.add(node)
-    
+
     for neighbor in graph[node]:
         if neighbor not in visited:
             if dfs_search(graph, neighbor, target, visited):
-                return True
-    
-    return False
+                return True   # Found in subtree!
+
+    return False  # Not found anywhere
 
 
 # DFS with path tracking
 def dfs_path(graph, start, end, visited=None):
-    """Returns path from start to end"""
+    """Returns the FIRST path found from start to end"""
     if visited is None:
         visited = set()
-    
+
     if start == end:
-        return [start]
-    
+        return [start]   # Base case: found the destination
+
     visited.add(start)
-    
+
     for neighbor in graph[start]:
         if neighbor not in visited:
             path = dfs_path(graph, neighbor, end, visited)
-            if path:
-                return [start] + path
-    
-    return None
+            if path:                    # If a path was found in subtree
+                return [start] + path   # Prepend current node
+
+    return None   # No path from this node
 ```
 
 ## DFS Iterative (Using Stack)
+
+### Visual: Iterative DFS Walkthrough
+
+```
+Graph: 0 → [1, 2], 1 → [0, 3], 2 → [0, 4]
+
+Iterative DFS from 0 (push in REVERSE order for consistent order):
+
+Step │ Stack   │ Pop │ Visited     │ Result
+─────│─────────│─────│─────────────│──────────
+  1  │ [0]     │ --  │ {0}         │ []
+  2  │ [2, 1]  │  0  │ {0}         │ [0]
+  3  │ [2, 4, 3]│ 1  │ {0, 1}      │ [0, 1]
+  4  │ [2, 4]  │  3  │ {0, 1, 3}   │ [0, 1, 3]
+  5  │ [2]     │  4  │ {0,1,3,4}   │ [0, 1, 3, 4]
+  6  │ []      │  2  │ {all}       │ [0, 1, 3, 4, 2]
+  7  │ DONE    │ --  │ {all}       │ [0, 1, 3, 4, 2]
+
+WHY push in reverse? 
+  Graph[0] = [1, 2]
+  If we push 1 then 2, stack pops 2 first (LIFO)
+  Pushing [2, 1] makes stack pop 1 first → matches recursive order
+```
 
 ```python
 def dfs_iterative(graph, start):
     """
     Iterative DFS using explicit stack
     Time: O(V + E) | Space: O(V)
+
+    WHY ITERATIVE?
+    - Python recursion limit is ~1000
+    - For graphs with V > 1000, recursive DFS will crash!
+    - Use iterative DFS for large graphs
     """
     visited = set([start])
     stack = [start]
     result = []
-    
+
     while stack:
-        node = stack.pop()
+        node = stack.pop()           # LIFO: process most recently added
         result.append(node)
-        
-        # Add neighbors in reverse for consistent order with recursive
+
+        # Add neighbors in REVERSE for consistent order with recursive
         for neighbor in reversed(graph[node]):
             if neighbor not in visited:
                 visited.add(neighbor)
                 stack.append(neighbor)
-    
+
     return result
 
 
 # DFS without visited set (for backtracking)
 def dfs_backtracking(graph, node, visited):
-    """DFS that modifies visited in-place"""
+    """DFS that modifies visited in-place — useful for backtracking"""
     visited.add(node)
-    
+
     for neighbor in graph[node]:
         if neighbor not in visited:
             dfs_backtracking(graph, neighbor, visited)
-    
+
     return visited
 ```
 
+### Recursion Limit Warning
+
+```
+⚠️  IMPORTANT: Python default recursion limit is ~1000
+
+For graphs with > 1000 nodes, recursive DFS WILL CRASH:
+  → RecursionError: maximum recursion depth exceeded
+
+SOLUTION 1: Use iterative DFS (explicit stack)
+SOLUTION 2: Increase limit: sys.setrecursionlimit(10**6)
+
+When to use which:
+┌───────────────────────┬─────────────────────────────┐
+│ Recursive DFS         │ Iterative DFS               │
+├───────────────────────┼─────────────────────────────┤
+│ Cleaner code          │ No recursion limit          │
+│ V < 1000              │ V can be any size           │
+│ Natural for backtracking│ Slightly more complex     │
+│ Easier to reason about│ Better for production code  │
+└───────────────────────┴─────────────────────────────┘
+```
+
 ## DFS on Grid/Matrix
+
+### Visual: Grid DFS — Recursive vs BFS
+
+```
+Grid DFS from (0,0) — Goes deep in ONE direction first:
+
+  Grid:                DFS Path:
+  ┌───┬───┬───┐       ┌───┬───┬───┐
+  │ S │ 1 │ 1 │       │ 1→│ 2→│ 3 │   S = Start (0,0)
+  ├───┼───┼───┤       ├───┼───┼───┤   Numbers = visit order
+  │ 1 │ 1 │ 1 │  ──►  │ 8 │ 9→│ 4 │   Goes RIGHT until blocked
+  ├───┼───┼───┤       ├───┼───┼───┤   then DOWN, then LEFT...
+  │ 1 │ 1 │ E │       │ 7←│ 6←│ 5 │   E = End
+  └───┴───┴───┘       └───┴───┴───┘
+
+  DFS: 1→2→3→4→5→6→7→8→9 (winds through entire region)
+  BFS: 1→2→8→3→9→4→7→6→5 (level by level, different order!)
+
+DFS advantage: Uses less memory (only one branch in stack)
+BFS advantage: Finds shortest path first
+```
 
 ```python
 def dfs_grid(grid, row, col, visited):
@@ -106,35 +265,35 @@ def dfs_grid(grid, row, col, visited):
     Time: O(M * N) | Space: O(M * N)
     """
     rows, cols = len(grid), len(grid[0])
-    
-    # Boundary and condition check
+
+    # Boundary and condition check — ALWAYS check BEFORE recursing!
     if (row < 0 or row >= rows or col < 0 or col >= cols or
         (row, col) in visited or grid[row][col] == 0):
         return
-    
+
     visited.add((row, col))
-    
+
     # 4-directional movement
     for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
         dfs_grid(grid, row + dr, col + dc, visited)
 
 
 def dfs_grid_iterative(grid, start_row, start_col):
-    """Iterative DFS on grid"""
+    """Iterative DFS on grid — no recursion limit issues"""
     rows, cols = len(grid), len(grid[0])
     visited = set([(start_row, start_col)])
     stack = [(start_row, start_col)]
-    
+
     while stack:
         r, c = stack.pop()
-        
+
         for dr, dc in [(0, 1), (0, -1), (1, 0), (-1, 0)]:
             nr, nc = r + dr, c + dc
             if (0 <= nr < rows and 0 <= nc < cols and
                 (nr, nc) not in visited and grid[nr][nc] == 1):
                 visited.add((nr, nc))
                 stack.append((nr, nc))
-    
+
     return visited
 ```
 
@@ -528,23 +687,51 @@ def count_regions(grid):
 ## BFS vs DFS Comparison
 
 ```
-| Feature | BFS | DFS |
-|---------|-----|-----|
-| Data Structure | Queue | Stack/Recursion |
-| Shortest Path | Yes (unweighted) | No (but finds any path) |
-| Memory | O(V) | O(V) worst case |
-| Level Order | Yes | No |
-| Cycle Detection | Yes | Yes (with colors) |
-| Topological Sort | Yes (Kahn's) | Yes (reverse finish) |
-| Connected Components | Yes | Yes |
-| Grid Traversal | Yes | Yes |
-| Bidirectional | Easy | Hard |
+| Feature           | BFS                    | DFS                    |
+|-------------------|------------------------|------------------------|
+| Data Structure    | Queue (FIFO)           | Stack/Recursion (LIFO) |
+| Shortest Path     | Yes (unweighted)       | No (but finds any path)|
+| Memory            | O(V) — wide graphs     | O(V) — deep graphs     |
+| Level Order       | Yes                    | No                     |
+| Cycle Detection   | Yes                    | Yes (with colors)      |
+| Topological Sort  | Yes (Kahn's)           | Yes (reverse finish)   |
+| Connected Comp.   | Yes                    | Yes                    |
+| Grid Traversal    | Yes                    | Yes                    |
+| Bidirectional     | Easy                   | Hard                   |
+
+WHEN TO CHOOSE BFS vs DFS:
+
+┌─────────────────────────────────────────────────────────────┐
+│                    USE BFS WHEN:                             │
+│                                                             │
+│  ✓ Shortest path in UNWEIGHTED graph                        │
+│  ✓ Level-by-level processing (tree level order)             │
+│  ✓ Multi-source propagation (rotting oranges)               │
+│  ✓ Bipartite checking                                       │
+│  ✓ Minimum moves/steps in a puzzle                          │
+│                                                             │
+│                    USE DFS WHEN:                             │
+│                                                             │
+│  ✓ Finding ALL paths between two nodes                      │
+│  ✓ Backtracking problems (permutations, combinations)       │
+│  ✓ Topological sort (reverse post-order)                    │
+│  ✓ Cycle detection in directed graphs                       │
+│  ✓ Connected components (simpler code)                      │
+│  ✓ Detecting bridges/articulation points                     │
+│  ✓ Grid problems (recursive DFS is shorter to write)        │
+│                                                             │
+│                    USE EITHER:                               │
+│                                                             │
+│  ✓ Checking if a path exists                                │
+│  ✓ Counting connected components                            │
+│  ✓ Flood fill / region problems                             │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 ## Key Takeaways for DFS
 
 ```
-1. DFS uses STACK (LIFO) or recursion - goes deep first
+1. DFS uses STACK (LIFO) or recursion — goes deep first
 2. DFS is NATURAL for backtracking problems
 3. DFS uses less memory than BFS in wide graphs
 4. For grid problems, DFS is simpler to write (recursive)
@@ -554,4 +741,53 @@ def count_regions(grid):
 8. Time: O(V + E) for graphs, O(M * N) for grids
 9. Space: O(V) for visited + recursion stack
 10. Use iterative DFS if recursion depth > 10^5
+
+CRITICAL: Boundary Check Pattern for Grid DFS
+┌──────────────────────────────────────────────────────────┐
+│                                                          │
+│  def dfs(grid, r, c, visited):                          │
+│      # Step 1: Check BOUNDS first (before anything else!)│
+│      if r < 0 or r >= rows or c < 0 or c >= cols:      │
+│          return                                          │
+│                                                          │
+│      # Step 2: Check VISITED and CONDITION               │
+│      if (r, c) in visited or grid[r][c] != target:      │
+│          return                                          │
+│                                                          │
+│      # Step 3: MARK as visited                           │
+│      visited.add((r, c))                                 │
+│                                                          │
+│      # Step 4: RECURSE in all directions                 │
+│      for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:        │
+│          dfs(grid, r+dr, c+dc, visited)                  │
+│                                                          │
+│  WHY this order?                                         │
+│  - Bounds check prevents IndexOutOfBounds errors         │
+│  - Visited check prevents infinite recursion             │
+│  - Mark visited BEFORE recursing (prevents duplicates)   │
+└──────────────────────────────────────────────────────────┘
+
+Complexity Analysis:
+┌────────────────────┬──────────────┬──────────────┐
+│ Operation          │ Graph DFS    │ Grid DFS     │
+├────────────────────┼──────────────┼──────────────┤
+│ Time Complexity    │ O(V + E)     │ O(M × N)     │
+│ Space (recursive)  │ O(V) stack   │ O(M × N)     │
+│ Space (iterative)  │ O(V) stack   │ O(M × N)     │
+│ Max recursion depth│ O(V)         │ O(M × N)     │
+└────────────────────┴──────────────┴──────────────┘
+
+Common DFS Patterns:
+┌─────────────────────────┬───────────────────────────────────┐
+│ Pattern                 │ Example Problems                  │
+├─────────────────────────┼───────────────────────────────────┤
+│ Count components        │ Number of Islands                 │
+│ Find largest component  │ Max Area of Island                │
+│ Mark visited & explore  │ Flood Fill                        │
+│ DFS from borders        │ Surrounded Regions                │
+│ DFS with coloring       │ Graph Coloring / Bipartite        │
+│ DFS with 3-color        │ Cycle Detection (directed)        │
+│ DFS + backtracking      │ Find all paths                    │
+│ DFS + disc/low          │ Bridges & Articulation Points     │
+└─────────────────────────┴───────────────────────────────────┘
 ```

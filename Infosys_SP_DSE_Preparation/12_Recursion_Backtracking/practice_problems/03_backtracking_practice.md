@@ -4,6 +4,43 @@
 - [Easy (3)](#easy)
 - [Medium (6)](#medium)
 - [Hard (6)](#hard)
+- [Pattern Recognition Guide](#pattern-recognition-guide)
+
+---
+
+## Pattern Recognition Guide
+
+```
+  BEFORE SOLVING: Identify which pattern applies
+  ════════════════════════════════════════════════════
+
+  ┌─────────────────────────────────────────────────────┐
+  │  1. "Return ALL subsets/combinations"                │
+  │     → Use START INDEX pattern (no used array)        │
+  │     → Record at EVERY node (not just leaves)         │
+  │     → Problems: #1, #4, #5, #15                     │
+  │                                                       │
+  │  2. "Return ALL permutations"                         │
+  │     → Use USED ARRAY pattern                         │
+  │     → Record only at LEAVES (path length = n)        │
+  │     → Problems: #2, #6                               │
+  │                                                       │
+  │  3. "Find path in grid/board"                         │
+  │     → Use POSITION-BASED pattern                     │
+  │     → Mark visited, try 4 directions, unmark         │
+  │     → Problems: #8, #9                               │
+  │                                                       │
+  │  4. "Fill board with constraints"                     │
+  │     → Use CONSTRAINT SATISFACTION pattern             │
+  │     → Try all valid values for each empty cell       │
+  │     → Problems: #9, #10                              │
+  │                                                       │
+  │  5. "Build strings with operators/letters"            │
+  │     → Use INDEX-BASED pattern                        │
+  │     → At each index, try all possible choices        │
+  │     → Problems: #3, #11                              │
+  └─────────────────────────────────────────────────────┘
+```
 
 ---
 
@@ -14,6 +51,38 @@
 **Problem**: Given a set of distinct integers, return all possible subsets (the power set).
 
 **Approach**: At each index, decide whether to include or exclude the element. Use backtracking with a start index to avoid duplicates.
+
+### Visual: Decision Tree for subsets([1,2,3])
+
+```
+                          []
+               ┌──────┬──────┬──────┐
+             +1     +2     +3     (done)
+            [1]    [2]    [3]
+           /   \    |
+         +2    +3  +3
+        [1,2][1,3] [2,3]
+         |
+        +3
+      [1,2,3]
+
+  Every node = a subset (record ALL nodes, not just leaves!)
+  Total: 2^3 = 8 subsets
+
+  Trace through the backtracking:
+  1. start=0, path=[] → record []
+  2. i=0: path=[1] → recurse(start=1)
+     3. i=1: path=[1,2] → recurse(start=2)
+        4. i=2: path=[1,2,3] → recurse(start=3) → record [1,2,3]
+        4. pop → path=[1,2] → record [1,2]
+     3. i=2: path=[1,3] → recurse(start=3) → record [1,3]
+     3. pop → path=[1] → record [1]
+  2. i=1: path=[2] → recurse(start=2)
+     3. i=2: path=[2,3] → recurse(start=3) → record [2,3]
+     3. pop → path=[2] → record [2]
+  2. i=2: path=[3] → recurse(start=3) → record [3]
+  2. pop → path=[] → done
+```
 
 ```python
 def subsets(nums):
@@ -43,6 +112,36 @@ print(subsets([1, 2, 3]))
 **Problem**: Given a collection of distinct integers, return all possible permutations.
 
 **Approach**: Use a `used` array to track which elements are in the current path. When path length equals array length, record the permutation.
+
+### Visual: Permutation Tree for [1,2,3]
+
+```
+                              []
+                  ┌──────────┼──────────┐
+                +1         +2         +3
+                [1]        [2]        [3]
+               /  \       /  \       /  \
+             +2  +3     +1  +3    +1   +2
+            [1,2][1,3] [2,1][2,3] [3,1][3,2]
+             |    |     |    |     |    |
+            +3  +2    +3   +1    +2   +1
+         [1,2,3][1,3,2][2,1,3][2,3,1][3,1,2][3,2,1]
+           ✓     ✓     ✓     ✓     ✓     ✓
+
+  Only LEAVES are recorded (path length == array length).
+  Total: 3! = 6 permutations
+
+  KEY DIFFERENCE FROM SUBSETS:
+  ┌────────────────────┬──────────────────┐
+  │ Subsets            │ Permutations     │
+  ├────────────────────┼──────────────────┤
+  │ Record at ALL nodes│ Record at LEAVES │
+  │ Use start index    │ Use used array   │
+  │ Order doesn't matter│ Order matters   │
+  │ [1,2] = [2,1]      │ [1,2] ≠ [2,1]   │
+  │ 2^n subsets        │ n! permutations  │
+  └────────────────────┴──────────────────┘
+```
 
 ```python
 def permute(nums):
@@ -79,6 +178,42 @@ print(permute([1, 2, 3]))
 **Problem**: Given a string of digits (2-9), return all possible letter combinations (phone keypad mapping).
 
 **Approach**: Recurse over each digit. For each digit, try all mapped letters. Build the combination string.
+
+### Visual: Phone Keypad and Decision Tree for "23"
+
+```
+  PHONE KEYPAD:
+  ══════════════
+  ┌─────┬─────┬─────┐
+  │     │ ABC │ DEF │
+  │  1  │  2  │  3  │
+  ├─────┼─────┼─────┤
+  │ GHI │ JKL │ MNO │
+  │  4  │  5  │  6  │
+  ├─────┼─────┼─────┤
+  │PQRS │ TUV │WXYZ │
+  │  7  │  8  │  9  │
+  ├─────┼─────┼─────┤
+  │     │     │     │
+  │  *  │  0  │  #  │
+  └─────┴─────┴─────┘
+
+  DECISION TREE for digits = "23":
+  ═════════════════════════════════
+
+                           ""
+                ┌──────────┼──────────┐
+              'a'        'b'        'c'     ← digit '2' maps to abc
+             / | \      / | \      / | \
+           d  e  f    d  e  f    d  e  f    ← digit '3' maps to def
+
+  ALL 9 PATHS:
+  "ad" "ae" "af" "bd" "be" "bf" "cd" "ce" "cf"
+
+  Total = 3 × 3 = 9 combinations (each digit has 3 letters)
+  For "234": 3 × 3 × 3 = 27 combinations
+  General: 4^N where N = number of digits (max 4 letters per digit)
+```
 
 ```python
 def letter_combinations(digits):
@@ -119,6 +254,34 @@ print(letter_combinations("23"))
 
 **Approach**: Sort candidates. At each step, try each candidate from `start` index (allows reuse). Prune if candidate exceeds remaining target.
 
+### Visual: Combination Sum Tree for candidates=[2,3,6,7], target=7
+
+```
+  SORTED candidates: [2, 3, 6, 7]
+
+                              []
+                    ┌─────┼─────┼─────┐
+                  +2     +3     +6    +7 ✓
+                 [2]    [3]    [6]   [7]
+                / | \    | \    |
+             +2 +3 +6  +3 +6  +6
+            [2,2][2,3][2,6]  [3,3][3,6] [6,6]
+            /| \   |         |     |
+          +2+3+6 +3         +3   ❌ (12>7)
+         [2,2,2] ...       [3,3,3]❌(9>7)
+          |
+         +2 +3  +6
+        [2,2,2,2]→8>7     [2,2,3]✓ [2,2,6]→10>7
+        PRUNE!             remaining=0!
+                          found [2,2,3]!
+
+  SOLUTIONS FOUND: [2, 2, 3] and [7]
+
+  KEY INSIGHT: backtracking(i, ...) not (i+1, ...)
+  Using i (not i+1) allows REUSING the same candidate.
+  e.g., [2,2,3] uses '2' twice because we pass 'i' as start.
+```
+
 ```python
 def combination_sum(candidates, target):
     result = []
@@ -152,6 +315,32 @@ print(combination_sum([2, 3, 6, 7], 7))
 **Problem**: Given a collection of integers that may contain duplicates, return all unique subsets.
 
 **Approach**: Sort the array. At each level, skip `nums[i]` if it equals `nums[i-1]` and we haven't used `nums[i-1]` at this recursion level.
+
+### Visual: How Duplicate Pruning Works for [1, 2, 2]
+
+```
+  SORTED: [1, 2_a, 2_b]  (two 2's, labeled a and b)
+
+  WITHOUT pruning:
+  ┌─────────────────────────────────────────────────────┐
+  │  [] → [1] → [1,2_a] → [1,2_a,2_b] ✓               │
+  │       [1] → [1,2_b] → [1,2_b,2_a] ❌ DUPLICATE!    │
+  │       [2_a] → [2_a,2_b] → ...                      │
+  │       [2_b] → [2_b,2_a] → ❌ DUPLICATE!             │
+  └─────────────────────────────────────────────────────┘
+
+  WITH pruning (skip if nums[i]==nums[i-1] and i > start):
+  ┌─────────────────────────────────────────────────────┐
+  │  [] → [1] → [1,2_a] → [1,2_a,2_b] ✓                │
+  │       [1] → [1,2_b] ❌ SKIPPED (2_b == 2_a,        │
+  │                              and 2_a was at start)   │
+  │       [2_a] → [2_a,2_b] ✓                           │
+  │       [2_b] ❌ SKIPPED (same reason)                 │
+  └─────────────────────────────────────────────────────┘
+
+  RESULT: [[], [1], [1,2], [1,2,2], [2], [2,2]]
+  (6 unique subsets instead of 8 with duplicates)
+```
 
 ```python
 def subsets_with_dup(nums):
@@ -258,6 +447,58 @@ print(partition_palindrome("aab"))
 
 **Approach**: For each cell matching the first letter, DFS. Mark visited cells by modifying the board. Restore on backtrack.
 
+### Visual: Word Search Execution for "ABCCED"
+
+```
+  BOARD:                        STEP-BY-STEP:
+  ┌───┬───┬───┬───┐            ═══════════════════════════════
+  │ A │ B │ C │ E │
+  ├───┼───┼───┼───┤            1. Scan board for 'A' → found at (0,0)
+  │ S │ F │ C │ S │            2. Start DFS from (0,0), looking for 'B'
+  ├───┼───┼───┼───┤            3. From (0,0), check 4 neighbors:
+  │ A │ D │ E │ E │               (0,1)=B ✓ match! Recurse.
+  └───┴───┴───┴───┘               (1,0)=S ✗ no match
+                                   (-1,0) out of bounds
+                                   (0,-1) out of bounds
+
+  DFS TRACE:
+  ──────────
+  idx=0: at (0,0), looking for 'A' → match
+         mark '#' (visited)
+         ┌───┬───┬───┬───┐
+         │ # │ B │ C │ E │   ← '#' = visited
+         ├───┼───┼───┼───┤
+         │ S │ F │ C │ S │
+         ├───┼───┼───┼───┤
+         │ A │ D │ E │ E │
+         └───┴───┴───┴───┘
+
+  idx=1: at (0,1), looking for 'B' → match
+         mark '#'
+         ┌───┬───┬───┬───┐
+         │ # │ # │ C │ E │
+         ├───┼───┼───┼───┤
+         │ S │ F │ C │ S │
+         ├───┼───┼───┼───┤
+         │ A │ D │ E │ E │
+         └───┴───┴───┴───┘
+
+  idx=2: at (0,2), looking for 'C' → match
+         mark '#'
+  idx=3: at (1,2), looking for 'C' → match (going DOWN)
+         mark '#'
+  idx=4: at (2,2), looking for 'E' → match
+         mark '#'
+  idx=5: at (2,1), looking for 'D' → match
+         mark '#' → idx == len(word) → return True! ✓
+
+  If we were looking for "ABCB":
+  After finding A→B→C, next 'B' would need to be adjacent to (1,2).
+  Only (0,2), (2,2), (1,1), (1,3) are neighbors.
+  (0,2) is already visited (#), others don't match 'B'.
+  → DEAD END! Backtrack: restore (1,2) to 'C', try other directions.
+```
+
 ```python
 def exist(board, word):
     if not board:
@@ -308,6 +549,49 @@ print(exist(board, "ABCB"))   # False
 **Problem**: Place N queens on an N x N chessboard so no two queens attack each other. Return all distinct solutions.
 
 **Approach**: Place row by row. Use sets for columns and diagonals for O(1) safety checks.
+
+### Visual: N-Queens Safety Check with Sets
+
+```
+  DIAGONAL PROPERTIES:
+  ════════════════════
+
+  Two cells (r1,c1) and (r2,c2) are on the same diagonal if:
+  ┌────────────────────────────────────────────────────────────┐
+  │  MAIN diagonal (top-left to bottom-right):  r1 - c1 = r2 - c2 │
+  │  ANTI diagonal (top-right to bottom-left): r1 + c1 = r2 + c2  │
+  └────────────────────────────────────────────────────────────┘
+
+  Example for 4x4 board:
+  ┌───┬───┬───┬───┐
+  │ 0 │ 1 │ 2 │ 3 │    cell (0,0): row-col = 0, row+col = 0
+  ├───┼───┼───┼───┤    cell (1,1): row-col = 0, row+col = 2
+  │ 0 │ 1 │ 2 │ 3 │    cell (2,2): row-col = 0, row+col = 4
+  ├───┼───┼───┼───┤    All three share row-col=0 → SAME MAIN DIAGONAL!
+  │ 0 │ 1 │ 2 │ 3 │
+  ├───┼───┼───┼───┤    cell (0,3): row-col = -3, row+col = 3
+  │ 0 │ 1 │ 2 │ 3 │    cell (1,2): row-col = -1, row+col = 3
+  └───┴───┴───┴───┘    cell (2,1): row-col = 1,  row+col = 3
+                        All share row+col=3 → SAME ANTI DIAGONAL!
+
+  SAFETY CHECK: Place Q at (row, col)?
+  ══════════════════════════════════════
+  cols:    col NOT in cols              → no same column
+  diag1:   (row - col) NOT in diag1     → no same main diagonal
+  diag2:   (row + col) NOT in diag2     → no same anti diagonal
+
+  Example: Placing queens on 4x4 board
+  ┌───┬───┬───┬───┐
+  │   │ Q │   │   │  Row 0: col=1, cols={1}, diag1={-1}, diag2={1}
+  ├───┼───┼───┼───┤
+  │   │   │   │ Q │  Row 1: col=3, safe? col=3∉{1}✓ -2∉{-1}✓ 4∉{1}✓
+  ├───┼───┼───┼───┤
+  │ Q │   │   │   │  Row 2: col=0, safe? col=0∉{1,3}✓ 2∉{-1,-2}✓ 2∉{1,4}✓
+  ├───┼───┼───┼───┤
+  │   │   │ Q │   │  Row 3: col=2, safe? col=2∉{1,3,0}✓ 1∉{-1,-2,2}✓ 5∉{1,4,2}✓
+  └───┴───┴───┴───┘
+  ALL SAFE! Solution found: [1, 3, 0, 2]
+```
 
 ```python
 def solve_n_queens(n):
@@ -372,6 +656,44 @@ for sol in solutions:
 
 **Approach**: Find the next empty cell. Try digits 1-9. Check validity against row, column, and box. Backtrack on failure.
 
+### Visual: Sudoku Constraints and Backtracking
+
+```
+  CONSTRAINTS FOR EACH CELL:
+  ══════════════════════════
+
+  When placing digit at (row, col), check:
+  ┌─────────────────────────────────────────────────────────┐
+  │  1. ROW:    digit not in rows[row]                      │
+  │  2. COLUMN: digit not in cols[col]                      │
+  │  3. BOX:    digit not in boxes[3*(row//3) + col//3]     │
+  └─────────────────────────────────────────────────────────┘
+
+  BOX INDEX CALCULATION:
+  ┌─────┬─────┬─────┐
+  │  0  │  1  │  2  │   box(0,0)=0  box(0,3)=1  box(0,6)=2
+  ├─────┼─────┼─────┤
+  │  3  │  4  │  5  │   box(3,0)=3  box(3,3)=4  box(3,6)=5
+  ├─────┼─────┼─────┤
+  │  6  │  7  │  8  │   box(6,0)=6  box(6,3)=7  box(6,6)=8
+  └─────┴─────┴─────┘
+  box_index = 3 * (row // 3) + (col // 3)
+
+  BACKTRACKING PROCESS:
+  ══════════════════════
+  1. Find next empty cell (first '.' in the grid)
+  2. Try digits '1' through '9':
+     - Is digit valid? (not in row, col, or box)
+     - If yes: place it, recurse to next empty cell
+     - If recursion returns True → solution found!
+     - If recursion returns False → undo (set back to '.'), try next digit
+  3. If no digit works → return False (trigger backtracking)
+
+  The recursion naturally explores the search space:
+  - Each empty cell has at most 9 choices
+  - With ~20-30 empty cells, worst case is 9^30 (but pruning makes it fast!)
+```
+
 ```python
 def solve_sudoku(board):
     rows = [set() for _ in range(9)]
@@ -423,6 +745,66 @@ def solve_sudoku(board):
 **Problem**: Given a string num and an integer target, add '+' or '-' between digits to form expressions that evaluate to target.
 
 **Approach**: At each position, try forming numbers of length 1, 2, etc. Track the current value and the previous operand (for multiplication).
+
+### Visual: Building Expressions for "123", target=6
+
+```
+  DECISION TREE:
+  ══════════════
+
+                           ""
+                    ┌──────┼──────┐
+                  "1"     "12"   "123"
+                   |        |      |
+              ┌────┼──┐    ...    ...
+            "1+2" "1-2" "1*2"
+              |      |     |
+         ┌────┼──┐  ...  ┌──┼──┐
+       "1+2+3" "1+2-3" "1+2*3" "1*2+3" "1*2*3"
+         ✓        ❌      ✓       ✓       ✓
+        =6       =0      =7      =5      =6
+
+  EXPRESSION EVALUATION WALKTHROUGH:
+  ═══════════════════════════════════
+
+  "1+2+3" = 6 ✓
+  ─────────────
+  idx=0: first number, no operator
+    curr=1, prev=1
+  idx=1: '+'
+    curr = 1 + 2 = 3, prev = 2
+  idx=2: '+'
+    curr = 3 + 3 = 6, prev = 3
+  idx=3: done! curr == target? Yes! Record "1+2+3"
+
+  "1*2*3" = 6 ✓
+  ─────────────
+  idx=0: first number, no operator
+    curr=1, prev=1
+  idx=1: '*'
+    curr = 1 - 1 + 1*2 = 2, prev = 1*2 = 2
+    (subtract prev, then add prev*operand)
+  idx=2: '*'
+    curr = 2 - 2 + 2*3 = 6, prev = 2*3 = 6
+  idx=3: done! curr == 6? Yes! Record "1*2*3"
+
+  "1+2*3" = 7 (not 6)
+  ─────────────────
+  idx=0: curr=1, prev=1
+  idx=1: '+'
+    curr = 1 + 2 = 3, prev = 2
+  idx=2: '*'
+    curr = 3 - 2 + 2*3 = 7, prev = 2*3 = 6
+  idx=3: curr=7 ≠ 6 → skip
+
+  WHY TRACK prev FOR MULTIPLICATION?
+  ═══════════════════════════════════
+  1+2*3: Without prev, we'd compute (1+2)*3 = 9 (WRONG!)
+  With prev: we know last op was '+', so:
+    curr = curr - prev + prev*operand
+         = 3 - 2 + 2*3 = 7 ✓
+  This correctly handles operator precedence!
+```
 
 ```python
 def add_operators(num, target):
@@ -768,3 +1150,60 @@ def get_factors_all(n):
 | 15 | Factor Combinations | Hard | O(sqrt(N)^(log N)) | O(log N) |
 
 Where: N = input size, T = target, M = min candidate, L = word length, E = empty cells, C = total chars, W = words, S = slots.
+
+### Complexity Visualization — Growth Rates
+
+```
+  HOW FAST DO THESE COMPLEXITIES GROW?
+  ══════════════════════════════════════
+
+  Input Size (n) →  5      10      15      20      25
+  ─────────────────────────────────────────────────────
+  O(n)              5      10      15      20      25
+  O(n²)            25     100     225     400     625
+  O(n log n)       12      33      59      86     115
+  O(2^n)           32   1,024  32,768  ~1M    ~33M
+  O(n!)           120  3.6M   ~1.3T    💀      💀
+  O(4^n)         1,024  ~1M    ~1B      💀      💀
+  O(n^n)         3,125  10B     💀      💀      💀
+
+  RULES OF THUMB:
+  ┌─────────────────────────────────────────────────────────┐
+  │  If n ≤ 10:  O(n!) and O(2^n) are acceptable           │
+  │  If n ≤ 20:  O(2^n) is acceptable, O(n!) is too slow   │
+  │  If n ≤ 30:  O(2^n) might be too slow, need pruning    │
+  │  If n > 30:  Must find polynomial or O(n log n) solution│
+  │  If n > 10^5: Only O(n) or O(n log n) works            │
+  └─────────────────────────────────────────────────────────┘
+```
+
+### Key Patterns — Cheat Sheet
+
+```
+  BACKTRACKING PROBLEM → TEMPLATE MAPPING:
+  ══════════════════════════════════════════
+
+  ┌──────────────────────┬─────────────────────────────────────┐
+  │ Problem Type          │ Template                            │
+  ├──────────────────────┼─────────────────────────────────────┤
+  │ Subsets               │ start index, record at every node   │
+  │ Subsets with dupes    │ sort + skip if nums[i]==nums[i-1]  │
+  │ Permutations          │ used array, record at leaves only   │
+  │ Permutations w/ dupes │ sort + skip if used[i-1]==False    │
+  │ Combination Sum       │ start index + remaining target     │
+  │ Combination Sum w/dup │ sort + skip same at same level      │
+  │ Partition             │ start index, check valid substring  │
+  │ Grid path (DFS)       │ position + 4 directions + unmark   │
+  │ Constraint (N-Queens) │ row-by-row + sets for O(1) check   │
+  │ Fill cells (Sudoku)   │ find empty + try all values         │
+  └──────────────────────┴─────────────────────────────────────┘
+
+  UNIVERSAL STEPS FOR ANY BACKTRACKING PROBLEM:
+  ══════════════════════════════════════════════
+  1. Identify: What is the STATE? (path, remaining, position)
+  2. Identify: What are the CHOICES? (elements, directions, digits)
+  3. Identify: What is the CONSTRAINT? (sum, validity, visited)
+  4. Identify: What is the BASE CASE? (path complete, target reached)
+  5. IMPLEMENT: choose → recurse → unchoose
+  6. OPTIMIZE: Add pruning (sort + break, skip duplicates, early termination)
+```

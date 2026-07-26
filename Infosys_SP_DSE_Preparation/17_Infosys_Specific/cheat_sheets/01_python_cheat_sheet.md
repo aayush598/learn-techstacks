@@ -2,7 +2,43 @@
 
 > Complete reference for all Python operations needed in competitive programming.
 
----
+## Quick Reference: Python Data Structure Selection
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    WHICH DATA STRUCTURE TO USE?                     │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  Need ordered collection + fast access?     → list                  │
+│  Need fast lookup + no duplicates?          → set                   │
+│  Need key-value mapping?                    → dict                  │
+│  Need FIFO queue (fast both ends)?          → deque                 │
+│  Need priority ordering?                    → heapq                 │
+│  Need frequency counting?                   → Counter               │
+│  Need default dict values?                  → defaultdict           │
+│  Need to check membership frequently?       → set (O(1) vs O(n))    │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+## Operation Speed Comparison
+
+```
+┌──────────────────┬──────────┬──────────┬────────────────────────┐
+│ Operation        │ list     │ set/dict │ When to prefer         │
+├──────────────────┼──────────┼──────────┼────────────────────────┤
+│ Check "x in Y"   │ O(n)     │ O(1)     │ set/dict (100x faster) │
+│ Append           │ O(1)     │ O(1)     │ Either                 │
+│ Insert at 0      │ O(n)     │ N/A      │ Use deque.appendleft   │
+│ Delete at 0      │ O(n)     │ O(1)     │ set/dict               │
+│ Find max/min     │ O(n)     │ O(n)     │ Use heapq instead      │
+│ Sort             │ O(nlogn) │ N/A      │ list only              │
+└──────────────────┴──────────┴──────────┴────────────────────────┘
+
+KEY INSIGHT for CP:
+  if "x in collection" appears in inner loop → use set/dict, NOT list!
+  This single change can make O(n²) → O(n)
+```
 
 ## Built-in Functions
 
@@ -55,16 +91,36 @@ print(x, end=" ")  # Print without newline
 ## String Methods
 
 ### Creation and Access
+
 ```python
 s = "hello"
 s = 'hello'
 s = """multi
 line"""
-s[0]            # First character
-s[-1]           # Last character
-s[1:3]          # Slice (index 1 to 2)
-s[::2]          # Every other character
-s[::-1]         # Reverse string
+s[0]            # First character  → 'h'
+s[-1]           # Last character   → 'o'
+s[1:3]          # Slice (index 1 to 2) → 'el'
+s[::2]          # Every other character → 'hlo'
+s[::-1]         # Reverse string   → 'olleh'
+```
+
+### String Slicing Visual Guide
+
+```
+String:   h  e  l  l  o
+Index:    0  1  2  3  4
+Neg Idx: -5 -4 -3 -2 -1
+
+s[1:4]   → 'ell'    (start at 1, stop before 4)
+s[::2]   → 'hlo'    (every 2nd char: 0, 2, 4)
+s[::-1]  → 'olleh'  (reverse the string)
+s[1:]    → 'ello'   (from index 1 to end)
+s[:3]    → 'hel'    (from start to index 2)
+
+CRITICAL for CP:
+  String reversal: s[::-1]        → O(n)
+  Substring check: s1 in s2       → O(n*m) naive, use KMP for large
+  Char count:      s.count('a')   → O(n)
 ```
 
 ### String Methods
@@ -150,22 +206,50 @@ lst.clear()         # Remove all elements
 ```
 
 ### List Comprehensions
+
 ```python
-# Basic
+# Basic: [expression for item in iterable]
 squares = [x**2 for x in range(10)]
+# Result: [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
 
-# With condition
+# With condition: [expression for item in iterable if condition]
 evens = [x for x in range(10) if x % 2 == 0]
+# Result: [0, 2, 4, 6, 8]
 
-# Nested
+# Nested: [[expression for j in range(cols)] for i in range(rows)]
 matrix = [[i*3+j+1 for j in range(3)] for i in range(3)]
+# Result: [[1,2,3], [4,5,6], [7,8,9]]
 
-# Flatten
+# Flatten: [item for sublist in list for item in sublist]
 flat = [x for row in matrix for x in row]
+# Result: [1, 2, 3, 4, 5, 6, 7, 8, 9]
 
 # With transformation
 words = ["hello", "world"]
 upper = [w.upper() for w in words]
+# Result: ['HELLO', 'WORLD']
+```
+
+### List Comprehension vs Loop (Equivalent Code)
+
+```
+LIST COMPREHENSION:              FOR LOOP:
+┌──────────────────────┐        ┌──────────────────────────┐
+│ squares =            │        │ squares = []             │
+│   [x**2              │   =    │ for x in range(10):      │
+│    for x             │        │     squares.append(x**2) │
+│    in range(10)]     │        │                          │
+└──────────────────────┘        └──────────────────────────┘
+
+List comprehension is:
+  ✅ Faster (optimized internally by Python)
+  ✅ More concise (1 line vs 3)
+  ✅ Preferred in CP for speed
+
+Nested comprehension reading order:
+  [[... for j in ...] for i in ...]
+   ↑ expression     ↑ outer loop
+           ↑ inner loop
 ```
 
 ---
@@ -256,7 +340,8 @@ s = {x for x in range(10) if x % 2 == 0}
 
 ## Collections Module
 
-### Counter
+### Counter - Frequency Counter
+
 ```python
 from collections import Counter
 
@@ -267,7 +352,24 @@ c["l"]  # 2
 c.update("world")  # Update counts
 ```
 
-### defaultdict
+### Visual: Counter Usage in CP
+
+```
+String: "aabbbcccc"
+Counter: {'a': 2, 'b': 3, 'c': 4}
+
+CP USE CASES:
+  1. Anagram check: Counter(s1) == Counter(s2)
+  2. Frequency sort: sorted(c.items(), key=lambda x: -x[1])
+  3. Most common element: c.most_common(1)[0][0]
+  4. Count pairs with sum: build Counter, then check complement
+
+  Counter is O(n) to build, O(1) to lookup
+  vs manual counting: O(n) to build, O(n) to lookup (with list)
+```
+
+### defaultdict - No KeyError
+
 ```python
 from collections import defaultdict
 
@@ -275,8 +377,25 @@ d = defaultdict(int)    # Default value 0
 d = defaultdict(list)   # Default value []
 d = defaultdict(lambda: 0)  # Custom default
 
-d["a"] += 1  # No KeyError
-d["b"].append(1)  # No KeyError
+d["a"] += 1  # No KeyError - creates d["a"] = 0 first, then adds 1
+d["b"].append(1)  # No KeyError - creates d["b"] = [] first, then appends
+```
+
+### defaultdict vs Normal Dict
+
+```
+NORMAL DICT:                    DEFAULTDICT:
+┌──────────────────────┐       ┌──────────────────────┐
+│ d = {}               │       │ d = defaultdict(int) │
+│ if key not in d:     │       │ d[key] += 1          │
+│     d[key] = 0       │       │ # Just works! ✅     │
+│ d[key] += 1          │       │                      │
+│ # 3 lines            │       │ # 1 line ✅          │
+└──────────────────────┘       └──────────────────────┘
+
+Use defaultdict(list) for adjacency lists in graphs:
+  graph = defaultdict(list)
+  graph[u].append(v)  # No need to check if u exists!
 ```
 
 ### deque
@@ -388,6 +507,31 @@ list(itertools.product([0,1], repeat=3))
 
 ## Bisect Module
 
+### Visual: bisect_left vs bisect_right
+
+```
+Sorted List: [1, 3, 3, 3, 5, 7, 9]
+               0  1  2  3  4  5  6
+
+bisect_left(lst, 3)  → 1  (leftmost position to insert 3)
+                         ↑
+                         First 3 is at index 1
+
+bisect_right(lst, 3) → 4  (rightmost position to insert 3)
+                              ↑
+                              After last 3 (index 3)
+
+bisect_left(lst, 6)  → 4  (where 6 would go to maintain sorted order)
+                         ↑
+                         Between 5 and 7
+
+bisect_left(lst, 0)  → 0  (smaller than all → insert at start)
+bisect_left(lst, 10) → 7  (larger than all → insert at end)
+
+CP APPLICATION: Count elements in range [lo, hi]
+  count = bisect_right(lst, hi) - bisect_left(lst, lo)
+```
+
 ```python
 import bisect
 
@@ -425,6 +569,25 @@ def count_greater_than(lst, x):
 ---
 
 ## heapq Module
+
+### Visual: Min-Heap Structure
+
+```
+Min-Heap: parent ≤ children
+
+        1              Array representation:
+       / \             [1, 3, 2, 5, 4, 6, 7]
+      3   2            Index: 0  1  2  3  4  5  6
+     / \ / \           
+    5  4 6  7          Parent of i: (i-1)//2
+                       Left child:  2*i + 1
+                       Right child: 2*i + 2
+
+heappush: O(log n)    - add to end, bubble up
+heappop:  O(log n)    - remove root, bubble down
+heapify:  O(n)        - convert list to heap in-place
+heap[0]:  O(1)        - peek at minimum
+```
 
 ```python
 import heapq

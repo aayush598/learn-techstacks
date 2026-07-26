@@ -1,5 +1,39 @@
 # Advanced Data Structures Practice Problems
 
+> **How to use this file:** Each problem includes the approach, code, and complexity. Practice these in order — they build on each other. Focus on understanding the PATTERN, not memorizing the code.
+
+---
+
+## Decision Tree: Which Data Structure to Use?
+
+```
+  ┌──────────────────────────────────────────────────────────┐
+  │  START                                                   │
+  │    │                                                     │
+  │    ├── Do you need RANGE queries?                        │
+  │    │   ├── YES: Do you need updates too?                 │
+  │    │   │   ├── Point updates only → SEGMENT TREE or BIT  │
+  │    │   │   ├── Range updates too → SEGMENT TREE (lazy)   │
+  │    │   │   └── No updates → PREFIX SUM (simplest!)       │
+  │    │   └── NO (only prefix queries) → BIT                │
+  │    │                                                     │
+  │    ├── Working with STRINGS?                             │
+  │    │   ├── Prefix matching → TRIE                        │
+  │    │   ├── XOR on numbers → BINARY TRIE                  │
+  │    │   └── Multiple pattern match → TRIE + DFS           │
+  │    │                                                     │
+  │    ├── Working with CONNECTED COMPONENTS?                │
+  │    │   ├── Static graph → DFS/BFS                        │
+  │    │   ├── Dynamic (adding edges) → DSU                  │
+  │    │   └── Cycle detection → DSU or DFS                  │
+  │    │                                                     │
+  │    └── Need to find ORDER STATISTICS?                    │
+  │        ├── Kth smallest → BIT/Segment Tree               │
+  │        ├── Count smaller after self → BIT + compression  │
+  │        └── Median from stream → Two Heaps                │
+  └──────────────────────────────────────────────────────────┘
+```
+
 ## Segment Tree Problems
 
 ### Problem 1: Range Sum Query Mutable (LC 307)
@@ -7,6 +41,41 @@
 **Problem:** Design a data structure to answer range sum queries and support point updates.
 
 **Approach:** Use segment tree for O(log n) updates and queries.
+
+### Visual: How the Segment Tree Answers Queries
+
+```
+  nums = [1, 3, 5, 7, 9]
+
+  Segment tree:
+                    [25]
+                  /      \
+              [9]          [16]
+             /  \        /   \
+          [4]  [5]    [16]   (wait, [7,9] = 16)
+          / \   |    /   \
+         [1][3][5] [7]   [9]
+
+  query(1, 3) → sum of [3, 5, 7] = 15
+
+  ┌────────────────────────────────────────────┐
+  │  Decompose [1,3] into tree nodes:          │
+  │    [1,1] covers index 1 → value 3         │
+  │    [2,3] covers indices 2-3 → value 12    │
+  │    Sum = 3 + 12 = 15 ✓                   │
+  └────────────────────────────────────────────┘
+
+  update(2, 6): set index 2 from 5 to 6
+  ┌────────────────────────────────────────────┐
+  │  Leaf [2] changes from 5 to 6             │
+  │  Propagate up:                            │
+  │    tree[4] = 5 → 6  (parent of leaf 2)   │
+  │    tree[1] = 4+6 = 10 (parent of [1,2])  │
+  │    tree[0] = 10+16 = 26 (root)           │
+  └────────────────────────────────────────────┘
+
+  After update, query(1,3) = 3 + 6 + 7 = 16 ✓
+```
 
 ```python
 class NumArray:
@@ -176,11 +245,48 @@ print(countRangeSum([-2, 5, -1], -2, 2))  # 3
 ### Problem 4: Count Inversions (LC 315)
 
 **Problem:** Count number of inversions in array.
+**Inversion:** A pair (i, j) where i < j and nums[i] > nums[j].
 
-**Approach:** Use BIT to count elements smaller than current from right.
+### Visual: How BIT Counts Inversions
+
+```
+  Array: [2, 4, 1, 3, 5]
+
+  Process from RIGHT to LEFT, counting how many
+  smaller elements we've already seen.
+
+  Step 1: Process 5 → seen: {5}
+          Count smaller than 5: 0
+          result[4] = 0
+
+  Step 2: Process 3 → seen: {3, 5}
+          Count smaller than 3: 0
+          result[3] = 0
+
+  Step 3: Process 1 → seen: {1, 3, 5}
+          Count smaller than 1: 0
+          result[2] = 0
+
+  Step 4: Process 4 → seen: {1, 3, 4, 5}
+          Count smaller than 4: 2 (1 and 3)
+          result[1] = 2  → inversions: (4,1), (4,3)
+
+  Step 5: Process 2 → seen: {1, 2, 3, 4, 5}
+          Count smaller than 2: 1 (1)
+          result[0] = 1  → inversion: (2,1)
+
+  Total inversions: 0+0+0+2+1 = 3 ✓
+
+  ┌──────────────────────────────────────────────────────┐
+  │  BIT stores FREQUENCY of elements seen so far.       │
+  │  query(rank - 1) counts how many elements smaller    │
+  │  than current have been processed (are to the right).│
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 def count_inversions(nums):
+    # Coordinate compression: map values to ranks 1..n
     sorted_nums = sorted(set(nums))
     rank = {v: i + 1 for i, v in enumerate(sorted_nums)}
     
@@ -201,10 +307,11 @@ def count_inversions(nums):
     
     inv_count = 0
     
+    # Process from RIGHT to LEFT
     for i in range(n - 1, -1, -1):
         r = rank[nums[i]]
-        inv_count += query(r - 1)
-        update(r)
+        inv_count += query(r - 1)  # Count elements smaller than current
+        update(r)                    # Mark current element as "seen"
     
     return inv_count
 
@@ -432,6 +539,54 @@ print(find_words(board, words))  # ["oath", "eat"]
 
 **Approach:** Use binary trie for bit-by-bit matching.
 
+### Visual: How Binary Trie Finds Maximum XOR
+
+```
+  nums = [3, 10, 5, 25, 2, 8]
+
+  Numbers in binary (5 bits for simplicity):
+    3  = 00011
+    10 = 01010
+    5  = 00101
+    25 = 11001
+    2  = 00010
+    8  = 01000
+
+  Build binary trie:
+             root
+          /        \
+        0            1
+       / \          |
+      0   1         1
+     /|   |\        |
+    0 1   0 1       0
+    | |   | |       |
+    0 1   0 1       0
+    1 0   1 0       1
+    |     |
+   (3)  (2)  (10) (5) (25) (8)
+
+  Query for num=25 (11001):
+  ┌──────────────────────────────────────────────────────┐
+  │  Bit 4 (MSB): 1 → try 0 (opposite) → exists!       │
+  │    result |= 1<<4 = 16                             │
+  │  Bit 3: 1 → try 0 → exists!                        │
+  │    result |= 1<<3 = 24                             │
+  │  Bit 2: 0 → try 1 → exists!                        │
+  │    result |= 1<<2 = 28                             │
+  │  Bit 1: 0 → try 1 → doesn't exist → take 0        │
+  │  Bit 0: 1 → try 0 → doesn't exist → take 1        │
+  │                                                     │
+  │  Max XOR for 25 = 28 (25 ^ 3 = 28)                │
+  │                                                     │
+  │  Overall max = 28 ✓                                │
+  └──────────────────────────────────────────────────────┘
+
+  WHY it works: XOR is maximized when bits DIFFER.
+  At each bit, we try to go to the OPPOSITE bit.
+  If opposite exists, that bit contributes to XOR.
+```
+
 ```python
 class TrieNode:
     def __init__(self):
@@ -533,6 +688,36 @@ print(replace_words(dictionary, sentence))
 
 **Approach:** Use DSU to merge friends.
 
+### Visual: How DSU Counts Provinces
+
+```
+  isConnected matrix:
+       0  1  2
+     ┌───────┐
+  0  │ 1  1  0 │
+  1  │ 1  1  0 │
+  2  │ 0  0  1 │
+     └───────┘
+
+  Edges: (0,1) and (2 is isolated)
+
+  Step 1: Process (0,1) → union(0,1)
+          parent: [0, 0, 2]
+          Tree:  0
+                /
+              (1)     (2)
+
+  Step 2: Process (2,2) → skip (self-loop)
+
+  Components: {0,1} and {2} → 2 provinces ✓
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Each connected component in the matrix becomes      │
+  │  one "set" in the DSU. Count unique roots = count    │
+  │  of provinces.                                       │
+  └──────────────────────────────────────────────────────┘
+```
+
 ```python
 def find_circle_num(isConnected):
     n = len(isConnected)
@@ -579,6 +764,33 @@ print(find_circle_num(isConnected))  # 2
 
 **Approach:** DSU - if union returns False, edge creates cycle.
 
+### Visual: Cycle Detection with DSU
+
+```
+  Edges: [[1,2], [1,3], [2,3]]
+
+  Step 1: Edge (1,2) → union(1,2) → SUCCESS
+          (1)
+           |
+          (2)        Sets: {1,2}, {3}
+
+  Step 2: Edge (1,3) → union(1,3) → SUCCESS
+          (1)
+         / |
+       (2)(3)       Sets: {1,2,3}
+
+  Step 3: Edge (2,3) → union(2,3) → FAILS!
+          (1)        2 and 3 already connected!
+         / \         Adding (2,3) creates cycle!
+       (2)-(3)       ANSWER: [2, 3]
+
+  ┌──────────────────────────────────────────────────────┐
+  │  The FIRST edge that fails union() is the redundant  │
+  │  connection. This is guaranteed by the problem       │
+  │  constraints (exactly one redundant edge exists).    │
+  └──────────────────────────────────────────────────────┘
+```
+
 ```python
 def findRedundantConnection(edges):
     parent = list(range(len(edges) + 1))
@@ -616,6 +828,51 @@ print(findRedundantConnection([[1, 2], [2, 3], [3, 4], [1, 4], [1, 5]]))  # [1, 
 **Problem:** Merge accounts that share common emails.
 
 **Approach:** Map emails to account indices, union accounts with common emails.
+
+### Visual: How Accounts Merge Works
+
+```
+  Accounts:
+    Account 0: ["John", "john@example.com", "john@example.net"]
+    Account 1: ["John", "john@example.com", "john_work@example.com"]
+    Account 2: ["Mary", "mary@example.com"]
+
+  Step 1: Build email → account index mapping
+  ┌────────────────────────────────────────────┐
+  │  john@example.com   → 0                   │
+  │  john@example.net   → 0                   │
+  │  john@example.com   → 0 (already mapped)  │
+  │  john_work@example.com → 1                │
+  │  mary@example.com   → 2                   │
+  └────────────────────────────────────────────┘
+
+  Step 2: Process emails
+    - "john@example.com" already mapped to 0, current=0
+      → union(0, 0) = same, skip
+    - "john_work@example.com" new, map to 1
+
+  Wait, let me re-trace:
+    Account 0: "john@example.com" → not mapped, map to 0
+               "john@example.net" → not mapped, map to 0
+    Account 1: "john@example.com" → already mapped to 0
+               → union(1, 0) = merge accounts!
+               "john_work@example.com" → not mapped, map to 1
+    Account 2: "mary@example.com" → not mapped, map to 2
+
+  Step 3: Group emails by root
+  ┌──────────────────────────────────────────────────────┐
+  │  Root 0: john@example.com, john@example.net,         │
+  │          john_work@example.com                       │
+  │  Root 2: mary@example.com                           │
+  └──────────────────────────────────────────────────────┘
+
+  Result: [["John", "john@example.com", "john@example.net",
+            "john_work@example.com"],
+           ["Mary", "mary@example.com"]]
+
+  KEY INSIGHT: Email acts as the "bridge" between accounts.
+  Two accounts sharing even ONE email should be merged.
+```
 
 ```python
 def accountsMerge(accounts):
@@ -682,6 +939,57 @@ print(accountsMerge(accounts))
 **Problem:** Dynamic number of islands with add land operations.
 
 **Approach:** DSU with 2D grid mapped to 1D.
+
+### Visual: Dynamic Island Counting
+
+```
+  Grid: 3×3, positions = [(0,0), (0,1), (1,2), (2,1)]
+
+  Position (0,0): Add land
+  ┌───┬───┬───┐
+  │ 1 │   │   │    Count = 1 (1 island)
+  ├───┼───┼───┤
+  │   │   │   │
+  ├───┼───┼───┤
+  │   │   │   │
+  └───┴───┴───┘
+
+  Position (0,1): Add land, merges with (0,0)
+  ┌───┬───┬───┐
+  │ 1 │ 1 │   │    Count = 1 (merged!)
+  ├───┼───┼───┤
+  │   │   │   │
+  ├───┼───┼───┤
+  │   │   │   │
+  └───┴───┴───┘
+
+  Position (1,2): Add land, no neighbors
+  ┌───┬───┬───┐
+  │ 1 │ 1 │   │    Count = 2 (new island)
+  ├───┼───┼───┤
+  │   │   │ 1 │
+  ├───┼───┼───┤
+  │   │   │   │
+  └───┴───┴───┘
+
+  Position (2,1): Add land, no neighbors
+  ┌───┬───┬───┐
+  │ 1 │ 1 │   │    Count = 3 (another new island)
+  ├───┼───┼───┤
+  │   │   │ 1 │
+  ├───┼───┼───┤
+  │   │ 1 │   │
+  └───┴───┴───┘
+
+  Result: [1, 1, 2, 3]
+
+  ┌──────────────────────────────────────────────────────┐
+  │  Map 2D → 1D: id(r,c) = r × n + c                   │
+  │  For each new land cell, check 4 neighbors.          │
+  │  If neighbor is land, union them.                     │
+  │  If union merges two components, island count -= 1   │
+  └──────────────────────────────────────────────────────┘
+```
 
 ```python
 def numIslands2(m, n, positions):
@@ -782,23 +1090,56 @@ print(validTree(5, [[0, 1], [1, 2], [2, 3], [1, 3], [1, 4]]))  # False
 
 ## Summary Table
 
-| # | Problem | Data Structure | Time Complexity |
-|---|---------|---------------|-----------------|
-| 1 | Range Sum Query Mutable | Segment Tree | O(n + q log n) |
-| 2 | Range Minimum Query | Segment Tree | O(n + q log n) |
-| 3 | Count of Range Sum | Merge Sort | O(n log n) |
-| 4 | Count Inversions | BIT | O(n log n) |
-| 5 | Count Smaller After Self | BIT | O(n log n) |
-| 6 | Range Update Point Query | BIT | O(q log n) |
-| 7 | Implement Trie | Trie | O(q * m) |
-| 8 | Word Search II | Trie + DFS | O(M * N * 4^L) |
-| 9 | Maximum XOR Pair | Trie | O(31n) |
-| 10 | Replace Words | Trie | O(D * L + S) |
-| 11 | Number of Provinces | DSU | O(n²) |
-| 12 | Redundant Connection | DSU | O(n) |
-| 13 | Accounts Merge | DSU | O(n * k * α(n)) |
-| 14 | Number of Islands II | DSU | O(k * α(m*n)) |
-| 15 | Graph Valid Tree | DSU | O(n + E) |
+| # | Problem | Data Structure | Time | Difficulty |
+|---|---------|---------------|------|------------|
+| 1 | Range Sum Query Mutable | Segment Tree | O(n + q log n) | Medium |
+| 2 | Range Minimum Query | Segment Tree | O(n + q log n) | Medium |
+| 3 | Count of Range Sum | Merge Sort | O(n log n) | Hard |
+| 4 | Count Inversions | BIT | O(n log n) | Medium |
+| 5 | Count Smaller After Self | BIT | O(n log n) | Hard |
+| 6 | Range Update Point Query | BIT | O(q log n) | Easy |
+| 7 | Implement Trie | Trie | O(q * m) | Easy |
+| 8 | Word Search II | Trie + DFS | O(M * N * 4^L) | Hard |
+| 9 | Maximum XOR Pair | Trie | O(31n) | Medium |
+| 10 | Replace Words | Trie | O(D * L + S) | Easy |
+| 11 | Number of Provinces | DSU | O(n²) | Easy |
+| 12 | Redundant Connection | DSU | O(n) | Medium |
+| 13 | Accounts Merge | DSU | O(n * k * α(n)) | Medium |
+| 14 | Number of Islands II | DSU | O(k * α(m*n)) | Hard |
+| 15 | Graph Valid Tree | DSU | O(n + E) | Medium |
+
+### Difficulty Distribution
+
+```
+  Easy:    ████░░░░░░  4 problems (6, 7, 10, 11)
+  Medium:  ████████░░  7 problems (1, 2, 4, 9, 12, 13, 15)
+  Hard:    █████░░░░░  4 problems (3, 5, 8, 14)
+```
+
+### Study Order (Recommended)
+
+```
+  Phase 1: Fundamentals (Easy)
+  ├── Problem 7:  Implement Trie (basic structure)
+  ├── Problem 10: Replace Words (trie application)
+  ├── Problem 6:  Range Update Point Query (BIT basics)
+  └── Problem 11: Number of Provinces (basic DSU)
+
+  Phase 2: Core Patterns (Medium)
+  ├── Problem 1:  Range Sum Query (segment tree)
+  ├── Problem 2:  Range Minimum Query (segment tree)
+  ├── Problem 4:  Count Inversions (BIT application)
+  ├── Problem 9:  Maximum XOR Pair (binary trie)
+  ├── Problem 12: Redundant Connection (DSU cycle detection)
+  ├── Problem 13: Accounts Merge (DSU real-world)
+  └── Problem 15: Graph Valid Tree (DSU properties)
+
+  Phase 3: Advanced (Hard)
+  ├── Problem 3:  Count of Range Sum (merge sort + counting)
+  ├── Problem 5:  Count Smaller After Self (BIT + compression)
+  ├── Problem 8:  Word Search II (trie + backtracking)
+  └── Problem 14: Number of Islands II (dynamic DSU)
+```
 
 ---
 

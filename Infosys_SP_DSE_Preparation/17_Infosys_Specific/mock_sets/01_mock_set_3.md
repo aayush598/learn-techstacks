@@ -10,36 +10,53 @@
 
 Given a string `s`, check if it can be a palindrome after removing at most one character.
 
-**Input Format:**
-- Single line: string s
-
-**Output Format:**
-- "True" if it can be palindrome, "False" otherwise
-
-**Constraints:**
-- 1 ≤ |s| ≤ 10^5
-- s contains only lowercase English letters
-
-### Sample Test Cases
+### Visual Problem Understanding
 
 ```
-Input:  "aba"
-Output: True
-Explanation: Already a palindrome
+String: "abca"
 
-Input:  "abca"
-Output: True
-Explanation: Remove 'b' to get "aca"
+Two pointers from both ends:
+  a  b  c  a
+  L        R
+  a == a ✓ → move both inward
+  
+  a  b  c  a
+     L  R
+  b != c ✗ → MISMATCH!
+  
+  Option 1: Skip L → check "bca" → b≠a → NOT palindrome
+  Option 2: Skip R → check "abc" → a≠c → NOT palindrome
+  
+  Wait, that's wrong... Let me re-trace:
+  
+  Option 1: Remove L (skip 'b') → check "ca" → c≠a → NO
+  Option 2: Remove R (skip 'c') → check "ba" → b≠a → NO
+  
+  Hmm, but "abca" can become "aca" by removing 'b' at index 1!
+  That IS a palindrome!
+  
+  The issue: we should check if the SUBSTRING is palindrome:
+  After removing index 1 ('b'): "aca" → YES palindrome ✅
+  After removing index 2 ('c'): "aba" → YES palindrome ✅
 
-Input:  "abc"
-Output: False
+DECISION FLOW:
+┌─────────────────────────────────────────────────────┐
+│  L and R match? → move both inward                 │
+│  L and R DON'T match?                             │
+│    → Try removing L (check if L+1..R is palindrome)│
+│    → Try removing R (check if L..R-1 is palindrome)│
+│    → If NEITHER works → return False               │
+└─────────────────────────────────────────────────────┘
 
-Input:  "deeee"
-Output: True
-Explanation: Remove 'd' to get "eeee"
+"deeee": 
+  d  e  e  e  e
+  L           R
+  d != e ✗ → Try removing 'd' → check "eeee" → palindrome ✅
+           → OR remove last 'e' → check "deee" → d≠e → NO
+  At least one works → True ✅
 ```
 
-### Approach 1: Two Pointers (Optimal)
+### Complexity Analysis
 
 ```python
 def valid_palindrome(s):
@@ -128,35 +145,58 @@ print(valid_palindrome_recursive(s))
 
 Given a set of coin denominations and a target amount, find the number of distinct ways to make the amount using the given coins. You can use unlimited coins of each type.
 
-**Input Format:**
-- First line: N (number of coin types) and amount
-- Second line: N space-separated coin denominations
-
-**Output Format:**
-- Single integer: number of ways modulo 10^9+7
-
-**Constraints:**
-- 1 ≤ N ≤ 50
-- 1 ≤ coins[i] ≤ 1000
-- 1 ≤ amount ≤ 5000
-
-### Sample Test Cases
+### Visual: DP Table Construction
 
 ```
-Input:  N=3, amount=5, coins=[1, 2, 5]
-Output: 4
-Explanation: Ways: {1,1,1,1,1}, {1,1,1,2}, {1,2,2}, {5}
+coins = [1, 2, 5], amount = 5
 
-Input:  N=2, amount=3, coins=[2, 3]
-Output: 1
-Explanation: Only {3}
+DP Table: dp[coin][amount] = number of ways using coins up to index
 
-Input:  N=1, amount=0, coins=[1]
-Output: 1
-Explanation: Empty set (sum = 0)
+     ""  1  2  3  4  5     ← Amount
+  ""  1  0  0  0  0  0     ← Base: 1 way to make amount 0 (use no coins)
+   1  1  1  1  1  1  1     ← Using only [1]: 1 way for each amount
+   2  1  1  2  2  3  3     ← Using [1,2]: more combinations
+   5  1  1  2  2  3  4     ← Using [1,2,5]: final answer = 4
+
+FILL RULE:
+  dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]]
+              ↑ don't use  ↑ use at least one
+  
+  Example: dp[2][3] = dp[1][3] + dp[2][1] = 1 + 1 = 2
+           (ways without 2) + (ways using at least one 2)
+
+WAYS TO MAKE 5:
+  {1,1,1,1,1}
+  {1,1,1,2}
+  {1,2,2}
+  {5}
+  Total = 4 ✅
+
+CRITICAL: Loop order matters!
+  coins in outer loop → counts COMBINATIONS (what we want)
+  amount in outer loop → counts PERMUTATIONS (wrong!)
 ```
 
-### Approach 1: 2D DP (Classic)
+### 1D Space Optimization Visual
+
+```
+1D DP: dp[amount] = number of ways
+
+Initial: dp = [1, 0, 0, 0, 0, 0]
+
+After coin=1:  dp = [1, 1, 1, 1, 1, 1]
+                ↑ for each amount j: dp[j] += dp[j-1]
+
+After coin=2:  dp = [1, 1, 2, 2, 3, 3]
+                ↑ for each amount j: dp[j] += dp[j-2]
+
+After coin=5:  dp = [1, 1, 2, 2, 3, 4]
+                ↑ for each amount j: dp[j] += dp[j-5]
+
+dp[5] = 4 ✅
+```
+
+### Complexity Analysis
 
 ```python
 def count_ways_2d(coins, amount):
@@ -245,35 +285,44 @@ print(count_ways_memo(coins, amount))
 
 Given `n` balloons indexed from 0 to n-1, each with a number on it represented by array `nums`. You are asked to burst all the balloons. If you burst balloon `i`, you will get `nums[i-1] * nums[i] * nums[i+1]` coins. If `i-1` or `i+1` goes out of bounds, treat it as 1. Find the maximum coins you can collect by bursting all balloons optimally.
 
-**Input Format:**
-- First line: N (number of balloons)
-- Second line: N space-separated integers
-
-**Output Format:**
-- Single integer: maximum coins
-
-**Constraints:**
-- 1 ≤ N ≤ 300
-- 1 ≤ nums[i] ≤ 100
-
-### Sample Test Cases
+### Visual: Why "Last Balloon" Strategy?
 
 ```
-Input:  N = 4, nums = [3, 1, 5, 8]
-Output: 167
-Explanation: Burst [1] first: 3*1*5 = 15, then [3]: 1*3*5 = 15,
-then [5]: 1*5*8 = 40, then [8]: 1*8*1 = 8. Wait, that's not right.
-Optimal: Burst [1] -> 15, Burst [5] -> 120, Burst [3] -> 15, Burst [8] -> 8 = 158
-Actually: Burst [1] -> 15, [5] -> 120, [3] -> 3, [8] -> 8 = 146
-Let me recalculate: optimal = 167
+nums = [3, 1, 5, 8]
+Add virtual balloons: [1, 3, 1, 5, 8, 1]
+                       ↑                 ↑
+                    virtual (value=1)
 
-Input:  N = 3, nums = [1, 2, 3]
-Output: 12
-Explanation: Burst [1] -> 1*2*3=6, [2] -> 1*2*3=6, [3] -> 1*3*1=3
-Actually: [2] -> 1*2*3=6, [1] -> 1*1*3=3, [3] -> 1*3*1=3 = 12
+WHY THINK "LAST" NOT "FIRST"?
+  If we think "first balloon to burst", the choice affects
+  neighbors for future bursts - hard to track!
+  
+  If we think "LAST balloon to burst in range [L,R]":
+  → When it's the last, its neighbors are ALREADY BURST
+  → So its neighbors are the VIRTUAL balloons at L-1 and R+1!
+  → Score = nums[L-1] * nums[k] * nums[R+1]
+
+INTERVAL DP VISUAL:
+  For range [L=1, R=4] (balloons 3,1,5,8):
+  
+  Try each as LAST:
+  ┌─────┬───────────────────────────────┬────────────────┐
+  │ Last │ Left part  │ Right part      │ Score          │
+  ├─────┼────────────┼─────────────────┼────────────────┤
+  │  k=1 │ [empty]=0  │ [5,8] (best)   │ 1*3*1 + 0+best│
+  │  k=2 │ [3] (best) │ [5,8] (best)   │ 1*1*1 + best  │
+  │  k=3 │ [3,1](best)│ [8] (best)     │ 1*5*1 + best  │
+  │  k=4 │ [3,1,5](b) │ [empty]=0      │ 1*8*1 + best  │
+  └─────┴────────────┴─────────────────┴────────────────┘
+
+DP TABLE CONSTRUCTION (increasing length):
+  Length 1: dp[i][i] = nums[i-1]*nums[i]*nums[i+1]
+  Length 2: dp[i][i+1] = max over all k in [i,i+1]
+  ...
+  Length n: dp[1][n] = final answer
 ```
 
-### Approach 1: Interval DP (Optimal)
+### Complexity Analysis
 
 ```python
 def max_coins(nums):

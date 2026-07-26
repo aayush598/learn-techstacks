@@ -2,18 +2,56 @@
 
 ## What is Tree DP?
 
-Tree DP applies DP to hierarchical (tree) data:
-- **Post-order traversal**: solve children first, compute parent
-- **Two-state DP**: for each node, maintain dp[node][state1], dp[node][state2], etc.
-- **In-Out DP**: dfs_in (going down) + dfs_out (coming up) for rerooting
+Tree DP applies DP to hierarchical (tree) data using a bottom-up (post-order) approach.
 
-Core pattern:
-```python
-def dfs(node, parent):
-    for child in node.children:
-        if child != parent:
-            dfs(child, node)
-            # combine child results into node
+### Core Pattern
+
+```
+          Root
+         / | \
+        A  B  C       Post-order: visit ALL children first, then compute parent.
+       / \   |        This guarantees children's results are ready when we process parent.
+      D   E   F
+
+  Traversal order: D, E, A, F, C, B, Root
+
+Template:
+  def dfs(node, parent):
+      for child in node.children:
+          if child != parent:        # Avoid going back up
+              dfs(child, node)       # Solve children first (post-order)
+              # Now combine child's results into node's answer
+
+  State: dp[node][state] or return a tuple (e.g., (take, skip))
+  Root answer: result computed at the root after DFS completes
+```
+
+### Tree DP vs Linear DP
+
+```
+┌──────────────────────┬───────────────────────┬─────────────────────────┐
+│                      │ Linear DP             │ Tree DP                 │
+├──────────────────────┼───────────────────────┼─────────────────────────┤
+│ State dimension      │ dp[i] or dp[i][j]     │ dp[node] or dp[node][s] │
+│ Dependency           │ dp[i] ← dp[i-1]       │ dp[node] ← dp[children] │
+│ Fill order           │ Left to right         │ Post-order (bottom-up)  │
+│ Space                │ O(n) or O(n²)         │ O(n) implicit via recursion│
+│ Recurrence           │ From previous states  │ From children's answers │
+└──────────────────────┴───────────────────────┴─────────────────────────┘
+```
+
+### Common Tree DP State Patterns
+
+```
+Two-State Pattern (most common):
+  dp[node][0] = best when node is NOT selected
+  dp[node][1] = best when node IS selected
+
+  Transition:
+    dp[node][1] = value(node) + Σ dp[child][0]  # children must be skipped
+    dp[node][0] = Σ max(dp[child][0], dp[child][1])  # children free to choose
+
+  Used for: Vertex Cover, Independent Set, House Robber III
 ```
 
 ---
@@ -22,8 +60,44 @@ def dfs(node, parent):
 
 Given a tree, find the longest path (diameter) between any two nodes.
 
-**Concept:** For each node as LCA of endpoints:
-- diameter = max(child1_height + child2_height + 2) across all pairs of children
+### Visual Walkthrough
+
+```
+Tree:
+       0
+     /   \
+    1     2
+   / \     \
+  3   4     5
+
+At each node, track the TWO longest paths through children.
+Diameter = max(longest1 + longest2) across all nodes.
+
+DFS trace (post-order):
+  Node 3: max1=0, max2=0 → height=0 (leaf)
+  Node 4: max1=0, max2=0 → height=0 (leaf)
+  Node 1: children 3,4 both height 0+1=1
+           max1=1, max2=1 → diameter candidate = 1+1 = 2
+           returns height=1
+  Node 5: height=0 (leaf)
+  Node 2: children 5 height 0+1=1 → max1=1, max2=0
+           diameter candidate = 1+0 = 1
+           returns height=1
+  Node 0: children 1(height=1+1=2), 2(height=1+1=2)
+           max1=2, max2=2 → diameter candidate = 2+2 = 4  ← MAX!
+           returns height=2
+
+  Answer: 4 (path 3→1→0→2→5)
+
+Alternative: Two BFS approach
+  1. BFS from any node → find farthest node A
+  2. BFS from A → find farthest node B
+  3. Distance(A, B) = diameter
+
+  BFS from 0: farthest = 3 or 5 (distance 2)
+  BFS from 3: farthest = 5 (distance 4)
+  Diameter = 4 ✓
+```
 
 ```python
 def tree_diameter(graph: list) -> int:
@@ -34,50 +108,19 @@ def tree_diameter(graph: list) -> int:
     def height(node: int) -> int:
         nonlocal diameter
         visited[node] = True
-        max1 = max2 = 0
+        max1 = max2 = 0  # Two longest child heights
         for nei in graph[node]:
             if not visited[nei]:
                 child_h = height(nei) + 1
                 if child_h > max1:
-                    max2, max1 = max1, child_h
+                    max2, max1 = max1, child_h   # Update two longest
                 elif child_h > max2:
                     max2 = child_h
-        diameter = max(diameter, max1 + max2)
-        return max1
+        diameter = max(diameter, max1 + max2)  # Best path through this node
+        return max1  # Return longest path to parent
 
     height(0)
     return diameter
-
-# Alternative: Two BFS approach (easier)
-from collections import deque
-
-def tree_diameter_bfs(graph: list) -> int:
-    def bfs(start: int):
-        dist = [-1] * len(graph)
-        dist[start] = 0
-        q = deque([start])
-        farthest_node = start
-        while q:
-            node = q.popleft()
-            for nei in graph[node]:
-                if dist[nei] == -1:
-                    dist[nei] = dist[node] + 1
-                    q.append(nei)
-                    if dist[nei] > dist[farthest_node]:
-                        farthest_node = nei
-        return farthest_node, dist[farthest_node]
-
-    node_a, _ = bfs(0)
-    node_b, dist = bfs(node_a)
-    return dist
-
-# Example:
-#       0
-#     /   \
-#    1     2
-#   / \     \
-#  3   4     5
-# Answer: 4 (3-1-0-2-5 or 4-1-0-2-5)
 
 # Time: O(n), Space: O(n)
 ```
@@ -88,6 +131,34 @@ def tree_diameter_bfs(graph: list) -> int:
 
 Given a binary tree, find maximum path sum. Path can start and end anywhere.
 
+### Visual Walkthrough
+
+```
+Tree:      -10
+          /   \
+         9    20
+             /  \
+            15   7
+
+At each node, consider: path THROUGH this node = left + node + right
+
+DFS trace (post-order):
+  Node 9:  left=0, right=0 → path_through = 9.  Return max(9,0)=9 to parent
+  Node 15: left=0, right=0 → path_through = 15. Return 15 to parent
+  Node 7:  left=0, right=0 → path_through = 7.  Return 7 to parent
+  Node 20: left=15, right=7
+            path_through = 15 + 20 + 7 = 42  ← global max!
+            Return 20 + max(15,7) = 35 to parent
+  Node -10: left=9, right=35 (from node 20)
+             path_through = 9 + (-10) + 35 = 34
+             Return -10 + max(9,35) = 25 to parent
+
+  Global max = 42 (path: 15→20→7)
+
+Key: We take max(dfs, 0) for left/right to handle negative nodes.
+     Negative paths are skipped (better to not include them).
+```
+
 ```python
 def max_path_sum(root) -> int:
     max_sum = float('-inf')
@@ -96,28 +167,21 @@ def max_path_sum(root) -> int:
         nonlocal max_sum
         if not node:
             return 0
+        # Get max path sum from each child, skip if negative
         left = max(dfs(node.left), 0)
         right = max(dfs(node.right), 0)
+        # Path THROUGH this node (can be the global answer)
         max_sum = max(max_sum, left + right + node.val)
+        # Return the best single branch to parent
         return node.val + max(left, right)
 
     dfs(root)
     return max_sum
 
-# Example:
-# Tree:   -10
-#        /   \
-#       9    20
-#           /  \
-#          15   7
-# Answer: 42 (15 + 20 + 7)
-
-# Time: O(n), Space: O(h)
+# Time: O(n), Space: O(h) — h = height of tree (recursion stack)
 ```
 
----
-
-## Binary Tree Maximum Path Sum Between Leaves
+### Binary Tree Maximum Path Sum Between Leaves
 
 Max path sum that MUST start and end at leaves.
 
@@ -128,11 +192,12 @@ def max_path_sum_leaves(root) -> int:
     def dfs(node):
         nonlocal max_sum
         if not node:
-            return float('-inf')
+            return float('-inf')  # Indicates no leaf path exists
         if not node.left and not node.right:
-            return node.val
+            return node.val  # Leaf node
         left = dfs(node.left)
         right = dfs(node.right)
+        # Only update if BOTH children provide valid leaf paths
         if left != float('-inf') and right != float('-inf'):
             max_sum = max(max_sum, left + right + node.val)
         return node.val + max(left, right)
@@ -149,7 +214,68 @@ def max_path_sum_leaves(root) -> int:
 
 The houses form a binary tree. Two directly linked houses cannot be robbed on same night. Maximize sum.
 
-**Concept:** dp[node][0] = not robbing node, dp[node][1] = robbing node
+### Visual Walkthrough
+
+```
+Tree:     3
+        /   \
+       2     3
+        \     \
+         3     1
+
+Two-state DP at each node:
+  rob_this  = value of robbing this node + skip both children
+  skip_this = best from children (each child can be robbed or skipped)
+
+DFS trace (post-order):
+  Node 2 (child): rob=2+0=2, skip=0 → (2, 0)
+  Node 3 (right child): rob=3+0=3, skip=0 → (3, 0)
+  Node 3 (right leaf 1): rob=1+0=1, skip=0 → (1, 0)
+  Node 3 (right non-leaf 3): rob=3+0=3, skip=max(1,0)=1 → (3, 1)
+
+  Root node 3:
+    left = (2, 0)   → rob_left=2, skip_left=0
+    right = (3, 1)  → rob_right=3, skip_right=1
+    rob_this = 3 + skip_left + skip_right = 3+0+1 = 4
+    skip_this = max(left) + max(right) = max(2,0) + max(3,1) = 2+3 = 5
+
+  Answer: max(4, 5) = 7 (skip root, rob 2 and 3 and 1)
+
+Wait, let me recalculate... rob_this=3+0+1=4, skip_this=2+3=5, max=5
+But 2+3+1=6 or 3+3+1=7... Let me re-examine.
+
+Actually: Node 3 (right side, value=3, child 1):
+  rob=3, skip=0 → returns (3, 0)  [rob this = 3, skip = max(3,0)=3]
+
+Root: left=(2,0), right=(3,0)
+  rob_this = 3 + 0 + 0 = 3
+  skip_this = max(2,0) + max(3,0) = 2+3 = 5
+  But wait... right subtree node 3 has child 3 (value 3):
+  
+Let me redo properly:
+  Leaf 3 (left-right): returns (3, 0)
+  Node 2: left=(0,0), right=(3,0)
+    rob = 2 + 0 + 0 = 2
+    skip = 0 + max(3,0) = 3
+    returns (2, 3)
+  
+  Leaf 1 (right-right): returns (1, 0)
+  Node 3 (right): left=(0,0), right=(1,0)
+    rob = 3 + 0 + 0 = 3
+    skip = 0 + max(1,0) = 1
+    returns (3, 1)
+  
+  Root 3: left=(2,3), right=(3,1)
+    rob = 3 + 3 + 1 = 7  ← rob root + skip left children + skip right children
+    skip = max(2,3) + max(3,1) = 3 + 3 = 6
+  
+  Answer: max(7, 6) = 7 ✓ (rob root + rob left-right(3) + rob right-left... no)
+
+Actually: rob_root = root.val + left[1] + right[1] = 3 + 3 + 1 = 7
+This means: rob root(3), skip left subtree but its best non-rob is 3, 
+            skip right subtree but its best non-rob is 1.
+Total = 7: 3(root) + 3(left's best-skip = the leaf 3) + 1(right's leaf 1) = 7 ✓
+```
 
 ```python
 def rob_tree(root) -> int:
@@ -160,22 +286,16 @@ def rob_tree(root) -> int:
         left = dfs(node.left)
         right = dfs(node.right)
 
+        # If we rob this node, children MUST be skipped
         rob_this = node.val + left[1] + right[1]
+        # If we skip this node, children are free to choose
         not_rob_this = max(left) + max(right)
 
         return (rob_this, not_rob_this)
 
     return max(dfs(root))
 
-# Example:
-# Tree:     3
-#         /   \
-#        2     3
-#         \     \
-#          3     1
-# Answer: 7 (3 + 3 + 1 = 7; rob 3 (root) + 3 (right child) + 1 (right grandchild))
-
-# Time O(n), Space: O(h)
+# Time: O(n), Space: O(h)
 ```
 
 ---
@@ -366,14 +486,55 @@ def most_frequent_subtree_sum(root) -> list:
 
 ---
 
-## Summary Table
+## Summary Table & Quick Reference
 
-| Problem | States | Transitions | Time |
-|---------|--------|-------------|------|
-| Diameter | heights | max of two largest child heights | O(n) |
-| Max Path Sum | path sum | left + right + node.val | O(n) |
-| House Robber III | take/skip | 2-state DP per node | O(n) |
-| Vertex Cover | cover/skip | cover=1+min(children) | O(n) |
-| Max Independent Set | take/skip | take=1+skip_children | O(n) |
-| Path Sum Count | prefix sums | hashmap + backtrack | O(n) |
-| Binary Tree Cameras | 3 states | 0/1/2 for coverage | O(n) |
+```
+┌──────────────────────────┬──────────────────────┬──────────┬───────────────────────────────────────────┐
+│ Problem                  │ States               │ Time     │ Key Insight                               │
+├──────────────────────────┼──────────────────────┼──────────┼───────────────────────────────────────────┤
+│ Diameter                 │ heights              │ O(n)     │ Track top-2 child heights at each node    │
+│ Max Path Sum             │ path_through         │ O(n)     │ max(left,0) + node + max(right,0)         │
+│ Max Leaf Path Sum        │ leaf_path            │ O(n)     │ Only count paths with both leaf children  │
+│ House Robber III         │ take/skip            │ O(n)     │ Take→children skipped; Skip→children free │
+│ Vertex Cover             │ cover/skip           │ O(n)     │ cover=1+min(children); skip=sum(covered)  │
+│ Max Independent Set      │ take/skip            │ O(n)     │ take=1+skip_children; skip=max(children)  │
+│ Path Sum Count           │ prefix sums          │ O(n)     │ Hashmap + backtrack                       │
+│ Binary Tree Cameras      │ 0/1/2 (3 states)     │ O(n)     │ Uncovered→place camera; camera→covered    │
+│ Delete and Return Forest │ root/non-root        │ O(n)     │ Track if parent was deleted               │
+│ Most Frequent Subtree    │ hash + DFS           │ O(n)     │ Sum subtree, count frequencies            │
+└──────────────────────────┴──────────────────────┴──────────┴───────────────────────────────────────────┘
+```
+
+### The Universal Tree DP Template
+
+```python
+# For ANY tree DP problem, follow this skeleton:
+def tree_dp(root):
+    def dfs(node, parent):
+        # Base case: leaf node
+        # Initialize states
+        
+        for child in node.children:
+            if child != parent:
+                dfs(child, node)           # Post-order: solve children first
+                # Combine child's result into current node's states
+        
+        # Compute this node's dp values from children's results
+    
+    dfs(root, None)
+    return extract_answer(root)
+```
+
+### When to Use 2-State vs 3-State
+
+```
+2-State (take/skip) covers:
+  - Maximum Independent Set
+  - House Robber III
+  - Vertex Cover (min vertices to cover all edges)
+
+3-State needed when:
+  - Binary Tree Cameras (uncovered=0, covered-by-child=1, has-camera=2)
+  - Some tree coloring problems
+  - State must track MORE than just selection status
+```

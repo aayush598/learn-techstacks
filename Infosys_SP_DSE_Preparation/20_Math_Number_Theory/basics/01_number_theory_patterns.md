@@ -7,6 +7,42 @@
 **Formula:** If n = p1^a1 * p2^a2 * ... * pk^ak, then
 φ(n) = n * (1 - 1/p1) * (1 - 1/p2) * ... * (1 - 1/pk)
 
+```
+Visual: What does Euler's Totient Mean?
+
+φ(12) = 4
+
+Numbers 1 to 12:
+1  2  3  4  5  6  7  8  9  10  11  12
+│  ✗  ✗  ✗  │  ✗  │  ✗  ✗  ✗   │   ✗
+✓  ✗  ✗  ✗  ✓  ✗  ✓  ✗  ✗  ✗   ✓   ✗
+
+gcd(1,12)=1  ✓ coprime
+gcd(2,12)=2  ✗ not coprime
+gcd(3,12)=3  ✗ not coprime
+gcd(4,12)=4  ✗ not coprime
+gcd(5,12)=1  ✓ coprime
+gcd(6,12)=6  ✗ not coprime
+gcd(7,12)=1  ✓ coprime
+gcd(8,12)=4  ✗ not coprime
+gcd(9,12)=3  ✗ not coprime
+gcd(10,12)=2 ✗ not coprime
+gcd(11,12)=1 ✓ coprime
+gcd(12,12)=12✗ not coprime
+
+Coprime numbers: {1, 5, 7, 11} → count = 4
+
+Using the formula:
+12 = 2² × 3
+φ(12) = 12 × (1 - 1/2) × (1 - 1/3)
+      = 12 × 1/2 × 2/3
+      = 12 × 1/3
+      = 4 ✓
+
+For primes: φ(p) = p - 1 (all numbers 1 to p-1 are coprime)
+φ(7) = 6, φ(13) = 12, φ(101) = 100
+```
+
 ### Basic Implementation
 ```python
 def euler_totient(n):
@@ -97,6 +133,44 @@ x ≡ ak (mod mk)
 
 Result: x ≡ a (mod M) where M = m1 * m2 * ... * mk
 
+```
+Visual: What CRT Does
+
+Problem: Find x such that:
+  x ≡ 2 (mod 3)    ─── x leaves remainder 2 when divided by 3
+  x ≡ 3 (mod 5)    ─── x leaves remainder 3 when divided by 5
+  x ≡ 2 (mod 7)    ─── x leaves remainder 2 when divided by 7
+
+Think of it as three number lines:
+
+mod 3:  0  1  2  0  1  2  0  1  2  0  1  2  0  1  2  0  1  2  0  1  2  0  1  2
+        ────────────────────────────────*───────────────────────────────────────
+                                        23
+mod 5:  0  1  2  3  4  0  1  2  3  4  0  1  2  3  4  0  1  2  3  4  0  1  2  3
+        ────────────────────────────────────*───────────────────────────────────
+                                            23
+mod 7:  0  1  2  3  4  5  6  0  1  2  3  4  5  6  0  1  2  3  4  5  6  0  1  2
+        ────────────────────────────────*───────────────────────────────────────
+                                        23
+
+The magic number 23 satisfies all three!
+
+Algorithm steps:
+  M = 3 × 5 × 7 = 105
+  For each equation x ≡ a_i (mod m_i):
+    M_i = M / m_i     (product of all OTHER moduli)
+    y_i = M_i^(-1)    (modular inverse of M_i mod m_i)
+    contribute = a_i × M_i × y_i
+
+  x = sum of all contributes mod M
+  
+  x = (2 × 35 × 35^(-1) mod 3) + (3 × 21 × 21^(-1) mod 5) + (2 × 15 × 15^(-1) mod 7)
+    = (2 × 35 × 2) + (3 × 21 × 1) + (2 × 15 × 1)
+    = 140 + 63 + 30
+    = 233
+    233 mod 105 = 23 ✓
+```
+
 ### Implementation
 ```python
 from math import prod
@@ -181,6 +255,42 @@ Compute C(n, r) mod p for large n, r where p is small prime.
 
 **Lucas Theorem:** If n = n0 + n1*p + n2*p² + ... and r = r0 + r1*p + r2*p² + ...
 then C(n,r) ≡ C(n0,r0) * C(n1,r1) * C(n2,r2) * ... (mod p)
+
+```
+Visual: How Lucas Theorem Works
+
+Example: Compute C(1000000000, 500000000) mod 7
+
+Step 1: Express n and r in base 7
+
+  n = 1000000000 in base 7:
+      1000000000 ÷ 7 = 142857142 remainder 6   → digit 0: 6
+      142857142 ÷ 7 = 20408163 remainder 1      → digit 1: 1
+      20408163 ÷ 7 = 2915451 remainder 6        → digit 2: 6
+      2915451 ÷ 7 = 416493 remainder 0          → digit 3: 0
+      416493 ÷ 7 = 59499 remainder 0            → digit 4: 0
+      59499 ÷ 7 = 8499 remainder 6              → digit 5: 6
+      8499 ÷ 7 = 1214 remainder 1               → digit 6: 1
+      1214 ÷ 7 = 173 remainder 3                → digit 7: 3
+      173 ÷ 7 = 24 remainder 5                  → digit 8: 5
+      24 ÷ 7 = 3 remainder 3                    → digit 9: 3
+      3 ÷ 7 = 0 remainder 3                     → digit 10: 3
+      
+      n (base 7) = 335316000616
+
+  r = 500000000 in base 7:
+      ...similar process...
+      r (base 7) = 15255363614  (approximately)
+
+Step 2: Apply Lucas Theorem
+  C(n,r) mod 7 = C(3,1) × C(3,5) × C(5,2) × C(3,5) × C(1,6) × ... 
+  
+  If any r_i > n_i, the result is 0!
+
+Step 3: Each C(n_i, r_i) is small (both < 7), so we compute directly.
+
+Key Insight: Break a HUGE nCr into tiny pieces!
+```
 
 ```python
 MOD = 10**9 + 7
@@ -557,12 +667,32 @@ for i in range(1, 20):
 
 ## Quick Reference
 
-| Concept | Formula/Method | Use Case |
-|---------|---------------|----------|
-| Euler's Totient | φ(n) = n * Π(1-1/p) | Count coprime numbers |
-| CRT | x ≡ a (mod M) | Solve simultaneous congruences |
-| Lucas Theorem | C(n,r) mod p | Large nCr with small prime mod |
-| Base Conversion | Repeated division | Representation problems |
-| Digit Manipulation | Mod 10, // 10 | Number properties |
-| Digit Root | 1 + (n-1) % 9 | Repeated digit sum |
-| Palindrome Check | Reverse and compare | Number symmetry |
+| Concept | Formula/Method | Use Case | Complexity |
+|---------|---------------|----------|------------|
+| Euler's Totient | φ(n) = n * Π(1-1/p) | Count coprime numbers | O(√n) single, O(n log log n) sieve |
+| CRT | x ≡ a (mod M) | Solve simultaneous congruences | O(k * log(max(moduli))) |
+| Lucas Theorem | C(n,r) mod p | Large nCr with small prime mod | O(log_p(n) * p) |
+| Base Conversion | Repeated division | Representation problems | O(log(n)) |
+| Digit Manipulation | Mod 10, // 10 | Number properties | O(digits) |
+| Digit Root | 1 + (n-1) % 9 | Repeated digit sum | O(1) |
+| Palindrome Check | Reverse and compare | Number symmetry | O(digits) |
+
+### When to Use Each Technique
+
+```
+Problem Type                    →  Technique
+─────────────────────────────────────────────────────
+"Count numbers ≤ n coprime to m" → Euler's Totient
+"Find x satisfying multiple     → Chinese Remainder
+ modular equations"
+"Large nCr where mod is small   → Lucas Theorem
+ prime"
+"Convert between number bases"  → Base Conversion
+"Sum/product of digits"         → Digit Manipulation
+"Repeatedly sum digits until    → Digit Root formula
+ single digit"
+"Check if number reads same     → Palindrome Check
+ forwards and backwards"
+"Count pairs with specific GCD" → GCD-based counting
+"Find largest GCD among pairs"  → Sort + check divisors
+```

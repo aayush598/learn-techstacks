@@ -17,23 +17,69 @@
 ### Problem
 Given an array of distinct integers, return all possible permutations.
 
+### Visual: How Permutations Work
+
+```
+  PERMUTATIONS OF [1, 2, 3]:
+  ═══════════════════════════
+
+  Total permutations = 3! = 3 × 2 × 1 = 6
+
+  Decision Tree (using "used" array):
+  ════════════════════════════════════
+
+                              []
+                  ┌──────────┼──────────┐
+                pick 1     pick 2     pick 3
+                [1]        [2]        [3]
+                /  \       /  \       /  \
+             2    3     1    3     1    2
+            [1,2][1,3] [2,1][2,3] [3,1][3,2]
+             |    |     |    |     |    |
+            3    2     3    1     2    1
+          [1,2,3][1,3,2][2,1,3][2,3,1][3,1,2][3,2,1]
+            ✓     ✓     ✓     ✓     ✓     ✓
+
+  At each level, we pick from REMAINING elements (not yet used):
+
+  Level 0: 3 choices (pick 1, 2, or 3)
+  Level 1: 2 choices (remaining elements)
+  Level 2: 1 choice  (last element)
+  Total: 3 × 2 × 1 = 6 = 3!
+
+  VISUAL: Used Array State at Each Step
+  ══════════════════════════════════════
+  Pick 1 → Pick 2 → Pick 3:
+  used=[T,F,F] → used=[T,T,F] → used=[T,T,T] → record [1,2,3]
+  Then backtrack: used=[T,F,F] → Pick 3 → Pick 2:
+  used=[T,F,T] → used=[T,T,T] → record [1,3,2]
+  Then backtrack all the way: Pick 2 → ...
+```
+
 ### Approach: Backtracking with used array
 
 ```python
 def permute(nums):
     result = []
-    used = [False] * len(nums)
+    used = [False] * len(nums)  # track which indices are in current path
 
     def backtrack(path):
         if len(path) == len(nums):
-            result.append(path[:])
+            result.append(path[:])  # COPY! Without [:], all results share same list
             return
+
         for i in range(len(nums)):
             if used[i]:
-                continue
+                continue  # skip already-used elements
+
+            # MAKE CHOICE
             used[i] = True
             path.append(nums[i])
+
+            # RECURSE with updated state
             backtrack(path)
+
+            # UNDO CHOICE (backtrack)
             path.pop()
             used[i] = False
 
@@ -43,6 +89,22 @@ def permute(nums):
 # Example
 print(permute([1, 2, 3]))
 # [[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]
+```
+
+### Why path[:] matters
+
+```
+  WITHOUT path[:]:
+  ════════════════
+  result.append(path)
+  After all recursions, path = [] (empty at the end)
+  So result = [[], [], [], [], [], []]  ← All point to the SAME empty list!
+
+  WITH path[:]:
+  ══════════════
+  result.append(path[:])  # creates a COPY
+  Each result entry is an independent snapshot:
+  result = [[1,2,3], [1,3,2], [2,1,3], [2,3,1], [3,1,2], [3,2,1]]  ✓
 ```
 
 ### Alternative: Swap-based (in-place)
@@ -62,6 +124,40 @@ def permute_swap(nums):
 
     backtrack(0)
     return result
+```
+
+### Visual: Swap-Based Permutation Walkthrough
+
+```
+  SWAP METHOD: [1, 2, 3]
+  ════════════════════════
+
+  Start at index 0, swap each element to position 0:
+
+  [1, 2, 3]  ← start=0
+    swap(0,0) → [1, 2, 3]
+      start=1: swap(1,1) → [1, 2, 3]
+        start=2: swap(2,2) → [1, 2, 3] ✓ RECORD
+      start=1: swap(1,2) → [1, 3, 2]
+        start=2: swap(2,2) → [1, 3, 2] ✓ RECORD
+      undo swap → [1, 2, 3]
+    swap(0,1) → [2, 1, 3]
+      start=1: swap(1,1) → [2, 1, 3]
+        start=2: swap(2,2) → [2, 1, 3] ✓ RECORD
+      start=1: swap(1,2) → [2, 3, 1]
+        start=2: swap(2,2) → [2, 3, 1] ✓ RECORD
+      undo swap → [2, 1, 3]
+    swap(0,2) → [3, 2, 1]
+      start=1: swap(1,1) → [3, 2, 1]
+        start=2: swap(2,2) → [3, 2, 1] ✓ RECORD
+      start=1: swap(1,2) → [3, 1, 2]
+        start=2: swap(2,2) → [3, 1, 2] ✓ RECORD
+      undo swap → [3, 2, 1]
+    undo all swaps → [1, 2, 3]
+
+  KEY INSIGHT: swap(i, start) puts element i at position 'start'
+  Then recurse on start+1, and all elements after start are still available.
+  This avoids the need for a "used" array!
 ```
 
 **Complexity**: O(N * N!) time, O(N) space (recursion stack).
@@ -109,6 +205,60 @@ print(permute_unique([1, 1, 2]))
 
 ### Why the duplicate condition works
 
+```
+  SORTING [1, 1, 2] FIRST:
+  ═════════════════════════
+
+  After sorting: [1_a, 1_b, 2]  (labeling duplicates as 1_a and 1_b)
+                  ^^^^  ^^^^
+                  same value but different indices
+
+  WITHOUT duplicate pruning (produces duplicates):
+  ┌─────────────────────────────────────────────────────────────┐
+  │                                                             │
+  │  Pick at pos 0:  Pick at pos 0:  Pick at pos 0:            │
+  │  [1_a]           [1_b]           [2]                        │
+  │   / \            / \             / \                        │
+  │ 1_b  2        1_a  2          1_a  1_b                     │
+  │  |    |        |    |          |    |                       │
+  │  2   1_b      2   1_a        1_b  1_a                      │
+  │                                                             │
+  │  [1_a,1_b,2]   [1_b,1_a,2]   [2,1_a,1_b]                  │
+  │  [1_a,2,1_b]   [1_b,2,1_a]   [2,1_b,1_a]                  │
+  │                                                             │
+  │  DUPLICATES: [1_a,1_b,2] same as [1_b,1_a,2]!             │
+  └─────────────────────────────────────────────────────────────┘
+
+  WITH duplicate pruning:
+  ┌─────────────────────────────────────────────────────────────┐
+  │                                                             │
+  │  Pick at pos 0:  Pick at pos 0:  Pick at pos 0:            │
+  │  [1_a]           [1_b] ❌ SKIP   [2]                        │
+  │   / \            (1_a was tried  / \                        │
+  │ 1_b  2           at this pos   1_a  1_b                     │
+  │  |    |          but 1_a was   |    |                       │
+  │  2   1_b         NOT used, so  1_b  1_a                     │
+  │                  same value → skip)                          │
+  │  [1_a,1_b,2]    SKIPPED!       [2,1_a,1_b]                 │
+  │  [1_a,2,1_b]                  [2,1_b,1_a] ❌ SKIP           │
+  │                                                             │
+  │  FINAL: [1,1,2], [1,2,1], [2,1,1]  ← 3 unique perms       │
+  │  (instead of 6 total with duplicates)                       │
+  └─────────────────────────────────────────────────────────────┘
+
+  THE KEY LOGIC:
+  ═══════════════
+  if i > 0 and nums[i] == nums[i-1] and not used[i-1]:
+      continue
+
+  "If current value == previous value AND previous was NOT used
+   at this recursion level, skip current."
+
+  WHY: If previous (same value) was already tried and undone at this level,
+  then trying current (same value) would produce the same permutation.
+  We only allow the FIRST occurrence of a duplicate value at each level.
+```
+
 After sorting `[1, 1, 2]`:
 - At position 0: we pick index 0 (value 1). used = [T, F, F]
 - At position 1: index 1 has same value as index 0, but index 0 IS used, so we allow it
@@ -125,6 +275,53 @@ After sorting `[1, 1, 2]`:
 
 ### Problem
 Given n and k, return all combinations of k numbers from 1 to n.
+
+### Visual: Combination Tree for combine(4, 2)
+
+```
+  COMBINATIONS OF 2 FROM {1, 2, 3, 4}:
+  ═══════════════════════════════════════
+
+  Total = C(4,2) = 4! / (2! × 2!) = 6
+
+  Decision Tree:
+                              []
+                    ┌────┬────┼────┐
+                  pick 1 pick 2 pick 3 pick 4
+                  [1]    [2]    [3]    [4]
+                  / \    / \     |      |
+                2   3  3   4   4      DONE
+               / \   |  |   |
+              3   4  4  4  DONE
+               |   |
+              DONE DONE
+
+  ALL PATHS:
+  ══════════
+  [1] → [1,2] → record    (picked 1 then 2)
+  [1] → [1,3] → record    (picked 1 then 3)
+  [1] → [1,4] → record    (picked 1 then 4)
+  [2] → [2,3] → record    (picked 2 then 3)
+  [2] → [2,4] → record    (picked 2 then 4)
+  [3] → [3,4] → record    (picked 3 then 4)
+
+  NOTE: [2,1] is NOT generated because we only pick
+  elements AFTER the current index. This avoids duplicates
+  because order doesn't matter in combinations: {1,2} = {2,1}
+
+  PRUNING VISUALIZED:
+  ════════════════════
+  For combine(4, 2), at each level:
+  - Level 0 (picking 1st): need 2 more elements
+    → can only pick up to index n - remaining + 1 = 4 - 2 + 1 = 3
+    → range(1, 4) = [1, 2, 3] (skip 4, not enough room for 2nd pick)
+
+  - Level 1 (picking 2nd): need 1 more element
+    → range(pick+1, 5) = [pick+1, ..., 4]
+
+  Without pruning: we'd try all starting positions including impossible ones.
+  With pruning: we skip branches where not enough elements remain.
+```
 
 ### Approach: Backtracking with start index
 
@@ -165,19 +362,20 @@ Given candidates and target, find all unique combinations. Same number can be re
 ```python
 def combination_sum(candidates, target):
     result = []
-    candidates.sort()
+    candidates.sort()  # SORT FIRST: enables pruning (break when > remaining)
 
     def backtrack(start, path, remaining):
         if remaining == 0:
-            result.append(path[:])
+            result.append(path[:])  # COPY the current path
             return
+
         for i in range(start, len(candidates)):
             if candidates[i] > remaining:
-                break  # PRUNE: sorted, so all future are bigger
-            path.append(candidates[i])
-            # Use i (not i+1) because repetition is allowed
-            backtrack(i, path, remaining - candidates[i])
-            path.pop()
+                break  # PRUNE: sorted, so all future candidates are also > remaining
+
+            path.append(candidates[i])                           # MAKE CHOICE
+            backtrack(i, path, remaining - candidates[i])        # RECURSE (i, not i+1!)
+            path.pop()                                           # UNDO CHOICE
 
     backtrack(0, [], target)
     return result
@@ -187,6 +385,8 @@ print(combination_sum([2, 3, 6, 7], 7))
 # [[2,2,3], [7]]
 ```
 
+**KEY INSIGHT**: We pass `i` (not `i+1`) as the start index. This allows the same element to be reused. If we passed `i+1`, each element could only be used once (like Combination Sum II).
+
 ### Combination Sum II (no repetition, handle duplicates)
 
 Each number can only be used once. Input may contain duplicates.
@@ -194,21 +394,26 @@ Each number can only be used once. Input may contain duplicates.
 ```python
 def combination_sum_2(candidates, target):
     result = []
-    candidates.sort()
+    candidates.sort()  # SORT: enables pruning AND duplicate detection
 
     def backtrack(start, path, remaining):
         if remaining == 0:
             result.append(path[:])
             return
+
         for i in range(start, len(candidates)):
             if candidates[i] > remaining:
-                break
-            # Skip duplicates at the same level
+                break  # PRUNE: sorted, so all remaining are too large
+
+            # SKIP DUPLICATES at the same recursion level
+            # If current == previous, and we're not at the start of this level,
+            # skip to avoid generating the same combination twice
             if i > start and candidates[i] == candidates[i - 1]:
                 continue
-            path.append(candidates[i])
-            backtrack(i + 1, path, remaining - candidates[i])  # i+1: no reuse
-            path.pop()
+
+            path.append(candidates[i])                              # MAKE CHOICE
+            backtrack(i + 1, path, remaining - candidates[i])      # i+1: NO REUSE
+            path.pop()                                             # UNDO CHOICE
 
     backtrack(0, [], target)
     return result
@@ -217,6 +422,12 @@ def combination_sum_2(candidates, target):
 print(combination_sum_2([10, 1, 2, 7, 6, 1, 5], 8))
 # [[1,1,6], [1,2,5], [1,7], [2,6]]
 ```
+
+**KEY DIFFERENCE from Combination Sum I**:
+- Pass `i+1` (not `i`) → each element used at most once
+- Skip duplicates at same level → avoid duplicate combinations
+- Combination Sum I: `backtrack(i, ...)` + no duplicate skip needed
+- Combination Sum II: `backtrack(i+1, ...)` + skip `if i > start and nums[i]==nums[i-1]`
 
 ### Combination Sum III
 
@@ -260,16 +471,70 @@ print(combination_sum_3(3, 7))
 
 Given a set of distinct integers, return all possible subsets.
 
+### Visual: Subset Generation for [1, 2, 3]
+
+```
+  POWER SET OF {1, 2, 3}:
+  ════════════════════════
+
+  Total subsets = 2^3 = 8
+
+  BINARY REPRESENTATION (each bit = include/exclude):
+  ┌─────┬─────┬─────┬───────────────┐
+  │  1  │  2  │  3  │ Subset        │
+  ├─────┼─────┼─────┼───────────────┤
+  │  0  │  0  │  0  │ []            │ ← empty set (always included)
+  │  0  │  0  │  1  │ [3]           │
+  │  0  │  1  │  0  │ [2]           │
+  │  0  │  1  │  1  │ [2, 3]        │
+  │  1  │  0  │  0  │ [1]           │
+  │  1  │  0  │  1  │ [1, 3]        │
+  │  1  │  1  │  0  │ [1, 2]        │
+  │  1  │  1  │  1  │ [1, 2, 3]     │ ← full set
+  └─────┴─────┴─────┴───────────────┘
+
+  DECISION TREE (start-index approach):
+  ═════════════════════════════════════
+
+                              [] ← record empty set
+                    ┌────┬────┼────┐
+                  pick 1 pick 2 pick 3
+                  [1]    [2]    [3]  ← record each single
+                  / \    / \     |
+               2    3  3   DONE  DONE
+              / \    |
+             3  DONE DONE
+              |
+           DONE
+
+  Path: [] → [1] → [1,2] → [1,2,3]
+                                    ↓
+  Backtrack:                 [1,2] → record
+                                    ↓
+  Backtrack:                 [1] → [1,3] → record
+                                    ↓
+  Backtrack:             [1] → record, then []
+                                    ↓
+                           [] → [2] → [2,3] → record
+                                    ↓
+                           [] → [2] → record, then []
+                                    ↓
+                           [] → [3] → record, then []
+
+  NOTE: At each node, we RECORD the current path as a subset!
+  This is different from permutations where we only record at leaves.
+```
+
 ```python
 def subsets(nums):
     result = []
 
     def backtrack(start, path):
-        result.append(path[:])
+        result.append(path[:])  # Record current subset at EVERY node (not just leaves!)
         for i in range(start, len(nums)):
-            path.append(nums[i])
-            backtrack(i + 1, path)
-            path.pop()
+            path.append(nums[i])         # MAKE CHOICE: include nums[i]
+            backtrack(i + 1, path)       # RECURSE: only consider elements AFTER i
+            path.pop()                   # UNDO CHOICE: remove nums[i]
 
     backtrack(0, [])
     return result
@@ -285,23 +550,66 @@ print(subsets([1, 2, 3]))
 def subsets_iterative(nums):
     result = [[]]
     for num in nums:
+        # For each existing subset, create a new one with 'num' added
         result += [subset + [num] for subset in result]
     return result
+
+# Step by step for [1, 2, 3]:
+# Start: result = [[]]
+# num=1: result = [[], [1]]
+# num=2: result = [[], [1], [2], [1,2]]
+# num=3: result = [[], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]]
 ```
 
 ### Subsets II (with duplicates)
 
 Given a collection that might contain duplicates, return all unique subsets.
 
+### Visual: Duplicate Handling for [1, 2, 2]
+
+```
+  SORTED INPUT: [1, 2, 2]
+                  ^  ^ ^
+                  a  b c  (two 2's)
+
+  WITHOUT DUPLICATE PRUNING:
+  ┌─────────────────────────────────────────────────────────────┐
+  │  [] → [1] → [1,2_a] → [1,2_a,2_b] ✓                       │
+  │       [1] → [1,2_b] → [1,2_b,2_a] ❌ DUPLICATE of above!  │
+  │       [2_a] → [2_a,2_b] ✓                                   │
+  │       [2_b] → [2_b,2_a] ❌ DUPLICATE!                       │
+  │  ...                                                        │
+  │  Total: 8 subsets (with duplicates)                         │
+  └─────────────────────────────────────────────────────────────┘
+
+  WITH DUPLICATE PRUNING (if i > start and nums[i] == nums[i-1]):
+  ┌─────────────────────────────────────────────────────────────┐
+  │  [] → [1] → [1,2_a] → [1,2_a,2_b] ✓                       │
+  │       [1] → [1,2_b] ❌ SKIPPED (2_b==2_a at same level)   │
+  │       [2_a] → [2_a,2_b] ✓                                   │
+  │       [2_b] ❌ SKIPPED (2_b==2_a at same level)             │
+  └─────────────────────────────────────────────────────────────┘
+  Total: 6 unique subsets
+
+  THE PRUNING RULE:
+  if i > start and nums[i] == nums[i-1]:
+      continue
+  This skips the SECOND (and subsequent) occurrences of a value
+  at the same recursion level, preventing duplicate subsets.
+```
+
 ```python
 def subsets_with_dup(nums):
     result = []
-    nums.sort()
+    nums.sort()  # SORT FIRST: duplicates must be adjacent for pruning to work
 
     def backtrack(start, path):
-        result.append(path[:])
+        result.append(path[:])  # Record at every node (subset pattern)
         for i in range(start, len(nums)):
-            # Skip duplicates at the same level
+            # Skip duplicates at the same recursion level
+            # i > start: not the first element in this loop iteration
+            # nums[i] == nums[i-1]: same value as previous
+            # Together: skip repeated values at the same level
             if i > start and nums[i] == nums[i - 1]:
                 continue
             path.append(nums[i])
@@ -440,13 +748,53 @@ print(get_permutation_math(4, 9))   # "2314"
 
 ### How the math approach works
 
-For n=4, k=9 (1-indexed → k=8 0-indexed):
-- Factorials: 3!=6, 2!=2, 1!=1
-- Position 0: index = 8//6 = 1 → pick nums[1]=2. Remaining nums=[1,3,4]. k=8%6=2
-- Position 1: index = 2//2 = 1 → pick nums[1]=3. Remaining nums=[1,4]. k=2%2=0
-- Position 2: index = 0//1 = 0 → pick nums[0]=1. Remaining nums=[4]. k=0
-- Position 3: index = 0 → pick nums[0]=4
-- Result: "2314"
+```
+  FINDING THE 9th PERMUTATION OF {1, 2, 3, 4} (1-indexed):
+  ══════════════════════════════════════════════════════════
+
+  There are 4! = 24 permutations. In lex order, they're grouped by first digit:
+  ┌─────────────────────────────────────────────────────────────────┐
+  │  First digit │ Permutations │ Count │ Cumulative                │
+  ├─────────────────────────────────────────────────────────────────┤
+  │     1        │ 1xxx         │  6    │  1-6                     │
+  │     2        │ 2xxx         │  6    │  7-12  ← 9 falls here!  │
+  │     3        │ 3xxx         │  6    │  13-18                   │
+  │     4        │ 4xxx         │  6    │  19-24                   │
+  └─────────────────────────────────────────────────────────────────┘
+
+  For n=4, k=9 (1-indexed → k=8 0-indexed):
+  Factorials: 3!=6, 2!=2, 1!=1, 0!=1
+
+  Step-by-step:
+  ┌──────────────────────────────────────────────────────────────────┐
+  │  Step 1: k=8, 3!=6                                              │
+  │    index = 8 // 6 = 1 → pick nums[1] = 2                       │
+  │    remaining = [1, 3, 4], k = 8 % 6 = 2                         │
+  │                                                                  │
+  │  Step 2: k=2, 2!=2                                              │
+  │    index = 2 // 2 = 1 → pick nums[1] = 3                       │
+  │    remaining = [1, 4], k = 2 % 2 = 0                            │
+  │                                                                  │
+  │  Step 3: k=0, 1!=1                                              │
+  │    index = 0 // 1 = 0 → pick nums[0] = 1                       │
+  │    remaining = [4], k = 0                                        │
+  │                                                                  │
+  │  Step 4: k=0, 0!=1                                              │
+  │    index = 0 → pick nums[0] = 4                                 │
+  │                                                                  │
+  │  Result: "2314"                                                  │
+  └──────────────────────────────────────────────────────────────────┘
+
+  WHY IT WORKS:
+  =============
+  The first digit divides all permutations into n!/n equal groups.
+  k // (n-1)! tells us WHICH group → which first digit.
+  k % (n-1)! tells us the POSITION within that group → recurse.
+
+  Think of it like a number system:
+  - Position 0 uses factorials: k = d₁×3! + d₂×2! + d₃×1! + d₄×0!
+  - Each dᵢ is the index into remaining digits
+```
 
 **Complexity**: Approach 1 is O(N! * N), Approach 2 is O(N^2) (or O(N) with a set for removal).
 
@@ -456,6 +804,42 @@ For n=4, k=9 (1-indexed → k=8 0-indexed):
 
 ### Problem
 Generate n-bit Gray code sequence where successive values differ in only one bit.
+
+### Visual: Gray Code for n=3
+
+```
+  GRAY CODE vs BINARY:
+  ════════════════════
+
+  Decimal │ Binary │ Gray Code
+  ────────┼────────┼──────────
+     0    │  000   │  000
+     1    │  001   │  001  ← differs from 000 in bit 0
+     2    │  010   │  011  ← differs from 001 in bit 1
+     3    │  011   │  010  ← differs from 011 in bit 0
+     4    │  100   │  110  ← differs from 010 in bit 2
+     5    │  101   │  111  ← differs from 110 in bit 0
+     6    │  110   │  101  ← differs from 111 in bit 1
+     7    │  111   │  100  ← differs from 101 in bit 2
+
+  KEY: Each consecutive pair differs by EXACTLY 1 bit!
+  Binary: 011 → 100 changes 3 bits ❌
+  Gray:   010 → 110 changes 1 bit  ✓
+
+  RECURSIVE STRUCTURE:
+  ════════════════════
+  Gray(1): [0, 1]
+
+  Gray(2): Take Gray(1), mirror it with prefix 0 and 1:
+           0: [0, 1]  →  00, 01
+           1: [1, 0]  →  11, 10  (reversed, with leading 1)
+           Result: [00, 01, 11, 10]
+
+  Gray(3): Take Gray(2), mirror with prefix 0 and 1:
+           0: [00, 01, 11, 10]  →  000, 001, 011, 010
+           1: [10, 11, 01, 00]  →  110, 111, 101, 100
+           Result: [000, 001, 011, 010, 110, 111, 101, 100]
+```
 
 ### Approach 1: Formula-based
 

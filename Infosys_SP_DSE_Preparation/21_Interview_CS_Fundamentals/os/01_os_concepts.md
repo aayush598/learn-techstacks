@@ -782,6 +782,345 @@ def philosopher(left_fork, right_fork):
 
 ---
 
+## Real-World Analogies for Quick Recall
+
+```
+╔══════════════════════════════════════════════════════════════════════╗
+║                    OS CONCEPT → REAL WORLD                         ║
+╠══════════════════════════════════════════════════════════════════════╣
+║                                                                    ║
+║  Process = A running program (like a running app on your phone)    ║
+║  Thread  = A worker inside that program (a tab in Chrome)          ║
+║                                                                    ║
+║  CPU Scheduling = A manager deciding who works next                ║
+║  FCFS         = Queue at a shop (first come, first served)         ║
+║  SJF          = Let the quickest task go first                     ║
+║  Round Robin  = Kids taking turns on a swing                       ║
+║  Priority     = VIP queue at airport                               ║
+║                                                                    ║
+║  Deadlock     = Two people in a hallway, both refusing to move     ║
+║  Starvation   = A nice person always letting others go first       ║
+║                                                                    ║
+║  Paging       = Library with numbered shelves (fixed-size slots)   ║
+║  Segmentation = Warehouse with variable-size storage rooms         ║
+║  Virtual Memory = Using disk as extra RAM (like cloud storage)     ║
+║                                                                    ║
+║  Mutex        = A bathroom key (only one person at a time)         ║
+║  Semaphore    = A parking lot counter (shows remaining spots)      ║
+║  Monitor      = A bank teller (handles one customer at a time)     ║
+╚══════════════════════════════════════════════════════════════════════╝
+```
+
+---
+
+## Deep Dive: Process Scheduling Visual Walkthrough
+
+### FCFS - Convoy Effect Problem
+
+```
+Scenario: Short jobs stuck behind a long job
+
+Processes: P1(100ms), P2(1ms), P3(1ms)
+
+Bad Order:
+|--------P1--------|--P2--|--P3--|
+0                 100    101    102
+
+Waiting times: P1=0, P2=100, P3=101
+Average = (0+100+101)/3 = 67ms  ← TERRIBLE!
+
+If we did SJF first:
+|--P2--|--P3--|--------P1--------|
+0      1      2                 102
+
+Waiting times: P2=0, P3=1, P1=2
+Average = (0+1+2)/3 = 1ms  ← MUCH BETTER!
+```
+
+### Round Robin - Time Quantum Effect
+
+```
+Time Quantum too large  → Behaves like FCFS
+Time Quantum too small  → Too much context switching overhead
+Time Quantum just right → Good response time
+
+Example: P1=10, P2=4, P3=7, Quantum=3
+
+Round 1: [P1] [P2] [P3]     → Each gets 3ms
+Round 2: [P1] [P2] [P3]     → P2 finishes, others continue
+Round 3: [P1] [P3]           → P3 finishes
+Round 4: [P1]                → P1 finishes
+
+Timeline:
+0  3  6  9  12 15 18 21 24 27 30
+|--|--|--|--|--|--|--|--|--|--|
+P1 P2 P3 P1 P2 P3 P1 P3    P1
+```
+
+---
+
+## Memory Management Deep Dive
+
+### Virtual Address Translation (Step-by-Step)
+
+```
+Given: Page size = 4KB (2^12 = 4096 bytes)
+Logical address = 8196 (decimal)
+
+Step 1: Convert to binary
+8196 = 0010000000000100
+
+Step 2: Split into Page Number + Offset
+┌──────────┬────────────┐
+│  Page #  │   Offset   │
+│ (20 bits)│ (12 bits)  │
+├──────────┼────────────┤
+│  0010    │ 000000000100│
+└──────────┴────────────┘
+Page = 2 (binary 0010)
+Offset = 4 (binary 100)
+
+Step 3: Look up Page Table
+Page 2 → Frame 8
+
+Step 4: Calculate Physical Address
+Physical = Frame × PageSize + Offset
+Physical = 8 × 4096 + 4
+Physical = 32768 + 4 = 32772
+
+┌─────────────────────────────────────────┐
+│     VIRTUAL ADDRESS TRANSLATION         │
+│                                         │
+│  Logical: [Page 2 | Offset 4]          │
+│              │                          │
+│              ▼ (Page Table Lookup)      │
+│  Page Table: [2 → 8]                   │
+│              │                          │
+│              ▼                          │
+│  Physical: [Frame 8 | Offset 4]        │
+│            = 32772                      │
+└─────────────────────────────────────────┘
+```
+
+### Page Table with Multiple Levels
+
+```
+Single-level page table (32-bit address, 4KB pages):
+- Would need 2^20 entries = 1 million entries!
+- Each entry 4 bytes → 4MB just for page table!
+
+Solution: Multi-level page table
+
+Two-level page table (x86):
+┌──────────┬──────────┬────────────┐
+│ Page Dir │  Page #  │   Offset   │
+│ (10 bits)│ (10 bits)│ (12 bits)  │
+└──────────┴──────────┴────────────┘
+
+        Page Directory
+        ┌─────────┐
+        │ Entry 0 │──→ Page Table 0 ──→ Frames 0-1023
+        │ Entry 1 │──→ Page Table 1 ──→ Frames 1024-2047
+        │ Entry 2 │──→ (not allocated)
+        │  ...    │
+        │Entry 1023│
+        └─────────┘
+
+Only allocates page tables that are actually used!
+```
+
+---
+
+## Synchronization Deep Dive
+
+### Producer-Consumer Problem (Visual)
+
+```
+┌─────────────────────────────────────────────────────┐
+│                  BOUNDED BUFFER                     │
+│  ┌───┬───┬───┬───┬───┬───┬───┬───┐                │
+│  │ 1 │ 2 │ 3 │ 4 │   │   │   │   │  ← Buffer     │
+│  └───┴───┴───┴───┴───┴───┴───┴───┘                │
+│    ↑                         ↑                      │
+│    │                         │                      │
+│ Producer                 Consumer                   │
+│ (adds items)          (removes items)               │
+│                                                     │
+│ Rules:                                              │
+│ 1. Producer waits if buffer is FULL                 │
+│ 2. Consumer waits if buffer is EMPTY                │
+│ 3. Only one thread accesses buffer at a time        │
+└─────────────────────────────────────────────────────┘
+
+Synchronization needed:
+- Mutex: Protect buffer access
+- Semaphore (empty): Count of empty slots
+- Semaphore (full): Count of full slots
+
+Producer:                    Consumer:
+wait(empty)                  wait(full)
+lock(buffer)                 lock(buffer)
+  add item                     remove item
+unlock(buffer)               unlock(buffer)
+signal(full)                 signal(empty)
+```
+
+### Readers-Writers Problem
+
+```
+Database Access Pattern:
+
+Readers (multiple can read simultaneously):
+  ┌─────┐  ┌─────┐  ┌─────┐
+  │ R1  │  │ R2  │  │ R3  │  ← All can read at same time
+  └──┬──┘  └──┬──┘  └──┬──┘
+     │        │        │
+     ▼        ▼        ▼
+  ┌─────────────────────┐
+  │     DATABASE        │
+  └─────────────────────┘
+     ▲        ▲        ▲
+     │        │        │
+  ┌──┴──┐  ┌──┴──┐
+  │ W1  │  │ W2  │  ← Only ONE writer at a time
+  └─────┘  └─────┘    AND no readers during write
+
+Rules:
+1. Multiple readers can read simultaneously
+2. Only one writer at a time
+3. No readers while writing
+```
+
+---
+
+## Context Switching Deep Dive
+
+```
+What happens during a context switch:
+
+Step 1: Timer interrupt occurs (process used its time slice)
+Step 2: CPU saves current process state:
+  ┌──────────────────────────────────┐
+  │ SAVED STATE (PCB - Process Ctrl Block) │
+  ├──────────────────────────────────┤
+  │ • Program Counter (where to resume)     │
+  │ • CPU Registers (all values)            │
+  │ • Memory Management info (page tables)  │
+  │ • I/O status info                       │
+  │ • Scheduling info (priority, etc.)      │
+  │ • Accounting info (CPU time used)       │
+  └──────────────────────────────────┘
+Step 3: OS scheduler picks next process
+Step 4: CPU loads new process state
+Step 5: New process resumes execution
+
+Cost of Context Switch:
+- Direct cost: Save/restore registers (~1-100 μs)
+- Indirect cost: Cache pollution, TLB flush
+- Too many switches → wasted CPU time
+```
+
+---
+
+## Additional Interview Questions
+
+### Q11: Explain the Producer-Consumer problem and its solutions.
+**Answer:** One thread produces data, another consumes. Bounded buffer shared between them. Solutions:
+1. **Semaphore-based:** Use two semaphores (empty count, full count) + mutex
+2. **Monitor-based:** Use condition variables (not_full, not_empty)
+3. **Lock-free:** Use ring buffer with atomic operations
+
+```python
+# Visual: How semaphores coordinate producer-consumer
+#
+# Buffer capacity = 5
+# Initially: empty=5, full=0, mutex=1
+#
+# Producer adds item:
+#   wait(empty)  → empty becomes 4 (decrement)
+#   lock(mutex)  → exclusive access
+#   add to buffer
+#   unlock(mutex)
+#   signal(full) → full becomes 1 (increment)
+#
+# Consumer removes item:
+#   wait(full)   → full becomes 0 (decrement)
+#   lock(mutex)  → exclusive access
+#   remove from buffer
+#   unlock(mutex)
+#   signal(empty)→ empty becomes 5 (increment)
+```
+
+### Q12: What is a race condition? How do you prevent it?
+**Answer:** Race condition occurs when multiple threads access shared data concurrently and the result depends on execution order.
+
+```
+Example: Two threads incrementing counter (initially 0)
+
+Thread A:          Thread B:          Counter:
+read counter (0)                       0
+                   read counter (0)   0
+increment to 1                         0
+                   increment to 1     0
+write counter (1)                      1
+                   write counter (1)  1
+
+Expected: 2, Actual: 1 ← DATA RACE!
+
+Prevention: Use synchronization (mutex, semaphore, lock)
+```
+
+### Q13: What is the difference between a process and a program?
+**Answer:**
+- **Program:** Static code stored on disk (like a recipe book)
+- **Process:** Program in execution (like cooking from the recipe)
+- One program can have multiple processes (open Chrome twice)
+- Each process has its own memory space and PID
+
+### Q14: Explain the dining philosophers problem.
+**Answer:** Classic synchronization problem illustrating deadlock.
+
+```
+        Philosopher 0
+           /    \
+     Fork0      Fork1
+        /          \
+Philosopher 4    Philosopher 1
+    |                |
+  Fork4          Fork2
+    \              /
+Philosopher 3  Philosopher 2
+           \    /
+          Fork3
+
+Each philosopher needs 2 forks to eat.
+If all pick up left fork simultaneously → DEADLOCK!
+
+Solutions:
+1. Allow at most 4 philosophers to sit
+2. Always pick up lower-numbered fork first
+3. Use a coordinator (waiter) to arbitrate
+4. Use chopsticks (resources) with timeout
+```
+
+### Q15: What is priority inversion and how to solve it?
+**Answer:** High-priority process waits for low-priority process holding a needed resource, while medium-priority processes preempt the low-priority one.
+
+```
+Priority Inversion Scenario:
+High Priority:    [--------WAITING--------]
+Medium Priority:       [---RUNNING---]
+Low Priority:     [--RUN--][---PREEMPTED---][RUN--]
+                   ↑ has resource      ↑ can't run to release
+
+Solution: Priority Inheritance Protocol
+- Temporarily boost low-priority process to high priority
+- It releases resource quickly
+- Then priority is restored
+```
+
+---
+
 ## Quick Reference Cheat Sheet
 
 | Topic | Key Points |
@@ -801,3 +1140,52 @@ def philosopher(left_fork, right_fork):
 | FIFO | Simple, Belady's anomaly |
 | LRU | Good performance, no Belady's |
 | Optimal | Best possible, impossible to implement |
+| Context Switch | Save/restore process state, overhead cost |
+| Race Condition | Concurrent access to shared data, use locks |
+| Priority Inversion | High waits for low, solved by priority inheritance |
+
+---
+
+## Quick Memory: Page Replacement Comparison
+
+```
+Algorithm    │ Concept                  │ Analogy
+─────────────┼──────────────────────────┼──────────────────────
+FIFO         │ Replace oldest page      │ Delete oldest file
+LRU          │ Replace least used       │ Delete forgotten file
+Optimal      │ Replace farthest future  │ Perfect but impossible
+Clock        │ Approximate LRU          │ Round-robin with check bit
+
+For interview, remember:
+- FIFO is simple but has Belady's anomaly
+- LRU is practical and good performance
+- Optimal is theoretical benchmark
+- Clock is what real systems use (approximation of LRU)
+```
+
+---
+
+## Key Formulas to Remember
+
+```
+1. CPU Utilization = (Busy Time / Total Time) × 100%
+
+2. Throughput = Number of processes completed / Time unit
+
+3. Turnaround Time = Completion Time - Arrival Time
+
+4. Waiting Time = Turnaround Time - Burst Time
+
+5. Response Time = First Response Time - Arrival Time
+
+6. Page Fault Rate = (Page Faults / Total Accesses) × 100%
+
+7. Effective Access Time = (1-p)×memory_access + p×page_fault_time
+   where p = page fault rate
+
+8. Number of Frames = (Process Size / Page Size)
+
+9. Page Table Size = Number of Pages × Entry Size
+
+10. Internal Fragmentation = (Page Size / 2) on average
+```

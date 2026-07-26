@@ -14,6 +14,37 @@
 
 **Problem**: Given a collection of intervals, merge all overlapping intervals.
 
+### Visual Walkthrough
+
+```
+  INPUT: [[1, 3], [2, 6], [8, 10], [15, 18]]
+  
+  STEP 1: Sort by start time → already sorted
+  
+  TIMELINE VISUALIZATION:
+  Time:  0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16 17 18
+         │  ├──[1──3]──┤           │           │                    │
+         │     ├──[2──────6]──┤    │           │                    │
+         │                              ├──[8──10]──┤               │
+         │                                                           ├──[15─18]──┤
+  
+  STEP 2: Process each interval:
+  ┌──────────────────────────────────────────────────────────────────┐
+  │ Start with merged = [[1, 3]]                                    │
+  │                                                                  │
+  │ Check [2, 6]:  2 <= 3 (overlaps with last) → merge to [1, 6]   │
+  │   merged = [[1, 6]]                                             │
+  │                                                                  │
+  │ Check [8, 10]: 8 > 6 (no overlap) → add new                    │
+  │   merged = [[1, 6], [8, 10]]                                    │
+  │                                                                  │
+  │ Check [15, 18]: 15 > 10 (no overlap) → add new                 │
+  │   merged = [[1, 6], [8, 10], [15, 18]]                         │
+  └──────────────────────────────────────────────────────────────────┘
+  
+  OUTPUT: [[1, 6], [8, 10], [15, 18]]
+```
+
 ```python
 def merge_intervals(intervals):
     """Merge all overlapping intervals."""
@@ -92,6 +123,37 @@ print(merge_intervals_detailed(intervals))
 
 **Problem**: Insert a new interval into a list of non-overlapping intervals and merge if necessary.
 
+### Visual Walkthrough
+
+```
+  INPUT: intervals = [[1, 2], [3, 5], [6, 7], [8, 10], [12, 16]]
+         new_interval = [4, 8]
+  
+  THREE-PHASE APPROACH:
+  ┌────────────────────────────────────────────────────────────────────┐
+  │                                                                    │
+  │  Phase 1: Add intervals BEFORE new_interval (end < 4)             │
+  │  ─────────────────────────────────────────────────────────         │
+  │  [1, 2]: end=2 < 4 → ADD ✓                                        │
+  │  result = [[1, 2]]                                                │
+  │                                                                    │
+  │  Phase 2: Merge overlapping intervals (start <= 8)                │
+  │  ─────────────────────────────────────────────────────────         │
+  │  [3, 5]:  3 <= 8 → merge → new = [min(4,3), max(8,5)] = [3, 8]  │
+  │  [6, 7]:  6 <= 8 → merge → new = [min(3,6), max(8,7)] = [3, 8]  │
+  │  [8, 10]: 8 <= 8 → merge → new = [min(3,8), max(8,10)] = [3, 10] │
+  │  result = [[1, 2], [3, 10]]                                       │
+  │                                                                    │
+  │  Phase 3: Add remaining intervals (start > 8)                     │
+  │  ─────────────────────────────────────────────────────────         │
+  │  [12, 16]: ADD ✓                                                   │
+  │  result = [[1, 2], [3, 10], [12, 16]]                             │
+  │                                                                    │
+  └────────────────────────────────────────────────────────────────────┘
+  
+  OUTPUT: [[1, 2], [3, 10], [12, 16]]
+```
+
 ```python
 def insert_interval(intervals, new_interval):
     """Insert new interval and merge if necessary."""
@@ -136,6 +198,34 @@ print(insert_interval(intervals, new_interval))
 ## 3. Non-overlapping Intervals
 
 **Problem**: Find minimum number of intervals to remove to make the rest non-overlapping.
+
+### Visual Walkthrough
+
+```
+  INPUT: [[1, 2], [2, 3], [3, 4], [1, 3]]
+  
+  SORT BY END TIME:
+  ┌──────┬───────┬────────┐
+  │ Sort │ Start │  End   │
+  ├──────┼───────┼────────┤
+  │  1   │   1   │    2   │ ◄── keep (earliest finish)
+  │  2   │   2   │    3   │     start 2 >= end 2 → KEEP
+  │  3   │   3   │    4   │     start 3 >= end 3 → KEEP
+  │  4   │   1   │    3   │     start 1 < end 2  → REMOVE
+  └──────┴───────┴────────┘
+  
+  TIMELINE:
+  Time:  0  1  2  3  4
+         │  [1─2]        ← KEEP
+         │     [2─3]     ← KEEP
+         │        [3─4]  ← KEEP
+         │  [1───3]      ← REMOVE (overlaps with [1-2])
+  
+  Minimum removals: 1
+  
+  GREEDY STRATEGY: Keep intervals that end EARLIEST.
+  This maximizes remaining time for other intervals.
+```
 
 ```python
 def erase_overlap_intervals(intervals):
@@ -207,6 +297,45 @@ erase_overlap_intervals_detailed(intervals)
 ## 4. Minimum Arrows to Burst Balloons
 
 **Problem**: Find minimum arrows to burst all balloons (balloon = interval on x-axis).
+
+### Visual Walkthrough
+
+```
+  INPUT: [[10, 16], [2, 8], [1, 6], [7, 12]]
+  
+  SORT BY END POSITION: [[1, 6], [2, 8], [7, 12], [10, 16]]
+  
+  X-AXIS VISUALIZATION:
+  
+  Arrow 1 at x=6:
+  Position:  0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+             │  ├────[1──────6]──┤  │  │                    │
+             │     ├────[2────────8]──┤  │                    │
+  
+  Balloons [1,6] and [2,8] are burst by arrow at x=6 ✓
+  
+  Arrow 2 at x=12:
+  Position:  7  8  9  10 11 12 13 14 15 16
+             ├──[7────────12]──┤  │  │
+             │        ├────[10─────────16]──┤
+  
+  Balloons [7,12] and [10,16] are burst by arrow at x=12 ✓
+  
+  RESULT: 2 arrows needed
+  
+  GREEDY STRATEGY:
+  ┌─────────────────────────────────────────────────────┐
+  │ 1. Sort balloons by END position                    │
+  │ 2. Place arrow at end of first balloon              │
+  │ 3. Skip all balloons that this arrow bursts         │
+  │ 4. Place next arrow at end of next unburst balloon  │
+  │ 5. Repeat until all balloons are burst              │
+  └─────────────────────────────────────────────────────┘
+  
+  SAME AS: Non-overlapping Intervals problem!
+  Each arrow = one non-overlapping interval.
+  Minimum arrows = maximum non-overlapping intervals.
+```
 
 ```python
 def find_min_arrows(points):
@@ -280,6 +409,75 @@ find_min_arrows_visual(points)
 ### Meeting Rooms I
 
 **Problem**: Determine if a person can attend all meetings.
+
+### Visual Explanation
+
+```
+  INPUT: [[0, 30], [5, 10], [15, 20]]
+  
+  SORT BY START TIME:
+  Time:  0  5  10  15  20  25  30
+         ├──[0──────────────30]──┤
+              ├──[5──10]──┤
+                     ├──[15──20]──┤
+  
+  Check overlaps:
+  [0,30] and [5,10]: 5 < 30 → OVERLAP! → return False
+  
+  INPUT: [[7, 10], [2, 4]]
+  
+  SORT BY START TIME:
+  Time:  0  2  4  5  6  7  8  9  10
+              [2─4]           [7─10]
+  
+  Check overlaps:
+  [2,4] and [7,10]: 7 >= 4 → NO OVERLAP → return True
+```
+
+### Meeting Rooms II
+
+**Problem**: Find minimum number of conference rooms required.
+
+### Visual Walkthrough (Min-Heap Approach)
+
+```
+  INPUT: [[0, 30], [5, 10], [15, 20]]
+  
+  SORT BY START TIME, then use min-heap:
+  
+  Time:  0     5     10    15    20    30
+         │     │     │     │     │     │
+         ▼     ▼     ▼     ▼     ▼     ▼
+  ┌──────────────────────────────────────────────┐
+  │ t=0: Start [0,30]                            │
+  │   heap = [30]          rooms needed = 1      │
+  │                                               │
+  │ t=5: Start [5,10]                            │
+  │   heap[0]=30 > 5 → can't reuse room          │
+  │   heap = [10, 30]    rooms needed = 2        │
+  │                                               │
+  │ t=10: Start [15,20]  (after [5,10] ends)     │
+  │   heap[0]=10 <= 15 → reuse room!             │
+  │   heap = [20, 30]    rooms still = 2         │
+  │                                               │
+  │ t=30: All done                                │
+  │   heap = [20, 30]    max rooms = 2           │
+  └──────────────────────────────────────────────┘
+  
+  RESULT: 2 rooms needed
+  
+  ALTERNATIVE: Line Sweep
+  ┌──────────────────────────────────────────────┐
+  │ Events:                                      │
+  │   (0, +1)  (5, +1)  (10, -1)  (15, +1)     │
+  │   (20, -1)  (30, -1)                         │
+  │                                               │
+  │ Sorted: (0,+1)(5,+1)(10,-1)(15,+1)(20,-1)(30,-1) │
+  │                                               │
+  │ Count: 0→1→2→1→2→1→0                         │
+  │ Max concurrent = 2                            │
+  └──────────────────────────────────────────────┘
+```
 
 ```python
 def can_attend_meetings(intervals):
@@ -374,6 +572,46 @@ print(min_meeting_rooms_sweep(intervals))  # 2
 ## 6. Interval Partitioning
 
 **Problem**: Partition intervals into minimum number of groups such that no two intervals in the same group overlap.
+
+### Visual Walkthrough
+
+```
+  INPUT: [[1, 3], [2, 4], [5, 6], [7, 8], [7, 9]]
+  
+  SORT BY START TIME:
+  Time:  1  2  3  4  5  6  7  8  9
+         ├──[1──3]──┤
+            ├──[2──4]──┤
+                     ├──[5─6]──┤
+                           ├──[7─8]──┤
+                           ├────[7──9]──┤
+  
+  ASSIGNMENT PROCESS (using min-heap of end times):
+  ┌──────────────────────────────────────────────────────────┐
+  │ [1,3]: No group available → create Group 1              │
+  │   heap = [(3, G1)]                                       │
+  │                                                          │
+  │ [2,4]: heap[0]=(3,G1), 2 < 3 → create Group 2          │
+  │   heap = [(3,G1), (4,G2)]                               │
+  │                                                          │
+  │ [5,6]: heap[0]=(3,G1), 5 >= 3 → REUSE Group 1           │
+  │   heap = [(4,G2), (6,G1)]                               │
+  │                                                          │
+  │ [7,8]: heap[0]=(4,G2), 7 >= 4 → REUSE Group 2           │
+  │   heap = [(6,G1), (8,G2)]                               │
+  │                                                          │
+  │ [7,9]: heap[0]=(6,G1), 7 >= 6 → REUSE Group 1           │
+  │   heap = [(8,G2), (9,G1)]                               │
+  └──────────────────────────────────────────────────────────┘
+  
+  RESULT:
+  Group 1: [[1, 3], [5, 6], [7, 8]]
+  Group 2: [[2, 4], [7, 9]]
+  Minimum groups needed: 2
+  
+  KEY INSIGHT: This is equivalent to finding the maximum
+  number of overlapping intervals at any point (Meeting Rooms II).
+```
 
 ```python
 import heapq
@@ -499,3 +737,51 @@ print(interval_partitioning_sorted(intervals))  # 2
 3. **Min-heap** tracks concurrent intervals/meetings
 4. **Line sweep** is powerful for event-based problems
 5. Always check if **end time** comparison is strict or non-strict
+
+### Interval Problem Decision Guide
+
+```
+  ┌──────────────────────────────────────────────────────────────────┐
+  │           INTERVAL PROBLEM PATTERN MATCHER                       │
+  ├──────────────────────────────────────────────────────────────────┤
+  │                                                                  │
+  │  "Merge overlapping intervals?"                                  │
+  │    → Sort by START, iterate and merge                            │
+  │                                                                  │
+  │  "Insert a new interval?"                                        │
+  │    → Three-phase: before, merge, after                           │
+  │                                                                  │
+  │  "Remove min intervals to make non-overlapping?"                 │
+  │    → Sort by END, greedily keep earliest finishers               │
+  │                                                                  │
+  │  "Min arrows to burst balloons?"                                 │
+  │    → Same as non-overlapping (sort by END)                       │
+  │                                                                  │
+  │  "Can attend all meetings?"                                      │
+  │    → Sort by START, check consecutive overlaps                   │
+  │                                                                  │
+  │  "Min conference rooms?"                                         │
+  │    → Sort by START + min-heap of END times                       │
+  │    → OR line sweep (+1 for start, -1 for end)                    │
+  │                                                                  │
+  │  "Partition into min non-overlapping groups?"                    │
+  │    → Sort by START + min-heap (same as Meeting Rooms II)         │
+  │                                                                  │
+  └──────────────────────────────────────────────────────────────────┘
+```
+
+### Sort Key Cheat Sheet
+
+```
+  ┌─────────────────────┬────────────────────────────────────────┐
+  │ When to sort by...  │ Problems                               │
+  ├─────────────────────┼────────────────────────────────────────┤
+  │ START time          │ Merge intervals, Insert interval,      │
+  │                     │ Meeting Rooms I/II, Interval partition  │
+  ├─────────────────────┼────────────────────────────────────────┤
+  │ END time            │ Non-overlapping intervals,              │
+  │                     │ Burst balloons, Activity selection      │
+  ├─────────────────────┼────────────────────────────────────────┤
+  │ Both (events)       │ Line sweep approach for Meeting Rooms   │
+  └─────────────────────┴────────────────────────────────────────┘
+```
