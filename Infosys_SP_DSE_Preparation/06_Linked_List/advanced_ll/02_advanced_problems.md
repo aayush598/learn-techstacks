@@ -1,429 +1,557 @@
-# Advanced Linked List Problems
+# Advanced Linked List Problems - Complete Guide
 
-## Flatten a Linked List with Next, Child, and Random Pointers - O(n)
+## Problem 1: Merge k Sorted Lists
+
+**Statement:** Merge k sorted linked lists into one sorted list.
+
+**Example:**
+```
+List 1: 1 → 4 → 5 → None
+List 2: 1 → 3 → 4 → None
+List 3: 2 → 6 → None
+
+Merged: 1 → 1 → 2 → 3 → 4 → 4 → 5 → 6 → None
+```
+
+### Why This is Hard:
+- Merging 2 lists is easy (compare and link)
+- But with k lists, we need an efficient strategy
+- Naive approach: merge one by one → O(k*n) time
+- Better approach: Use min-heap → O(n*log k) time
+
+### The Code (Using Min-Heap):
 ```python
-class SpecialNode:
-    def __init__(self, val=0, next=None, child=None, random=None):
-        self.val = val
-        self.next = next
-        self.child = child
-        self.random = random
+import heapq
 
-def flatten_with_random(head):
-    """
-    Flatten a multilevel doubly linked list with random pointers
-    """
+def merge_k_lists(lists):
+    # Create a dummy node to build result
+    dummy = ListNode(0)
+    current = dummy
+    
+    # Min-heap: stores (value, index, node)
+    heap = []
+    
+    # Step 1: Add first node of each list to heap
+    for i, l in enumerate(lists):
+        if l:
+            heapq.heappush(heap, (l.val, i, l))
+    
+    # Step 2: Pop smallest, add to result, push next node
+    while heap:
+        val, i, node = heapq.heappop(heap)
+        current.next = ListNode(val)
+        current = current.next
+        
+        # If this list has more nodes, push the next one
+        if node.next:
+            heapq.heappush(heap, (node.next.val, i, node.next))
+    
+    return dummy.next
+```
+
+### Visual Walkthrough:
+
+**Initial:**
+```
+List 1: 1 → 4 → 5
+List 2: 1 → 3 → 4
+List 3: 2 → 6
+
+Heap: [(1, 0, node1_1), (1, 1, node2_1), (2, 2, node3_1)]
+```
+
+**Iteration 1:** Pop (1, 0, node1_1)
+```
+Add 1 to result
+Push node1_1.next = (4, 0, node1_2)
+
+Heap: [(1, 1, node2_1), (2, 2, node3_1), (4, 0, node1_2)]
+Result: 1
+```
+
+**Iteration 2:** Pop (1, 1, node2_1)
+```
+Add 1 to result
+Push node2_1.next = (3, 1, node2_2)
+
+Heap: [(2, 2, node3_1), (3, 1, node2_2), (4, 0, node1_2)]
+Result: 1 → 1
+```
+
+**Iteration 3:** Pop (2, 2, node3_1)
+```
+Add 2 to result
+Push node3_1.next = (6, 2, node3_2)
+
+Heap: [(3, 1, node2_2), (4, 0, node1_2), (6, 2, node3_2)]
+Result: 1 → 1 → 2
+```
+
+**Continue until heap is empty...**
+
+**Final Result:** 1 → 1 → 2 → 3 → 4 → 4 → 5 → 6
+
+**Time:** O(n log k) where n = total nodes, k = number of lists
+
+---
+
+## Problem 2: Flatten a Multilevel Linked List
+
+**Statement:** Given a linked list where nodes may have next and child pointers, flatten it to a single level.
+
+### Visual Example:
+```
+Before:
+1 → 2 → 3 → 4 → 5 → None
+            ↓
+            6 → 7 → 8 → None
+                ↓
+                9 → 10 → None
+
+After:
+1 → 2 → 3 → 6 → 7 → 9 → 10 → 8 → 4 → 5 → None
+```
+
+### The Code:
+```python
+def flatten(head):
     if not head:
         return head
     
-    # Step 1: Create mapping for random pointers
-    mapping = {}
-    current = head
-    while current:
-        mapping[id(current)] = current
-        current = current.next
-    
-    # Step 2: Flatten the list
     current = head
     while current:
         if current.child:
+            # Save next node
             next_node = current.next
             
-            # Connect to child
-            current.next = current.child
-            current.child.prev = current
+            # Flatten child
+            child_head = flatten(current.child)
             
-            # Find tail of child
-            tail = current.child
-            while tail.next:
-                tail = tail.next
+            # Connect current to child
+            current.next = child_head
+            child_head.prev = current
             
-            # Connect tail to next
-            tail.next = next_node
+            # Find end of child list
+            while current.next:
+                current = current.next
+            
+            # Connect end of child to saved next
+            current.next = next_node
             if next_node:
-                next_node.prev = tail
+                next_node.prev = current
             
             # Remove child pointer
             current.child = None
-        else:
-            current = current.next
+        
+        current = current.next
     
     return head
 ```
 
-## Merge Sort on Linked List - O(n log n)
+### Step-by-Step:
+
+**Step 1: At node 3, child exists (6)**
+```
+Before: 3 → 4 → 5
+        ↓
+        6 → 7 → 8
+```
+
+**Step 2: Flatten child recursively**
+```
+Child becomes: 6 → 7 → 9 → 10 → 8 (flattened)
+```
+
+**Step 3: Connect 3 to child head (6)**
+```
+3 → 6 → 7 → 9 → 10 → 8
+```
+
+**Step 4: Connect child end (8) to saved next (4)**
+```
+3 → 6 → 7 → 9 → 10 → 8 → 4 → 5
+```
+
+**Final Result:**
+```
+1 → 2 → 3 → 6 → 7 → 9 → 10 → 8 → 4 → 5 → None
+```
+
+---
+
+## Problem 3: Reverse Linked List II (Reverse from Position m to n)
+
+**Statement:** Reverse a portion of a linked list from position m to n.
+
+**Example:** m=2, n=4, List = [1, 2, 3, 4, 5]
+```
+Before:  1 → 2 → 3 → 4 → 5 → None
+After:   1 → 4 → 3 → 2 → 5 → None
+              ↑───↑
+           reversed
+```
+
+### The Code:
 ```python
-def merge_sort_list(head):
-    if not head or not head.next:
+def reverse_between(head, m, n):
+    if not head or m == n:
         return head
     
-    # Find middle
-    slow = head
-    fast = head.next
-    
-    while fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
-    
-    # Split list
-    mid = slow.next
-    slow.next = None
-    
-    # Recursively sort both halves
-    left = merge_sort_list(head)
-    right = merge_sort_list(mid)
-    
-    # Merge sorted halves
-    return merge_sorted(left, right)
-
-def merge_sorted(l1, l2):
-    dummy = ListNode(0)
-    current = dummy
-    
-    while l1 and l2:
-        if l1.val <= l2.val:
-            current.next = l1
-            l1 = l1.next
-        else:
-            current.next = l2
-            l2 = l2.next
-        current = current.next
-    
-    current.next = l1 if l1 else l2
-    return dummy.next
-```
-
-## Quick Sort on Linked List - O(n log n) average
-```python
-def quick_sort_list(head):
-    if not head or not head.next:
-        return head
-    
-    # Partition around pivot
-    pivot = head.val
-    less_head = less_tail = ListNode(0)
-    equal_head = equal_tail = ListNode(0)
-    greater_head = greater_tail = ListNode(0)
-    
-    current = head
-    while current:
-        if current.val < pivot:
-            less_tail.next = current
-            less_tail = less_tail.next
-        elif current.val == pivot:
-            equal_tail.next = current
-            equal_tail = equal_tail.next
-        else:
-            greater_tail.next = current
-            greater_tail = greater_tail.next
-        current = current.next
-    
-    # Terminate lists
-    less_tail.next = None
-    equal_tail.next = None
-    greater_tail.next = None
-    
-    # Recursively sort less and greater
-    sorted_less = quick_sort_list(less_head.next)
-    sorted_greater = quick_sort_list(greater_head.next)
-    
-    # Concatenate: less + equal + greater
-    return concatenate(sorted_less, equal_head.next, sorted_greater)
-
-def concatenate(list1, list2, list3):
-    dummy = ListNode(0)
-    current = dummy
-    
-    for lst in [list1, list2, list3]:
-        if lst:
-            current.next = lst
-            while current.next:
-                current = current.next
-    
-    return dummy.next
-```
-
-## Reverse a Linked List in Groups of K - O(n)
-```python
-def reverse_k_group(head, k):
-    def reverse_segment(start, end):
-        prev = None
-        current = start
-        while current != end:
-            next_node = current.next
-            current.next = prev
-            prev = current
-            current = next_node
-        return prev
-    
-    dummy = ListNode(0)
-    dummy.next = head
-    prev_group_end = dummy
-    
-    while True:
-        # Check if k nodes exist
-        kth = prev_group_end
-        for _ in range(k):
-            kth = kth.next
-            if not kth:
-                return dummy.next
-        
-        group_next = kth.next
-        group_start = prev_group_end.next
-        
-        # Reverse the group
-        prev_group_end.next = reverse_segment(group_start, group_next)
-        group_start.next = group_next
-        
-        prev_group_end = group_start
-```
-
-## Remove Duplicates from Sorted Linked List - O(n)
-```python
-def remove_duplicates(head):
-    current = head
-    
-    while current and current.next:
-        if current.val == current.next.val:
-            current.next = current.next.next
-        else:
-            current = current.next
-    
-    return head
-
-# Remove all duplicates (return unique values only)
-def remove_duplicates_all(head):
     dummy = ListNode(0)
     dummy.next = head
     prev = dummy
-    current = head
     
-    while current:
-        if current.next and current.val == current.next.val:
-            # Skip all duplicates
-            while current.next and current.val == current.next.val:
-                current = current.next
-            prev.next = current.next
-        else:
-            prev = prev.next
-        current = current.next
+    # Step 1: Move to position m-1
+    for _ in range(m - 1):
+        prev = prev.next
+    
+    # Step 2: Reverse from m to n
+    current = prev.next
+    next_node = None
+    
+    for _ in range(n - m + 1):
+        temp = current.next
+        current.next = next_node
+        next_node = current
+        current = temp
+    
+    # Step 3: Connect reversed portion
+    prev.next.next = current    # Connect tail of reversed to rest
+    prev.next = next_node       # Connect prev to head of reversed
     
     return dummy.next
 ```
 
-## Swap Nodes in Linked List Without Swapping Data - O(n)
+### Visual Walkthrough: m=2, n=4, [1, 2, 3, 4, 5]
+
+**Step 1: Move to position 1 (m-1)**
+```
+dummy → 1 → 2 → 3 → 4 → 5
+        ↑
+      prev (at position 1)
+```
+
+**Step 2: Reverse 3 nodes (2, 3, 4)**
+```
+Before: prev → 2 → 3 → 4 → 5
+After:  prev → 4 → 3 → 2 → 5
+```
+
+**Step 3: Connect**
+```
+dummy → 1 → 4 → 3 → 2 → 5
+```
+
+**Result:** 1 → 4 → 3 → 2 → 5
+
+---
+
+## Problem 4: Partition List
+
+**Statement:** Partition list around value x (nodes < x come before nodes >= x).
+
+**Example:** x=3, List = [1, 4, 3, 2, 5]
+```
+Before:  1 → 4 → 3 → 2 → 5
+After:   1 → 2 → 4 → 3 → 5
+         ↑   ↑   ↑───↑
+       (<3) (<3) (>=3)
+```
+
+### The Code:
 ```python
-def swap_nodes(head, k):
-    # Find kth node from beginning
-    first = head
-    for _ in range(k - 1):
-        first = first.next
+def partition(head, x):
+    # Create two dummy heads
+    less_dummy = ListNode(0)      # For nodes < x
+    greater_dummy = ListNode(0)   # For nodes >= x
     
-    # Find kth node from end using two pointers
-    fast = head
-    slow = head
+    less = less_dummy
+    greater = greater_dummy
     
-    for _ in range(k):
-        fast = fast.next
+    while head:
+        if head.val < x:
+            less.next = head
+            less = less.next
+        else:
+            greater.next = head
+            greater = greater.next
+        head = head.next
     
-    while fast:
-        fast = fast.next
-        slow = slow.next
+    # Connect the two lists
+    greater.next = None          # End the greater list
+    less.next = greater_dummy.next  # Connect less to greater
     
-    second = slow
-    
-    # Swap values
-    first.val, second.val = second.val, first.val
-    
-    return head
-
-# Alternative: Swap by changing pointers (more complex but true swap)
-def swap_nodes_pointers(head, k):
-    if not head or not head.next:
-        return head
-    
-    # Find length
-    length = 0
-    current = head
-    while current:
-        length += 1
-        current = current.next
-    
-    # Find positions
-    pos1 = k - 1
-    pos2 = length - k
-    
-    if pos1 == pos2:
-        return head
-    
-    # Ensure pos1 < pos2
-    if pos1 > pos2:
-        pos1, pos2 = pos2, pos1
-    
-    # Find nodes and their predecessors
-    dummy = ListNode(0)
-    dummy.next = head
-    prev1 = dummy
-    prev2 = dummy
-    
-    for _ in range(pos1):
-        prev1 = prev1.next
-    
-    for _ in range(pos2):
-        prev2 = prev2.next
-    
-    node1 = prev1.next
-    node2 = prev2.next
-    next2 = node2.next
-    
-    # Perform swap
-    prev1.next = node2
-    node2.next = node1.next
-    
-    if pos2 - pos1 == 1:
-        node1.next = node2
-    else:
-        node1.next = next2
-        prev2.next = node1
-    
-    return dummy.next
+    return less_dummy.next
 ```
 
-## Rotate Linked List - O(n)
+### Visual Walkthrough: x=3, [1, 4, 3, 2, 5]
+
+**Step 1: Separate into two lists**
+```
+Less list:     1 → 2
+Greater list:  4 → 3 → 5
+```
+
+**Step 2: Connect less to greater**
+```
+less_dummy → 1 → 2 → 4 → 3 → 5
+```
+
+**Result:** 1 → 2 → 4 → 3 → 5
+
+---
+
+## Problem 5: Rotate List
+
+**Statement:** Rotate list to the right by k places.
+
+**Example:** k=2, List = [1, 2, 3, 4, 5]
+```
+Before:  1 → 2 → 3 → 4 → 5
+After:   4 → 5 → 1 → 2 → 3
+         ↑───↑   ↑───────↑
+        moved   stayed
+```
+
+### The Code:
 ```python
 def rotate_right(head, k):
     if not head or not head.next or k == 0:
         return head
     
-    # Find length and tail
+    # Step 1: Find length and last node
     length = 1
-    tail = head
-    while tail.next:
-        tail = tail.next
+    last = head
+    while last.next:
+        last = last.next
         length += 1
     
-    # Make circular
-    tail.next = head
+    # Step 2: Make it circular
+    last.next = head
     
-    # Find new tail position
+    # Step 3: Find new tail (length - k % length - 1 steps from head)
     k = k % length
-    steps_to_new_tail = length - k
-    
     new_tail = head
-    for _ in range(steps_to_new_tail - 1):
+    for _ in range(length - k - 1):
         new_tail = new_tail.next
     
+    # Step 4: New head is next of new tail
     new_head = new_tail.next
-    new_tail.next = None
-    
-    return new_head
-
-def rotate_left(head, k):
-    if not head or not head.next or k == 0:
-        return head
-    
-    # Find length and tail
-    length = 1
-    tail = head
-    while tail.next:
-        tail = tail.next
-        length += 1
-    
-    # Make circular
-    tail.next = head
-    
-    # Find new tail position
-    k = k % length
-    steps_to_new_tail = k - 1
-    
-    new_tail = head
-    for _ in range(steps_to_new_tail):
-        new_tail = new_tail.next
-    
-    new_head = new_tail.next
-    new_tail.next = None
+    new_tail.next = None  # Break the circle
     
     return new_head
 ```
 
-## Odd-Even Linked List - O(n)
-```python
-def odd_even_list(head):
-    if not head:
-        return head
-    
-    odd = head
-    even = head.next
-    even_head = even
-    
-    while even and even.next:
-        odd.next = even.next
-        odd = odd.next
-        even.next = odd.next
-        even = even.next
-    
-    odd.next = even_head
-    return head
+### Visual Walkthrough: k=2, [1, 2, 3, 4, 5]
+
+**Step 1: Find length (5) and last node (5)**
+```
+1 → 2 → 3 → 4 → 5 → None
+                    ↑
+                  last
 ```
 
-## Linked List Cycle II (Find Start) - O(n)
-```python
-def detect_cycle_start(head):
-    if not head or not head.next:
-        return None
-    
-    # Phase 1: Detect cycle
-    slow = head
-    fast = head
-    
-    while fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
-        if slow == fast:
-            break
-    else:
-        return None
-    
-    # Phase 2: Find start of cycle
-    slow = head
-    while slow != fast:
-        slow = slow.next
-        fast = fast.next
-    
-    return slow
+**Step 2: Make circular**
+```
+1 → 2 → 3 → 4 → 5
+ ↑               ↓
+ └───────────────┘
 ```
 
-## Complete Example Usage
-```python
-def create_list(arr):
-    if not arr:
-        return None
-    head = ListNode(arr[0])
-    current = head
-    for val in arr[1:]:
-        current.next = ListNode(val)
-        current = current.next
-    return head
+**Step 3: Find new tail**
+```
+k % 5 = 2
+Move (5 - 2 - 1) = 2 steps from head
+New tail is at position 2 (value 3)
 
-def print_list(head):
-    elements = []
+1 → 2 → 3 → 4 → 5
+            ↑
+         new_tail
+```
+
+**Step 4: Break circle**
+```
+new_head = 4 (new_tail.next)
+new_tail.next = None
+
+4 → 5 → 1 → 2 → 3 → None
+```
+
+**Result:** 4 → 5 → 1 → 2 → 3
+
+---
+
+## Problem 6: Swap Nodes in Pairs
+
+**Statement:** Swap every two adjacent nodes.
+
+**Example:**
+```
+Before:  1 → 2 → 3 → 4
+After:   2 → 1 → 4 → 3
+```
+
+### The Code:
+```python
+def swap_pairs(head):
+    dummy = ListNode(0)
+    dummy.next = head
+    prev = dummy
+    
+    while prev.next and prev.next.next:
+        # Nodes to swap
+        first = prev.next
+        second = prev.next.next
+        
+        # Swap
+        first.next = second.next
+        second.next = first
+        prev.next = second
+        
+        # Move prev forward
+        prev = first
+    
+    return dummy.next
+```
+
+### Visual Walkthrough: [1, 2, 3, 4]
+
+**Iteration 1: Swap 1 and 2**
+```
+Before: prev → 1 → 2 → 3 → 4
+After:  prev → 2 → 1 → 3 → 4
+```
+
+**Iteration 2: Swap 3 and 4**
+```
+Before: prev → 2 → 1 → 3 → 4
+After:  prev → 2 → 1 → 4 → 3
+```
+
+**Result:** 2 → 1 → 4 → 3
+
+---
+
+## Problem 7: Add Two Numbers II
+
+**Statement:** Add two numbers stored in FORWARD order (not reversed).
+
+**Example:**
+```
+List 1:  3 → 4 → 2 (represents 342)
+List 2:  4 → 6 → 5 (represents 465)
+Result:  8 → 0 → 7 (represents 807)
+```
+
+### The Code:
+```python
+def add_two_numbers_II(l1, l2):
+    # Step 1: Reverse both lists
+    l1 = reverse_list(l1)
+    l2 = reverse_list(l2)
+    
+    # Step 2: Add (like reversed version)
+    result = add_two_reversed(l1, l2)
+    
+    # Step 3: Reverse result back
+    return reverse_list(result)
+
+def reverse_list(head):
+    prev = None
     while head:
-        elements.append(str(head.val))
-        head = head.next
-    return " -> ".join(elements) + " -> None"
-
-# Test merge sort
-head = create_list([4, 2, 1, 3])
-sorted_head = merge_sort_list(head)
-print(f"Merge sorted: {print_list(sorted_head)}")  # 1 -> 2 -> 3 -> 4
-
-# Test odd-even list
-head = create_list([1, 2, 3, 4, 5])
-result = odd_even_list(head)
-print(f"Odd-even: {print_list(result)}")  # 1 -> 3 -> 5 -> 2 -> 4
-
-# Test reverse in groups of 2
-head = create_list([1, 2, 3, 4, 5])
-result = reverse_k_group(head, 2)
-print(f"Reverse in groups of 2: {print_list(result)}")  # 2 -> 1 -> 4 -> 3 -> 5
+        next_temp = head.next
+        head.next = prev
+        prev = head
+        head = next_temp
+    return prev
 ```
+
+### Why reverse twice?
+- Addition is easier from least significant digit (right to left)
+- So we reverse, add, then reverse back!
+
+---
+
+## Problem 8: Copy List with Random Pointer (O(1) Space)
+
+**Statement:** Deep copy a list with next and random pointers using O(1) extra space.
+
+### The Code (Interweaving Method):
+```python
+def copy_random_list(head):
+    if not head:
+        return None
+    
+    # Step 1: Interweave - insert copy nodes after original
+    current = head
+    while current:
+        copy = ListNode(current.val)
+        copy.next = current.next
+        current.next = copy
+        current = copy.next
+    
+    # Step 2: Set random pointers for copies
+    current = head
+    while current:
+        if current.random:
+            current.next.random = current.random.next
+        current = current.next.next
+    
+    # Step 3: Separate original and copy lists
+    copy_head = head.next
+    current = head
+    while current:
+        copy = current.next
+        current.next = copy.next
+        if copy.next:
+            copy.next = copy.next.next
+        current = current.next
+    
+    return copy_head
+```
+
+### Visual Walkthrough: [1, 2, 3] with random pointers
+
+**Step 1: Interweave**
+```
+Before: 1 → 2 → 3
+After:  1 → 1' → 2 → 2' → 3 → 3'
+```
+
+**Step 2: Set random pointers**
+```
+If 1.random = 3, then 1'.random = 3'
+If 2.random = 1, then 2'.random = 1'
+```
+
+**Step 3: Separate**
+```
+Original: 1 → 2 → 3
+Copy:     1' → 2' → 3'
+```
+
+**Time:** O(n) | **Space:** O(1) - no extra data structures!
+
+---
+
+## Summary: Advanced Linked List Patterns
+
+| Problem | Technique | Time | Space |
+|---------|-----------|------|-------|
+| Merge k Sorted Lists | Min-Heap | O(n log k) | O(k) |
+| Flatten Multilevel | Recursion | O(n) | O(d) depth |
+| Reverse Sublist | Pointers | O(n) | O(1) |
+| Partition List | Two Lists | O(n) | O(1) |
+| Rotate List | Circular | O(n) | O(1) |
+| Swap Pairs | Iterative | O(n) | O(1) |
+| Add Forward | Reverse + Add | O(n) | O(1) |
+| Copy Random | Interweave | O(n) | O(1) |
+
+## Key Insights for Interviews
+
+1. **Use dummy nodes** - eliminates edge cases for head operations
+2. **Two-pass approach** - first count/measure, then operate
+3. **Reverse when needed** - makes operations easier in some cases
+4. **Heap for k-way merge** - efficient for merging multiple sorted lists
+5. **Interweaving technique** - O(1) space for copying lists
+6. **Circular list trick** - useful for rotation problems
