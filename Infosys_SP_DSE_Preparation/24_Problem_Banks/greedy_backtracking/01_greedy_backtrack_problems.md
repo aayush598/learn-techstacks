@@ -13,25 +13,127 @@
 
 ## Problem 1 — Maximum Units on a Truck (Easy)
 
-**Statement:** You have `n` boxes, each described by `[boxes_i, units_i]`. You have a truck with capacity `maxBoxes`. Return the **maximum total number of units** you can load.
+**Problem Explanation:**
+You're loading a truck with boxes. Each box type tells you how many boxes of that type you have and how many units each box contains. Your truck has a limited box capacity. You want to maximize total units loaded. The greedy insight: since boxes are interchangeable, always take boxes that give the most units first.
 
-**Approach:** Greedily pick boxes with the most units first. Sort by `units_i` descending, then take as many as capacity allows.
+**Algorithm Steps:**
+1. Sort `boxTypes` by units per box in descending order (highest-value boxes first)
+2. Initialize `total = 0` for tracking total units loaded
+3. For each box type `[boxes, units]`:
+   a. Take as many as possible: `take = min(boxes, truckCapacity)`
+   b. Add `take * units` to total
+   c. Reduce truck capacity by `take`
+   d. If truck is full (`truckCapacity == 0`), stop early
+4. Return total units
 
+**Step-by-Step Walkthrough:**
+```
+boxTypes = [[1,3], [2,2], [3,1]], truckCapacity = 4
+Sorted by units desc: [[1,3], [2,2], [3,1]]
+
+Iteration 1: boxes=1, units=3
+  take = min(1, 4) = 1
+  total += 1*3 = 3
+  truckCapacity = 4-1 = 3
+
+Iteration 2: boxes=2, units=2
+  take = min(2, 3) = 2
+  total += 2*2 = 7
+  truckCapacity = 3-2 = 1
+
+Iteration 3: boxes=3, units=1
+  take = min(3, 1) = 1
+  total += 1*1 = 8
+  truckCapacity = 1-1 = 0 → break
+
+Result: 8 units
+```
+
+**Solution:**
 ```python
 def maximumUnits(boxTypes, truckCapacity):
+    # Sort box types by units per box descending (greedy: best first)
     boxTypes.sort(key=lambda x: x[1], reverse=True)
     total = 0
     for boxes, units in boxTypes:
+        # Take as many boxes as capacity allows (but not more than available)
         take = min(boxes, truckCapacity)
         total += take * units
         truckCapacity -= take
-        if truckCapacity == 0:
+        if truckCapacity == 0:  # Truck is full, stop early
             break
     return total
 ```
 
-- **Time:** O(n log n) | **Space:** O(1)
-- **Tip:** Sort by units per box descending. Greedy is optimal here because every box position is interchangeable — no ordering constraint.
+**Complexity Analysis:**
+- **Time:** O(n log n) — dominated by sorting; the loop is O(n)
+- **Space:** O(1) — sorting may use O(log n) stack space but no extra data structures
+
+**Edge Cases:**
+- `truckCapacity = 0`: Return 0 immediately (truck can't carry anything)
+- All boxes have same units: Order doesn't matter, any selection works
+- More capacity than boxes: Take all boxes
+- Single box type: Take min(boxes, capacity) of that type
+
+**Common Mistakes:**
+- Sorting by boxes count instead of units per box (wrong optimization target)
+- Not using `min(boxes, truckCapacity)` — either index out of bounds or over-counting
+- Forgetting to decrement capacity and breaking on zero (infinite loop risk)
+
+**Pattern Recognition:**
+- "Maximum of something with capacity constraint" → Sort by value descending, fill greedily
+- Similar to: Fractional Knapsack (but discrete here, not fractional)
+- This is a "load balancing" variant where item value is uniform per type
+
+---
+
+## Problem 2 — Best Time to Buy and Sell Stock (Easy)
+
+**Problem Explanation:**
+You have stock prices day-by-day. You can buy once and sell once later. Find the maximum profit possible. If prices only go down, return 0. The trick: you track the cheapest price seen so far and check if selling today would give maximum profit.
+
+**Algorithm Steps:**
+1. Initialize `min_price` to infinity (no price seen yet)
+2. Initialize `max_profit` to 0
+3. Loop through each day's price:
+   a. Update `min_price = min(min_price, current_price)`
+   b. Calculate profit if sold today: `current_price - min_price`
+   c. Update `max_profit = max(max_profit, profit)`
+4. Return `max_profit`
+
+**Solution:**
+```python
+def maxProfit(prices):
+    # Start with a sentinel high value so first price becomes min
+    min_price = float('inf')
+    max_profit = 0
+    for p in prices:
+        # Track the lowest price seen so far (best day to buy)
+        min_price = min(min_price, p)
+        # Compute profit if we sell today and update max
+        max_profit = max(max_profit, p - min_price)
+    return max_profit
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass through the array
+- **Space:** O(1) — just two integer variables
+
+**Edge Cases:**
+- `prices = []`: Return 0 (no transactions possible)
+- `prices = [5]`: Return 0 (single price, no sell possible)
+- Strictly decreasing `[5,4,3,2,1]`: Return 0 (no profitable transaction)
+- All same prices `[3,3,3]`: Return 0 (no profit)
+
+**Common Mistakes:**
+- Thinking you need to track both buy and sell days (not needed — just track min price)
+- Setting `min_price` to `prices[0]` without checking for empty array (runtime error)
+- Using `max` instead of `min` for tracking buy price (wrong direction)
+
+**Pattern Recognition:**
+- "Maximum profit from single transaction" → Track minimum so far
+- Similar to: "Maximum subarray" (Kadane's algorithm variant)
+- This is a "best time" pattern where you need optimal buy/sell timing
 
 ---
 
@@ -58,99 +160,275 @@ def maxProfit(prices):
 
 ## Problem 3 — Jump Game (Easy)
 
-**Statement:** Array `nums[i]` = max jump length from index `i`. Starting at index 0, return `True` if you can reach the last index.
+**Problem Explanation:**
+You're at the start of an array. Each number tells you the maximum steps you can jump forward from that position. Can you reach the last index? Think of it as: maintain the furthest position you could possibly reach so far. If you ever land on a spot beyond your reachable range, you're stuck.
 
-**Approach:** Track the farthest reachable index. If current index exceeds farthest, return False.
+**Algorithm Steps:**
+1. Initialize `farthest = 0` (furthest index reachable so far)
+2. Loop through each index `i` with jump value `jump`:
+   a. If `i > farthest`: current position is beyond reach → return False
+   b. Update `farthest = max(farthest, i + jump)` — extend reachable range
+   c. Optional: if `farthest >= len(nums)-1`, return True early
+3. Return True (completed loop without getting stuck)
 
-```python
-def canJump(nums):
-    farthest = 0
-    for i, jump in enumerate(nums):
-        if i > farthest:
-            return False
-        farthest = max(farthest, i + jump)
-    return True
+**Step-by-Step Walkthrough:**
+```
+nums = [2, 3, 1, 1, 4], last_index = 4
+
+i=0: jump=2, farthest = max(0, 0+2) = 2
+i=1: jump=3, farthest = max(2, 1+3) = 4 → farthest >= 4, can reach end!
+Result: True
+
+nums = [3, 2, 1, 0, 4], last_index = 4
+i=0: jump=3, farthest = max(0, 0+3) = 3
+i=1: jump=2, farthest = max(3, 1+2) = 3
+i=2: jump=1, farthest = max(3, 2+1) = 3
+i=3: jump=0, farthest = max(3, 3+0) = 3
+i=4: i(4) > farthest(3) → Stuck! Return False
 ```
 
-- **Time:** O(n) | **Space:** O(1)
-- **Tip:** Greedily extend your reach. If `farthest >= last_index` at any point, you can stop early.
+**Solution:**
+```python
+def canJump(nums):
+    # farthest tracks the maximum index reachable so far
+    farthest = 0
+    for i, jump in enumerate(nums):
+        # If current index is beyond what we can reach, we're stuck
+        if i > farthest:
+            return False
+        # Extend the reachable window using current jump
+        farthest = max(farthest, i + jump)
+    return True  # Completed the array, we can reach the end
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass through the array
+- **Space:** O(1) — only one variable
+
+**Edge Cases:**
+- `nums = [0]`: At last index already, return True
+- `nums = [0, 1]`: Stuck at index 0 (cannot move), return False
+- `nums = [1, 0, 0, ...]`: Gets stuck at index 2
+- Large jumps: `nums = [10, 0, 0, 0, 0]` — first jump clears everything, return True
+
+**Common Mistakes:**
+- Returning True as soon as `farthest >= last_index` without considering that you might skip earlier unreachable spots — this is fine since `i > farthest` check would have caught it already
+- Thinking you need to find the actual path (not needed — just check reachability)
+- Using `if farthest >= len(nums):` instead of `if farthest >= len(nums)-1:`
+
+**Pattern Recognition:**
+- "Can you reach the end" → Track the maximum reachable index
+- Variants: Jump Game II (minimum jumps), Jump Game III (with specific rules)
+- This is a "reachability" problem that greedy solves because all jumps go forward
 
 ---
 
 ## Problem 4 — Lemonade Change (Easy)
 
-**Statement:** Customers pay with `$5`, `$10`, or `$20` bills. Each lemonade costs `$5`. Return `True` if you can give every customer correct change (starting with no bills).
+**Problem Explanation:**
+Each lemonade is $5. Customers pay with $5, $10, or $20 bills. You start with no change in the register. Can you give correct change to every customer? The greedy rule: always use a $10 bill (instead of two $5s) when giving change for $20 to preserve $5 bills.
 
-**Approach:** Track count of $5 and $10 bills. For $20, prefer giving one $10 + one $5 over three $5s.
+**Algorithm Steps:**
+1. Initialize `fives = 0, tens = 0`
+2. For each bill `b`:
+   a. **$5 bill**: Just increment `fives`
+   b. **$10 bill**: Need $5 change. If `fives == 0`, fail. Else decrement `fives`, increment `tens`
+   c. **$20 bill**: Need $15 change. Prefer `$10 + $5` over `$5 + $5 + $5`. If neither possible, fail
+3. Return True (all customers served)
 
+**Step-by-Step Walkthrough:**
+```
+bills = [5, 5, 5, 10, 20]
+
+b=5:  fives=1, tens=0
+b=5:  fives=2, tens=0
+b=5:  fives=3, tens=0
+b=10: need $5 change → fives=2, tens=1
+b=20: need $15 change → tens>0 && fives>0 → give $10+$5
+      fives=1, tens=0
+Result: True
+
+bills = [5, 5, 10, 10, 20]
+b=5:  fives=1
+b=5:  fives=2
+b=10: fives=1, tens=1
+b=10: fives=0, tens=2
+b=20: need $15 → tens>0 but fives=0, fives>=3? No → Return False
+```
+
+**Solution:**
 ```python
 def lemonadeChange(bills):
-    fives = tens = 0
+    fives = tens = 0  # Track available $5 and $10 bills
     for b in bills:
         if b == 5:
-            fives += 1
+            fives += 1  # No change needed, just collect
         elif b == 10:
-            if fives == 0:
+            if fives == 0:  # Need $5 change but have none
                 return False
             fives -= 1
             tens += 1
-        else:
+        else:  # $20 bill
             if tens > 0 and fives > 0:
+                # Prefer $10+$5 to preserve $5s for future customers
                 tens -= 1
                 fives -= 1
             elif fives >= 3:
-                fives -= 3
+                fives -= 3  # Fallback: three $5s
             else:
-                return False
+                return False  # Cannot make $15 change
     return True
 ```
 
-- **Time:** O(n) | **Space:** O(1)
-- **Tip:** Always try to keep $5 bills since they are the most versatile for making change. Never break a $5 when you can break a $10.
+**Complexity Analysis:**
+- **Time:** O(n) — single pass through bills array
+- **Space:** O(1) — only two counters
+
+**Edge Cases:**
+- First customer pays $10 or $20: Impossible (no change available), return False
+- All customers pay $5: Always possible, return True
+- Many $20 bills with few $5s: Likely fails unless $10s are available
+- `bills = []`: Return True (vacuously true)
+
+**Common Mistakes:**
+- Using three $5s for $20 even when $10 is available (wastes $5s unnecessarily)
+- Forgetting to increment `tens` when receiving $10
+- Not checking `fives == 0` before giving change for $10
+
+**Pattern Recognition:**
+- "Can you make change" → Track bill counts, use largest denominations first
+- Cashier/billing problems where greedy is optimal because denominations are canonical
+- Similar to: Coin change in canonical coin systems
 
 ---
 
 ## Problem 5 — Assign Cookies (Easy)
 
-**Statement:** Each child `i` has greed `g[i]`; each cookie `j` has size `s[j]`. A child is content if `s[j] >= g[i]`. Maximize the number of content children.
+**Problem Explanation:**
+Children have greed factors (minimum cookie size they'll accept). Cookies have sizes. A child is content if they get a cookie at least as big as their greed. Each child gets at most one cookie. Maximize content children. Greedy insight: match the smallest adequate cookie to the least greedy child.
 
-**Approach:** Sort both arrays. Use two pointers to assign the smallest sufficient cookie to each child.
+**Algorithm Steps:**
+1. Sort both `g` (greed) and `s` (cookie sizes) in ascending order
+2. Use two pointers: `child` for greed array, `cookie` for sizes array
+3. While both pointers are valid:
+   a. If `s[cookie] >= g[child]`: This cookie satisfies this child → move both pointers
+   b. Else: Cookie too small → try next cookie (move cookie pointer)
+4. Return `child` (number of content children)
 
+**Step-by-Step Walkthrough:**
+```
+g = [1, 2, 3], s = [1, 1]
+Sorted: g=[1,2,3], s=[1,1]
+
+child=0, cookie=0: s[0]=1 >= g[0]=1 → content! child=1, cookie=1
+child=1, cookie=1: s[1]=1 >= g[1]=2? No → cookie=2 (loop ends)
+Result: 1 content child
+
+g = [1, 2], s = [1, 2, 3]
+Sorted: g=[1,2], s=[1,2,3]
+child=0, cookie=0: s[0]=1 >= g[0]=1 → content! child=1, cookie=1
+child=1, cookie=1: s[1]=2 >= g[1]=2 → content! child=2, cookie=2
+Result: 2 content children
+```
+
+**Solution:**
 ```python
 def findContentChildren(g, s):
+    # Sort both arrays to use two-pointer matching
     g.sort()
     s.sort()
     child = cookie = 0
     while child < len(g) and cookie < len(s):
+        # If this cookie satisfies this child, count the child
         if s[cookie] >= g[child]:
             child += 1
+        # Move to next cookie regardless (current cookie is used or too small)
         cookie += 1
     return child
 ```
 
-- **Time:** O(n log n + m log m) | **Space:** O(1)
-- **Tip:** Always give the smallest cookie that satisfies a child — this preserves larger cookies for pickier children.
+**Complexity Analysis:**
+- **Time:** O(n log n + m log m) — sorting both arrays. The matching pass is O(n + m)
+- **Space:** O(1) — sorting may use O(log n) stack space
+
+**Edge Cases:**
+- No cookies (`s = []`): Return 0 (no child can be satisfied)
+- No children (`g = []`): Return 0
+- All cookies too small: Return 0
+- More cookies than children: Can satisfy all children if every cookie >= corresponding greed
+- Duplicate greed values: Handled naturally by sorting
+
+**Common Mistakes:**
+- Not sorting (matching won't be optimal without order)
+- Trying to match largest cookie to greediest child first — same result but different approach
+- Forgetting to increment cookie pointer when a child is NOT satisfied (infinite loop risk)
+- Sorting in descending order but using ascending pointer logic (inconsistent)
+
+**Pattern Recognition:**
+- "Maximize satisfied demand with limited supply" → Sort both, greedy match smallest adequate
+- Classic "matching" problem solvable greedily because we only care about count, not which child gets which cookie
+- Two-pointer on sorted arrays is a common pattern
 
 ---
 
 ## Problem 6 — Maximum 69 Number (Easy)
 
-**Statement:** Given a positive integer made of only `6` and `9`, you may change **at most one** digit. Return the **maximum number** you can obtain.
+**Problem Explanation:**
+You get a number made of only digits 6 and 9. You can flip at most one digit (6→9 or 9→6) to make the number as large as possible. Since 9 > 6, you always flip the leftmost 6 to 9 to maximize the number's value.
 
-**Approach:** Convert to string, replace the first `6` with `9`, convert back.
+**Algorithm Steps:**
+1. Convert number to string, then to list of characters
+2. Find the first occurrence of '6' (leftmost)
+3. Change that '6' to '9'
+4. Convert back to integer and return
 
+**Step-by-Step Walkthrough:**
+```
+num = 9669
+String: ['9','6','6','9']
+i=0: '9' → skip
+i=1: '6' → change to '9', break
+Result: 9969
+
+num = 9999
+String: ['9','9','9','9']
+No '6' found → return original 9999
+```
+
+**Solution:**
 ```python
 def maximum69Number(num):
+    # Convert to list of characters for mutation
     s = list(str(num))
     for i in range(len(s)):
+        # Flip the leftmost 6 to 9 for maximum value
         if s[i] == '6':
             s[i] = '9'
             break
     return int(''.join(s))
 ```
 
-- **Time:** O(d) where d = digits | **Space:** O(d)
-- **Tip:** Changing the leftmost `6` always gives the maximum number due to positional value.
+**Complexity Analysis:**
+- **Time:** O(d) where d = number of digits (max ~10 for integer range)
+- **Space:** O(d) for the character list
+
+**Edge Cases:**
+- Single digit `6`: Flip to `9`
+- Single digit `9`: Already maximum, return as-is
+- All `9`s: No flip needed
+- Leading digit is `6`: Always flip it (highest positional value)
+- `num = 0`: Can't happen (problem says only 6 and 9)
+
+**Common Mistakes:**
+- Flipping the first digit regardless (might already be 9, should flip the first 6)
+- Flipping the rightmost 6 (less gain than leftmost)
+- Trying to do it with math operations instead of string (much more complex)
+- Flipping a 9 to 6 (would decrease the number)
+
+**Pattern Recognition:**
+- "Maximum number by changing one digit" → Change leftmost smaller digit to larger one
+- Positional value makes leftmost changes most significant
+- This is a special case of the Maximum Swap problem (Problem 9 in Batch 2)
 
 ---
 
