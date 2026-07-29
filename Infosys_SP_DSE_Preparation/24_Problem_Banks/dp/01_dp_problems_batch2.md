@@ -21,6 +21,30 @@
 **Problem Statement:**
 You are climbing a staircase with `n` steps. Each step `i` has a cost `cost[i]`. You can start from step 0 or step 1. After paying the cost, you can climb one or two steps. Find the minimum cost to reach the top (past the last step).
 
+**Problem Explanation:** Classic DP intro. You pay cost[i] to stand on step i, then jump 1 or 2 steps forward. Minimize total cost to go past the last step.
+
+**Algorithm Steps:**
+1. If n=1 return cost[0]; if n=2 return min(cost[0], cost[1]).
+2. Set dp[0]=cost[0], dp[1]=cost[1].
+3. For i=2 to n-1: dp[i] = cost[i] + min(dp[i-1], dp[i-2]).
+4. Return min(dp[n-1], dp[n-2]).
+
+**Visual Walkthrough:** cost = [10, 15, 20]
+```
+dp[0]=10, dp[1]=15
+dp[2]=20+min(15,10)=30 → dp=[10,15,30]
+Return min(30,15)=15
+Start at step 1 (cost 15→top) — cheaper than 10→15→20→top
+```
+
+**Key Insight:** Start at step 0 or 1 — so answer is min of last two. Space can be O(1) with two variables.
+
+**Edge Cases:** n=1 → cost[0]. n=2 → min(cost[0], cost[1]).
+
+**Common Mistakes:** Answer is min of last two dp values, not dp[n-1] alone. Forgetting you can start from index 1.
+
+**Pattern Recognition:** **Linear DP (1D)**: Fibonacci-style recurrence. Used in: House Robber, Jump Game, Climbing Stairs.
+
 **Example:**
 ```
 Input: cost = [10, 15, 20]
@@ -88,6 +112,27 @@ def minCostClimbingStairsOptimized(cost):
 **Problem Statement:**
 Design a data structure to compute the sum of elements between indices `left` and `right` (inclusive) where `0 <= left <= right < n`. Multiple queries are made.
 
+**Problem Explanation:** Precompute prefix sums so each range query is O(1). sum(i..j) = prefix[j+1] - prefix[i].
+
+**Algorithm Steps:**
+1. Build prefix array of length n+1: prefix[0]=0, prefix[i+1]=prefix[i]+nums[i].
+2. For query(left, right): return prefix[right+1] - prefix[left].
+
+**Visual Walkthrough:** nums = [-2, 0, 3, -5, 2, -1]
+```
+prefix = [0, -2, -2, 1, -4, -2, -3]
+query(0,2) = prefix[3] - prefix[0] = 1 - 0 = 1
+query(2,5) = prefix[6] - prefix[2] = -3 - (-2) = -1
+```
+
+**Key Insight:** Prefix sums trade O(n) preprocessing for O(1) queries. Essential pattern for range queries on immutable arrays.
+
+**Edge Cases:** left=right (single element query). Large arrays (prefix array overflow — use Python's big ints, fine).
+
+**Common Mistakes:** Off-by-one: prefix[i] stores sum of first i elements, so sum(i..j) = prefix[j+1] - prefix[i].
+
+**Pattern Recognition:** **Prefix Sum Pattern**: Precomputed cumulative sums for O(1) range queries. Used in: Range Sum Query 2D, Subarray Sum Equals K, Product of Array Except Self.
+
 **Example:**
 ```
 Input: nums = [-2, 0, 3, -5, 2, -1]
@@ -140,6 +185,31 @@ class NumArray2:
 
 **Problem Statement:**
 Given strings `s` and `t`, return `True` if `s` is a subsequence of `t`, or `False` otherwise.
+
+**Problem Explanation:** Check if you can delete characters from t to get s. Order must be preserved. Two-pointer or DP works; two-pointer is optimal here.
+
+**Algorithm Steps:**
+1. Initialize pointers i=0 (for s) and j=0 (for t).
+2. While i < len(s) and j < len(t):
+   - If s[i] == t[j], i++ (matched one character of s).
+   - Always j++.
+3. Return i == len(s) (all characters of s matched in order).
+
+**Visual Walkthrough:** s = "abc", t = "ahbgdc"
+```
+s: a b c
+t: a h b g d c
+    ↑       → Match a at t[0], b at t[2], c at t[5]
+All matched → True
+```
+
+**Key Insight:** Two-pointer is O(n) and O(1) space. DP approach (LCS variant) is overkill for subsequence checking.
+
+**Edge Cases:** Empty s → True (empty string is subsequence of anything). s longer than t → False.
+
+**Common Mistakes:** Using DP instead of greedy two-pointer. Not checking all characters in order.
+
+**Pattern Recognition:** **Two-Pointer (Sequence Matching)**: Greedy matching in order. Used in: Is Subsequence, Number of Matching Subsequences.
 
 **Example:**
 ```
@@ -198,6 +268,35 @@ def isSubsequenceTwoPointer(s, t):
 
 **Problem Statement:**
 Given an array of positive integers, find the maximum sum of a strictly ascending subarray (contiguous).
+
+**Problem Explanation:** Find the subarray with max sum where each element is strictly greater than the previous. Kadane's algorithm variant with a twist: reset when ascending condition breaks.
+
+**Algorithm Steps:**
+1. Initialize curr = max_sum = nums[0].
+2. For i=1 to n-1:
+   - If nums[i] > nums[i-1]: curr += nums[i] (extend ascending subarray).
+   - Else: curr = nums[i] (start fresh).
+   - max_sum = max(max_sum, curr).
+3. Return max_sum.
+
+**Visual Walkthrough:** nums = [10, 20, 30, 5, 10, 50]
+```
+i=0: curr=10, max=10
+i=1: 20>10 → curr=30, max=30
+i=2: 30>20 → curr=60, max=60
+i=3: 5<30 → curr=5, max=60
+i=4: 10>5 → curr=15, max=60
+i=5: 50>10 → curr=65, max=65
+Answer: 65
+```
+
+**Key Insight:** Unlike Kadane's (where you decide to extend or start fresh based on sum), here the decision is based on the ascending condition.
+
+**Edge Cases:** Single element → return it. All descending → max sum = max element.
+
+**Common Mistakes:** Forgetting strictly ascending (not >=). Confusing with Kadane's (condition vs sum).
+
+**Pattern Recognition:** **Condition-based Kadane Variant**: Extend or reset based on a condition. Used in: Maximum Sum of Non-adjacent Elements variant.
 
 **Example:**
 ```
@@ -261,6 +360,31 @@ def maxAscendingSumOptimized(nums):
 **Problem Statement:**
 Given an integer `n`, return an array of length `n + 1` where `ans[i]` is the number of 1's in the binary representation of `i`.
 
+**Problem Explanation:** Compute popcount for all numbers 0..n efficiently using DP. The key: removing the last set bit gives a smaller number whose popcount we already know.
+
+**Algorithm Steps:**
+1. Initialize dp[0] = 0.
+2. For i=1 to n: dp[i] = dp[i >> 1] + (i & 1) or dp[i & (i-1)] + 1.
+3. Return dp.
+
+**Visual Walkthrough:** n=5
+```
+i=1: binary 1 → dp[0]+1=1 (or dp[0]+1=1)
+i=2: binary 10 → dp[1]+0=1 (or dp[0]+1=1)
+i=3: binary 11 → dp[1]+1=2 (or dp[2]+1=2)
+i=4: binary 100 → dp[2]+0=1 (or dp[0]+1=1)
+i=5: binary 101 → dp[2]+1=2 (or dp[4]+1=2)
+Result: [0,1,1,2,1,2]
+```
+
+**Key Insight:** `i >> 1` removes LSB; `i & 1` gets LSB. Alternatively, `i & (i-1)` removes the lowest set bit — that number is smaller, so dp for it is already computed.
+
+**Edge Cases:** n=0 → [0].
+
+**Common Mistakes:** Off-by-one in array size (need n+1 elements). Using built-in bin(i).count('1') which is O(n log n).
+
+**Pattern Recognition:** **Bit DP Pattern**: Recurrence on bit manipulation. Used in: Counting Bits, Number of 1 Bits.
+
 **Example:**
 ```
 Input: n = 5
@@ -308,6 +432,35 @@ def countBitsKernighan(n):
 
 **Problem Statement:**
 Given an integer array `arr` and an integer `k`, return the number of non-empty subarrays that have a bitwise XOR equal to `k`.
+
+**Problem Explanation:** Count subarrays with XOR = k. Uses prefix XOR + hashmap, same logic as Subarray Sum Equals K but with XOR properties.
+
+**Algorithm Steps:**
+1. Maintain prefix_xor = 0, hashmap = {0: 1} (empty prefix XOR=0 appears once).
+2. For each num in arr:
+   - prefix_xor ^= num.
+   - If prefix_xor ^ k in hashmap → count += freq.
+   - Increment hashmap[prefix_xor].
+3. Return count.
+
+**Visual Walkthrough:** arr = [4, 2, 2, 6, 4], k = 6
+```
+Initialize: prefix=0, map={0:1}, count=0
+4: prefix=4, 4^6=2 not in map, map={0:1,4:1}
+2: prefix=6, 6^6=0 in map (1) → count=1, map={0:1,4:1,6:1}
+2: prefix=4, 4^6=2 not in map, map={0:1,4:2,6:1}
+6: prefix=2, 2^6=4 in map (2) → count=3, map={0:1,4:2,6:1,2:1}
+4: prefix=6, 6^6=0 in map (1) → count=4
+Answer: 4
+```
+
+**Key Insight:** XOR property: subarray XOR = prefixXOR[j] ^ prefixXOR[i-1]. So subarray XOR = k means prefixXOR[j] ^ prefixXOR[i-1] = k → prefixXOR[i-1] = prefixXOR[j] ^ k.
+
+**Edge Cases:** k=0 → count subarrays with XOR 0 (including single elements with value 0).
+
+**Common Mistakes:** Forgetting that "empty prefix" (XOR=0) exists before index 0. Not initializing map with {0:1}.
+
+**Pattern Recognition:** **Prefix XOR + Hashmap Pattern**: Count subarrays with target XOR. Used in: Subarray Sum Equals K, Longest Well-Performing Interval.
 
 **Example:**
 ```
@@ -357,6 +510,31 @@ def xorSubarrays(arr, k):
 
 **Problem Statement:**
 You have a flowerbed (array of 0s and 1s) and `n` new flowers to plant. No two flowers can be adjacent. Return `True` if you can plant all `n` flowers.
+
+**Problem Explanation:** Greedy placement: when you find an empty spot with empty neighbors, plant there. This maximizes capacity.
+
+**Algorithm Steps:**
+1. For each spot i, check if flowerbed[i]==0 and both neighbors (if they exist) are 0.
+2. If valid, plant (set to 1) and decrement n.
+3. Return n ≤ 0.
+
+**Visual Walkthrough:** flowerbed=[1,0,0,0,1], n=1
+```
+i=0: 1 → skip
+i=1: 0, left=1 → skip
+i=2: 0, left=0, right=0 → plant! n=0
+i=3: 1 (just planted) → skip
+i=4: 1 → skip
+Return True
+```
+
+**Key Insight:** Greedy is optimal — planting at first valid spot never hurts. Each plant only blocks 1 adjacent spot ahead.
+
+**Edge Cases:** n=0 → True. Single empty spot → True.
+
+**Common Mistakes:** Not checking boundary conditions for neighbors. Planting at spot that already has a flower.
+
+**Pattern Recognition:** **Greedy Array Placement Pattern**: Scan and place when valid. Used in: Non-overlapping Intervals, Maximum Number of Events Attended.
 
 **Example:**
 ```
@@ -425,6 +603,31 @@ def canPlaceFlowersDP(flowerbed, n):
 **Problem Statement:**
 You are a robber planning to rob houses along a street. Each house has a certain amount of money. You cannot rob two adjacent houses. Find the maximum amount you can rob.
 
+**Problem Explanation:** Classic DP: at each house, decide to rob it (need to skip prev) or skip it (keep prev max). Optimal choice at each step builds the global optimum.
+
+**Algorithm Steps:**
+1. If n==0 return 0; if n==1 return nums[0].
+2. Initialize prev2=0, prev1=nums[0].
+3. For i=1 to n-1: curr = max(prev1, prev2 + nums[i]), shift prev2, prev1.
+4. Return prev1.
+
+**Visual Walkthrough:** nums = [1, 2, 3, 1]
+```
+prev2=0, prev1=1
+i=1: curr=max(1, 0+2=2)=2 → prev2=1, prev1=2
+i=2: curr=max(2, 1+3=4)=4 → prev2=2, prev1=4
+i=3: curr=max(4, 2+1=3)=4 → prev2=4, prev1=4
+Answer: 4
+```
+
+**Key Insight:** dp[i] = max(dp[i-1], dp[i-2] + nums[i]). Only depends on last two — constant space possible.
+
+**Edge Cases:** n=0 → 0. n=1 → nums[0]. Two houses → max of both.
+
+**Common Mistakes:** Robbing adjacent by using dp[i-1]+nums[i]. Not handling n<2.
+
+**Pattern Recognition:** **House Robber Pattern**: Linear DP with non-adjacent selection. Used in: House Robber II, Delete and Earn, Maximum Sum of Non-adjacent Elements.
+
 **Example:**
 ```
 Input: nums = [1, 2, 3, 1]
@@ -491,6 +694,23 @@ def robOptimized(nums):
 
 **Problem Statement:**
 Calculate the nth Fibonacci number where F(0) = 0, F(1) = 1, and F(n) = F(n-1) + F(n-2) for n > 1.
+
+**Problem Explanation:** The simplest DP problem. Each number is sum of previous two. O(n) with space optimization to O(1).
+
+**Visual Walkthrough:** n=4
+```
+F(0)=0, F(1)=1
+F(2)=1+0=1, F(3)=1+1=2, F(4)=2+1=3
+Answer: 3
+```
+
+**Key Insight:** Base of ALL DP. The recurrence dp[i] = dp[i-1] + dp[i-2] is the foundation for 1D DP.
+
+**Edge Cases:** n=0 → 0, n=1 → 1.
+
+**Common Mistakes:** Recursion without memoization (O(2^n)). Forgetting base cases.
+
+**Pattern Recognition:** **Fibonacci Pattern**: Simple recurrence with overlapping subproblems. Foundation for: Climbing Stairs, Min Cost Climbing Stairs, House Robber.
 
 **Example:**
 ```
@@ -589,6 +809,18 @@ The Tribonacci sequence T(n) is defined as:
 - T(0) = 0, T(1) = 1, T(2) = 1
 - T(n) = T(n-1) + T(n-2) + T(n-3) for n >= 3
 
+**Problem Explanation:** Fibonacci extension with 3 terms. Same DP pattern with O(1) space using 3 variables.
+
+**Visual Walkthrough:** n=5: T=0,1,1,2,4,7 → answer 7.
+
+**Key Insight:** Extending Fibonacci to k terms = k variables sliding window.
+
+**Edge Cases:** n=0→0, n=1→1, n=2→1.
+
+**Common Mistakes:** Forgetting T(2)=1. Off-by-one in iteration.
+
+**Pattern Recognition:** **K-term Recurrence Pattern**: Generalized Fibonacci. Used in: N-th Tribonacci, Partitioning problems.
+
 **Example:**
 ```
 Input: n = 4
@@ -654,6 +886,32 @@ def tribonacciOptimized(n):
 
 ### Problem 11: Longest Palindromic Subsequence
 
+**Problem Explanation:** Find longest subsequence (not substring) that reads same forward and backward. LPS(s) = LCS(s, reverse(s)). Classic 2D DP on string intervals.
+
+**Algorithm Steps:**
+1. Create n×n DP table initialized to 0. Set dp[i][i] = 1.
+2. Loop length from 2 to n: for each i, compute j = i+len-1.
+3. If s[i]==s[j]: dp[i][j] = dp[i+1][j-1]+2; else: dp[i][j] = max(dp[i+1][j], dp[i][j-1]).
+4. Return dp[0][n-1].
+
+**Visual Walkthrough:** s = "bbbab"
+```
+Length 1: all diagonal = 1
+Length 2: "bb"→2, "bb"→2, "ba"→1, "ab"→1
+Length 3: "bbb"→3 (b=b, inner=1+2), "bba"→2, "bab"→3 (b=b, inner=1+2)
+Length 4: "bbba"→3, "bbab"→3
+Length 5: "bbbab"→4 (b=b, inner max=2+2)
+Answer: 4 ("bbbb")
+```
+
+**Key Insight:** LPS reduces to LCS of string and its reverse. Interval DP: build from smaller to larger substrings.
+
+**Edge Cases:** n=1 → 1. Empty string → 0 (not typical). All unique chars → 1.
+
+**Common Mistakes:** Iterating i from 0 with incorrect j range. Forgetting dp[i+1][j-1] for matching chars requires filling diagonally.
+
+**Pattern Recognition:** **Interval DP (2D String)**: DP over substring intervals. Used in: Longest Palindromic Substring, Palindrome Partitioning, Edit Distance.
+
 **Problem Statement:**
 Given a string `s`, find the length of the longest palindromic subsequence.
 
@@ -717,6 +975,35 @@ def longestPalindromeSubseqLCS(s):
 ---
 
 ### Problem 12: Longest Common Subsequence (LCS)
+
+**Problem Explanation:** Find the longest subsequence common to both strings (order preserved, not necessarily contiguous). Classic 2D DP building from prefixes.
+
+**Algorithm Steps:**
+1. Create (m+1)×(n+1) DP table with 0s.
+2. For i=1..m, j=1..n:
+   - If text1[i-1]==text2[j-1]: dp[i][j] = dp[i-1][j-1]+1.
+   - Else: dp[i][j] = max(dp[i-1][j], dp[i][j-1]).
+3. Return dp[m][n].
+
+**Visual Walkthrough:** text1="abcde", text2="ace"
+```
+    '' a  c  e
+''  0  0  0  0
+a   0  1  1  1
+b   0  1  1  1
+c   0  1  2  2
+d   0  1  2  2
+e   0  1  2  3
+Answer: 3 ("ace")
+```
+
+**Key Insight:** Foundation string DP. The recurrence captures all cases: match (diag+1) or skip from either string (max of left/up).
+
+**Edge Cases:** One empty string → 0. No common chars → 0.
+
+**Common Mistakes:** Off-by-one with 0-indexed strings vs 1-indexed table. Using `dp[i-1][j-1]` without first checking match.
+
+**Pattern Recognition:** **2D String DP (Standard)**: Match/skip recurrence. Used in: Edit Distance, Distinct Subsequences, Min ASCII Delete Sum.
 
 **Problem Statement:**
 Given two strings `text1` and `text2`, return the length of their longest common subsequence.

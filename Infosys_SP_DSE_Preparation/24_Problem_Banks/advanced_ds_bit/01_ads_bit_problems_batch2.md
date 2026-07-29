@@ -9,6 +9,64 @@
 
 ---
 
+**Problem Explanation:** For each element in an array, count how many smaller elements appear to its right.
+
+**Algorithm Steps:**
+1. Coordinate-compress values to ranks.
+2. Iterate right to left.
+3. Query BIT for count of smaller ranks seen so far.
+4. Update BIT with current element's rank.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Fenwick Tree enables O(log n) prefix sum; right-to-left traversal handles 'after self'.
+
+**Well-Commented Code:**
+```python
+class BIT:
+    def __init__(self, n):
+        self.n = n
+        self.tree = [0] * (n + 1)
+
+    def update(self, i, delta=1):
+        while i <= self.n:
+            self.tree[i] += delta
+            i += i & (-i)
+
+    def query(self, i):
+        s = 0
+        while i > 0:
+            s += self.tree[i]
+            i -= i & (-i)
+        return s
+
+def count_smaller(nums):
+    sorted_vals = sorted(set(nums))
+    rank = {v: i + 1 for i, v in enumerate(sorted_vals)}
+    bit = BIT(len(sorted_vals))
+    result = [0] * len(nums)
+    for i in range(len(nums) - 1, -1, -1):
+        r = rank[nums[i]]
+        result[i] = bit.query(r - 1)
+        bit.update(r)
+    return result
+
+# Example
+print(count_smaller([5, 2, 6, 1]))  # [2, 1, 1, 0]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — each element triggers one BIT query and one update.
+- **Space:** O(n) — for BIT array and rank map.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty array -> []
+- All equal -> all zeros
+
 ### Problem 1: Count of Smaller Numbers After Self
 
 **Statement:** Given an integer array `nums`, return an integer array `counts` where `counts[i]` is the number of smaller elements to the right of `nums[i]`.
@@ -52,6 +110,64 @@ print(count_smaller([5, 2, 6, 1]))  # [2, 1, 1, 0]
 **Space Complexity:** O(n) — for BIT array and rank map.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class FenwickTree:
+    def __init__(self, nums):
+        self.n = len(nums)
+        self.tree = [0] * (self.n + 1)
+        self.nums = [0] * self.n
+        for i, v in enumerate(nums):
+            self.update(i, v)
+
+    def update(self, index, val):
+        delta = val - self.nums[index]
+        self.nums[index] = val
+        i = index + 1
+        while i <= self.n:
+            self.tree[i] += delta
+            i += i & (-i)
+
+    def _query(self, i):
+        s = 0
+        while i > 0:
+            s += self.tree[i]
+            i -= i & (-i)
+        return s
+
+    def sum_range(self, left, right):
+        return self._query(right + 1) - self._query(left)
+
+# Example
+ft = FenwickTree([1, 3, 5])
+print(ft.sum_range(0, 2))   # 9
+ft.update(1, 2)
+print(ft.sum_range(0, 2))   # 8
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log n) for both update and query operations.
+- **Space:** O(n) — for the BIT tree and nums copy.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 2: Range Sum Query - Mutable (Fenwick Tree)
 
@@ -97,6 +213,80 @@ print(ft.sum_range(0, 2))   # 8
 **Space Complexity:** O(n) — for the BIT tree and nums copy.
 
 ---
+
+**Problem Explanation:** Support querying the minimum value in a range with point updates.
+
+**Algorithm Steps:**
+1. Build a segment tree from the array.
+2. Query: traverse tree nodes overlapping the range.
+3. Update: propagate leaf value change up the tree.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Segment tree divides array into a binary tree, supporting range queries in O(log n).
+
+**Well-Commented Code:**
+```python
+class SegmentTree:
+    def __init__(self, data):
+        self.n = len(data)
+        self.tree = [float('inf')] * (4 * self.n)
+        self._build(data, 1, 0, self.n - 1)
+
+    def _build(self, data, node, start, end):
+        if start == end:
+            self.tree[node] = data[start]
+            return
+        mid = (start + end) // 2
+        self._build(data, 2 * node, start, mid)
+        self._build(data, 2 * node + 1, mid + 1, end)
+        self.tree[node] = min(self.tree[2 * node], self.tree[2 * node + 1])
+
+    def _update(self, node, start, end, idx, val):
+        if start == end:
+            self.tree[node] = val
+            return
+        mid = (start + end) // 2
+        if idx <= mid:
+            self._update(2 * node, start, mid, idx, val)
+        else:
+            self._update(2 * node + 1, mid + 1, end, idx, val)
+        self.tree[node] = min(self.tree[2 * node], self.tree[2 * node + 1])
+
+    def update(self, idx, val):
+        self._update(1, 0, self.n - 1, idx, val)
+
+    def _query(self, node, start, end, l, r):
+        if r < start or end < l:
+            return float('inf')
+        if l <= start and end <= r:
+            return self.tree[node]
+        mid = (start + end) // 2
+        left_min = self._query(2 * node, start, mid, l, r)
+        right_min = self._query(2 * node + 1, mid + 1, end, l, r)
+        return min(left_min, right_min)
+
+    def query(self, l, r):
+        return self._query(1, 0, self.n - 1, l, r)
+
+# Example
+st = SegmentTree([2, 1, 5, 3, 4])
+print(st.query(1, 3))   # 1
+st.update(2, 0)
+print(st.query(1, 3))   # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log n) for update and query; O(n) for building.
+- **Space:** O(n) — segment tree uses ~4n space.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Query single element
+- Array size not power of 2
 
 ### Problem 3: Range Minimum Query (Segment Tree)
 
@@ -159,6 +349,72 @@ print(st.query(1, 3))   # 0
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def count_inversions(arr):
+    def merge_sort_count(nums, temp, left, right):
+        if left >= right:
+            return 0
+        mid = (left + right) // 2
+        count = merge_sort_count(nums, temp, left, mid)
+        count += merge_sort_count(nums, temp, mid + 1, right)
+        count += merge_count(nums, temp, left, mid, right)
+        return count
+
+    def merge_count(nums, temp, left, mid, right):
+        i, j, k = left, mid + 1, left
+        inv_count = 0
+        while i <= mid and j <= right:
+            if nums[i] <= nums[j]:
+                temp[k] = nums[i]
+                i += 1
+            else:
+                temp[k] = nums[j]
+                inv_count += (mid - i + 1)
+                j += 1
+            k += 1
+        while i <= mid:
+            temp[k] = nums[i]
+            i += 1
+            k += 1
+        while j <= right:
+            temp[k] = nums[j]
+            j += 1
+            k += 1
+        for i in range(left, right + 1):
+            nums[i] = temp[i]
+        return inv_count
+
+    temp = [0] * len(arr)
+    return merge_sort_count(arr, temp, 0, len(arr) - 1)
+
+# Example
+print(count_inversions([2, 4, 1, 3, 5]))  # 3
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — standard merge sort complexity.
+- **Space:** O(n) — auxiliary array for merging.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 4: Merge Sort with Inversion Count
 
 **Statement:** Count the number of inversions in an array. An inversion is a pair `(i, j)` where `i < j` and `nums[i] > nums[j]`.
@@ -212,6 +468,62 @@ print(count_inversions([2, 4, 1, 3, 5]))  # 3
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class BIT:
+    def __init__(self, n):
+        self.tree = [0] * (n + 1)
+
+    def update(self, i, delta=1):
+        while i < len(self.tree):
+            self.tree[i] += delta
+            i += i & (-i)
+
+    def query(self, i):
+        s = 0
+        while i > 0:
+            s += self.tree[i]
+            i -= i & (-i)
+        return s
+
+def count_inversions_bit(nums):
+    sorted_vals = sorted(set(nums))
+    rank = {v: i + 1 for i, v in enumerate(sorted_vals)}
+    bit = BIT(len(sorted_vals))
+    inversions = 0
+    for i, num in enumerate(nums):
+        r = rank[num]
+        inversions += i - bit.query(r)
+        bit.update(r)
+    return inversions
+
+# Example
+print(count_inversions_bit([2, 4, 1, 3, 5]))  # 3
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — each element triggers one BIT query and update.
+- **Space:** O(n) — for BIT and rank map.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 5: Count Inversions using BIT
 
 **Statement:** Count the number of inversions in an array using a Binary Indexed Tree instead of merge sort.
@@ -254,6 +566,72 @@ print(count_inversions_bit([2, 4, 1, 3, 5]))  # 3
 **Space Complexity:** O(n) — for BIT and rank map.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class BIT:
+    def __init__(self, n):
+        self.tree = [0] * (n + 1)
+
+    def update(self, i, delta=1):
+        while i < len(self.tree):
+            self.tree[i] += delta
+            i += i & (-i)
+
+    def query(self, i):
+        s = 0
+        while i > 0:
+            s += self.tree[i]
+            i -= i & (-i)
+        return s
+
+    def range_query(self, l, r):
+        return self.query(r) - self.query(l - 1)
+
+def reverse_pairs(nums):
+    sorted_vals = sorted(set(
+        [v for num in nums for v in (num, 2 * num + 1)]
+    ))
+    rank = {v: i + 1 for i, v in enumerate(sorted_vals)}
+    bit = BIT(len(sorted_vals))
+    count = 0
+    for num in nums:
+        # Query elements greater than 2*num
+        target = 2 * num
+        r = rank[target]
+        if target in rank:
+            count += bit.range_query(r + 1, len(rank))
+        else:
+            count += bit.range_query(r, len(rank))
+        bit.update(rank[num])
+    return count
+
+# Example
+print(reverse_pairs([1, 3, 2, 3, 1]))  # 2
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — compression and BIT operations dominate.
+- **Space:** O(n) — for coordinate map and BIT.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 6: Reverse Pairs using Segment Tree
 
@@ -307,6 +685,77 @@ print(reverse_pairs([1, 3, 2, 3, 1]))  # 2
 **Space Complexity:** O(n) — for coordinate map and BIT.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class BIT2D:
+    def __init__(self, matrix):
+        self.m = len(matrix)
+        self.n = len(matrix[0]) if self.m else 0
+        self.tree = [[0] * (self.n + 1) for _ in range(self.m + 1)]
+        self.original = [[0] * self.n for _ in range(self.m)]
+        for i in range(self.m):
+            for j in range(self.n):
+                self.update(i, j, matrix[i][j])
+
+    def _update(self, r, c, delta):
+        i = r + 1
+        while i <= self.m:
+            j = c + 1
+            while j <= self.n:
+                self.tree[i][j] += delta
+                j += j & (-j)
+            i += i & (-i)
+
+    def update(self, r, c, val):
+        delta = val - self.original[r][c]
+        self.original[r][c] = val
+        self._update(r, c, delta)
+
+    def _query(self, r, c):
+        s = 0
+        i = r + 1
+        while i > 0:
+            j = c + 1
+            while j > 0:
+                s += self.tree[i][j]
+                j -= j & (-j)
+            i -= i & (-i)
+        return s
+
+    def sum_region(self, r1, c1, r2, c2):
+        return (self._query(r2, c2) - self._query(r1 - 1, c2)
+                - self._query(r2, c1 - 1) + self._query(r1 - 1, c1 - 1))
+
+# Example
+b = BIT2D([[3, 0, 1], [5, 6, 2], [1, 4, 3]])
+print(b.sum_region(1, 1, 2, 2))  # 15
+b.update(1, 1, 10)
+print(b.sum_region(1, 1, 2, 2))  # 25
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log m * log n) for update and sum_region.
+- **Space:** O(m * n) — for BIT and original matrix.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 7: Range Sum Query 2D - Mutable
 
@@ -365,6 +814,81 @@ print(b.sum_region(1, 1, 2, 2))  # 25
 **Space Complexity:** O(m * n) — for BIT and original matrix.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class MaxSegmentTree:
+    def __init__(self, data):
+        self.n = len(data)
+        self.tree = [float('-inf')] * (4 * self.n)
+        self._build(data, 1, 0, self.n - 1)
+
+    def _build(self, data, node, start, end):
+        if start == end:
+            self.tree[node] = data[start]
+            return
+        mid = (start + end) // 2
+        self._build(data, 2 * node, start, mid)
+        self._build(data, 2 * node + 1, mid + 1, end)
+        self.tree[node] = max(self.tree[2 * node], self.tree[2 * node + 1])
+
+    def _update(self, node, start, end, idx, val):
+        if start == end:
+            self.tree[node] = val
+            return
+        mid = (start + end) // 2
+        if idx <= mid:
+            self._update(2 * node, start, mid, idx, val)
+        else:
+            self._update(2 * node + 1, mid + 1, end, idx, val)
+        self.tree[node] = max(self.tree[2 * node], self.tree[2 * node + 1])
+
+    def update(self, idx, val):
+        self._update(1, 0, self.n - 1, idx, val)
+
+    def _query(self, node, start, end, l, r):
+        if r < start or end < l:
+            return float('-inf')
+        if l <= start and end <= r:
+            return self.tree[node]
+        mid = (start + end) // 2
+        return max(
+            self._query(2 * node, start, mid, l, r),
+            self._query(2 * node + 1, mid + 1, end, l, r)
+        )
+
+    def query(self, l, r):
+        return self._query(1, 0, self.n - 1, l, r)
+
+# Example
+st = MaxSegmentTree([1, 5, 3, 9, 2])
+print(st.query(0, 3))   # 9
+st.update(4, 10)
+print(st.query(0, 4))   # 10
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log n) for update and query; O(n) for build.
+- **Space:** O(n) — segment tree array ~4n.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 8: Maximum in Range using Segment Tree
 
@@ -428,6 +952,79 @@ print(st.query(0, 4))   # 10
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def count_range_sum(nums, lower, upper):
+    prefix = [0]
+    for num in nums:
+        prefix.append(prefix[-1] + num)
+
+    def merge_sort_count(arr, temp, left, right):
+        if left >= right:
+            return 0
+        mid = (left + right) // 2
+        count = merge_sort_count(arr, temp, left, mid)
+        count += merge_sort_count(arr, temp, mid + 1, right)
+        # Count cross-range pairs
+        j, k = mid + 1, mid + 1
+        for i in range(left, mid + 1):
+            while j <= right and arr[j] - arr[i] < lower:
+                j += 1
+            while k <= right and arr[k] - arr[i] <= upper:
+                k += 1
+            count += k - j
+        # Merge
+        i, j, k2 = left, mid + 1, left
+        while i <= mid and j <= right:
+            if arr[i] <= arr[j]:
+                temp[k2] = arr[i]
+                i += 1
+            else:
+                temp[k2] = arr[j]
+                j += 1
+            k2 += 1
+        while i <= mid:
+            temp[k2] = arr[i]
+            i += 1
+            k2 += 1
+        while j <= right:
+            temp[k2] = arr[j]
+            j += 1
+            k2 += 1
+        for i in range(left, right + 1):
+            arr[i] = temp[i]
+        return count
+
+    temp = [0] * len(prefix)
+    return merge_sort_count(prefix, temp, 0, len(prefix) - 1)
+
+# Example
+print(count_range_sum([-2, 5, -1], -2, 2))  # 3
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — merge sort with two-pointer counting.
+- **Space:** O(n) — for prefix array and temp array.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 9: Count of Range Sum
 
 **Statement:** Given an integer array `nums` and two integers `lower` and `upper`, return the number of range sums that lie in `[lower, upper]` inclusive. Range sum `S(i, j)` is defined as the sum of elements from index `i` to `j`.
@@ -488,6 +1085,72 @@ print(count_range_sum([-2, 5, -1], -2, 2))  # 3
 
 ---
 
+**Problem Explanation:** Find the number of connected components (provinces) in an undirected graph.
+
+**Algorithm Steps:**
+1. DFS from each unvisited node, marking all reachable nodes.
+2. Increment count for each DFS component.
+3. Return total count.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Number of provinces = number of connected components in the graph.
+
+**Well-Commented Code:**
+```python
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+        self.components = n
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False
+        if self.rank[px] < self.rank[py]:
+            px, py = py, px
+        self.parent[py] = px
+        if self.rank[px] == self.rank[py]:
+            self.rank[px] += 1
+        self.components -= 1
+        return True
+
+def count_provinces_queries(n, edges, queries):
+    edges.sort(key=lambda e: e[2])
+    sorted_queries = sorted(enumerate(queries), key=lambda x: x[1])
+    result = [0] * len(queries)
+    dsu = DSU(n)
+    edge_idx = 0
+    for orig_idx, threshold in sorted_queries:
+        while edge_idx < len(edges) and edges[edge_idx][2] <= threshold:
+            dsu.union(edges[edge_idx][0], edges[edge_idx][1])
+            edge_idx += 1
+        result[orig_idx] = dsu.components
+    return result
+
+# Example: 4 cities, edges (u, v, weight)
+edges = [(0, 1, 3), (1, 2, 1), (2, 3, 4), (0, 2, 2)]
+print(count_provinces_queries(4, edges, [1, 2, 3, 5]))  # [4, 2, 2, 1]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(E log E + Q log Q + (E + Q) * α(N)) — sorting + DSU operations.
+- **Space:** O(N + E + Q) — for DSU, edges, and queries.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- All disconnected -> n provinces
+- Fully connected -> 1 province
+
 ### Problem 10: Number of Provinces with Range Queries
 
 **Statement:** Given `n` cities and a list of connections, answer queries: "How many provinces exist if we only consider connections with weight ≤ `threshold`?" Process queries offline.
@@ -545,6 +1208,73 @@ print(count_provinces_queries(4, edges, [1, 2, 3, 5]))  # [4, 2, 2, 1]
 
 ---
 
+**Problem Explanation:** Implement a trie (prefix tree) with insert, search, and startsWith operations.
+
+**Algorithm Steps:**
+1. Each TrieNode has a dict/array of children and an end-of-word flag.
+2. Insert: walk char by char, creating nodes as needed, mark end.
+3. Search: walk char by char, check end flag at last node.
+4. startsWith: walk char by char, return True if path exists.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Trie provides O(L) prefix matching where L is string length, ideal for dictionary/autocomplete.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+class Trie:
+    def __init__(self):
+        self.root = TrieNode()
+
+    def insert(self, word):
+        node = self.root
+        for ch in word:
+            if ch not in node.children:
+                node.children[ch] = TrieNode()
+            node = node.children[ch]
+        node.is_end = True
+
+    def search(self, word):
+        node = self.root
+        for ch in word:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return node.is_end
+
+    def starts_with(self, prefix):
+        node = self.root
+        for ch in prefix:
+            if ch not in node.children:
+                return False
+            node = node.children[ch]
+        return True
+
+# Example
+t = Trie()
+t.insert("apple")
+print(t.search("apple"))      # True
+print(t.search("app"))        # False
+print(t.starts_with("app"))   # True
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(m) for insert, search, and starts_with where m = word length.
+- **Space:** O(total characters) — storing all inserted words.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty string insert/search/startsWith
+- Word longer than any existing path
+
 ### Problem 11: Implement Trie (Prefix Tree)
 
 **Statement:** Implement a Trie with `insert(word)`, `search(word)` (exact match), and `starts_with(prefix)` (prefix check).
@@ -597,6 +1327,76 @@ print(t.starts_with("app"))   # True
 **Space Complexity:** O(total characters) — storing all inserted words.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.word = None
+
+def find_words(board, words):
+    root = TrieNode()
+    for word in words:
+        node = root
+        for ch in word:
+            if ch not in node.children:
+                node.children[ch] = TrieNode()
+            node = node.children[ch]
+        node.word = word
+
+    rows, cols = len(board), len(board[0])
+    result = []
+
+    def dfs(r, c, node):
+        ch = board[r][c]
+        if ch not in node.children:
+            return
+        child = node.children[ch]
+        if child.word:
+            result.append(child.word)
+            child.word = None
+        board[r][c] = '#'
+        for dr, dc in [(-1, 0), (1, 0), (0, -1), (0, 1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < rows and 0 <= nc < cols and board[nr][nc] != '#':
+                dfs(nr, nc, child)
+        board[r][c] = ch
+        if not child.children:
+            del node.children[ch]
+
+    for r in range(rows):
+        for c in range(cols):
+            dfs(r, c, root)
+    return result
+
+# Example
+board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]]
+print(find_words(board, ["oath","pea","eat","rain"]))  # ['oath', 'eat']
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(M * N * 4^L) worst case where M*N is board size, L is max word length. Trie pruning makes it much faster in practice.
+- **Space:** O(K) where K is total characters in all words for Trie.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 12: Word Search II (Trie + Backtracking)
 
@@ -655,6 +1455,71 @@ print(find_words(board, ["oath","pea","eat","rain"]))  # ['oath', 'eat']
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+
+def find_max_xor(nums):
+    root = TrieNode()
+
+    def insert(num):
+        node = root
+        for i in range(31, -1, -1):
+            bit = (num >> i) & 1
+            if bit not in node.children:
+                node.children[bit] = TrieNode()
+            node = node.children[bit]
+
+    def query(num):
+        node = root
+        result = 0
+        for i in range(31, -1, -1):
+            bit = (num >> i) & 1
+            want = 1 - bit
+            if want in node.children:
+                result |= (1 << i)
+                node = node.children[want]
+            else:
+                node = node.children[bit]
+        return result
+
+    for num in nums:
+        insert(num)
+
+    max_xor = 0
+    for num in nums:
+        max_xor = max(max_xor, query(num))
+    return max_xor
+
+# Example
+print(find_max_xor([3, 10, 5, 25, 2, 8]))  # 28
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * 32) = O(n) — insert and query each number in 32-bit Trie.
+- **Space:** O(n * 32) — Trie nodes for n numbers.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 13: Maximum XOR of Two Numbers in Array
 
 **Statement:** Given an array of integers, find the maximum value of `nums[i] XOR nums[j]` where `0 ≤ i, j < n`.
@@ -707,6 +1572,65 @@ print(find_max_xor([3, 10, 5, 25, 2, 8]))  # 28
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+def longest_word(words):
+    root = TrieNode()
+    for word in words:
+        node = root
+        for ch in word:
+            if ch not in node.children:
+                node.children[ch] = TrieNode()
+            node = node.children[ch]
+        node.is_end = True
+
+    best = ""
+
+    def dfs(node, path):
+        nonlocal best
+        for ch in sorted(node.children.keys()):
+            child = node.children[ch]
+            if child.is_end:
+                word = path + ch
+                if len(word) > len(best) or (len(word) == len(best) and word < best):
+                    best = word
+                dfs(child, word)
+
+    dfs(root, "")
+    return best
+
+# Example
+print(longest_word(["w", "wo", "wor", "worl", "world"]))  # "world"
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N * L + 26^L) in worst case — building Trie + DFS. In practice much less due to pruning.
+- **Space:** O(N * L) — Trie storage.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 14: Longest Word in Dictionary
 
 **Statement:** Given a list of words, find the longest word that can be built one character at a time from other words in the list. If there are multiple, return the lexicographically smallest.
@@ -752,6 +1676,69 @@ print(longest_word(["w", "wo", "wor", "worl", "world"]))  # "world"
 **Space Complexity:** O(N * L) — Trie storage.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.suggestions = []
+
+def suggested_products(products, search_word):
+    products.sort()
+    root = TrieNode()
+
+    for product in products:
+        node = root
+        for ch in product:
+            if ch not in node.children:
+                node.children[ch] = TrieNode()
+            node = node.children[ch]
+            if len(node.suggestions) < 3:
+                node.suggestions.append(product)
+
+    result = []
+    node = root
+    for ch in search_word:
+        if node and ch in node.children:
+            node = node.children[ch]
+            result.append(node.suggestions)
+        else:
+            node = None
+            result.append([])
+    return result
+
+# Example
+print(suggested_products(
+    ["mobile", "mouse", "moneypot", "monitor", "mousepad"],
+    "mouse"
+))
+# [["mobile","moneypot","monitor"],["mobile","moneypot","monitor"],
+#  ["mobile","moneypot","monitor"],["mouse","mousepad"],["mouse","mousepad"]]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N * L * log N) for sorting + O(L) per query. Trie construction is O(N * L).
+- **Space:** O(N * L) — Trie nodes storing references.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 15: Search Suggestions System
 
@@ -803,6 +1790,66 @@ print(suggested_products(
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+def replace_words(dictionary, sentence):
+    root = TrieNode()
+    for word in dictionary:
+        node = root
+        for ch in word:
+            if ch not in node.children:
+                node.children[ch] = TrieNode()
+            node = node.children[ch]
+        node.is_end = True
+
+    def find_shortest_prefix(word):
+        node = root
+        for i, ch in enumerate(word):
+            if node.is_end:
+                return word[:i]
+            if ch not in node.children:
+                return word
+            node = node.children[ch]
+        return word
+
+    return " ".join(find_shortest_prefix(w) for w in sentence.split())
+
+# Example
+print(replace_words(
+    ["cat", "bat", "rat"],
+    "the cattle was rattled by the battery"
+))
+# "the cat was rat by the bat"
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(D * L + S) where D = dict size, L = avg root length, S = sentence length.
+- **Space:** O(D * L) — Trie for dictionary roots.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 16: Replace Words (Shortest Prefix)
 
 **Statement:** Given a list of roots (dictionary) and a sentence, replace each word in the sentence with its shortest root prefix from the dictionary. If no root matches, keep the original word.
@@ -849,6 +1896,68 @@ print(replace_words(
 **Space Complexity:** O(D * L) — Trie for dictionary roots.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class StreamChecker:
+    def __init__(self, words):
+        self.root = {}
+        self.buffer = []
+        self.max_len = 0
+        for word in words:
+            node = self.root
+            self.max_len = max(self.max_len, len(word))
+            for ch in reversed(word):
+                if ch not in node:
+                    node[ch] = {}
+                node = node[ch]
+            node['$'] = True
+
+    def query(self, letter):
+        self.buffer.append(letter)
+        if len(self.buffer) > self.max_len:
+            self.buffer.pop(0)
+        node = self.root
+        for ch in reversed(self.buffer):
+            if ch not in node:
+                return False
+            node = node[ch]
+            if '$' in node:
+                return True
+        return False
+
+# Example
+sc = StreamChecker(["cd", "f", "kl"])
+print(sc.query('a'))  # False
+print(sc.query('b'))  # False
+print(sc.query('c'))  # False
+print(sc.query('d'))  # True  (suffix "cd")
+print(sc.query('e'))  # False
+print(sc.query('f'))  # True  (suffix "f")
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(L) per query where L = max word length (buffer bounded).
+- **Space:** O(total characters in words + L) — Trie + buffer.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 17: Stream of Characters (Suffix Matching)
 
@@ -898,6 +2007,82 @@ print(sc.query('f'))  # True  (suffix "f")
 **Space Complexity:** O(total characters in words + L) — Trie + buffer.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.index = -1
+        self.palindrome_indices = []
+
+def palindrome_pairs(words):
+    root = TrieNode()
+
+    def insert(word, idx):
+        node = root
+        for i, ch in enumerate(reversed(word)):
+            if ch not in node.children:
+                node.children[ch] = TrieNode()
+            node = node.children[ch]
+            prefix = word[:len(word) - i]
+            if prefix == prefix[::-1]:
+                node.palindrome_indices.append(idx)
+        node.index = idx
+
+    def search(word, idx):
+        node = root
+        result = []
+        for i, ch in enumerate(word):
+            # Case: remaining suffix of word + some word from Trie = palindrome
+            if node.index >= 0 and node.index != idx:
+                suffix = word[i:]
+                if suffix == suffix[::-1]:
+                    result.append([idx, node.index])
+            if ch not in node.children:
+                return result
+            node = node.children[ch]
+        # Case: entire word consumed, check palindrome indices in Trie
+        for j in node.palindrome_indices:
+            if j != idx:
+                result.append([idx, j])
+        return result
+
+    for i, w in enumerate(words):
+        insert(w, i)
+
+    result = []
+    for i, w in enumerate(words):
+        result.extend(search(w, i))
+    return result
+
+# Example
+print(palindrome_pairs(["abcd", "dcba", "lls", "s", "sssll"]))
+# [[0,1],[1,0],[3,2],[2,4]]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N * K²) where N = number of words, K = max word length.
+- **Space:** O(N * K) — Trie storage for all reversed words.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 18: Palindrome Pairs using Trie
 
@@ -966,6 +2151,64 @@ print(palindrome_pairs(["abcd", "dcba", "lls", "s", "sssll"]))
 
 ---
 
+**Problem Explanation:** Find an edge that can be removed to make a graph a tree (no cycles).
+
+**Algorithm Steps:**
+1. Use Union-Find (DSU) to track connected components.
+2. For each edge, if its endpoints are already connected, it creates a cycle.
+3. Return the last such edge.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** DSU detects the edge that closes a cycle in near-constant time per operation.
+
+**Well-Commented Code:**
+```python
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n + 1))
+        self.rank = [0] * (n + 1)
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False
+        if self.rank[px] < self.rank[py]:
+            px, py = py, px
+        self.parent[py] = px
+        if self.rank[px] == self.rank[py]:
+            self.rank[px] += 1
+        return True
+
+def find_redundant(edges):
+    n = len(edges)
+    dsu = DSU(n)
+    for u, v in edges:
+        if not dsu.union(u, v):
+            return [u, v]
+    return []
+
+# Example
+print(find_redundant([[1,2],[1,3],[2,3]]))  # [2, 3]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N * α(N)) ≈ O(N) — near-linear with path compression and union by rank.
+- **Space:** O(N) — parent and rank arrays.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Graph with exactly one cycle
+- Return last edge found
+
 ### Problem 19: Redundant Connection
 
 **Statement:** Given a tree with `n` nodes labeled `1` to `n`, an extra edge is added making it a graph with one cycle. Find the edge that, when removed, results in a tree.
@@ -1010,6 +2253,77 @@ print(find_redundant([[1,2],[1,3],[2,3]]))  # [2, 3]
 **Space Complexity:** O(N) — parent and rank arrays.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n))
+        self.rank = [0] * n
+        self.count = 0
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px == py:
+            return False
+        if self.rank[px] < self.rank[py]:
+            px, py = py, px
+        self.parent[py] = px
+        if self.rank[px] == self.rank[py]:
+            self.rank[px] += 1
+        self.count -= 1
+        return True
+
+def num_islands2(m, n, positions):
+    dsu = DSU(m * n)
+    grid = [[0] * n for _ in range(m)]
+    result = []
+    for r, c in positions:
+        if grid[r][c] == 1:
+            result.append(dsu.count)
+            continue
+        grid[r][c] = 1
+        dsu.count += 1
+        idx = r * n + c
+        for dr, dc in [(-1,0),(1,0),(0,-1),(0,1)]:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < m and 0 <= nc < n and grid[nr][nc] == 1:
+                dsu.union(idx, nr * n + nc)
+        result.append(dsu.count)
+    return result
+
+# Example
+print(num_islands2(3, 3, [(0,0),(0,1),(1,2),(2,1)]))
+# [1, 1, 2, 3]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(K * α(m*n)) where K = number of operations.
+- **Space:** O(m * n) — for DSU and grid.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 20: Number of Islands II (Dynamic)
 
@@ -1069,6 +2383,77 @@ print(num_islands2(3, 3, [(0,0),(0,1),(1,2),(2,1)]))
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n))
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px != py:
+            self.parent[py] = px
+
+def accounts_merge(accounts):
+    dsu = DSU(len(accounts))
+    email_to_acc = {}
+    for i, account in enumerate(accounts):
+        for email in account[1:]:
+            if email in email_to_acc:
+                dsu.union(i, email_to_acc[email])
+            email_to_acc[email] = i
+
+    groups = {}
+    for email, acc_idx in email_to_acc.items():
+        root = dsu.find(acc_idx)
+        if root not in groups:
+            groups[root] = set()
+        groups[root].add(email)
+
+    result = []
+    for root, emails in groups.items():
+        result.append([accounts[root][0]] + sorted(emails))
+    return result
+
+# Example
+accounts = [["John","john@mail.com","john_new@mail.com"],
+            ["John","john@mail.com","john0@mail.com"],
+            ["Mary","mary@mail.com"],
+            ["John","johnny@mail.com","john@mail.com"]]
+print(accounts_merge(accounts))
+# [["John","john@mail.com","john_new@mail.com","john0@mail.com"],
+#  ["Mary","mary@mail.com"],
+#  ["John","john@mail.com","johnny@mail.com"]]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N * K * α(N)) where N = accounts, K = avg emails per account.
+- **Space:** O(N * K) — for email-to-account map and DSU.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 21: Accounts Merge
 
 **Statement:** Given a list of accounts where each account has a name and a list of emails, merge accounts that share at least one email. Return the merged accounts with unique sorted emails.
@@ -1127,6 +2512,73 @@ print(accounts_merge(accounts))
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n))
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def union(self, x, y):
+        px, py = self.find(x), self.find(y)
+        if px != py:
+            self.parent[py] = px
+
+def smallest_string(s, pairs):
+    n = len(s)
+    dsu = DSU(n)
+    for i, j in pairs:
+        dsu.union(i, j)
+
+    groups = {}
+    for i in range(n):
+        root = dsu.find(i)
+        if root not in groups:
+            groups[root] = {'indices': [], 'chars': []}
+        groups[root]['indices'].append(i)
+        groups[root]['chars'].append(s[i])
+
+    result = list(s)
+    for root, data in groups.items():
+        indices = sorted(data['indices'])
+        chars = sorted(data['chars'])
+        for idx, ch in zip(indices, chars):
+            result[idx] = ch
+
+    return ''.join(result)
+
+# Example
+print(smallest_string("dcab", [[0,3],[1,2]]))  # "bacd"
+print(smallest_string("dcab", [[0,3],[1,2],[0,2]]))  # "abcd"
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N log N + P * α(N)) where P = number of pairs, N = string length.
+- **Space:** O(N) — for DSU and group maps.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 22: Smallest String With Swaps
 
 **Statement:** Given a string and a list of pairs `(i, j)` where characters at indices `i` and `j` can be swapped any number of times, find the lexicographically smallest string achievable.
@@ -1180,6 +2632,95 @@ print(smallest_string("dcab", [[0,3],[1,2],[0,2]]))  # "abcd"
 **Space Complexity:** O(N) — for DSU and group maps.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class DSU:
+    def __init__(self, n):
+        self.parent = list(range(n + 2))
+
+    def find(self, x):
+        if self.parent[x] != x:
+            self.parent[x] = self.find(self.parent[x])
+        return self.parent[x]
+
+    def remove(self, x):
+        self.parent[x] = self.find(x + 1)
+
+def smallest_missing_queries(arr, queries):
+    present = set(arr)
+    max_val = max(max(arr) if arr else 0, max(q[0] + q[1] for q in queries) + 1)
+    max_val = max(max_val + len(queries) + 2, 100)
+    dsu = DSU(max_val)
+
+    # Precompute missing numbers available at each position
+    for i in range(1, max_val + 1):
+        if i in present:
+            dsu.remove(i)
+
+    sorted_queries = sorted(enumerate(queries), key=lambda x: x[0])
+    result = [0] * len(queries)
+
+    for orig_idx, (start, k) in sorted_queries:
+        # Need k-th missing from start
+        # Process: remove all numbers < start to find what's available
+        temp_dsu = DSU(max_val)
+        for i in range(1, max_val + 1):
+            if i in present and i >= start:
+                temp_dsu.remove(i)
+        # Also remove numbers < start from consideration
+        # Actually find k-th missing >= start
+        pos = temp_dsu.find(start)
+        for _ in range(k - 1):
+            temp_dsu.remove(pos)
+            pos = temp_dsu.find(pos)
+        result[orig_idx] = pos
+
+    return result
+
+# Simple brute-force version for clarity:
+def smallest_missing_simple(arr, queries):
+    arr_set = set(arr)
+    result = []
+    for start, k in queries:
+        count = 0
+        num = start
+        while count < k:
+            if num not in arr_set:
+                count += 1
+                if count == k:
+                    result.append(num)
+                    break
+            num += 1
+    return result
+
+# Example
+print(smallest_missing_simple([1, 3, 5], [(2, 1), (2, 2), (1, 3)]))
+# [2, 4, 6]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N + Q * sqrt(N)) for the simple version. DSU version O((max_val + Q) * α(N)).
+- **Space:** O(N + max_val) — for set and DSU.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 23: Find Smallest Missing Elements
 
@@ -1261,6 +2802,43 @@ print(smallest_missing_simple([1, 3, 5], [(2, 1), (2, 2), (1, 3)]))
 
 ---
 
+**Problem Explanation:** Find the element that appears exactly once in an array where every other element appears three times.
+
+**Algorithm Steps:**
+1. Count bits across all numbers modulo 3.
+2. Bits appearing 1 mod 3 form the unique number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Bit counting modulo k isolates the element appearing exactly once when others appear k times.
+
+**Well-Commented Code:**
+```python
+def single_number(nums):
+    ones = 0
+    twos = 0
+    for num in nums:
+        ones = (ones ^ num) & ~twos
+        twos = (twos ^ num) & ~ones
+    return ones
+
+# Example
+print(single_number([2, 2, 3, 2]))     # 3
+print(single_number([0, 1, 0, 1, 0, 1, 99]))  # 99
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass through the array.
+- **Space:** O(1) — only two integer variables.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Single element array
+- Negative numbers
+
 ### Problem 24: Single Number II
 
 **Statement:** Given an integer array where every element appears exactly three times except one element which appears exactly once, find the single element.
@@ -1285,6 +2863,76 @@ print(single_number([0, 1, 0, 1, 0, 1, 99]))  # 99
 **Space Complexity:** O(1) — only two integer variables.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+
+def max_xor_subarray(nums):
+    root = TrieNode()
+
+    def insert(num):
+        node = root
+        for i in range(31, -1, -1):
+            bit = (num >> i) & 1
+            if bit not in node.children:
+                node.children[bit] = TrieNode()
+            node = node.children[bit]
+
+    def query(num):
+        node = root
+        result = 0
+        for i in range(31, -1, -1):
+            bit = (num >> i) & 1
+            want = 1 - bit
+            if want in node.children:
+                result |= (1 << i)
+                node = node.children[want]
+            else:
+                node = node.children[bit]
+        return result
+
+    # Insert 0 (empty prefix)
+    insert(0)
+    prefix_xor = 0
+    max_xor = 0
+
+    for num in nums:
+        prefix_xor ^= num
+        max_xor = max(max_xor, query(prefix_xor))
+        insert(prefix_xor)
+
+    return max_xor
+
+# Example
+print(max_xor_subarray([1, 2, 3]))     # 3
+print(max_xor_subarray([8, 1, 2, 12]))  # 15
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * 32) = O(n) — for each element, Trie operations are O(32).
+- **Space:** O(n * 32) — Trie nodes.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 25: Maximum XOR Subarray
 
@@ -1343,6 +2991,50 @@ print(max_xor_subarray([8, 1, 2, 12]))  # 15
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def range_bitwise_and(left, right):
+    shift = 0
+    while left != right:
+        left >>= 1
+        right >>= 1
+        shift += 1
+    return left << shift
+
+# Alternative approach using Brian Kernighan's algorithm
+def range_bitwise_and_v2(left, right):
+    while left < right:
+        right &= (right - 1)
+    return right
+
+# Example
+print(range_bitwise_and(5, 7))   # 4 (binary: 100)
+print(range_bitwise_and(1, 2147483647))  # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log n) — shifting right until common prefix, or removing lowest bits.
+- **Space:** O(1) — only integer variables.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 26: Bitwise AND of Range
 
 **Statement:** Given two integers `left` and `right`, return the bitwise AND of all numbers in the range `[left, right]`.
@@ -1374,6 +3066,50 @@ print(range_bitwise_and(1, 2147483647))  # 0
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def min_flips(a, b, c):
+    flips = 0
+    for i in range(32):
+        bit_a = (a >> i) & 1
+        bit_b = (b >> i) & 1
+        bit_c = (c >> i) & 1
+        if bit_c == 0:
+            flips += bit_a + bit_b
+        else:
+            if bit_a == 0 and bit_b == 0:
+                flips += 1
+    return flips
+
+# Example
+print(min_flips(2, 6, 5))  # 3
+# 2=010, 6=110, 5=101
+# 010 OR 110 = 110 != 101 → need flips
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(32) = O(1) — fixed number of bit positions.
+- **Space:** O(1) — constant extra space.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 27: Minimum Flips to Make a OR b Equal to c
 
 **Statement:** Given three integers `a`, `b`, and `c`, find the minimum number of bit flips required so that `a OR b` equals `c`.
@@ -1404,6 +3140,53 @@ print(min_flips(2, 6, 5))  # 3
 **Space Complexity:** O(1) — constant extra space.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def query_string(s, n):
+    for i in range(1, n + 1):
+        if bin(i)[2:] not in s:
+            return False
+    return True
+
+# Optimized version: only check numbers whose binary fits in s
+def query_string_optimized(s, n):
+    max_len = len(s)
+    for i in range(1, n + 1):
+        binary = bin(i)[2:]
+        if len(binary) > max_len:
+            return False
+        if binary not in s:
+            return False
+    return True
+
+# Example
+print(query_string("0110", 3))  # True (1="1", 2="10", 3="11" all in "0110")
+print(query_string("0110", 4))  # False ("100" not in "0110")
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * L * S) where L = avg binary length, S = len(s). With optimization, only checks numbers with binary length ≤ len(s).
+- **Space:** O(L) — for binary string conversion.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 28: Binary String With Substrings Representing 1 to N
 
@@ -1439,6 +3222,46 @@ print(query_string("0110", 4))  # False ("100" not in "0110")
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def concatenated_binary(n):
+    MOD = 10**9 + 7
+    result = 0
+    for i in range(1, n + 1):
+        bits = i.bit_length()
+        result = ((result << bits) + i) % MOD
+    return result
+
+# Example
+print(concatenated_binary(1))   # 1
+print(concatenated_binary(3))   # 27
+# "1" + "10" + "11" = "11011" = 27
+print(concatenated_binary(12))  # 50537971
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass from 1 to n, each step is O(1).
+- **Space:** O(1) — only integer variables.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 29: Concatenation of Consecutive Binary Numbers
 
 **Statement:** Given an integer `n`, return the decimal value of the binary string formed by concatenating the binary representations of 1 to n, modulo `10^9 + 7`.
@@ -1465,6 +3288,63 @@ print(concatenated_binary(12))  # 50537971
 **Space Complexity:** O(1) — only integer variables.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def longest_unique_substring(s):
+    char_index = {}
+    left = 0
+    max_len = 0
+    for right, ch in enumerate(s):
+        if ch in char_index and char_index[ch] >= left:
+            left = char_index[ch] + 1
+        char_index[ch] = right
+        max_len = max(max_len, right - left + 1)
+    return max_len
+
+# Bit manipulation approach: use a bitmask for ASCII characters
+def longest_unique_bitmask(s):
+    char_mask = 0
+    left = 0
+    max_len = 0
+    for right, ch in enumerate(s):
+        bit = 1 << (ord(ch) - ord('a'))
+        while char_mask & bit:
+            char_mask ^= (1 << (ord(s[left]) - ord('a')))
+            left += 1
+        char_mask |= bit
+        max_len = max(max_len, right - left + 1)
+    return max_len
+
+# Example
+print(longest_unique_substring("abcabcbb"))   # 3 ("abc")
+print(longest_unique_substring("bbbbb"))      # 1
+print(longest_unique_substring("pwwkew"))     # 3 ("wke")
+print(longest_unique_bitmask("abcabcbb"))     # 3
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each character visited at most twice (once by `right`, once by `left`).
+- **Space:** O(min(n, 26)) — for hash map with lowercase letters only.
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 30: Find the Longest Substring With All Unique Characters
 

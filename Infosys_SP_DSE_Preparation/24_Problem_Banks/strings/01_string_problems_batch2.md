@@ -8,6 +8,40 @@
 
 ---
 
+**Problem Explanation:** Reverse a character array in-place using O(1) extra memory.
+
+**Algorithm Steps:**
+1. Set left=0, right=len(s)-1.
+2. Swap characters at left and right.
+3. Move pointers inward until they meet.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Two-pointer in-place reversal is the most memory-efficient approach.
+
+**Well-Commented Code:**
+```python
+def reverse_string(s: list[str]) -> None:
+    left, right = 0, len(s) - 1
+    while left < right:
+        s[left], s[right] = s[right], s[left]
+        left += 1
+        right -= 1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element is swapped at most once
+- **Space:** O(1) — in-place swaps only
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty array unchanged
+- Single character unchanged
+- Even/odd length both work
+
 ### Problem 1: Reverse String
 
 **Statement:** Write a function that reverses a character array `s` in-place using O(1) extra memory.
@@ -33,6 +67,43 @@ def reverse_string(s: list[str]) -> None:
 **Space Complexity:** O(1) — in-place swaps only
 
 ---
+
+**Problem Explanation:** Reverse the order of words in a string. Words are separated by spaces.
+
+**Algorithm Steps:**
+1. Trim leading/trailing spaces.
+2. Split by spaces into words.
+3. Reverse the list of words and join with single space.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Split-reverse-join is O(n) and handles most edge cases naturally.
+
+**Well-Commented Code:**
+```python
+def reverse_words(s: str) -> str:
+    words = s.split(' ')
+    for i in range(len(words)):
+        words[i] = words[i][::-1]
+    return ' '.join(words)
+
+def reverse_words_v2(s: str) -> str:
+    # More Pythonic one-liner approach
+    return ' '.join(word[::-1] for word in s.split(' '))
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — we visit each character once during split, reverse, and join
+- **Space:** O(n) — for storing the split words and result
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Multiple consecutive spaces
+- Leading/trailing spaces
+- Single word
 
 ### Problem 2: Reverse Words in String III
 
@@ -64,6 +135,43 @@ def reverse_words_v2(s: str) -> str:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def num_unique_emails(emails: list[str]) -> int:
+    unique = set()
+    for email in emails:
+        local, domain = email.split('@')
+        # Ignore everything after '+'
+        local = local.split('+')[0]
+        # Remove all dots
+        local = local.replace('.', '')
+        unique.add(f"{local}@{domain}")
+    return len(unique)
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * m) where n = number of emails, m = average email length
+- **Space:** O(n * m) — storing unique addresses in the set
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 3: Unique Email Addresses
 
 **Statement:** Given a list of emails where each has a local name and domain name, process them: `.` in local name is ignored (treated as same), `+` ignores everything after it until `@`. Count unique processed email addresses.
@@ -94,6 +202,45 @@ def num_unique_emails(emails: list[str]) -> int:
 **Space Complexity:** O(n * m) — storing unique addresses in the set
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def judge_circle(moves: str) -> bool:
+    x = y = 0
+    for move in moves:
+        if move == 'U':
+            y += 1
+        elif move == 'D':
+            y -= 1
+        elif move == 'R':
+            x += 1
+        elif move == 'L':
+            x -= 1
+    return x == 0 and y == 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass through all moves
+- **Space:** O(1) — only two integer variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 4: Robot Return to Origin
 
@@ -127,6 +274,38 @@ def judge_circle(moves: str) -> bool:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def dest_city(paths: list[list[str]]) -> str:
+    starts = set(path[0] for path in paths)
+    for path in paths:
+        if path[1] not in starts:
+            return path[1]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — building the set and searching are both O(n)
+- **Space:** O(n) — for storing source cities in the set
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 5: Destination City
 
 **Statement:** You are given a list of paths where `paths[i] = [cityA, cityB]` means there is a direct path from `cityA` to `cityB`. Each city has at most one outgoing path. Find the destination city — the city that is not a starting point of any path.
@@ -151,6 +330,43 @@ def dest_city(paths: list[list[str]]) -> str:
 **Space Complexity:** O(n) — for storing source cities in the set
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def max_depth(s: str) -> int:
+    depth = 0
+    max_d = 0
+    for ch in s:
+        if ch == '(':
+            depth += 1
+            max_d = max(max_d, depth)
+        elif ch == ')':
+            depth -= 1
+    return max_d
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — just two integer variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 6: Maximum Nesting Depth of Parentheses
 
@@ -183,6 +399,44 @@ def max_depth(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def balanced_string_split(s: str) -> int:
+    count = 0
+    balance = 0
+    for ch in s:
+        if ch == 'L':
+            balance += 1
+        else:
+            balance -= 1
+        if balance == 0:
+            count += 1
+    return count
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — just two counters
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 7: Split a String in Balanced Strings
 
 **Statement:** A balanced string has an equal number of `L` and `R` characters. Given a balanced string `s`, split it into the maximum number of balanced substrings. Return the count.
@@ -214,6 +468,39 @@ def balanced_string_split(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def remove_palindrome_sub(s: str) -> int:
+    if not s:
+        return 0
+    if s == s[::-1]:
+        return 1
+    return 2
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — for the palindrome check (reversal and comparison)
+- **Space:** O(n) — for the reversed string copy
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 8: Remove Palindromic Subsequences
 
 **Statement:** Given a string `s` consisting of only `a` and `b`, remove palindromic subsequences to make it empty. Return the minimum number of operations needed. A subsequence doesn't need to be contiguous.
@@ -240,6 +527,48 @@ def remove_palindrome_sub(s: str) -> int:
 **Space Complexity:** O(n) — for the reversed string copy
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def count_binary_substrings(s: str) -> int:
+    groups = []
+    count = 1
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            count += 1
+        else:
+            groups.append(count)
+            count = 1
+    groups.append(count)
+
+    result = 0
+    for i in range(len(groups) - 1):
+        result += min(groups[i], groups[i + 1])
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass to build groups, single pass to sum
+- **Space:** O(n) — for the groups array
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 9: Count Binary Substrings
 
@@ -278,6 +607,42 @@ def count_binary_substrings(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def array_strings_are_equal(word1: list[str], word2: list[str]) -> bool:
+    return ''.join(word1) == ''.join(word2)
+
+def array_strings_are_equal_v2(word1: list[str], word2: list[str]) -> bool:
+    def gen(words):
+        for word in words:
+            for ch in word:
+                yield ch
+    return all(a == b for a, b in zip(gen(word1), gen(word2)))
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) where n = total characters across all strings
+- **Space:** O(n) — for the concatenated result
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 10: Check If Two String Arrays are Equivalent
 
 **Statement:** Two string arrays are equivalent if the concatenation of all strings in `word1` equals the concatenation of all strings in `word2`.
@@ -306,6 +671,50 @@ def array_strings_are_equal_v2(word1: list[str], word2: list[str]) -> bool:
 **Space Complexity:** O(n) — for the concatenated result
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def interpret(command: str) -> str:
+    result = []
+    i = 0
+    while i < len(command):
+        if command[i] == 'G':
+            result.append('G')
+            i += 1
+        elif command[i:i + 2] == '()':
+            result.append('o')
+            i += 2
+        else:
+            result.append('al')
+            i += 4
+    return ''.join(result)
+
+def interpret_v2(command: str) -> str:
+    return command.replace('()', 'o').replace('(al)', 'al')
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass (or O(n) for string replacements)
+- **Space:** O(n) — for the result string
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 11: Goal Parser Interpretation
 
@@ -343,6 +752,56 @@ def interpret_v2(command: str) -> str:
 **Space Complexity:** O(n) — for the result string
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def is_unique(s: str) -> bool:
+    seen = [False] * 256
+    for ch in s:
+        if seen[ord(ch)]:
+            return False
+        seen[ord(ch)] = True
+    return True
+
+def is_unique_no_extra(s: str) -> bool:
+    # O(n^2) time but O(1) space
+    for i in range(len(s)):
+        for j in range(i + 1, len(s)):
+            if s[i] == s[j]:
+                return False
+    return True
+
+def is_unique_sort(s: str) -> bool:
+    # O(n log n) time, O(n) space for sorted copy
+    sorted_s = sorted(s)
+    for i in range(len(sorted_s) - 1):
+        if sorted_s[i] == sorted_s[i + 1]:
+            return False
+    return True
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) / O(n²) / O(n log n) for the three approaches
+- **Space:** O(1) / O(1) / O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 12: Determine if String Has All Unique Characters
 
@@ -392,6 +851,42 @@ def is_unique_sort(s: str) -> bool:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def is_prefix_string(s: str, words: list[str]) -> bool:
+    built = ''
+    for word in words:
+        built += word
+        if built == s:
+            return True
+        if len(built) > len(s):
+            return False
+    return False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) where n = total characters in words
+- **Space:** O(n) — for the built string
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 13: Check if String is a Prefix of Array
 
 **Statement:** Given a string `s` and an array of strings `words`, return True if `s` is a prefix of the concatenation of all strings in `words` in order.
@@ -422,6 +917,39 @@ def is_prefix_string(s: str, words: list[str]) -> bool:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def halves_are_alike(s: str) -> bool:
+    vowels = set('aeiouAEIOU')
+    n = len(s)
+    first = sum(1 for i in range(n // 2) if s[i] in vowels)
+    second = sum(1 for i in range(n // 2, n) if s[i] in vowels)
+    return first == second
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — only a small set for vowels
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 14: Determine if String Halves Are Alike
 
 **Statement:** Given a string `s` of even length, split it into two halves of equal length. Check if both halves contain the same number of vowels (`a, e, i, o, u` — both uppercase and lowercase).
@@ -447,6 +975,48 @@ def halves_are_alike(s: str) -> bool:
 **Space Complexity:** O(1) — only a small set for vowels
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def capitalize_title(title: str) -> str:
+    words = title.split()
+    result = []
+    for word in words:
+        if len(word) <= 2:
+            result.append(word.lower())
+        else:
+            result.append(word[0].upper() + word[1:].lower())
+    return ' '.join(result)
+
+def capitalize_title_v2(title: str) -> str:
+    return ' '.join(
+        w.capitalize() if len(w) > 2 else w.lower()
+        for w in title.split()
+    )
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — processing each character once
+- **Space:** O(n) — for storing the result words
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 15: Capitalize the Title
 
@@ -489,6 +1059,45 @@ def capitalize_title_v2(title: str) -> str:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+from collections import defaultdict
+
+def group_strings(strings: list[str]) -> list[list[str]]:
+    groups = defaultdict(list)
+    for s in strings:
+        if not s:
+            groups[()].append(s)
+            continue
+        # Normalize: compute relative differences from first char
+        pattern = tuple((ord(s[i]) - ord(s[0])) % 26 for i in range(len(s)))
+        groups[pattern].append(s)
+    return list(groups.values())
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * m) where n = number of strings, m = average string length
+- **Space:** O(n * m) — for storing all strings in groups
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 16: Group Shifted Strings
 
 **Statement:** Given a list of strings, group all strings that belong to the same "shift" pattern. A shift is defined by the relative differences between consecutive characters (mod 26). For example, "abc" and "def" belong to the same group because both shift forward by 1.
@@ -521,6 +1130,45 @@ def group_strings(strings: list[str]) -> list[list[str]]:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def compare_version(version1: str, version2: str) -> int:
+    v1 = list(map(int, version1.split('.')))
+    v2 = list(map(int, version2.split('.')))
+    max_len = max(len(v1), len(v2))
+    for i in range(max_len):
+        num1 = v1[i] if i < len(v1) else 0
+        num2 = v2[i] if i < len(v2) else 0
+        if num1 > num2:
+            return 1
+        elif num1 < num2:
+            return -1
+    return 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) where n = number of revision parts
+- **Space:** O(n) — for the integer arrays
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 17: Compare Version Numbers
 
 **Statement:** Compare two version numbers `version1` and `version2`. Return 1 if version1 > version2, -1 if version1 < version2, and 0 if they are equal. Version numbers consist of revisions separated by dots (e.g., "1.01" == "1.001").
@@ -552,6 +1200,52 @@ def compare_version(version1: str, version2: str) -> int:
 **Space Complexity:** O(n) — for the integer arrays
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def compress(chars: list[str]) -> int:
+    write = 0
+    read = 0
+    while read < len(chars):
+        char = chars[read]
+        count = 0
+        # Count all consecutive occurrences
+        while read < len(chars) and chars[read] == char:
+            read += 1
+            count += 1
+        # Write the character
+        chars[write] = char
+        write += 1
+        # Write the count if > 1
+        if count > 1:
+            for digit in str(count):
+                chars[write] = digit
+                write += 1
+    return write
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each character is read and written once
+- **Space:** O(1) — in-place modification
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 18: String Compression
 
@@ -592,6 +1286,57 @@ def compress(chars: list[str]) -> int:
 **Space Complexity:** O(1) — in-place modification
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+from collections import Counter
+
+def reorganize_string(s: str) -> str:
+    count = Counter(s)
+    n = len(s)
+    max_char, max_count = count.most_common(1)[0]
+    if max_count > (n + 1) // 2:
+        return ""
+    result = [''] * n
+    idx = 0
+    # Place most frequent at even indices
+    for _ in range(max_count):
+        result[idx] = max_char
+        idx += 2
+    # Place remaining characters
+    for ch, c in count.items():
+        if ch == max_char:
+            continue
+        for _ in range(c):
+            if idx >= n:
+                idx = 1  # Switch to odd indices
+            result[idx] = ch
+            idx += 2
+    return ''.join(result)
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n)
+- **Space:** O(n) — for the result array
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 19: Reorganize String
 
@@ -640,6 +1385,47 @@ def reorganize_string(s: str) -> str:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def repeated_substring_pattern(s: str) -> bool:
+    # Elegant O(n) approach
+    doubled = (s + s)[1:-1]
+    return s in doubled
+
+def repeated_substring_pattern_v2(s: str) -> bool:
+    # Brute force approach for understanding
+    n = len(s)
+    for length in range(1, n // 2 + 1):
+        if n % length == 0:
+            substring = s[:length]
+            if substring * (n // length) == s:
+                return True
+    return False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) for the first, O(n²) for the second
+- **Space:** O(n) — for the doubled string
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 20: Repeated Substring Pattern
 
 **Statement:** Given a string `s`, check if it can be constructed by taking a substring and appending multiple copies of it (at least 2 copies). Return True/False.
@@ -678,6 +1464,37 @@ def repeated_substring_pattern_v2(s: str) -> bool:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def find_lu_slength(a: str, b: str) -> int:
+    if a == b:
+        return -1
+    return max(len(a), len(b))
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — for string comparison
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 21: Longest Uncommon Subsequence I
 
 **Statement:** Given two strings `a` and `b`, find the length of the longest uncommon subsequence. An uncommon subsequence is a string that is a subsequence of one but not the other. Return -1 if none exists.
@@ -703,6 +1520,50 @@ def find_lu_slength(a: str, b: str) -> int:
 **Space Complexity:** O(1)
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def find_lu_slength_ii(strs: list[str]) -> int:
+    def is_subsequence(a: str, b: str) -> bool:
+        it = iter(b)
+        return all(ch in it for ch in a)
+
+    # Sort by length descending
+    strs.sort(key=len, reverse=True)
+    for i in range(len(strs)):
+        is_sub = False
+        for j in range(len(strs)):
+            if i != j and len(strs[i]) <= len(strs[j]):
+                if is_subsequence(strs[i], strs[j]):
+                    is_sub = True
+                    break
+        if not is_sub:
+            return len(strs[i])
+    return -1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n² * m) where n = number of strings, m = max string length
+- **Space:** O(1) — excluding input storage
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 22: Longest Uncommon Subsequence II
 
@@ -743,6 +1604,46 @@ def find_lu_slength_ii(strs: list[str]) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def count_homogenous_substrings(s: str) -> int:
+    result = 0
+    count = 1
+    MOD = 10**9 + 7
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            count += 1
+        else:
+            result = (result + count * (count + 1) // 2) % MOD
+            count = 1
+    # Don't forget the last run
+    result = (result + count * (count + 1) // 2) % MOD
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 23: Count Substrings with Only One Distinct Letter
 
 **Statement:** Given a string `s`, return the number of substrings that contain only one distinct letter. The answer can be very large, return modulo 10^9 + 7.
@@ -778,6 +1679,44 @@ def count_homogenous_substrings(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def min_distance_adjacent(words: list[str]) -> int:
+    words.sort()
+    min_dist = float('inf')
+    for i in range(len(words) - 1):
+        a, b = words[i], words[i + 1]
+        # Count character differences
+        dist = sum(1 for ca, cb in zip(a, b) if ca != cb)
+        # Add length difference
+        dist += abs(len(a) - len(b))
+        min_dist = min(min_dist, dist)
+    return min_dist
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n + n * m) where m = average string length
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 24: Minimum Distance Between Adjacent Sorted Strings
 
 **Statement:** Given a list of strings, sort them alphabetically and find the minimum "distance" between any two adjacent strings. The distance is the number of positions where characters differ (padding shorter string with nothing).
@@ -810,6 +1749,43 @@ def min_distance_adjacent(words: list[str]) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def longest_nice_substring(s: str) -> str:
+    if len(s) < 2:
+        return ""
+    chars = set(s)
+    for i, ch in enumerate(s):
+        if ch.swapcase() not in chars:
+            left = longest_nice_substring(s[:i])
+            right = longest_nice_substring(s[i + 1:])
+            return left if len(left) >= len(right) else right
+    return s  # Entire string is nice
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) per level × O(n) levels worst case = O(n²)
+- **Space:** O(n) — for recursive call stack and substrings
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 25: Longest Nice Substring
 
 **Statement:** A string is "nice" if for every lowercase letter, its uppercase version also exists in the string (and vice versa). Find the longest nice substring. Return empty string if none exists.
@@ -839,6 +1815,45 @@ def longest_nice_substring(s: str) -> str:
 **Space Complexity:** O(n) — for recursive call stack and substrings
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def count_homogenous(s: str) -> int:
+    result = 0
+    count = 1
+    MOD = 10**9 + 7
+    for i in range(1, len(s)):
+        if s[i] == s[i - 1]:
+            count += 1
+        else:
+            result = (result + count * (count + 1) // 2) % MOD
+            count = 1
+    result = (result + count * (count + 1) // 2) % MOD
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 26: Count Number of Homogenous Substrings
 
@@ -872,6 +1887,37 @@ def count_homogenous(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def is_sum_equal(first_word: str, second_word: str, target_word: str) -> bool:
+    def word_to_num(word: str) -> int:
+        return sum(ord(ch) - ord('a') + 1 for ch in word)
+    return word_to_num(first_word) + word_to_num(second_word) == word_to_num(target_word)
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) where n = total characters in all three words
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 27: Check if Word Equals Sum of Two Words
 
 **Statement:** Given string arrays `firstWord` and `secondWord`, and a string `targetWord`, each string represents a number where `'a'` = 1, `'b'` = 2, ..., `'z'` = 26. Check if the numeric value of `firstWord + secondWord` equals that of `targetWord`.
@@ -895,6 +1941,44 @@ def is_sum_equal(first_word: str, second_word: str, target_word: str) -> bool:
 **Space Complexity:** O(1)
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def max_vowels(s: str, k: int) -> int:
+    vowels = set('aeiou')
+    count = sum(1 for i in range(k) if s[i] in vowels)
+    max_count = count
+    for i in range(k, len(s)):
+        if s[i] in vowels:
+            count += 1
+        if s[i - k] in vowels:
+            count -= 1
+        max_count = max(max_count, count)
+    return max_count
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass with sliding window
+- **Space:** O(1) — fixed set of vowels
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 28: Maximum Number of Vowels in Substring of Given Length
 
@@ -928,6 +2012,44 @@ def max_vowels(s: str, k: int) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def max_satisfied(customers: list[int], grumpy: list[int], minutes: int) -> int:
+    # Base satisfaction: customers when not grumpy
+    base = sum(c for c, g in zip(customers, grumpy) if g == 0)
+    # Sliding window: find max customers that can be saved
+    window_save = sum(c * g for c, g in zip(customers[:minutes], grumpy[:minutes]))
+    max_save = window_save
+    for i in range(minutes, len(customers)):
+        window_save += customers[i] * grumpy[i]
+        window_save -= customers[i - minutes] * grumpy[i - minutes]
+        max_save = max(max_save, window_save)
+    return base + max_save
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 29: Grumpy Bookstore Owner
 
 **Statement:** A bookstore owner is grumpy at certain minutes. `customers[i]` customers arrive at minute `i`, and `grumpy[i]` is 1 if the owner is grumpy then (customers leave unsatisfied). The owner can use a secret technique for `minutes` consecutive minutes to suppress grumpiness. Find the maximum number of satisfied customers.
@@ -958,6 +2080,56 @@ def max_satisfied(customers: list[int], grumpy: list[int], minutes: int) -> int:
 **Space Complexity:** O(1)
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def min_flips(s: str) -> int:
+    n = len(s)
+    doubled = s + s
+    # Count mismatches for pattern starting with '0' and '1'
+    count0 = count1 = 0
+    for i in range(n):
+        if doubled[i] != str(i % 2):
+            count0 += 1
+        if doubled[i] != str(1 - i % 2):
+            count1 += 1
+    result = min(count0, count1)
+    # Slide the window through the doubled string
+    for i in range(n, 2 * n):
+        if doubled[i] != str(i % 2):
+            count0 += 1
+        if doubled[i] != str(1 - i % 2):
+            count1 += 1
+        if doubled[i - n] != str((i - n) % 2):
+            count0 -= 1
+        if doubled[i - n] != str(1 - (i - n) % 2):
+            count1 -= 1
+        result = min(result, count0, count1)
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — sliding window on doubled string
+- **Space:** O(n) — for the doubled string
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 30: Minimum Number of Flips to Make Binary String Alternating
 
@@ -1002,6 +2174,41 @@ def min_flips(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def str_str(haystack: str, needle: str) -> int:
+    if not needle:
+        return 0
+    n, m = len(haystack), len(needle)
+    for i in range(n - m + 1):
+        if haystack[i:i + m] == needle:
+            return i
+    return -1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * m) worst case
+- **Space:** O(m) — for the substring comparison
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 31: Find the Index of the First Occurrence
 
 **Statement:** Implement `strStr()` — find the index of the first occurrence of substring `needle` in string `haystack`. Return -1 if `needle` is not found. If `needle` is empty, return 0.
@@ -1031,6 +2238,43 @@ def str_str(haystack: str, needle: str) -> int:
 **Space Complexity:** O(m) — for the substring comparison
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def remove_duplicates(s: str, k: int) -> str:
+    stack = []  # Each element: (char, count)
+    for ch in s:
+        if stack and stack[-1][0] == ch:
+            stack[-1] = (ch, stack[-1][1] + 1)
+            if stack[-1][1] == k:
+                stack.pop()
+        else:
+            stack.append((ch, 1))
+    return ''.join(ch * count for ch, count in stack)
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each character pushed and popped at most once
+- **Space:** O(n) — stack storage
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 32: Remove All Adjacent Duplicates in String II
 
@@ -1062,6 +2306,46 @@ def remove_duplicates(s: str, k: int) -> str:
 **Space Complexity:** O(n) — stack storage
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def repeated_string_match(a: str, b: str) -> int:
+    repeated = a
+    count = 1
+    # Keep repeating until long enough
+    while len(repeated) < len(b):
+        repeated += a
+        count += 1
+    # Check current and one more repeat
+    if b in repeated:
+        return count
+    if b in repeated + a:
+        return count + 1
+    return -1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * m) where n = len(repeated), m = len(b)
+- **Space:** O(n + m) — for the repeated string
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 33: Repeated String Match
 
@@ -1097,6 +2381,41 @@ def repeated_string_match(a: str, b: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def has_all_codes(s: str, k: int) -> bool:
+    required = 1 << k  # 2^k
+    seen = set()
+    for i in range(len(s) - k + 1):
+        seen.add(s[i:i + k])
+        if len(seen) == required:
+            return True
+    return False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) where n = len(s)
+- **Space:** O(2^k) — for storing all unique substrings
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 34: Check if a String Contains All Binary Codes of Size K
 
 **Statement:** Given a binary string `s` and integer `k`, check if every possible binary code of length `k` exists as a substring of `s`.
@@ -1124,6 +2443,46 @@ def has_all_codes(s: str, k: int) -> bool:
 **Space Complexity:** O(2^k) — for storing all unique substrings
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def min_deletions(s: str) -> int:
+    from collections import Counter
+    freq = list(Counter(s).values())
+    freq.sort(reverse=True)
+    deletions = 0
+    used = set()
+    for f in freq:
+        # Decrease f until it's unique or zero
+        while f > 0 and f in used:
+            f -= 1
+            deletions += 1
+        used.add(f)
+    return deletions
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n + k log k) where k = unique characters (k ≤ 26)
+- **Space:** O(k) — for the frequency set
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 35: Minimum Deletions to Make Character Frequencies Unique
 
@@ -1158,6 +2517,43 @@ def min_deletions(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def get_lucky(s: str, k: int) -> int:
+    # Step 1: Convert letters to digits
+    num_str = ''
+    for ch in s:
+        num_str += str(ord(ch) - ord('a') + 1)
+    # Step 2: Apply digit sum k times
+    total = sum(int(ch) for ch in num_str)
+    for _ in range(k - 1):
+        total = sum(int(ch) for ch in str(total))
+    return total
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n + k * log(total)) where log(total) is digits count
+- **Space:** O(n) — for the numeric string
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 36: Sum of Digits of String After Convert
 
 **Statement:** Given a string `s` of lowercase letters and integer `k`, first convert each letter to its position (a→1, b→2, ..., z→26), concatenate all digits, then perform digit sum operation `k` times.
@@ -1188,6 +2584,43 @@ def get_lucky(s: str, k: int) -> int:
 **Space Complexity:** O(n) — for the numeric string
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def max_length_between_equal_characters(s: str) -> int:
+    first_occurrence = {}
+    max_len = -1
+    for i, ch in enumerate(s):
+        if ch in first_occurrence:
+            # Length between first and current occurrence (exclusive)
+            max_len = max(max_len, i - first_occurrence[ch] - 1)
+        else:
+            first_occurrence[ch] = i
+    return max_len
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(n) — for the hash map
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 37: Largest Substring Between Two Equal Characters
 
@@ -1220,6 +2653,44 @@ def max_length_between_equal_characters(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def minimum_length(s: str) -> int:
+    left, right = 0, len(s) - 1
+    while left < right and s[left] == s[right]:
+        ch = s[left]
+        # Skip all matching characters from left
+        while left <= right and s[left] == ch:
+            left += 1
+        # Skip all matching characters from right
+        while left <= right and s[right] == ch:
+            right -= 1
+    return right - left + 1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each character visited at most once
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 38: Minimum Length of String After Deleting Similar Ends
 
 **Statement:** Given a string `s`, you can remove characters from both ends if the characters at both ends are the same. Return the minimum possible length after performing any number of such operations.
@@ -1251,6 +2722,47 @@ def minimum_length(s: str) -> int:
 **Space Complexity:** O(1)
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def length_of_longest_substring_k_distinct(s: str, k: int) -> int:
+    from collections import defaultdict
+    count = defaultdict(int)
+    left = 0
+    max_len = 0
+    for right in range(len(s)):
+        count[s[right]] += 1
+        while len(count) > k:
+            count[s[left]] -= 1
+            if count[s[left]] == 0:
+                del count[s[left]]
+            left += 1
+        max_len = max(max_len, right - left + 1)
+    return max_len
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each character added and removed at most once
+- **Space:** O(k) — at most k entries in the dictionary
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 39: Longest Substring with At Most K Distinct Characters
 
@@ -1286,6 +2798,59 @@ def length_of_longest_substring_k_distinct(s: str, k: int) -> int:
 **Space Complexity:** O(k) — at most k entries in the dictionary
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def min_window(s1: str, s2: str) -> str:
+    n, m = len(s1), len(s2)
+    result = ""
+    min_len = float('inf')
+    for i in range(n):
+        if s1[i] == s2[0]:
+            # Forward pass: match s2
+            j, k = 0, i
+            while k < n and j < m:
+                if s1[k] == s2[j]:
+                    j += 1
+                k += 1
+            if j == m:
+                # Backward pass: find tightest start
+                end = k - 1
+                j = m - 1
+                start = end
+                while j >= 0:
+                    if s1[start] == s2[j]:
+                        j -= 1
+                    start -= 1
+                start += 1
+                if end - start + 1 < min_len:
+                    min_len = end - start + 1
+                    result = s1[start:end + 1]
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * m) — for each start position, O(n + m) work
+- **Space:** O(1) — only pointers and result tracking
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 40: Minimum Window Subsequence
 
@@ -1333,6 +2898,64 @@ def min_window(s1: str, s2: str) -> str:
 **Space Complexity:** O(1) — only pointers and result tracking
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def num_matching_subseq(s: str, words: list[str]) -> int:
+    from collections import defaultdict
+    # Build position index for each character
+    positions = defaultdict(list)
+    for i, ch in enumerate(s):
+        positions[ch].append(i)
+    count = 0
+    for word in words:
+        prev = -1
+        is_sub = True
+        for ch in word:
+            if ch not in positions:
+                is_sub = False
+                break
+            # Binary search for next position > prev
+            idx = -1
+            lo, hi = 0, len(positions[ch]) - 1
+            while lo <= hi:
+                mid = (lo + hi) // 2
+                if positions[ch][mid] > prev:
+                    idx = mid
+                    hi = mid - 1
+                else:
+                    lo = mid + 1
+            if idx == -1:
+                is_sub = False
+                break
+            prev = positions[ch][idx]
+        if is_sub:
+            count += 1
+    return count
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n + m * log(n)) where m = total characters in all words
+- **Space:** O(n) — for the position index
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 41: Number of Matching Subsequences
 
@@ -1385,6 +3008,49 @@ def num_matching_subseq(s: str, words: list[str]) -> int:
 
 ---
 
+**Problem Explanation:** Determine if a string is a palindrome considering only alphanumeric characters, ignoring case.
+
+**Algorithm Steps:**
+1. Initialize two pointers at left and right ends.
+2. Skip non-alphanumeric characters from each end.
+3. Compare lowercase versions; if mismatch, return False.
+4. Return True when pointers cross.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Two-pointer technique avoids creating a filtered copy, saving O(n) space.
+
+**Well-Commented Code:**
+```python
+def is_valid_palindrome(s: str, k: int) -> bool:
+    n = len(s)
+    # Space-optimized LCS of s and reverse(s)
+    prev = [0] * n
+    curr = [0] * n
+    for i in range(n - 1, -1, -1):
+        for j in range(i, n):
+            if s[i] == s[j]:
+                curr[j] = (prev[j - 1] + 2) if j > i else 1
+            else:
+                curr[j] = max(prev[j], curr[j - 1]) if j > i else 0
+        prev, curr = curr, [0] * n
+    lps = prev[n - 1]
+    return n - lps <= k
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n²) — for the LPS DP computation
+- **Space:** O(n) — space-optimized DP
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty string -> True
+- Only non-alphanumeric -> True
+- Single character -> True
+
 ### Problem 42: Valid Palindrome III
 
 **Statement:** Given a string `s` and integer `k`, return True if `s` is a palindrome or can become one by removing at most `k` characters.
@@ -1420,6 +3086,57 @@ def is_valid_palindrome(s: str, k: int) -> bool:
 **Space Complexity:** O(n) — space-optimized DP
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class StreamChecker:
+    def __init__(self, words: list[str]):
+        self.trie = {}
+        self.stream = []
+        # Build trie with words inserted in reverse
+        for word in words:
+            node = self.trie
+            for ch in reversed(word):
+                if ch not in node:
+                    node[ch] = {}
+                node = node[ch]
+            node['#'] = True  # Mark end of word
+
+    def query(self, letter: str) -> bool:
+        self.stream.append(letter)
+        node = self.trie
+        # Traverse stream in reverse (check suffix)
+        for ch in reversed(self.stream):
+            if '#' in node:
+                return True
+            if ch not in node:
+                return False
+            node = node[ch]
+        return '#' in node
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(k) per query where k = max word length
+- **Space:** O(sum of all word lengths) — for the trie
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 43: Stream of Characters
 
@@ -1465,6 +3182,52 @@ class StreamChecker:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def camel_match(queries: list[str], pattern: str) -> list[bool]:
+    def matches(word: str) -> bool:
+        i, j = 0, 0  # i for word, j for pattern
+        while i < len(word) and j < len(pattern):
+            if word[i] == pattern[j]:
+                i += 1
+                j += 1
+            elif word[i].isupper():
+                return False  # Uppercase doesn't match pattern
+            else:
+                i += 1  # Skip lowercase that doesn't match
+        # Any remaining uppercase in word means mismatch
+        while i < len(word):
+            if word[i].isupper():
+                return False
+            i += 1
+        return j == len(pattern)  # All pattern chars consumed
+
+    return [matches(q) for q in queries]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n * m) where n = number of queries, m = max word length
+- **Space:** O(1) — excluding output
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 44: Camelcase Matching
 
 **Statement:** Given a list of words and a pattern, check which words match the pattern. A word matches if pattern characters appear in order within the word, with uppercase characters in the word needing exact matches.
@@ -1504,6 +3267,49 @@ def camel_match(queries: list[str], pattern: str) -> list[bool]:
 **Space Complexity:** O(1) — excluding output
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def alert_names(name: list[str], time: list[str]) -> list[str]:
+    from collections import defaultdict
+    # Group times by name
+    logs = defaultdict(list)
+    for n, t in zip(name, time):
+        h, m = map(int, t.split(':'))
+        logs[n].append(h * 60 + m)
+    result = []
+    for person in sorted(logs.keys()):
+        times = sorted(logs[person])
+        # Check every window of 3 consecutive swipes
+        for i in range(len(times) - 2):
+            if times[i + 2] - times[i] <= 60:
+                result.append(person)
+                break  # One alert is enough per person
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — for sorting times per person
+- **Space:** O(n) — for storing the grouped logs
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 45: Alert Using Same Key-Card Three or More Times in a One Hour Period
 
@@ -1546,6 +3352,47 @@ def alert_names(name: list[str], time: list[str]) -> list[str]:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def min_operations(nums: list[int]) -> int:
+    n = len(nums)
+    operations = 0
+    last = nums[-1]  # Rightmost element is the initial max allowed
+    for i in range(n - 2, -1, -1):
+        if nums[i] > last:
+            # Need to split nums[i] into parts where each ≤ last
+            parts = (nums[i] + last - 1) // last  # ceil division
+            operations += parts - 1
+            # The minimum part becomes the new bound
+            last = nums[i] // parts
+        else:
+            last = nums[i]
+    return operations
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass from right to left
+- **Space:** O(1) — only a few variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 46: Minimum Replacement to Sort the Array
 
 **Statement:** Given an integer array `nums`, in one operation you can replace any element with two non-negative integers that sum to it. Find the minimum number of operations to make the array sorted in non-decreasing order.
@@ -1582,6 +3429,61 @@ def min_operations(nums: list[int]) -> int:
 **Space Complexity:** O(1) — only a few variables
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def longest_palindrome_subseq(s: str) -> int:
+    n = len(s)
+    # Space-optimized: use two rows
+    prev = [0] * n
+    curr = [0] * n
+    for i in range(n - 1, -1, -1):
+        for j in range(i, n):
+            if s[i] == s[j]:
+                curr[j] = (prev[j - 1] + 2) if j > i else 1
+            else:
+                curr[j] = max(prev[j], curr[j - 1]) if j > i else 0
+        prev, curr = curr, [0] * n
+    return prev[n - 1]
+
+def longest_palindrome_subseq_dp(s: str) -> int:
+    # Full n×n DP approach for clarity
+    n = len(s)
+    dp = [[0] * n for _ in range(n)]
+    for i in range(n):
+        dp[i][i] = 1  # Single character is palindrome of length 1
+    for length in range(2, n + 1):
+        for i in range(n - length + 1):
+            j = i + length - 1
+            if s[i] == s[j]:
+                dp[i][j] = dp[i + 1][j - 1] + 2
+            else:
+                dp[i][j] = max(dp[i + 1][j], dp[i][j - 1])
+    return dp[0][n - 1]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n²) — for both approaches
+- **Space:** O(n) for the first, O(n²) for the second
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 47: Longest Palindromic Subsequence
 
@@ -1635,6 +3537,50 @@ def longest_palindrome_subseq_dp(s: str) -> int:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+from collections import deque
+
+def find_max_value_of_equation(points: list[list[int]], k: int) -> int:
+    dq = deque()  # Stores (x, y+x) in decreasing order of y+x
+    max_val = float('-inf')
+    for x, y in points:
+        # Remove points outside the window
+        while dq and x - dq[0][0] > k:
+            dq.popleft()
+        # Compute with best candidate
+        if dq:
+            max_val = max(max_val, dq[0][1] + y - x)
+        # Maintain deque property: remove smaller y+x values
+        while dq and y + x >= dq[-1][1]:
+            dq.pop()
+        dq.append((x, y + x))
+    return max_val
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each point enters and leaves deque at most once
+- **Space:** O(n) — worst case all points in deque
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ### Problem 48: Max Value of Equation
 
 **Statement:** Given a list of 2D points sorted by x-coordinate and an integer `k`, find the maximum value of `yi + yj - |xi - xj|` for any two points where `|xi - xj| ≤ k`.
@@ -1673,6 +3619,54 @@ def find_max_value_of_equation(points: list[list[int]], k: int) -> int:
 **Space Complexity:** O(n) — worst case all points in deque
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def num_ways(s: str) -> int:
+    total_ones = s.count('1')
+    MOD = 10**9 + 7
+    if total_ones == 0:
+        # Any two split points work
+        n = len(s) - 1
+        return n * (n - 1) // 2 % MOD
+    if total_ones % 3 != 0:
+        return 0
+    target = total_ones // 3
+    # Count positions where 1st third ends and 2nd third ends
+    count1 = count2 = 0
+    ones = 0
+    for i in range(len(s)):
+        if s[i] == '1':
+            ones += 1
+        if ones == target:
+            count1 += 1
+        if ones == 2 * target:
+            count2 += 1
+    return (count1 * count2) % MOD
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — only counters
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 49: Number of Ways to Split a String
 
@@ -1715,6 +3709,48 @@ def num_ways(s: str) -> int:
 **Space Complexity:** O(1) — only counters
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def length_of_longest_substring_two_distinct(s: str) -> int:
+    from collections import defaultdict
+    count = defaultdict(int)
+    left = 0
+    max_len = 0
+    for right in range(len(s)):
+        count[s[right]] += 1
+        # Shrink window if more than 2 distinct characters
+        while len(count) > 2:
+            count[s[left]] -= 1
+            if count[s[left]] == 0:
+                del count[s[left]]
+            left += 1
+        max_len = max(max_len, right - left + 1)
+    return max_len
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each character added and removed at most once
+- **Space:** O(1) — at most 3 entries in the dictionary
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ### Problem 50: Longest Substring with At Most Two Distinct Characters
 

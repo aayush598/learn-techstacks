@@ -65,6 +65,50 @@ def create_cycle(head, pos):
 
 ---
 
+**Problem Explanation:** Reverse a singly linked list and return the new head.
+
+**Algorithm Steps:**
+1. Use three pointers: prev=None, curr=head.
+2. Save next pointer before overwriting: nxt = curr.next.
+3. Point curr.next to prev, advance prev=curr, curr=nxt.
+4. Return prev as the new head.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Save the next pointer before overwriting current.next -- the golden rule of linked list reversal.
+
+**Well-Commented Code:**
+```python
+def reverse_list(head):
+    prev, curr = None, head
+    while curr:
+        nxt = curr.next
+        curr.next = prev
+        prev = curr
+        curr = nxt
+    return prev
+
+def reverse_list_recursive(head):
+    if not head or not head.next:
+        return head
+    new_head = reverse_list_recursive(head.next)
+    head.next.next = head
+    head.next = None
+    return new_head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1) iterative / O(n) recursive
+- **Space:** O(1) iterative / O(n) recursive
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty list -> None
+- Single node
+
 ## Problem 1: Reverse Linked List (Easy)
 
 **Problem Statement:** Given the head of a singly linked list, reverse the list and return the reversed list.
@@ -109,6 +153,48 @@ def reverse_list_recursive(head):
 
 ---
 
+**Problem Explanation:** Merge two sorted linked lists into one sorted linked list.
+
+**Algorithm Steps:**
+1. Use a dummy head node to simplify edge cases.
+2. Compare current nodes of both lists, attach the smaller to result.
+3. Advance the pointer of the list whose node was attached.
+4. Attach remaining nodes from whichever list is not exhausted.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Dummy head eliminates special-case handling for the first node.
+
+**Well-Commented Code:**
+```python
+def merge_two_lists(l1, l2):
+    dummy = ListNode(0)
+    curr = dummy
+    while l1 and l2:
+        if l1.val <= l2.val:
+            curr.next = l1
+            l1 = l1.next
+        else:
+            curr.next = l2
+            l2 = l2.next
+        curr = curr.next
+    curr.next = l1 or l2
+    return dummy.next
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n+m), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Both lists empty
+- One list empty
+- One list exhausted early
+
 ## Problem 2: Merge Two Sorted Lists (Easy)
 
 **Problem Statement:** Merge two sorted linked lists into one sorted list by splicing together the nodes.
@@ -151,6 +237,42 @@ def merge_two_lists(l1, l2):
 
 ---
 
+**Problem Explanation:** Detect if a linked list has a cycle using constant space.
+
+**Algorithm Steps:**
+1. Use two pointers: slow moves 1 step, fast moves 2 steps.
+2. If they meet, a cycle exists.
+3. If fast reaches None, no cycle.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Floyd's Tortoise and Hare: if there's a cycle, the fast pointer will lap the slow one.
+
+**Well-Commented Code:**
+```python
+def has_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            return True
+    return False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty list -> False
+- Single node -> False
+- Full cycle (tail to head)
+
 ## Problem 3: Linked List Cycle (Easy)
 
 **Problem Statement:** Given head, determine if the linked list has a cycle in it using O(1) memory.
@@ -187,6 +309,39 @@ def has_cycle(head):
 
 ---
 
+**Problem Explanation:** Return the middle node of a linked list. If two middle nodes, return the second.
+
+**Algorithm Steps:**
+1. Use slow and fast pointers both starting at head.
+2. Slow moves 1 step, fast moves 2 steps.
+3. When fast reaches the end, slow is at the middle.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Fast/slow pointer finds the middle in one pass without knowing the length.
+
+**Well-Commented Code:**
+```python
+def middle_node(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    return slow
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty list -> None
+- Single node
+
 ## Problem 4: Middle of the Linked List (Easy)
 
 **Problem Statement:** Given head of a singly linked list, return the middle node. If two middle nodes, return the second.
@@ -218,6 +373,41 @@ def middle_node(head):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def delete_duplicates(head):
+    curr = head
+    while curr and curr.next:
+        if curr.val == curr.next.val:
+            curr.next = curr.next.next
+        else:
+            curr = curr.next
+    return head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 5: Remove Duplicates from Sorted List (Easy)
 
 **Problem Statement:** Given a sorted linked list, delete all duplicates such that each element appears only once.
@@ -247,6 +437,49 @@ def delete_duplicates(head):
 **Edge Cases:** Empty list, all duplicates, no duplicates.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def add_two_numbers(l1, l2):
+    dummy = ListNode(0)
+    curr = dummy
+    carry = 0
+    while l1 or l2 or carry:
+        val = carry
+        if l1:
+            val += l1.val
+            l1 = l1.next
+        if l2:
+            val += l2.val
+            l2 = l2.next
+        carry, digit = divmod(val, 10)
+        curr.next = ListNode(digit)
+        curr = curr.next
+    return dummy.next
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(max(m,n)), Space O(max(m,n))
+- **Space:** O(max(m,n))
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 6: Add Two Numbers (Easy)
 
@@ -286,6 +519,41 @@ def add_two_numbers(l1, l2):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def get_intersection_node(headA, headB):
+    if not headA or not headB:
+        return None
+    pA, pB = headA, headB
+    while pA is not pB:
+        pA = pA.next if pA else headB
+        pB = pB.next if pB else headA
+    return pA
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(m+n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 7: Intersection of Two Linked Lists (Easy)
 
 **Problem Statement:** Given two singly linked lists, find the node where they intersect (by reference, not value). Return null if no intersection.
@@ -319,6 +587,46 @@ def get_intersection_node(headA, headB):
 **Edge Cases:** No intersection (both become null), lists of different lengths.
 
 ---
+
+**Problem Explanation:** Detect if a linked list has a cycle using constant space.
+
+**Algorithm Steps:**
+1. Use two pointers: slow moves 1 step, fast moves 2 steps.
+2. If they meet, a cycle exists.
+3. If fast reaches None, no cycle.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Floyd's Tortoise and Hare: if there's a cycle, the fast pointer will lap the slow one.
+
+**Well-Commented Code:**
+```python
+def detect_cycle(head):
+    slow = fast = head
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            slow = head
+            while slow is not fast:
+                slow = slow.next
+                fast = fast.next
+            return slow
+    return None
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty list -> False
+- Single node -> False
+- Full cycle (tail to head)
 
 ## Problem 8: Linked List Cycle II (Easy)
 
@@ -354,6 +662,43 @@ def detect_cycle(head):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def remove_nth_from_end(head, n):
+    dummy = ListNode(0, head)
+    fast = slow = dummy
+    for _ in range(n + 1):
+        fast = fast.next
+    while fast:
+        fast = fast.next
+        slow = slow.next
+    slow.next = slow.next.next
+    return dummy.next
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(L), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 9: Remove Nth Node From End of List (Medium)
 
 **Problem Statement:** Given head of a linked list, remove the nth node from the end and return the head.
@@ -385,6 +730,57 @@ def remove_nth_from_end(head, n):
 **Edge Cases:** Removing the only node, removing the head.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def reorder_list(head):
+    if not head or not head.next:
+        return
+    # Find middle
+    slow, fast = head, head
+    while fast.next and fast.next.next:
+        slow = slow.next
+        fast = fast.next.next
+    # Reverse second half
+    prev, curr = None, slow.next
+    slow.next = None
+    while curr:
+        nxt = curr.next
+        curr.next = prev
+        prev = curr
+        curr = nxt
+    # Merge two halves
+    first, second = head, prev
+    while second:
+        tmp1, tmp2 = first.next, second.next
+        first.next = second
+        second.next = tmp1
+        first = tmp1
+        second = tmp2
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 10: Reorder List (Medium)
 
@@ -435,6 +831,44 @@ def reorder_list(head):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def swap_pairs(head):
+    dummy = ListNode(0, head)
+    prev = dummy
+    while prev.next and prev.next.next:
+        first = prev.next
+        second = first.next
+        first.next = second.next
+        second.next = first
+        prev.next = second
+        prev = first
+    return dummy.next
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 11: Swap Nodes in Pairs (Medium)
 
 **Problem Statement:** Swap every two adjacent nodes and return the reordered list. Do not change values — swap nodes themselves.
@@ -467,6 +901,54 @@ def swap_pairs(head):
 **Edge Cases:** Odd number of nodes (last node stays), empty list.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def rotate_right(head, k):
+    if not head or not head.next or k == 0:
+        return head
+    # Find length and tail
+    length = 1
+    tail = head
+    while tail.next:
+        tail = tail.next
+        length += 1
+    k %= length
+    if k == 0:
+        return head
+    # Make circular and find new break point
+    tail.next = head
+    steps_to_new_tail = length - k
+    new_tail = head
+    for _ in range(steps_to_new_tail - 1):
+        new_tail = new_tail.next
+    new_head = new_tail.next
+    new_tail.next = None
+    return new_head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 12: Rotate List (Medium)
 
@@ -510,6 +992,57 @@ def rotate_right(head, k):
 **Edge Cases:** k=0, k=length (no change), single node.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def copy_random_list(head):
+    if not head:
+        return None
+    # Step 1: Interleave copies
+    curr = head
+    while curr:
+        copy = Node(curr.val, curr.next, None)
+        curr.next = copy
+        curr = copy.next
+    # Step 2: Set random pointers
+    curr = head
+    while curr:
+        if curr.random:
+            curr.next.random = curr.random.next
+        curr = curr.next.next
+    # Step 3: Separate lists
+    copy_head = head.next
+    curr = head
+    while curr:
+        copy = curr.next
+        curr.next = copy.next
+        copy.next = copy.next.next if copy.next else None
+        curr = curr.next
+    return copy_head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 13: Copy List with Random Pointer (Medium)
 
@@ -557,6 +1090,59 @@ def copy_random_list(head):
 **Edge Cases:** Empty list, nodes with random=None.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def sort_list(head):
+    if not head or not head.next:
+        return head
+    # Find middle
+    slow, fast = head, head.next
+    while fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+    mid = slow.next
+    slow.next = None
+    # Sort halves
+    left = sort_list(head)
+    right = sort_list(mid)
+    # Merge
+    dummy = ListNode(0)
+    curr = dummy
+    while left and right:
+        if left.val <= right.val:
+            curr.next = left
+            left = left.next
+        else:
+            curr.next = right
+            right = right.next
+        curr = curr.next
+    curr.next = left or right
+    return dummy.next
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n), Space O(log n) for recursion stack
+- **Space:** O(log n) for recursion stack
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 14: Sort List (Medium)
 
@@ -606,6 +1192,54 @@ def sort_list(head):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def add_two_numbers_ii(l1, l2):
+    s1, s2 = [], []
+    while l1:
+        s1.append(l1.val)
+        l1 = l1.next
+    while l2:
+        s2.append(l2.val)
+        l2 = l2.next
+    carry = 0
+    head = None
+    while s1 or s2 or carry:
+        val = carry
+        if s1:
+            val += s1.pop()
+        if s2:
+            val += s2.pop()
+        carry, digit = divmod(val, 10)
+        node = ListNode(digit)
+        node.next = head
+        head = node
+    return head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(m+n), Space O(m+n)
+- **Space:** O(m+n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 15: Add Two Numbers II (Medium)
 
 **Problem Statement:** Numbers stored in forward order. Return sum as a linked list (also forward order).
@@ -649,6 +1283,46 @@ def add_two_numbers_ii(l1, l2):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def odd_even_list(head):
+    if not head:
+        return None
+    odd = head
+    even = head.next
+    even_head = even
+    while even and even.next:
+        odd.next = even.next
+        odd = odd.next
+        even.next = odd.next
+        even = even.next
+    odd.next = even_head
+    return head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 16: Odd Even Linked List (Medium)
 
 **Problem Statement:** Group all odd-indexed nodes together followed by even-indexed nodes. First node is odd.
@@ -683,6 +1357,49 @@ def odd_even_list(head):
 **Edge Cases:** Single node, two nodes, all same values.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+import heapq
+
+def merge_k_lists(lists):
+    dummy = ListNode(0)
+    curr = dummy
+    heap = []
+    for i, l in enumerate(lists):
+        if l:
+            heapq.heappush(heap, (l.val, i, l))
+    while heap:
+        val, idx, node = heapq.heappop(heap)
+        curr.next = node
+        curr = curr.next
+        if node.next:
+            heapq.heappush(heap, (node.next.val, idx, node.next))
+    return dummy.next
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(N log k) where N = total nodes, Space O(k)
+- **Space:** O(k)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 17: Merge k Sorted Lists (Hard)
 
@@ -721,6 +1438,52 @@ def merge_k_lists(lists):
 **Edge Cases:** Empty input, some empty lists, single list.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def reverse_k_group(head, k):
+    def reverse(start, end):
+        prev, curr = None, start
+        while curr is not end:
+            nxt = curr.next
+            curr.next = prev
+            prev = curr
+            curr = nxt
+        return prev
+    count = 0
+    node = head
+    while node and count < k:
+        node = node.next
+        count += 1
+    if count < k:
+        return head
+    new_head = reverse(head, node)
+    head.next = reverse_k_group(node, k)
+    return new_head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1) iterative / O(n/k) recursive
+- **Space:** O(1) iterative / O(n/k) recursive
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 18: Reverse Nodes in k-Group (Hard)
 
@@ -765,6 +1528,77 @@ def reverse_k_group(head, k):
 **Edge Cases:** k=1 (no change), k=length, k>length.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class DLLNode:
+    def __init__(self, key=0, val=0):
+        self.key = key
+        self.val = val
+        self.prev = None
+        self.next = None
+
+class LRUCache:
+    def __init__(self, capacity):
+        self.cap = capacity
+        self.cache = {}
+        self.head = DLLNode()
+        self.tail = DLLNode()
+        self.head.next = self.tail
+        self.tail.prev = self.head
+
+    def _remove(self, node):
+        node.prev.next = node.next
+        node.next.prev = node.prev
+
+    def _add_to_head(self, node):
+        node.next = self.head.next
+        node.prev = self.head
+        self.head.next.prev = node
+        self.head.next = node
+
+    def get(self, key):
+        if key in self.cache:
+            node = self.cache[key]
+            self._remove(node)
+            self._add_to_head(node)
+            return node.val
+        return -1
+
+    def put(self, key, value):
+        if key in self.cache:
+            self._remove(self.cache[key])
+        node = DLLNode(key, value)
+        self._add_to_head(node)
+        self.cache[key] = node
+        if len(self.cache) > self.cap:
+            lru = self.tail.prev
+            self._remove(lru)
+            del self.cache[lru.key]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(1) for get/put, Space O(capacity)
+- **Space:** O(capacity)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 19: LRU Cache (Hard)
 
@@ -836,6 +1670,53 @@ class LRUCache:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def flatten(head):
+    if not head:
+        return head
+    curr = head
+    while curr:
+        if curr.child:
+            child_head = flatten(curr.child)
+            nxt = curr.next
+            curr.next = child_head
+            child_head.prev = curr
+            # Find tail of child list
+            tail = child_head
+            while tail.next:
+                tail = tail.next
+            tail.next = nxt
+            if nxt:
+                nxt.prev = tail
+            curr.child = None
+        curr = curr.next
+    return head
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(d) where d = max depth
+- **Space:** O(d) where d = max depth
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 20: Flatten a Multilevel Doubly Linked List (Hard)
 
 **Problem Statement:** A doubly linked list where some nodes have a child pointer to a separate doubly linked list. Flatten all levels into a single list.
@@ -888,6 +1769,45 @@ def flatten(head):
 
 ---
 
+**Problem Explanation:** Determine if a string of brackets is properly closed and nested.
+
+**Algorithm Steps:**
+1. Use a stack to track opening brackets.
+2. For each closing bracket, check if it matches the top of stack.
+3. Return True if stack is empty at the end, else False.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Stack is the natural data structure for nested matching problems.
+
+**Well-Commented Code:**
+```python
+def is_valid(s):
+    stack = []
+    mapping = {')': '(', '}': '{', ']': '['}
+    for char in s:
+        if char in mapping:
+            if not stack or stack[-1] != mapping[char]:
+                return False
+            stack.pop()
+        else:
+            stack.append(char)
+    return len(stack) == 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty string -> True
+- Single bracket -> False
+- Only opening -> False
+
 ## Problem 21: Valid Parentheses (Easy)
 
 **Problem Statement:** Given a string containing only `(){}[]`, determine if the input is valid.
@@ -923,6 +1843,52 @@ def is_valid(s):
 **Edge Cases:** Empty string (True), single bracket (False), unmatched opening (False).
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class MyQueue:
+    def __init__(self):
+        self.input = []
+        self.output = []
+
+    def push(self, x):
+        self.input.append(x)
+
+    def pop(self):
+        self.peek()
+        return self.output.pop()
+
+    def peek(self):
+        if not self.output:
+            while self.input:
+                self.output.append(self.input.pop())
+        return self.output[-1]
+
+    def empty(self):
+        return not self.input and not self.output
+
+```
+
+**Complexity Analysis:**
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 22: Implement Queue using Stacks (Easy)
 
@@ -970,6 +1936,51 @@ class MyQueue:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+from collections import deque
+
+class MyStack:
+    def __init__(self):
+        self.q = deque()
+
+    def push(self, x):
+        self.q.append(x)
+        for _ in range(len(self.q) - 1):
+            self.q.append(self.q.popleft())
+
+    def pop(self):
+        return self.q.popleft()
+
+    def top(self):
+        return self.q[0]
+
+    def empty(self):
+        return len(self.q) == 0
+
+```
+
+**Complexity Analysis:**
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 23: Implement Stack using Queues (Easy)
 
 **Problem Statement:** Implement a LIFO stack using only one queue.
@@ -1014,6 +2025,52 @@ class MyStack:
 **Edge Cases:** Pop from empty stack, single element stack.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class MinStack:
+    def __init__(self):
+        self.stack = []
+        self.min_stack = []
+
+    def push(self, val):
+        self.stack.append(val)
+        min_val = min(val, self.min_stack[-1] if self.min_stack else val)
+        self.min_stack.append(min_val)
+
+    def pop(self):
+        self.stack.pop()
+        self.min_stack.pop()
+
+    def top(self):
+        return self.stack[-1]
+
+    def get_min(self):
+        return self.min_stack[-1]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(1) for all ops, Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 24: Min Stack (Easy)
 
@@ -1062,6 +2119,45 @@ class MinStack:
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def cal_points(operations):
+    stack = []
+    for op in operations:
+        if op == '+':
+            stack.append(stack[-1] + stack[-2])
+        elif op == 'D':
+            stack.append(2 * stack[-1])
+        elif op == 'C':
+            stack.pop()
+        else:
+            stack.append(int(op))
+    return sum(stack)
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 25: Baseball Game (Easy)
 
 **Problem Statement:** Calculate score from operations: integer = add, "+" = sum of last two, "D" = double of last, "C" = remove last.
@@ -1097,6 +2193,43 @@ def cal_points(operations):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def min_operations(logs):
+    depth = 0
+    for log in logs:
+        if log == '../':
+            depth = max(0, depth - 1)
+        elif log == './':
+            continue
+        else:
+            depth += 1
+    return depth
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(1)
+- **Space:** O(1)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 26: Crawler Log Folder (Easy)
 
 **Problem Statement:** Given a list of folder operations ("../" go up, "./" stay, "x/" go into folder x), find final depth from root.
@@ -1130,6 +2263,43 @@ def min_operations(logs):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def daily_temperatures(temperatures):
+    n = len(temperatures)
+    result = [0] * n
+    stack = []  # indices of temperatures awaiting warmer day
+    for i in range(n):
+        while stack and temperatures[i] > temperatures[stack[-1]]:
+            prev = stack.pop()
+            result[prev] = i - prev
+        stack.append(i)
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 27: Daily Temperatures (Medium)
 
 **Problem Statement:** Given daily temperatures, find how many days you must wait for a warmer temperature. If none, use 0.
@@ -1161,6 +2331,43 @@ def daily_temperatures(temperatures):
 **Edge Cases:** All same temperatures, strictly increasing, strictly decreasing.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+class StockSpanner:
+    def __init__(self):
+        self.stack = []  # (price, span)
+
+    def next(self, price):
+        span = 1
+        while self.stack and self.stack[-1][0] <= price:
+            s_price, s_span = self.stack.pop()
+            span += s_span
+        self.stack.append((price, span))
+        return span
+
+```
+
+**Complexity Analysis:**
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 28: Stock Span Problem (Medium)
 
@@ -1194,6 +2401,49 @@ class StockSpanner:
 **Edge Cases:** First call, prices in strictly decreasing order.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def eval_rpn(tokens):
+    stack = []
+    for token in tokens:
+        if token in '+-*/':
+            b, a = stack.pop(), stack.pop()
+            if token == '+':
+                stack.append(a + b)
+            elif token == '-':
+                stack.append(a - b)
+            elif token == '*':
+                stack.append(a * b)
+            else:
+                stack.append(int(a / b))
+        else:
+            stack.append(int(token))
+    return stack[0]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 29: Evaluate Reverse Polish Notation (Medium)
 
@@ -1234,6 +2484,43 @@ def eval_rpn(tokens):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def simplify_path(path):
+    stack = []
+    parts = path.split('/')
+    for part in parts:
+        if part == '..':
+            if stack:
+                stack.pop()
+        elif part and part != '.':
+            stack.append(part)
+    return '/' + '/'.join(stack)
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 30: Simplify Path (Medium)
 
 **Problem Statement:** Given an absolute Unix path, simplify it (resolve `.`, `..`, and consecutive slashes).
@@ -1268,6 +2555,50 @@ def simplify_path(path):
 **Edge Cases:** Root path only "/a", path with only "..".
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def decode_string(s):
+    stack = []
+    curr_str = ''
+    curr_num = 0
+    for char in s:
+        if char.isdigit():
+            curr_num = curr_num * 10 + int(char)
+        elif char == '[':
+            stack.append((curr_str, curr_num))
+            curr_str = ''
+            curr_num = 0
+        elif char == ']':
+            prev_str, num = stack.pop()
+            curr_str = prev_str + curr_str * num
+        else:
+            curr_str += char
+    return curr_str
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n) (output length can be exponential, so space is technically O(output))
+- **Space:** O(n) (output length can be exponential, so space is technically O(output))
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 31: Decode String (Medium)
 
@@ -1311,6 +2642,41 @@ def decode_string(s):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def next_greater_element(nums1, nums2):
+    stack = []
+    next_greater = {}
+    for num in nums2:
+        while stack and stack[-1] < num:
+            next_greater[stack.pop()] = num
+        stack.append(num)
+    return [next_greater.get(num, -1) for num in nums1]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(m+n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 32: Next Greater Element I (Medium)
 
 **Problem Statement:** Given two arrays (nums1 is subset of nums2), for each element in nums1, find the next greater element in nums2.
@@ -1341,6 +2707,43 @@ def next_greater_element(nums1, nums2):
 **Edge Cases:** nums1 empty, all elements in nums2 have no greater.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def next_greater_elements(nums):
+    n = len(nums)
+    result = [-1] * n
+    stack = []  # indices
+    for i in range(2 * n):
+        while stack and nums[stack[-1]] < nums[i % n]:
+            result[stack.pop()] = nums[i % n]
+        if i < n:
+            stack.append(i)
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(2n) = O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 33: Next Greater Element II (Medium)
 
@@ -1375,6 +2778,41 @@ def next_greater_elements(nums):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def car_fleet(target, position, speed):
+    cars = sorted(zip(position, speed), reverse=True)
+    stack = []
+    for pos, spd in cars:
+        time = (target - pos) / spd
+        if not stack or time > stack[-1]:
+            stack.append(time)
+    return len(stack)
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 34: Car Fleet (Medium)
 
 **Problem Statement:** Cars at different positions travel toward a target at different speeds. A faster car behind a slower one becomes a fleet. Count total fleets.
@@ -1405,6 +2843,47 @@ def car_fleet(target, position, speed):
 **Edge Cases:** All cars at same position, single car.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def largest_rectangle_area(heights):
+    stack = [-1]
+    max_area = 0
+    for i in range(len(heights)):
+        while stack[-1] != -1 and heights[i] < heights[stack[-1]]:
+            height = heights[stack.pop()]
+            width = i - stack[-1] - 1
+            max_area = max(max_area, height * width)
+        stack.append(i)
+    while stack[-1] != -1:
+        height = heights[stack.pop()]
+        width = len(heights) - stack[-1] - 1
+        max_area = max(max_area, height * width)
+    return max_area
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 35: Largest Rectangle in Histogram (Hard)
 
@@ -1442,6 +2921,60 @@ def largest_rectangle_area(heights):
 **Edge Cases:** Empty array, all same heights, strictly increasing heights.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def maximal_rectangle(matrix):
+    if not matrix:
+        return 0
+    rows, cols = len(matrix), len(matrix[0])
+    heights = [0] * cols
+    max_area = 0
+
+    def largest_area(h):
+        stack = [-1]
+        area = 0
+        for i in range(len(h)):
+            while stack[-1] != -1 and h[i] < h[stack[-1]]:
+                height = h[stack.pop()]
+                width = i - stack[-1] - 1
+                area = max(area, height * width)
+            stack.append(i)
+        while stack[-1] != -1:
+            height = h[stack.pop()]
+            width = len(h) - stack[-1] - 1
+            area = max(area, height * width)
+        return area
+
+    for r in range(rows):
+        for c in range(cols):
+            heights[c] = heights[c] + 1 if matrix[r][c] == '1' else 0
+        max_area = max(max_area, largest_area(heights))
+    return max_area
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(rows × cols), Space O(cols)
+- **Space:** O(cols)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 36: Maximal Rectangle (Hard)
 
@@ -1492,6 +3025,45 @@ def maximal_rectangle(matrix):
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def trap(height):
+    stack = []
+    water = 0
+    for i in range(len(height)):
+        while stack and height[i] > height[stack[-1]]:
+            bottom = stack.pop()
+            if stack:
+                width = i - stack[-1] - 1
+                h = min(height[i], height[stack[-1]]) - height[bottom]
+                water += width * h
+        stack.append(i)
+    return water
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 37: Trapping Rain Water (Hard)
 
 **Problem Statement:** Given n non-negative integers representing elevation, compute how much water it can trap after rain.
@@ -1525,6 +3097,47 @@ def trap(height):
 **Edge Cases:** Empty array, no water trapped, all same heights.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+from collections import deque
+
+def max_sliding_window(nums, k):
+    dq = deque()
+    result = []
+    for i in range(len(nums)):
+        while dq and dq[0] < i - k + 1:
+            dq.popleft()
+        while dq and nums[dq[-1]] < nums[i]:
+            dq.pop()
+        dq.append(i)
+        if i >= k - 1:
+            result.append(nums[dq[0]])
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(k)
+- **Space:** O(k)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 38: Sliding Window Maximum (Hard)
 
@@ -1561,6 +3174,103 @@ def max_sliding_window(nums, k):
 **Edge Cases:** k=1 (return array), k=length (return single max), all same values.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+import heapq
+
+def median_sliding_window(nums, k):
+    from sortedcontainers import SortedList
+    window = SortedList()
+    result = []
+
+    for i, num in enumerate(nums):
+        window.add(num)
+        if len(window) > k:
+            window.remove(nums[i - k])
+        if len(window) == k:
+            if k % 2 == 1:
+                result.append(window[k // 2])
+            else:
+                result.append((window[k // 2 - 1] + window[k // 2]) / 2)
+    return result
+
+def median_sliding_window_heap(nums, k):
+    import heapq
+    lo, hi = [], []
+    delayed = {}
+    lo_size = 0
+    hi_size = 0
+    result = []
+
+    def make_balance():
+        nonlocal lo_size, hi_size
+        while lo_size > (k + 1) // 2:
+            val = -heapq.heappop(lo)
+            lo_size -= 1
+            heapq.heappush(hi, val)
+            hi_size += 1
+        while lo_size < (k + 1) // 2 and hi:
+            val = heapq.heappop(hi)
+            hi_size -= 1
+            heapq.heappush(lo, -val)
+            lo_size += 1
+
+    def prune(heap, is_max):
+        while heap:
+            val = heap[0] if not is_max else -heap[0]
+            if delayed.get(val, 0) > 0:
+                delayed[val] -= 1
+                heapq.heappop(heap)
+            else:
+                break
+
+    for i, num in enumerate(nums):
+        if not lo or num <= -lo[0]:
+            heapq.heappush(lo, -num)
+            lo_size += 1
+        else:
+            heapq.heappush(hi, num)
+            hi_size += 1
+
+        if i >= k:
+            out = nums[i - k]
+            delayed[out] = delayed.get(out, 0) + 1
+            if out <= -lo[0] if lo else False:
+                lo_size -= 1
+            else:
+                hi_size -= 1
+            prune(lo, True)
+            prune(hi, False)
+
+        make_balance()
+        if i >= k - 1:
+            result.append(float(-lo[0]))
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log k), Space O(k)
+- **Space:** O(k)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 39: Sliding Window Median (Hard)
 
@@ -1653,6 +3363,55 @@ def median_sliding_window_heap(nums, k):
 **Edge Cases:** k=1, k=length, all same values.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def get_collision_times(positions, speeds):
+    n = len(positions)
+    result = [-1.0] * n
+    stack = []  # indices of cars to the right
+
+    for i in range(n - 1, -1, -1):
+        while stack:
+            j = stack[-1]
+            # Cannot catch up if same speed or slower
+            if speeds[i] <= speeds[j]:
+                stack.pop()
+                continue
+            # Time to catch car j
+            time = (positions[j] - positions[i]) / (speeds[i] - speeds[j])
+            # If j catches k before we catch j, skip j
+            if result[j] != -1 and time >= result[j]:
+                stack.pop()
+                continue
+            result[i] = time
+            break
+        stack.append(i)
+    return result
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n), Space O(n)
+- **Space:** O(n)
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 40: Car Fleet II (Hard)
 

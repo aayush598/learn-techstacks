@@ -49,6 +49,9 @@ Iteration 3: boxes=3, units=1
 Result: 8 units
 ```
 
+**Key Insight:**
+Since all boxes of the same type are identical, the optimal strategy is to take the highest-value boxes first. Sorting by value descending ensures we fill the truck with the most valuable mix. This works because boxes are discrete but fungible — we don't need fractional amounts, just the best combination.
+
 **Solution:**
 ```python
 def maximumUnits(boxTypes, truckCapacity):
@@ -100,6 +103,9 @@ You have stock prices day-by-day. You can buy once and sell once later. Find the
    b. Calculate profit if sold today: `current_price - min_price`
    c. Update `max_profit = max(max_profit, profit)`
 4. Return `max_profit`
+
+**Key Insight:**
+You don't need to track both buy and sell days separately. By tracking the minimum price seen so far, you implicitly know the best possible buy day. At each step, computing `price - min_price` gives the profit if you sold today — and taking the max over all days gives the answer. This transforms a nested-loop problem into a single pass.
 
 **Solution:**
 ```python
@@ -187,6 +193,9 @@ i=3: jump=0, farthest = max(3, 3+0) = 3
 i=4: i(4) > farthest(3) → Stuck! Return False
 ```
 
+**Key Insight:**
+You don't need to simulate actual jumps — just track the furthest index reachable. If at any point the current index exceeds the furthest reachable index, you're stuck. This works because all jumps move forward; if you can reach index `i`, you can also reach every index before it.
+
 **Solution:**
 ```python
 def canJump(nums):
@@ -255,6 +264,9 @@ b=10: fives=1, tens=1
 b=10: fives=0, tens=2
 b=20: need $15 → tens>0 but fives=0, fives>=3? No → Return False
 ```
+
+**Key Insight:**
+The greedy rule for $20 change is to give $10+$5 first (not three $5s). This preserves $5 bills, which are the most versatile — $5s are needed for both $10 and $20 change, while $10s only help with $20. This is a classic example of "use the largest denomination possible to preserve smaller ones."
 
 **Solution:**
 ```python
@@ -331,6 +343,9 @@ child=1, cookie=1: s[1]=2 >= g[1]=2 → content! child=2, cookie=2
 Result: 2 content children
 ```
 
+**Key Insight:**
+By sorting both arrays and matching the smallest adequate cookie to the least greedy child, you avoid wasting large cookies on small-greed children. This is a classic "two-pointer on sorted arrays" pattern — the greedy choice of giving the smallest sufficient cookie at each step naturally maximizes total content children.
+
 **Solution:**
 ```python
 def findContentChildren(g, s):
@@ -395,6 +410,9 @@ String: ['9','9','9','9']
 No '6' found → return original 9999
 ```
 
+**Key Insight:**
+The leftmost digit has the highest positional value (thousands > hundreds > tens > ones). Changing the leftmost '6' to '9' gives the maximum possible increase. This is a special case of the Maximum Swap problem — here we only flip 6→9 (not 9→6), making it simpler.
+
 **Solution:**
 ```python
 def maximum69Number(num):
@@ -434,304 +452,759 @@ def maximum69Number(num):
 
 ## Problem 7 — Jump Game II (Medium)
 
-**Statement:** Same as Jump Game but return the **minimum number of jumps** to reach the last index. Assume it's always possible.
+**Problem Explanation:**
+You're at the start of an array where each number tells you the maximum jump length from that position. You need to find the **minimum number of jumps** to reach the last index. Unlike Jump Game I, you are guaranteed to be able to reach the end. The question asks: what's the fewest jumps needed?
 
-**Approach:** BFS-style greedy: track the current range and the farthest reachable in the next jump.
+**Algorithm Steps:**
+1. Initialize `jumps = 0` (count of jumps taken), `end = 0` (boundary of current jump), `farthest = 0` (furthest reachable)
+2. Loop through indices from 0 to n-2 (don't need to jump from last index):
+   a. Update `farthest = max(farthest, i + nums[i])`
+   b. If `i == end`: reached the boundary of the current jump level → increment `jumps`, set `end = farthest` (new boundary)
+3. Return `jumps`
 
+**Visual Walkthrough:**
+```
+nums = [2, 3, 1, 1, 4]
+
+i=0: farthest = max(0, 0+2) = 2
+     i == end(0) → jumps=1, end=2
+     State: farthest=2, can reach [1, 2] in 1 jump
+
+i=1: farthest = max(2, 1+3) = 4
+     i(1) != end(2) → still within current jump zone
+
+i=2: farthest = max(4, 2+1) = 4
+     i == end(2) → jumps=2, end=4
+     State: farthest=4, can reach end!
+
+i=3: farthest = max(4, 3+1) = 4
+     i(3) != end(4) → still in zone
+
+Loop ends (i < len-1 = 4)
+Result: 2 jumps
+  Jump 1: [0→1] (reach up to index 2)
+  Jump 2: [1→4] (reach up to index 4) Done!
+```
+
+**Key Insight:**
+This is BFS in disguise. Each "jump" defines a range of indices you can reach. The end of one range becomes the start of the next. You track `farthest` to see how far the current jump can take you, and `end` marks when you must take a new jump. This "level-by-level" approach gives the minimum number of jumps without explicitly building a graph.
+
+**Solution:**
 ```python
 def jump(nums):
+    # jumps: count of jumps taken
+    # end: boundary of current jump range
+    # farthest: furthest index reachable within current jump
     jumps = end = farthest = 0
+    # Loop until second-to-last index (no jump needed from last)
     for i in range(len(nums) - 1):
+        # Extend the reachable range for the current jump
         farthest = max(farthest, i + nums[i])
+        # Reached the boundary of current jump → must take another
         if i == end:
             jumps += 1
-            end = farthest
+            end = farthest  # New boundary = furthest reachable
     return jumps
 ```
 
-- **Time:** O(n) | **Space:** O(1)
-- **Tip:** This is a "level-by-level" BFS done greedily. `end` marks the boundary of the current jump level.
+- **Time:** O(n) — single pass through the array
+- **Space:** O(1) — just integer variables
+- **Edge Cases:** Single element `[0]` → return 0 (already at end). Two elements `[1, 0]` → return 1. All zeros except start `[2, 0, 0]` → return 2.
+- **Common Mistakes:** Forgetting to stop at n-2 (jumping from last index is unnecessary). Confusing `end` (current boundary) with `farthest` (maximum reachable).
+- **Pattern Recognition:** "Minimum jumps to reach end" → BFS-level greedy; similar to "minimum steps to reach target" where each step has a range.
 
 ---
 
 ## Problem 8 — Gas Station (Medium)
 
-**Statement:** `gas[i]` = gas at station `i`, `cost[i]` = cost to travel to station `i+1`. Find the **starting station index** to complete a full circuit, or `-1` if impossible.
+**Problem Explanation:**
+You're driving around a circular route with `n` gas stations. Each station `i` has `gas[i]` fuel you can take, but it costs `cost[i]` fuel to drive to station `i+1`. You start with an empty tank. Find a starting station such that you can complete the full circuit without running out of fuel. Return -1 if impossible.
 
-**Approach:** If total gas >= total cost, a solution exists. Track `tank` and reset when it goes negative — the next station is the new candidate.
+**Algorithm Steps:**
+1. Initialize `total_tank = curr_tank = start = 0`
+2. For each station `i`:
+   a. Compute `diff = gas[i] - cost[i]` (surplus/deficit at this leg)
+   b. Add to both `total_tank` and `curr_tank`
+   c. If `curr_tank < 0`: this station (and all before) cannot be start → set `start = i + 1`, reset `curr_tank = 0`
+3. If `total_tank >= 0`, return `start`; else return -1
 
+**Visual Walkthrough:**
+```
+gas  = [1, 2, 3, 4, 5]
+cost = [3, 4, 5, 1, 2]
+diff = [-2, -2, -2, 3, 3]
+
+i=0: diff=-2, total=-2, curr=-2 < 0 → start=1, curr=0
+i=1: diff=-2, total=-4, curr=-2 < 0 → start=2, curr=0
+i=2: diff=-2, total=-6, curr=-2 < 0 → start=3, curr=0
+i=3: diff=+3, total=-3, curr=+3
+i=4: diff=+3, total=0,  curr=+6
+
+total_tank(0) >= 0 → return start=3
+
+Verification from station 3:
+  3→4: tank=3 (gas=4-cost=1)
+  4→0: tank=6 (gas=5-cost=2)
+  0→1: tank=4 (gas=1-cost=3)
+  1→2: tank=2 (gas=2-cost=4)
+  2→3: tank=0 (gas=3-cost=5) → Complete circuit!
+```
+
+**Key Insight:**
+If total gas >= total cost across all stations, a solution MUST exist. The proof: you can think of running out of fuel at a station as "proof that every station before this one fails as a starting point." By resetting `curr_tank` at each failure, you only check the remaining candidates. This turns O(n²) into O(n).
+
+**Solution:**
 ```python
 def canCompleteCircuit(gas, cost):
+    # total_tank: overall surplus/deficit across all stations
+    # curr_tank: running tank level from current start candidate
+    # start: the current best candidate for starting station
     total_tank = curr_tank = start = 0
     for i in range(len(gas)):
-        diff = gas[i] - cost[i]
+        diff = gas[i] - cost[i]  # Net gain/loss at this station
         total_tank += diff
         curr_tank += diff
+        # If we run out of fuel, no station up to i can be start
         if curr_tank < 0:
-            start = i + 1
-            curr_tank = 0
+            start = i + 1         # Try next station as candidate
+            curr_tank = 0         # Reset tank for new candidate
     return start if total_tank >= 0 else -1
 ```
 
 - **Time:** O(n) | **Space:** O(1)
-- **Tip:** The key insight: if the total surplus is non-negative, there IS exactly one valid starting point. When your tank goes negative, every station before (including current) cannot be the answer.
+- **Edge Cases:** Only one station: check if `gas[0] >= cost[0]`. All stations with net deficit: return -1. All stations with surplus: return 0.
+- **Common Mistakes:** Returning `start` even when `total_tank < 0` (no solution exists). Using `if curr_tank <= 0` instead of `< 0` (resetting at zero is wrong — zero means you barely made it, not failed).
+- **Pattern Recognition:** "Circular route feasibility" → track cumulative deficit with reset. Similar to finding subarray with maximum sum (Kadane's algorithm variant).
 
 ---
 
 ## Problem 9 — Task Scheduler (Medium)
 
-**Statement:** You have tasks `['A','A','B','B']` and cooldown `n`. Between two same tasks, there must be at least `n` intervals. Return the **least number of intervals** to finish all tasks.
+**Problem Explanation:**
+You have a list of tasks (each task is a letter) and a cooldown period `n`. Between two executions of the **same** task, at least `n` other intervals must pass. During each interval, you can either run a task or be idle. Find the minimum number of intervals needed to finish all tasks.
 
-**Approach:** The most frequent task dictates the minimum. Formula: `max(len(tasks), (max_count - 1) * (n + 1) + count_of_max)`.
+**Algorithm Steps:**
+1. Count frequency of each task using `Counter`
+2. Find `max_freq` — the highest frequency among all tasks
+3. Find `max_count` — how many tasks have that maximum frequency
+4. Compute formula: `(max_freq - 1) * (n + 1) + max_count`
+5. Return `max(len(tasks), formula_result)`
 
+**Visual Walkthrough:**
+```
+tasks = ['A','A','A','B','B','B'], n = 2
+
+freq: A=3, B=3
+max_freq = 3
+max_count = 2 (both A and B appear 3 times)
+
+Formula: (3-1)*(2+1)+2 = 2*3+2 = 8
+len(tasks) = 6
+Result = max(6, 8) = 8
+
+Layout (n=2 cooldown means 2 other tasks between same tasks):
+  A _ _ A _ _ A     (A's positions)
+  B _ _ B _ _ B     (B's positions)
+  Merged: A B _ A B _ A B
+  So 8 intervals total (A,B,idle,A,B,idle,A,B)
+```
+
+**Key Insight:**
+The most frequent task is the bottleneck — it defines the minimum schedule length. The formula `(max_freq - 1) * (n + 1)` creates frames with `n` gaps between frames, then `+ max_count` fills the last partial frame. If other tasks happen to fill all the gaps, the answer is simply the total number of tasks (no idle needed).
+
+**Solution:**
 ```python
 from collections import Counter
 
 def leastInterval(tasks, n):
-    freq = Counter(tasks)
-    max_freq = max(freq.values())
-    max_count = sum(1 for v in freq.values() if v == max_freq)
+    freq = Counter(tasks)                 # Count occurrences of each task
+    max_freq = max(freq.values())         # How many times the most frequent task appears
+    max_count = sum(1 for v in freq.values() if v == max_freq)  # How many tasks have max freq
+    
+    # Formula: frames for max-freq tasks with n gaps, plus the last row
     result = max(len(tasks), (max_freq - 1) * (n + 1) + max_count)
     return result
 ```
 
 - **Time:** O(n) | **Space:** O(1) (at most 26 letters)
-- **Tip:** The formula `(max_freq - 1) * (n + 1) + max_count` represents laying out the most frequent tasks with `n` gaps, then filling the last row. If other tasks fill all gaps, total tasks length dominates.
+- **Edge Cases:** `n = 0`: Return `len(tasks)` (no cooldown needed). All tasks are the same `['A', 'A', 'A'], n=2`: Return `(3-1)*(2+1)+1 = 7`. Only one task type: the formula handles it naturally.
+- **Common Mistakes:** Forgetting `max_count` (multiple tasks with same max frequency fill the last row differently). Using `(max_freq) * (n + 1)` instead of `(max_freq - 1) * (n + 1)`. Not taking `max()` with `len(tasks)`.
+- **Pattern Recognition:** "Schedule with cooldown" → formula-based greedy; counting + max-frequency analysis is common in scheduling problems.
 
 ---
 
 ## Problem 10 — Queue Reconstruction by Height (Medium)
 
-**Statement:** People described as `[h, k]` where `h` = height, `k` = number of people in front who are >= h. Reconstruct the queue.
+**Problem Explanation:**
+You have an array of people described as `[height, k]` where `k` is the number of people in front of this person who are **taller or same height**. The queue is jumbled; you need to reconstruct the correct ordering. The key property: taller people are visible over shorter ones, so shorter people don't affect `k` counts of taller people.
 
-**Approach:** Sort by height descending (ties by k ascending). Insert each person at index `k` in the result.
+**Algorithm Steps:**
+1. Sort `people` by height descending (tallest first), and for ties, by `k` ascending
+2. Initialize an empty result list
+3. For each person `p` in sorted order:
+   a. Insert `p` at index `p[1]` in the result list
+4. Return the result list
 
+**Visual Walkthrough:**
+```
+people = [[7,0],[4,4],[7,1],[5,0],[6,1],[5,2]]
+Sorted by (-height, k): [[7,0],[7,1],[6,1],[5,0],[5,2],[4,4]]
+
+Insert [7,0] at index 0:  [[7,0]]
+Insert [7,1] at index 1:  [[7,0],[7,1]]
+Insert [6,1] at index 1:  [[7,0],[6,1],[7,1]]
+Insert [5,0] at index 0:  [[5,0],[7,0],[6,1],[7,1]]
+Insert [5,2] at index 2:  [[5,0],[7,0],[5,2],[6,1],[7,1]]
+Insert [4,4] at index 4:  [[5,0],[7,0],[5,2],[6,1],[4,4],[7,1]]
+                          ✓✓✓✓✓✓
+```
+
+**Key Insight:**
+Taller people are "invisible" to shorter people — a short person's `k` only counts people taller than them. So if you place taller people first, the shorter person can just be inserted at position `k`, and they'll end up with exactly `k` taller people before them. This works because all previously placed people are already >= current height.
+
+**Solution:**
 ```python
 def reconstructQueue(people):
+    # Sort by height descending (tallest first), then by k ascending
     people.sort(key=lambda x: (-x[0], x[1]))
     queue = []
     for p in people:
+        # Insert at index k — taller people already placed won't be affected
         queue.insert(p[1], p)
     return queue
 ```
 
-- **Time:** O(n²) | **Space:** O(n)
-- **Tip:** Taller people are placed first and are unaffected by shorter people inserted later. Inserting at index `k` directly places them correctly relative to taller people.
+- **Time:** O(n²) — list insertions are O(n) each
+- **Space:** O(n) for the result list
+- **Edge Cases:** All same height `[[5,0],[5,1],[5,2]]`: Just sort by `k` ascending → works. Single person: Insert at index 0, return. People with `k` larger than current list length: Not possible in valid input.
+- **Common Mistakes:** Sorting ascending instead of descending by height. Forgetting tie-breaker (ascending `k`). Using `queue.insert(-1, p)` or `queue.append(p)` instead of inserting at index `k`.
+- **Pattern Recognition:** "Reconstruct from relative ordering" → insert tallest/smallest first; similar to building a tree from inorder/postorder.
 
 ---
 
 ## Problem 11 — Hand of Straights (Medium)
 
-**Statement:** Alice has cards (integer array). Can she rearrange them into groups of `groupSize` where each group is a consecutive sequence?
+**Problem Explanation:**
+You have an integer array of cards. Can you rearrange them into groups of size `groupSize` where each group forms a consecutive sequence (like 2,3,4 or 7,8,9)? Each card can be used once. The order doesn't matter — you can reorder freely.
 
-**Approach:** Use a min-heap. Always try to form a group starting from the smallest card.
+**Algorithm Steps:**
+1. If `len(hand) % groupSize != 0`: impossible, return False
+2. Count frequency of each card value using `Counter`
+3. Build a min-heap of unique card values
+4. While heap is not empty:
+   a. Peek at the smallest card value (`heap[0]`)
+   b. For `i` from 0 to `groupSize - 1`:
+      - Card needed = `first + i`
+      - If count of needed card is 0: return False
+      - Decrement count
+      - If count becomes 0 and card is NOT the heap's minimum: return False (gap!)
+      - If count becomes 0: pop from heap (this value is exhausted)
+5. Return True
 
+**Visual Walkthrough:**
+```
+hand = [1,2,3,6,2,3,4,7,8], groupSize = 3
+len(hand)=9, 9%3=0 ✓
+
+Count: {1:1, 2:2, 3:2, 4:1, 6:1, 7:1, 8:1}
+Heap: [1,2,3,4,6,7,8]
+
+Group 1: first=1
+  need 1 → count[1]=0, pop 1
+  need 2 → count[2]=1
+  need 3 → count[3]=1
+  Result: [1,2,3]
+
+Group 2: first=2 (heap[0]=2)
+  need 2 → count[2]=0, pop 2
+  need 3 → count[3]=0, pop 3
+  need 4 → count[4]=0, pop 4
+  Result: [2,3,4]
+
+Group 3: first=6 (heap[0]=6)
+  need 6 → count[6]=0, pop 6
+  need 7 → count[7]=0, pop 7
+  need 8 → count[8]=0, pop 8
+  Result: [6,7,8]
+
+Heap empty → Return True
+```
+
+**Key Insight:**
+Always start a group from the smallest remaining card. If you don't, the smallest card will eventually be left without consecutive companions. The min-heap gives O(1) access to the smallest card. The check `count[card] == 0 and card != heap[0]` detects gaps — if a card in the middle of a sequence runs out before the first card, there's a hole that can't be filled.
+
+**Solution:**
 ```python
 import heapq
 from collections import Counter
 
 def isNStraightHand(hand, groupSize):
+    # If total cards aren't divisible by groupSize, impossible
     if len(hand) % groupSize != 0:
         return False
+    
+    # Count occurrences of each card value
     count = Counter(hand)
+    # Min-heap of unique card values (sorted for smallest-first access)
     heap = list(count.keys())
     heapq.heapify(heap)
+    
     while heap:
-        first = heap[0]
+        first = heap[0]  # Smallest card value currently available
+        # Try to form a consecutive group starting from 'first'
         for i in range(groupSize):
             card = first + i
-            if count[card] == 0:
+            if count[card] == 0:       # Missing required card
                 return False
             count[card] -= 1
+            # If we just exhausted a middle card while first still exists → gap
             if count[card] == 0 and card != heap[0]:
                 return False
-            if count[card] == 0:
-                heapq.heappop(heap)
+            if count[card] == 0:       # This card value is fully used
+                heapq.heappop(heap)    # Remove from heap
     return True
 ```
 
-- **Time:** O(n log n) | **Space:** O(n)
-- **Tip:** Always start building a group from the smallest available card. If any card in the consecutive sequence is missing, it's impossible.
+- **Time:** O(n log n) — each card processed once, heap operations O(log n)
+- **Space:** O(n) — Counter and heap
+- **Edge Cases:** Empty hand: return True (vacuously). Single card with groupSize=1: return True. Duplicates `[1,1,1], groupSize=3`: Need three different consecutive numbers, only 1's → False. Large groupSize > max spread: may have gaps.
+- **Common Mistakes:** Forgetting the modulo check (impossible group sizes). Not checking for gaps when a middle card is exhausted (`count[card] == 0 and card != heap[0]`). Sorting the hand and iterating linearly (fails with duplicates/overlapping groups).
+- **Pattern Recognition:** "Partition into consecutive sequences" → min-heap + frequency count; similar to "Divide Array in Sets of K Consecutive Numbers" (identical problem).
 
 ---
 
 ## Problem 12 — Minimum Number of Arrows to Burst Balloons (Medium)
 
-**Statement:** Each balloon `[start, end]` is an interval. An arrow shot at position `x` bursts all balloons where `start <= x <= end`. Find the **minimum arrows** to burst all.
+**Problem Explanation:**
+Balloons are represented as intervals `[start, end]` on a number line. An arrow shot at position `x` bursts every balloon whose interval `[start, end]` contains `x`. You can shoot arrows anywhere. Find the minimum number of arrows needed to burst all balloons.
 
-**Approach:** Sort by end. Shoot at the end of the first balloon; skip all overlapping ones.
+**Algorithm Steps:**
+1. Sort balloons by their end coordinate (ascending)
+2. Initialize `arrows = 1` (at least one arrow needed) and `end = points[0][1]` (shoot at first balloon's end)
+3. For each remaining balloon `[s, e]`:
+   a. If `s > end`: balloon starts after last arrow's range → need new arrow → `arrows += 1`, update `end = e`
+   b. Else: balloon overlaps with current arrow range → skip (arrow bursts it too)
+4. Return `arrows`
 
+**Visual Walkthrough:**
+```
+points = [[10,16],[2,8],[1,6],[7,12]]
+
+Sorted by end: [[1,6],[2,8],[7,12],[10,16]]
+
+arrows=1, end=6 (shoot at x=6)
+  [2,8]: 2 <= 6? Yes (overlaps) → skip (burst by same arrow)
+  [7,12]: 7 > 6? Yes (no overlap) → new arrow at x=12, arrows=2
+  [10,16]: 10 > 12? No (overlaps) → skip
+
+Answer: 2 arrows
+  Arrow 1 at x=6 bursts [1,6] and [2,8]
+  Arrow 2 at x=12 bursts [7,12] and [10,16]
+```
+
+**Key Insight:**
+By shooting at the end of the first balloon, you burst all balloons that overlap with that point. Since the first balloon ends earliest, any balloon that overlaps with it MUST start before or at its end. Sorting by end ensures each arrow is placed as far right as possible while still bursting the leftmost remaining balloon — this maximizes arrow coverage.
+
+**Solution:**
 ```python
 def findMinArrowShots(points):
+    # Sort intervals by end coordinate (greedy: shoot at earliest end)
     points.sort(key=lambda x: x[1])
-    arrows = 1
-    end = points[0][1]
+    arrows = 1                      # At least one arrow needed
+    end = points[0][1]              # Shoot at the first balloon's end
     for s, e in points[1:]:
-        if s > end:
+        if s > end:                 # Balloon starts after current arrow's range
             arrows += 1
-            end = e
+            end = e                 # New arrow at this balloon's end
+        # else: balloon is burst by current arrow (overlapping)
     return arrows
 ```
 
-- **Time:** O(n log n) | **Space:** O(1)
-- **Tip:** This is the classic "interval scheduling" greedy — sorting by end point maximizes the number of non-overlapping intervals (and minimizes arrows).
+- **Time:** O(n log n) — sorting dominates; traversal is O(n)
+- **Space:** O(1) — in-place sorting
+- **Edge Cases:** Single balloon: return 1. Non-overlapping balloons `[[1,2],[3,4],[5,6]]`: Each needs own arrow → return 3. All overlapping `[[1,6],[2,5],[3,4]]`: One arrow at x=4 bursts all → return 1. Negative coordinates: works the same way.
+- **Common Mistakes:** Sorting by start instead of end (incorrect — earliest-ending balloons constrain the arrow the most). Using `<` instead of `<=` for overlap check — careful: `s > end` means no overlap. Not handling empty `points` array.
+- **Pattern Recognition:** "Minimum number of arrows/points to cover all intervals" → sort by end, greedy overlap check; identical to "Maximum number of non-overlapping intervals" (Problem 13) and "Activity Selection" (Batch 2, Problem 14).
 
 ---
 
 ## Problem 13 — Non-overlapping Intervals (Medium)
 
-**Statement:** Given intervals, return the **minimum number to remove** so the rest don't overlap.
+**Problem Explanation:**
+You're given a list of intervals `[start, end]`. You need to remove the minimum number of intervals so that the remaining intervals are non-overlapping (they can touch at endpoints). This is equivalent to: find the maximum number of intervals you can KEEP that don't overlap — then answer = total - kept.
 
-**Approach:** Sort by end. Count how many you can keep (non-overlapping). Answer = total - kept.
+**Algorithm Steps:**
+1. Sort intervals by end coordinate (ascending)
+2. Initialize `end = intervals[0][1]` (end of first interval), `kept = 1`
+3. For each remaining interval `[s, e]`:
+   a. If `s >= end`: interval doesn't overlap → keep it, update `end = e`, increment `kept`
+   b. Else: interval overlaps → skip (would need removal)
+4. Return `len(intervals) - kept`
 
+**Visual Walkthrough:**
+```
+intervals = [[1,2],[2,3],[3,4],[1,3]]
+Sorted by end: [[1,2],[2,3],[1,3],[3,4]]
+
+kept=1, end=2
+  [2,3]: 2 >= 2? Yes → kept=2, end=3
+  [1,3]: 1 >= 3? No (overlaps) → skip
+  [3,4]: 3 >= 3? Yes → kept=3, end=4
+
+Kept = 3 ([1,2], [2,3], [3,4])
+Remove = 4 - 3 = 1 (remove [1,3])
+```
+
+**Key Insight:**
+This is the dual of Problem 12. Instead of minimizing arrows (which equals minimizing non-overlapping groups), here we maximize non-overlapping intervals. Both use the same sorting-by-end strategy. Picking intervals that end earliest leaves the most room for subsequent intervals — this is the "interval scheduling" greedy that guarantees optimality via exchange argument.
+
+**Solution:**
 ```python
 def eraseOverlapIntervals(intervals):
+    # Sort by end time — earliest-finishing intervals leave most room
     intervals.sort(key=lambda x: x[1])
-    end = intervals[0][1]
-    kept = 1
+    end = intervals[0][1]   # End of the last kept interval
+    kept = 1                # First interval is always kept
     for s, e in intervals[1:]:
-        if s >= end:
+        if s >= end:        # No overlap → safe to keep
             kept += 1
-            end = e
+            end = e         # Update end to this interval
+    # Total - kept = number we must remove
     return len(intervals) - kept
 ```
 
 - **Time:** O(n log n) | **Space:** O(1)
-- **Tip:** Minimizing removals = maximizing non-overlapping kept. Same greedy as interval scheduling: sort by end.
+- **Edge Cases:** Single interval: return 0. All overlapping `[[1,5],[2,3],[3,4]]`: Keep 1, remove 2. No overlapping `[[1,2],[2,3],[3,4]]`: Keep all, return 0. Empty list: return 0.
+- **Common Mistakes:** Using `>` instead of `>=` for the non-overlap check (touching at endpoints counts as non-overlapping in this version). Sorting by start instead of end. Calculating `kept` incorrectly (off-by-one on the first interval).
+- **Pattern Recognition:** "Remove minimum to make non-overlapping" → sort by end, count non-overlapping; "Maximum number of non-overlapping intervals" is the underlying greedy pattern.
 
 ---
 
 ## Problem 14 — Meeting Rooms II (Medium)
 
-**Statement:** Given meetings `[start, end]`, return the **minimum number of conference rooms** required.
+**Problem Explanation:**
+You have meeting time intervals `[start, end]`. A meeting room can host only one meeting at a time. Find the minimum number of conference rooms required to accommodate all meetings. This is a classic "overlap counting" problem — you need a room for each overlapping meeting at any given time.
 
-**Approach:** Sort start and end times separately. Use a sweep-line: if a meeting starts before another ends, you need another room.
+**Algorithm Steps:**
+1. Sort intervals by start time
+2. Initialize a min-heap to track end times of ongoing meetings
+3. For each meeting `[s, e]`:
+   a. If heap is not empty and the earliest-ending meeting ends by `s`: free that room (heapreplace)
+   b. Else: no rooms free → add a new one (heappush)
+4. Return heap size (number of rooms in use)
 
+**Visual Walkthrough:**
+```
+intervals = [[0,30],[5,10],[15,20]]
+Sorted by start: [[0,30],[5,10],[15,20]]
+
+[0,30]: heap empty → push end=30  → heap=[30], rooms=1
+[5,10]: heap[0]=30 > 5? Yes → room not free → push end=10 → heap=[10,30], rooms=2
+[15,20]: heap[0]=10 ≤ 15? Yes → room free → heapreplace → heap=[20,30], rooms=2
+
+Result: 2 rooms needed
+```
+
+**Key Insight:**
+At any moment, the number of concurrent meetings equals the number of rooms needed. By processing meetings in start-time order and freeing rooms when meetings end, we simulate the real-time usage. The min-heap efficiently tracks which meeting ends next — if the next meeting starts after the earliest-ending meeting finishes, we reuse that room.
+
+**Solution:**
 ```python
 import heapq
 
 def minMeetingRooms(intervals):
+    # Sort by start time to process meetings in chronological order
     intervals.sort()
+    # Min-heap stores end times of currently ongoing meetings
     heap = []
     for s, e in intervals:
+        # If the earliest-ending meeting is done by now → free its room
         if heap and heap[0] <= s:
-            heapq.heapreplace(heap, e)
+            heapq.heapreplace(heap, e)  # Replace with new meeting's end
         else:
-            heapq.heappush(heap, e)
+            heapq.heappush(heap, e)     # Need a new room
+    # Heap size = number of concurrent meetings = rooms needed
     return len(heap)
 ```
 
-- **Time:** O(n log n) | **Space:** O(n)
-- **Tip:** The heap always holds the end times of ongoing meetings. Its size = rooms needed at any point. `heapreplace` is O(log n) vs push+pop being O(2 log n).
+- **Time:** O(n log n) — sorting + heap operations
+- **Space:** O(n) — heap can hold all meetings if they all overlap
+- **Edge Cases:** No meetings: return 0. Single meeting: return 1. All non-overlapping `[[1,2],[2,3],[3,4]]`: return 1 (one room reused). All overlapping `[[1,10],[2,9],[3,8]]`: return 3.
+- **Common Mistakes:** Not sorting by start time (chronological order is essential). Using `heap[0] < s` instead of `heap[0] <= s` (can end exactly when next starts → room is free). Pop + push instead of heapreplace (less efficient but works).
+- **Pattern Recognition:** "Minimum rooms/platforms" → two-pointer sweep-line or min-heap of end times; same as "Minimum Platforms" (Batch 2, Problem 10).
 
 ---
 
 ## Problem 15 — Candy (Hard)
 
-**Statement:** `n` children with ratings. Each child must have at least 1 candy. Children with higher rating get more candy than their neighbors. Return the **minimum total candy**.
+**Problem Explanation:**
+`n` children stand in a line, each with a rating. You must give each child at least 1 candy. Children with a **higher rating** than their neighbor must get **more candy** than that neighbor. Neighbors with equal ratings have no constraint (they can have any number, but must be at least 1). Find the minimum total candies needed.
 
-**Approach:** Two passes: left-to-right (ensure right neighbor gets more if rating is higher), then right-to-left.
+**Algorithm Steps:**
+1. Initialize `candies = [1] * n` (everyone gets at least 1)
+2. **Left-to-Right pass:** For `i` from 1 to n-1: if `ratings[i] > ratings[i-1]`, set `candies[i] = candies[i-1] + 1` (ensure right child gets more than left if higher rated)
+3. **Right-to-Left pass:** For `i` from n-2 down to 0: if `ratings[i] > ratings[i+1]`, set `candies[i] = max(candies[i], candies[i+1] + 1)` (ensure left child gets more than right if higher rated)
+4. Return `sum(candies)`
 
+**Visual Walkthrough:**
+```
+ratings = [1, 3, 2, 2, 1]
+
+Pass 1 (left → right):
+  candies = [1, 1, 1, 1, 1]
+  i=1: r=3 > r[0]=1 → c[1] = c[0]+1 = 2
+  i=2: r=2 < r[1]=3 → c[2] = 1 (no change)
+  i=3: r=2 = r[2]=2 → c[3] = 1 (no change)
+  i=4: r=1 < r[3]=2 → c[4] = 1 (no change)
+  After pass 1: [1, 2, 1, 1, 1]
+
+Pass 2 (right → left):
+  i=3: r=2 > r[4]=1 → c[3] = max(1, 1+1) = 2
+  i=2: r=2 = r[3]=2 → no change (c[2]=1)
+  i=1: r=3 > r[2]=2 → c[1] = max(2, 1+1) = 2
+  i=0: r=1 < r[1]=3 → no change (c[0]=1)
+  After pass 2: [1, 2, 1, 2, 1]
+
+Total = 1+2+1+2+1 = 7
+```
+
+**Key Insight:**
+The constraint is bidirectional — each child compares to both left and right neighbors. A single pass can only capture one direction. Two passes (forward + backward) handle both directions independently. The `max` in the second pass ensures we don't reduce a candy count that was correctly set by the first pass. This elegantly handles "valleys" (ratings like 3, 1, 2 where the middle child is lower than both neighbors).
+
+**Solution:**
 ```python
 def candy(ratings):
     n = len(ratings)
+    # Give each child at least 1 candy
     candies = [1] * n
+    
+    # Left-to-right: ensure right neighbor gets more if higher rated
     for i in range(1, n):
         if ratings[i] > ratings[i - 1]:
             candies[i] = candies[i - 1] + 1
+    
+    # Right-to-left: ensure left neighbor gets more if higher rated
     for i in range(n - 2, -1, -1):
         if ratings[i] > ratings[i + 1]:
             candies[i] = max(candies[i], candies[i + 1] + 1)
+    
     return sum(candies)
 ```
 
-- **Time:** O(n) | **Space:** O(n)
-- **Tip:** The two-pass approach handles the "valley" case (a child lower than both neighbors gets 1 candy from both sides without conflict).
+- **Time:** O(n) — two linear passes
+- **Space:** O(n) — candy array
+- **Edge Cases:** Single child: return 1. Strictly increasing `[1,2,3]`: candies = [1,2,3], sum=6. All equal `[2,2,2]`: all get 1, sum=n. Decreasing `[3,2,1]`: candies = [3,2,1] after two passes, sum=6.
+- **Common Mistakes:** Only doing one pass (missing the reverse constraint). Using `candies[i] = candies[i+1] + 1` without `max()` (may override correct value from first pass). Forgetting that equal ratings have no constraint (not treating > vs >= correctly).
+- **Pattern Recognition:** "Distribute with neighbor constraints" → two-pass greedy; similar to "trapping rain water" (two-pointer) and "product of array except self."
 
 ---
 
 ## Problem 16 — IPO (Hard)
 
-**Statement:** You start with capital `w`. `n` projects each give `profits[i]` and require `capital[i]`. You can fund at most `k` projects. Return the **maximum capital** you can achieve.
+**Problem Explanation:**
+You start with capital `w`. There are `n` projects, each requiring `capital[i]` to fund and giving `profits[i]` in return. You can fund at most `k` projects (you can do them in any order). The profit from a project adds to your capital, letting you afford more expensive projects later. Maximize your total capital after at most `k` projects.
 
-**Approach:** Min-heap of affordable projects (by capital). Max-heap of profits from affordable ones. Pick best profit k times.
+**Algorithm Steps:**
+1. Pair each project as `(capital, profit)` and sort by capital (ascending)
+2. Initialize a max-heap (use negative values for Python's min-heap) to store profits of affordable projects
+3. Repeat up to `k` times:
+   a. Push all projects whose capital requirement ≤ current capital into the max-heap
+   b. If heap is empty: break (no affordable projects)
+   c. Pop the most profitable project, add its profit to capital
+4. Return total capital
 
+**Visual Walkthrough:**
+```
+k=2, w=0, profits=[1,2,3], capital=[0,1,1]
+
+Projects sorted by capital: [(0,1), (1,2), (1,3)]
+
+Iteration 1 (w=0):
+  Push projects with cap ≤ 0: (0,1) → heap=[-1]
+  Pop -1 → profit=1, w = 0+1 = 1
+
+Iteration 2 (w=1):
+  Push projects with cap ≤ 1: (1,2), (1,3) → heap=[-3,-2]
+  Pop -3 → profit=3, w = 1+3 = 4
+
+k=2 iterations done → return 4
+```
+
+**Key Insight:**
+The two-heap (or heap + sorted list) approach separates the problem into two phases: finding which projects are affordable (sorted by capital, incremental sweep) and picking the best among them (max-heap of profits). As capital grows, more projects become available — the heap dynamically manages the candidate pool. This "affordability + profitability" split is the core pattern.
+
+**Solution:**
 ```python
 import heapq
 
 def findMaximizedCapital(k, w, profits, capital):
+    # Sort projects by capital requirement (ascending)
     projects = sorted(zip(capital, profits))
+    # Max-heap to store profits of affordable projects (use negative)
     max_heap = []
-    idx = 0
+    idx = 0  # Pointer to next project in sorted list
+    
     for _ in range(k):
+        # Add all projects we can now afford to the heap
         while idx < len(projects) and projects[idx][0] <= w:
-            heapq.heappush(max_heap, -projects[idx][1])
+            heapq.heappush(max_heap, -projects[idx][1])  # Negative for max-heap
             idx += 1
+        # If no projects are affordable, we're done
         if not max_heap:
             break
-        w -= heapq.heappop(max_heap)
+        # Take the most profitable affordable project
+        w -= heapq.heappop(max_heap)  # Subtract negative = add profit
     return w
 ```
 
-- **Time:** O(n log n) | **Space:** O(n)
-- **Tip:** Two-heap approach: min-heap to filter affordable, max-heap to greedily pick the most profitable. This is essentially a priority queue-based greedy.
+- **Time:** O(n log n) — sorting + at most n heap operations
+- **Space:** O(n) — heap and sorted list
+- **Edge Cases:** No project affordable initially: if `w < min(capital)`, return `w`. k larger than n: still fine, just exhaust all projects. All profits are zero: capital stays the same.
+- **Common Mistakes:** Not sorting by capital (can't efficiently find affordable projects). Using `w += profit` instead of `w -= -profit` (or equivalently `w += heapq.heappop(max_heap)` where heap stores negatives). Forgetting to break when no affordable projects exist.
+- **Pattern Recognition:** "Maximum capital with k selections" → dynamic selection via two-heap; similar to "Maximum Performance of a Team" (Batch 2, Problem 20).
 
 ---
 
 ## Problem 17 — Minimum Cost to Hire K Workers (Hard)
 
-**Statement:** Each worker has `quality[i]` and `wage[i]` (minimum wage). A "paid ratio" is `wage/quality`. Form a group of K workers where all are paid by the same ratio. Return the **minimum total cost**.
+**Problem Explanation:**
+You have `n` workers, each with a `quality` score and a minimum `wage` they'll accept. You want to hire exactly `k` workers. The rule: all hired workers are paid according to the same ratio (wage/quality). This means if you set a ratio `r`, each worker gets `r * quality[i]`. The constraint is that every hired worker must receive at least their minimum wage, so `r >= wage[i]/quality[i]` for each hired worker. Minimize total cost.
 
-**Approach:** Sort by ratio `wage/quality`. Use a max-heap of quality. For each worker as the "ratio-setter", maintain the K smallest qualities.
+**Algorithm Steps:**
+1. For each worker, compute ratio = wage/quality. Sort workers by ratio (ascending)
+2. Initialize max-heap (negative values) for quality, `total_q = 0`, `result = infinity`
+3. For each worker (ratio, quality) in sorted order:
+   a. Push quality to heap (as negative), add to total_q
+   b. If heap size > k: remove the worker with highest quality (pop negative heap)
+   c. If heap size == k: compute cost = ratio * total_q, update result = min(result, cost)
+4. Return result
 
+**Visual Walkthrough:**
+```
+quality = [3,1,10,10,1], wage = [4,8,2,2,7], k = 3
+
+Workers sorted by ratio (wage/quality):
+  (2.0, 10), (2.0, 1), (2.33, 3), (2.67, 1), (7.0, 1)
+
+Iter 1: ratio=2.0, q=10 → heap=[-10], total_q=10, size=1<3
+Iter 2: ratio=2.0, q=1  → heap=[-10,-1], total_q=11, size=2<3
+Iter 3: ratio=2.33, q=3 → heap=[-10,-1,-3], total_q=14, size=3=k
+        cost = 2.33*14 = 32.67 → result=32.67
+Iter 4: ratio=2.67, q=1 → heap=[-10,-1,-3,-1], total_q=15
+        size>k → pop -10 (qual=10), total_q=5, heap=[-3,-1,-1]
+        size=3 → cost = 2.67*5 = 13.33 → result=13.33
+Iter 5: ratio=7.0, q=1 → heap=[-3,-1,-1,-1], total_q=6
+        size>k → pop -3 (qual=3), total_q=3, heap=[-1,-1,-1]
+        size=3 → cost = 7.0*3 = 21.0 → result=13.33
+
+Answer: 13.33
+```
+
+**Key Insight:**
+If you fix the ratio `r`, the cost is `r * sum(qualities)`. The ratio must be at least as large as every hired worker's minimum ratio. So the maximum ratio among hired workers determines `r`. By sorting workers by ratio and iterating, each worker becomes the "ratio-setter" (the one with highest ratio in the group). For each ratio-setter, we want the `k-1` smallest qualities among workers with lower (or equal) ratios — a max-heap efficiently maintains these smallest qualities.
+
+**Solution:**
 ```python
 import heapq
 
 def mincostToHireWorkers(quality, wage, k):
+    # Sort by ratio (wage/quality) — ascending
+    # The highest ratio in the group sets the pay rate for everyone
     workers = sorted([(w / q, q) for q, w in zip(quality, wage)])
+    # Max-heap quality (negative) to keep K smallest qualities
     heap = []
-    total_q = 0
+    total_q = 0          # Sum of qualities currently in heap
     result = float('inf')
+    
     for ratio, q in workers:
-        heapq.heappush(heap, -q)
+        heapq.heappush(heap, -q)  # Add current worker
         total_q += q
+        # If we have more than K, remove the largest quality
         if len(heap) > k:
-            total_q += heapq.heappop(heap)
+            total_q += heapq.heappop(heap)  # Pop negative = subtract quality
+        # If we have exactly K, compute cost with current ratio
         if len(heap) == k:
+            # ratio * total_q = cost for this group
             result = min(result, ratio * total_q)
     return result
 ```
 
-- **Time:** O(n log n) | **Space:** O(n)
-- **Tip:** By fixing the ratio (using the highest-ratio worker in the group), we only need to minimize total quality. Max-heap of size K keeps the smallest K qualities.
+- **Time:** O(n log n) — sorting + heap operations
+- **Space:** O(n) — heap and sorted list
+- **Edge Cases:** k = n: All workers hired, no quality dropping needed. k = 1: Pick the worker with minimum wage (not minimum quality).
+- **Common Mistakes:** Forgetting that the ratio is determined by the highest-ratio worker in the group. Using a min-heap instead of max-heap for quality (we want to drop the LARGEST quality when exceeding k). Computing result before heap reaches size k.
+- **Pattern Recognition:** "Hire K workers with minimum cost" → sort by ratio + max-heap for smallest K qualities; similar to "IPO" (Problem 16) and "Maximum Performance" (Batch 2, Problem 20) — all use heap to dynamically select best subset.
 
 ---
 
 ## Problem 18 — Course Schedule III (Hard)
 
-**Statement:** `n` courses with `[duration, lastDay]`. Take a course before its lastDay. Return the **maximum number of courses** you can take.
+**Problem Explanation:**
+You have `n` courses, each with a `duration` (how long it takes) and a `lastDay` (deadline by which it must be completed). You can take courses in any order. You can only take one course at a time. You must finish a course before or on its lastDay. Return the maximum number of courses you can complete.
 
-**Approach:** Sort by end day. Use a max-heap of durations. If total time exceeds deadline, remove the longest course.
+**Algorithm Steps:**
+1. Sort courses by their lastDay (deadline) ascending
+2. Initialize max-heap (negative values) for course durations, `total = 0`
+3. For each course `[duration, lastDay]`:
+   a. If `total + duration <= lastDay`: can fit → push to heap, add to total
+   b. Else if heap exists and longest duration in heap > current duration:
+      - Swap: remove longest course, add current course
+      - Update total: `total = total - longest + current`
+4. Return heap size (number of courses taken)
 
+**Visual Walkthrough:**
+```
+courses = [[5,5],[2,6],[100,101],[10,10]]
+Sorted by lastDay: [[5,5],[2,6],[10,10],[100,101]]
+
+[5,5]:  total+dur=0+5=5 ≤ 5 → heap=[-5], total=5
+[2,6]:  total+dur=5+2=7 > 6 → can't fit
+        heap[0]=5 > 2? Yes → swap: pop -5 → total=5-5=0, push -2 → total=0+2=2
+        heap=[-2], total=2
+[10,10]: total+dur=2+10=12 > 10 → can't fit
+         heap[0]=2 > 10? No → skip
+[100,101]: total+dur=2+100=102 > 101 → can't fit
+           heap[0]=2 > 100? No → skip
+
+Answer: 1 course (the [2,6] one)
+```
+
+**Key Insight:**
+This is an "exchange argument" greedy. When adding a new course would exceed its deadline, check if replacing it with a longer course already in your schedule helps. If the current course is shorter than the longest course you've already selected, swapping frees up time without reducing course count. This maintains the invariant: at any point, you have the maximum number of courses with minimum total duration among all possible schedules up to that deadline.
+
+**Solution:**
 ```python
 import heapq
 
 def scheduleCourse(courses):
+    # Sort by deadline (earliest deadline first)
     courses.sort(key=lambda x: x[1])
+    # Max-heap (negative) to store durations of selected courses
     heap = []
-    total = 0
+    total = 0  # Total time spent on selected courses
+    
     for dur, end in courses:
+        # If we can add this course without missing its deadline
         if total + dur <= end:
             heapq.heappush(heap, -dur)
             total += dur
+        # If not, but swapping with a longer course helps
         elif heap and -heap[0] > dur:
-            total += heapq.heappop(heap) + dur
+            # Remove the longest course from schedule
+            total += heapq.heappop(heap)  # Pop negative = subtract
+            # Add the current (shorter) course
             heapq.heappush(heap, -dur)
+            total += dur
+    
+    # Number of courses we can take
     return len(heap)
 ```
 
-- **Time:** O(n log n) | **Space:** O(n)
-- **Tip:** This is a classic exchange argument greedy. If adding a course exceeds the deadline, swapping it with the longest course already chosen (if longer) can only improve or maintain the count while freeing time.
+- **Time:** O(n log n) — sorting + heap operations
+- **Space:** O(n) — heap for selected courses
+- **Edge Cases:** All courses have tight deadlines: only the shortest ones before each deadline can be taken. Courses with very long durations: may never fit or may be swapped out. No courses: return 0.
+- **Common Mistakes:** Sorting by duration instead of deadline. Adding a course without checking the deadline. Using the swap check condition incorrectly — we swap only if the current course is SHORTER than the longest selected course. Thinking you need to maximize some profit (this is count maximization, not profit/cost).
+- **Pattern Recognition:** "Maximum number of tasks before deadlines" → sort by deadline + max-heap of durations for optimal swaps; classic "exchange argument" problem seen in variants of "Maximum Profit in Job Scheduling."
 
 ---
 
@@ -743,95 +1216,289 @@ def scheduleCourse(courses):
 
 ## Problem 19 — Subsets (Easy)
 
-**Statement:** Given a list of **unique** integers, return all possible subsets (the power set).
+**Problem Explanation:**
+Given a list of unique integers, generate every possible subset (the power set). This includes the empty set and the full set. Order doesn't matter — `[1,2]` and `[2,1]` are considered the same subset. The total number of subsets for n elements is 2ⁿ.
 
-**Approach:** At each element, choose to include or exclude it. Classic backtracking.
+**Algorithm Steps:**
+1. Initialize result list
+2. Define recursive function `backtrack(start, path)`:
+   a. Add current path to result (including empty path for the empty set)
+   b. For each index `i` from `start` to n-1:
+      - Include nums[i] in path
+      - Recurse with `i + 1` (next element)
+      - Exclude nums[i] (pop) — backtrack
+3. Call `backtrack(0, [])` and return result
 
+**Visual Walkthrough:**
+```
+nums = [1, 2, 3]
+
+Backtrack tree (each node = a subset added to result):
+         []
+       / |  \
+    [1]  [2]  [3]
+   /  \    |
+[1,2] [1,3] [2,3]
+  |
+[1,2,3]
+
+Execution trace:
+backtrack(0, [])          → add [], i=0: [1]
+  backtrack(1, [1])       → add [1], i=1: [1,2]
+    backtrack(2, [1,2])   → add [1,2], i=2: [1,2,3]
+      backtrack(3, [1,2,3]) → add [1,2,3], loop ends
+    backtrack(2, [1,2])   → pop 3 → i=3: loop ends
+  backtrack(1, [1])       → pop 2 → i=2: [1,3]
+    backtrack(2, [1,3])   → add [1,3], loop ends
+  backtrack(1, [1])       → pop 3 → loop ends
+backtrack(0, [])          → pop 1 → i=1: [2]
+  ... continues for [2], [2,3], [3]
+
+Result: [[], [1], [1,2], [1,2,3], [1,3], [2], [2,3], [3]]
+8 = 2³ subsets
+```
+
+**Key Insight:**
+The key pattern for subsets vs permutations: subsets use a `start` index that only moves forward — this prevents both reusing elements and generating duplicate permutations. Each element is either included or excluded exactly once. The path is added to result at **every** node, not just leaves. This is the foundation for all "combination-type" backtracking problems.
+
+**Solution:**
 ```python
 def subsets(nums):
     result = []
+    
     def backtrack(start, path):
+        # Add current subset to result (at every node, not just leaves)
         result.append(path[:])
+        # Try including each remaining element
         for i in range(start, len(nums)):
-            path.append(nums[i])
-            backtrack(i + 1, path)
-            path.pop()
+            path.append(nums[i])      # Choose: include this element
+            backtrack(i + 1, path)    # Explore: recurse with next index
+            path.pop()                # Unchoose: remove for backtracking
+    
     backtrack(0, [])
     return result
 ```
 
-- **Time:** O(n × 2ⁿ) | **Space:** O(n)
-- **Tip:** Use `start` index to avoid duplicates. Each recursive call adds the current path to results before exploring further.
+- **Time:** O(n × 2ⁿ) — 2ⁿ subsets, each copied O(n) time
+- **Space:** O(n) — recursion depth
+- **Edge Cases:** Empty input `[]`: Return `[[]]` (just the empty set). Single element `[1]`: Return `[[], [1]]`. Large n: 2ⁿ grows exponentially; n > 20 may be computationally heavy.
+- **Common Mistakes:** Adding path ONLY at leaf nodes (missing intermediate subsets like `[1]`). Not copying path with `path[:]` (storing a reference that mutates later). Using `start = 0` in recursive call without incrementing (causes infinite recursion with permutations).
+- **Pattern Recognition:** "Generate all subsets/combinations" → backtracking with `start` index; fundamental template for: Subsets II, Combinations, Combination Sum I/II/III.
 
 ---
 
 ## Problem 20 — Subsets II (Easy)
 
-**Statement:** Given a list of integers that **may contain duplicates**, return all unique subsets.
+**Problem Explanation:**
+Same as Subsets (Problem 19), but the input may contain **duplicate** numbers. You must return only **unique** subsets — `[1,2]` should appear only once even if there are multiple ways to form it from the input.
 
-**Approach:** Sort first. Skip duplicate values at the same level.
+**Algorithm Steps:**
+1. Sort `nums` (duplicates will be adjacent)
+2. Initialize result list
+3. Define `backtrack(start, path)`:
+   a. Add current path to result
+   b. For `i` from `start` to n-1:
+      - Skip if `i > start and nums[i] == nums[i-1]` (duplicate at same level)
+      - Include nums[i], recurse with `i+1`, then pop/backtrack
+4. Call `backtrack(0, [])` and return result
 
+**Visual Walkthrough:**
+```
+nums = [1, 2, 2]
+Sorted: [1, 2, 2]
+
+Backtrack tree (X = skipped duplicate):
+         []
+       /    \
+    [1]      [2]
+   /   \       |
+[1,2] [1,2,2] [2,2]
+   |      |      |
+(dup X) (end)  (end)
+
+Execution:
+backtrack(0, [])        → add []
+  i=0: v=1 → [1]
+    backtrack(1, [1])   → add [1]
+    i=1: v=2 → [1,2]
+      backtrack(2, [1,2]) → add [1,2]
+      i=2: v=2 → [1,2,2]
+        backtrack(3, [1,2,2]) → add [1,2,2], end
+      pop → [1,2]
+    i=2: v=2, i(2)>start(1) and nums[2]==nums[1]? Yes → SKIP
+    pop → [1]
+  i=1: v=2 → [2]
+    backtrack(2, [2])   → add [2]
+    i=2: v=2 → [2,2]
+      backtrack(3, [2,2]) → add [2,2], end
+    pop → [2]
+  i=2: v=2, i(2)>start(0) and nums[2]==nums[1]? Yes → SKIP
+
+Result: [[], [1], [1,2], [1,2,2], [2], [2,2]]
+Notice: No duplicate [2] or [1,2] despite having two 2's!
+```
+
+**Key Insight:**
+The `i > start` check is crucial — it skips duplicates only at the **same recursion level**. If `i == start`, that's the first time we're using this element at this level, which is fine. The skip only fires when we've already made a choice with the same value at the same level, ensuring we don't generate identical subsets from different positions of duplicate values.
+
+**Solution:**
 ```python
 def subsetsWithDup(nums):
+    # Sort so duplicates are adjacent — enables duplicate skipping
     nums.sort()
     result = []
+    
     def backtrack(start, path):
+        # Add current subset (every node, not just leaves)
         result.append(path[:])
         for i in range(start, len(nums)):
+            # Skip duplicate at the same recursion level
             if i > start and nums[i] == nums[i - 1]:
                 continue
-            path.append(nums[i])
-            backtrack(i + 1, path)
-            path.pop()
+            path.append(nums[i])      # Choose
+            backtrack(i + 1, path)    # Explore
+            path.pop()                # Unchoose
+    
     backtrack(0, [])
     return result
 ```
 
-- **Time:** O(n × 2ⁿ) | **Space:** O(n)
-- **Tip:** Sort + skip consecutive duplicates at the same recursion level. `i > start` ensures we only skip within the same level, not across levels.
+- **Time:** O(n × 2ⁿ) — worst case all distinct (same as Subsets)
+- **Space:** O(n) — recursion depth
+- **Edge Cases:** All duplicates `[1,1,1]`: Return `[[], [1], [1,1], [1,1,1]]`. Single element `[1]`: Return `[[], [1]]`. Already sorted vs unsorted: function sorts anyway.
+- **Common Mistakes:** Forgetting to sort first (duplicate skip logic requires adjacent duplicates). Using `if nums[i] == nums[i-1]: continue` without `i > start` (this skips ALL duplicates even across different levels, losing valid subsets). Not understanding the difference from Permutations II (different skip condition).
+- **Pattern Recognition:** "Unique subsets with duplicates" → sort + skip duplicates at same level with `i > start`; same pattern used in Combination Sum II.
 
 ---
 
 ## Problem 21 — Permutations (Easy)
 
-**Statement:** Given a list of **unique** integers, return all possible permutations.
+**Problem Explanation:**
+Given a list of **unique** integers, generate every possible ordering (permutation). Unlike subsets, `[1,2]` and `[2,1]` are different. For n elements, there are n! permutations. Each element must appear exactly once in each permutation.
 
-**Approach:** Swap-based or visited-array backtracking.
+**Algorithm Steps:**
+1. Initialize result list
+2. Define `backtrack(path, used)`:
+   a. If `len(path) == len(nums)`: add copy of path to result (base case)
+   b. For each index `i` from 0 to n-1:
+      - Skip if already used (`used[i]`)
+      - Mark as used, append to path
+      - Recurse
+      - Unmark, pop (backtrack)
+3. Call `backtrack([], [False] * len(nums))` and return result
 
+**Visual Walkthrough:**
+```
+nums = [1, 2, 3]
+Factorial: 3! = 6 permutations
+
+Backtrack tree (depth-first):
+                      []
+        ┌─────────────┼─────────────┐
+      [1]            [2]            [3]
+     /    \         /    \         /    \
+  [1,2]  [1,3]   [2,1]  [2,3]   [3,1]  [3,2]
+    |      |       |      |       |      |
+[1,2,3] [1,3,2] [2,1,3] [2,3,1] [3,1,2] [3,2,1]
+
+Execution trace (partial):
+backtrack([], [F,F,F])
+  i=0: n=1 → used[0]=T, path=[1]
+    backtrack([1], [T,F,F])
+    i=0: skip (used)
+    i=1: n=2 → used[1]=T, path=[1,2]
+      backtrack([1,2], [T,T,F])
+      i=0: skip, i=1: skip, i=2: n=3 → path=[1,2,3]
+        backtrack([1,2,3], [T,T,T]) → len==3 → ADD [1,2,3]!
+        pop → [1,2], used[2]=F
+      pop → [1], used[1]=F
+    i=2: n=3 → used[2]=T, path=[1,3]
+      ... → ADD [1,3,2]!
+    pop → [], used[0]=F
+  i=1: n=2 → ... → ADD [2,1,3]!
+  i=2: n=3 → ... → ADD [3,1,2]! etc.
+```
+
+**Key Insight:**
+The fundamental difference from subsets: permutations use a `used[]` array (or swap-based approach) that allows picking **any** unused element at each step, rather than moving forward with a `start` index. This creates n! leaf nodes (complete permutations) instead of 2ⁿ nodes. Each element must be used exactly once — the `used[]` array enforces this.
+
+**Solution:**
 ```python
 def permute(nums):
     result = []
+    
     def backtrack(path, used):
+        # Base case: all elements used → permutation complete
         if len(path) == len(nums):
             result.append(path[:])
             return
+        # Try every unused element as the next in permutation
         for i in range(len(nums)):
             if used[i]:
-                continue
-            used[i] = True
-            path.append(nums[i])
-            backtrack(path, used)
-            path.pop()
-            used[i] = False
+                continue          # Already placed this element
+            used[i] = True        # Choose: mark as used
+            path.append(nums[i])  # Add to current permutation
+            backtrack(path, used) # Explore: fill remaining positions
+            path.pop()            # Unchoose
+            used[i] = False       # Unmark
+    
     backtrack([], [False] * len(nums))
     return result
 ```
 
-- **Time:** O(n × n!) | **Space:** O(n)
-- **Tip:** Track used elements to ensure each appears exactly once per permutation. The result has n! permutations.
+- **Time:** O(n × n!) — n! permutations, each copied O(n)
+- **Space:** O(n) — recursion depth + used array
+- **Edge Cases:** Single element `[1]`: Return `[[1]]`. Empty input `[]`: Return `[[]]` (one permutation of nothing). n=10: 10! ≈ 3.6M permutations (large but computable).
+- **Common Mistakes:** Using a `start` index like subsets (produces combinations, not permutations). Not copying path in the base case (result stores reference to mutating list). Swapping approach (alternative) is more memory-efficient but harder to understand.
+- **Pattern Recognition:** "Generate all arrangements" → `used[]` array backtracking; same pattern for: Permutations II, N-Queens (used columns), Generate Parentheses (used count).
 
 ---
 
 ## Problem 22 — Permutations II (Medium)
 
-**Statement:** Given a list of integers that **may contain duplicates**, return all unique permutations.
+**Problem Explanation:**
+Same as Permutations (Problem 21), but the input may contain **duplicate** integers. Return only unique permutations. For example, `[1, 1, 2]` should produce only 3 unique permutations (not 6), because swapping the two 1's doesn't create a new arrangement.
 
-**Approach:** Sort first. Skip duplicates at the same level.
+**Algorithm Steps:**
+1. Sort `nums` (duplicates become adjacent)
+2. Initialize result list
+3. Define `backtrack(path, used)`:
+   a. If `len(path) == len(nums)`: add copy to result
+   b. For each index `i` from 0 to n-1:
+      - Skip if `used[i]`
+      - Skip if `i > 0 and nums[i] == nums[i-1] and not used[i-1]`
+      - Mark used, append, recurse, unmark, pop
+4. Call `backtrack([], [False] * len(nums))`
 
+**Visual Walkthrough:**
+```
+nums = [1, 1, 2]
+Sorted: [1, 1, 2]
+
+Backtrack tree (X = skipped duplicate):
+                  []
+        ┌─────────┼─────────┐
+      [1i=0]    [1i=1]X    [2]
+      /    \       (dup)
+  [1,1]  [1,2]      ✗
+    |      |
+[1,1,2] [1,2,1]
+
+Valid permutations: [1,1,2], [1,2,1], [2,1,1]  (3 = 3!/2!)
+
+Key: at the root, i=1 (second 1) is skipped because
+nums[1]=nums[0] and used[0] is False (not selected by THIS path yet)
+```
+
+**Key Insight:**
+The condition `nums[i] == nums[i-1] and not used[i-1]` is different from Subsets II. In permutations, we skip a duplicate when the **previous identical element is NOT used**. This ensures that among identical elements, we only consider them in order (first occurrence first), preventing duplicate permutations. If `used[i-1]` is True, that means the previous identical element is already in the current path, so the current one can still be used (as a different position in the same permutation).
+
+**Solution:**
 ```python
 def permuteUnique(nums):
-    nums.sort()
+    nums.sort()  # Sort so duplicates are adjacent
     result = []
+    
     def backtrack(path, used):
         if len(path) == len(nums):
             result.append(path[:])
@@ -839,6 +1506,7 @@ def permuteUnique(nums):
         for i in range(len(nums)):
             if used[i]:
                 continue
+            # Skip duplicate: only allow the first among identical values
             if i > 0 and nums[i] == nums[i - 1] and not used[i - 1]:
                 continue
             used[i] = True
@@ -846,183 +1514,507 @@ def permuteUnique(nums):
             backtrack(path, used)
             path.pop()
             used[i] = False
+    
     backtrack([], [False] * len(nums))
     return result
 ```
 
-- **Time:** O(n × n!) worst case | **Space:** O(n)
-- **Tip:** The condition `nums[i] == nums[i-1] and not used[i-1]` ensures we skip a duplicate only when the previous identical element is not used in the current path (same level).
+- **Time:** O(n × n!) worst case (all distinct = same as Permutations)
+- **Space:** O(n) — recursion depth + used array
+- **Edge Cases:** All same `[1,1,1]`: Return `[[1,1,1]]` (only 1 permutation). Two same, one different `[1,1,2]`: 3 permutations.
+- **Common Mistakes:** Using the Subsets II skip condition (`i > start and nums[i] == nums[i-1]`) which doesn't work for permutations (no `start` parameter). Forgetting `used[i-1]` check — `nums[i] == nums[i-1]` alone skips too many cases. Not sorting (duplicates need to be adjacent).
+- **Pattern Recognition:** "Unique permutations with duplicates" → sort + `not used[i-1]` skip; contrasting condition with Subsets II (`i > start` skip).
 
 ---
 
 ## Problem 23 — Letter Combinations of a Phone Number (Easy)
 
-**Statement:** Given a string of digits `2-9`, return all possible letter combinations (phone keypad mapping).
+**Problem Explanation:**
+Given a string of digits from 2-9 (like "23"), return every possible letter combination based on a phone keypad mapping (2=abc, 3=def, 4=ghi, etc.). Each digit maps to 3-4 letters. You pick one letter per digit to form combinations. The number of combinations equals the product of each digit's letter count.
 
-**Approach:** Map digits to letters. Backtrack by appending each possible letter for each digit.
+**Algorithm Steps:**
+1. Handle base case: if digits is empty, return []
+2. Create mapping dict: digit → letters
+3. Initialize result list
+4. Define `backtrack(index, path)`:
+   a. If `index == len(digits)`: join path to string, add to result
+   b. For each letter in `mapping[digits[index]]`:
+      - Append letter to path, recurse with `index + 1`, pop
+5. Call `backtrack(0, [])` and return result
 
+**Visual Walkthrough:**
+```
+digits = "23"
+
+Phone keypad:
+  2: abc    3: def
+
+Backtrack tree:
+                   ""
+         ┌─────────┼─────────┐
+        a          b          c
+        |          |          |
+     ┌──┼──┐    ┌──┼──┐    ┌──┼──┐
+    ad  ae  af  bd  be  bf  cd  ce  cf
+
+Result (9 combinations):
+  "ad", "ae", "af", "bd", "be", "bf", "cd", "ce", "cf"
+
+For each digit at index 0 (choices: a,b,c):
+  For each digit at index 1 (choices: d,e,f):
+    → 3 × 3 = 9 combinations
+```
+
+**Key Insight:**
+This is a simple "product of choices" problem — at each digit, the number of branches equals the mapping size (3 or 4). The recursion depth equals the number of digits. No pruning needed (all branches are valid). This is the simplest form of backtracking: at each level, iterate over a fixed set of valid choices.
+
+**Solution:**
 ```python
 def letterCombinations(digits):
     if not digits:
         return []
+    # Phone keypad mapping
     mapping = {'2': 'abc', '3': 'def', '4': 'ghi', '5': 'jkl',
                '6': 'mno', '7': 'pqrs', '8': 'tuv', '9': 'wxyz'}
     result = []
+    
     def backtrack(index, path):
+        # Base: built a complete combination
         if index == len(digits):
             result.append(''.join(path))
             return
+        # Try each possible letter for the current digit
         for ch in mapping[digits[index]]:
             path.append(ch)
-            backtrack(index + 1, path)
+            backtrack(index + 1, path)  # Move to next digit
             path.pop()
+    
     backtrack(0, [])
     return result
 ```
 
-- **Time:** O(4ⁿ × n) | **Space:** O(n)
-- **Tip:** Each digit maps to 3-4 letters. The total combinations = product of all mapping lengths. Maximum 4⁷ = 16384 for 7 digits.
+- **Time:** O(4ⁿ × n) — up to 4 choices per digit, string join is O(n)
+- **Space:** O(n) — recursion depth
+- **Edge Cases:** Empty digits: Return [] (not [""]). Digits containing 0 or 1: Not valid (problem says 2-9 only). Long digits (n=7): max 4⁷ = 16384 combinations.
+- **Common Mistakes:** Not handling empty input (returning [""] instead of []). Forgetting to convert path list to string with `''.join(path)`. Using a `start` index approach (each digit is an independent choice, not a selection from a pool).
+- **Pattern Recognition:** "Generate letter combinations from digits" → product-of-choices backtracking; similar to: Generate Parentheses, Combination Sum (simple branching at each level).
 
 ---
 
 ## Problem 24 — Combination Sum (Medium)
 
-**Statement:** Given candidates (unique) and a target, return all unique combinations where candidates can be **reused** and sum to target.
+**Problem Explanation:**
+Given an array of **unique** integers (candidates) and a `target` sum, find all unique combinations where the numbers sum to target. You may **reuse** each candidate **unlimited** times. For example, `[2,3,6,7]` with target 7 gives `[2,2,3]` and `[7]`. The same combination in different orders is considered the same (so `[2,2,3]` and `[2,3,2]` are duplicates).
 
-**Approach:** Backtrack with `start` index. Allow reusing by passing `i` (not `i+1`) as next start.
+**Algorithm Steps:**
+1. Sort candidates (for pruning — early break when exceeding remaining)
+2. Initialize result list
+3. Define `backtrack(start, path, remaining)`:
+   a. If `remaining == 0`: add path copy to result (base case)
+   b. For `i` from `start` to n-1:
+      - If `candidates[i] > remaining`: break (prune — sorted, rest will be larger too)
+      - Append candidate, recurse with `backtrack(i, ...)` (NOT i+1 — allow reuse!)
+      - Pop (backtrack)
+4. Call `backtrack(0, [], target)` and return result
 
+**Visual Walkthrough:**
+```
+candidates = [2, 3, 6, 7], target = 7
+
+Backtrack tree (X = pruned because candidate > remaining):
+                    []
+       ┌────────────┼────────────┐
+      [2]          [3]           [6]         [7]✓
+    ┌──┼──┐       ┌──┼──┐       ┌──┐
+ [2,2] [2,3]    [3,3]X [3,6]X  [6,6]X
+   |     |        ✗       ✗       ✗
+[2,2,2] [2,2,3]✓
+   |
+[2,2,2,?]X
+
+Valid combinations: [2,2,3], [7]
+
+Detailed trace:
+backtrack(0, [], rem=7)
+  i=0: 2 ≤ 7 → [2], rem=5
+    i=0: 2 ≤ 5 → [2,2], rem=3
+      i=0: 2 ≤ 3 → [2,2,2], rem=1
+        i=0: 2 > 1 → break
+      pop → [2,2]
+      i=1: 3 > 1 → break
+    pop → [2]
+    i=1: 3 ≤ 5 → [2,3], rem=2
+      i=1: 3 > 2 → break
+    pop → [2]
+    i=2: 6 > 5 → break
+    i=3: 7 > 5 → break
+  pop → []
+  i=1: 3 ≤ 7 → [3], rem=4
+    i=1: 3 ≤ 4 → [3,3], rem=1
+      i=1: 3 > 1 → break
+    pop → [3]
+    i=2: 6 > 4 → break
+  pop → []
+  i=2: 6 ≤ 7 → [6], rem=1 → 6 > 1 → break
+  pop → []
+  i=3: 7 ≤ 7 → [7], rem=0 → ADD [7]!
+```
+
+**Key Insight:**
+The critical design choice: `backtrack(i, ...)` (not `i+1`) allows reusing the same candidate multiple times. The `start` parameter ensures non-decreasing order, preventing duplicates like `[2,3]` and `[3,2]`. Sorting + `break` on exceeding remaining is a powerful pruning technique that dramatically reduces the search space.
+
+**Solution:**
 ```python
 def combinationSum(candidates, target):
     result = []
+    # Sort for early break pruning
+    candidates.sort()
+    
     def backtrack(start, path, remaining):
+        # Base: found a valid combination
         if remaining == 0:
             result.append(path[:])
             return
+        # Try each candidate starting from 'start' (non-decreasing order)
         for i in range(start, len(candidates)):
+            # Prune: sorted, so if this is too big, rest are too
             if candidates[i] > remaining:
                 break
             path.append(candidates[i])
+            # Pass i (not i+1) to allow reusing this candidate
             backtrack(i, path, remaining - candidates[i])
             path.pop()
-    candidates.sort()
+    
     backtrack(0, [], target)
     return result
 ```
 
-- **Time:** O(N^(T/M)) where N=candidates, T=target, M=min | **Space:** O(T/M)
-- **Tip:** Sort + early break (`if candidates[i] > remaining: break`) prunes the search tree significantly.
+- **Time:** O(N^(T/M)) — branching factor N, depth T/M (T=target, M=min candidate)
+- **Space:** O(T/M) — recursion stack depth
+- **Edge Cases:** target=0: Return [[]] (empty combination sums to 0). Very small candidates `[1]` with large target: Deep recursion (target levels deep). No candidates: Return [].
+- **Common Mistakes:** Using `i+1` instead of `i` in the recursive call (disables reuse, becoming subset sum). Not sorting before pruning (break doesn't work on unsorted array). Forgetting to copy path with `path[:]` in the base case.
+- **Pattern Recognition:** "Combinations summing to target with reuse" → `backtrack(i, ...)` allows reuse; same pattern extended in Combination Sum II (no reuse, `i+1`) and III (fixed set 1-9).
 
 ---
 
 ## Problem 25 — Combination Sum II (Medium)
 
-**Statement:** Given candidates (may have duplicates) and a target, return all unique combinations that sum to target. Each number used **at most once**.
+**Problem Explanation:**
+Same as Combination Sum, but candidates **may contain duplicates** and each candidate can be used **at most once**. Return all unique combinations that sum to target. For example, `[10,1,2,7,6,1,5]` with target 8 gives `[1,1,6], [1,2,5], [1,7], [2,6]`.
 
-**Approach:** Sort. Skip duplicates at same level. Use `i+1` to prevent reuse.
+**Algorithm Steps:**
+1. Sort candidates
+2. Define `backtrack(start, path, remaining)`:
+   a. If `remaining == 0`: add path to result
+   b. For `i` from `start` to n-1:
+      - Skip if `i > start and candidates[i] == candidates[i-1]` (duplicate at same level)
+      - If `candidates[i] > remaining`: break (pruning)
+      - Append, recurse with `backtrack(i + 1, ...)` (no reuse!), pop
+3. Call `backtrack(0, [], target)`
 
+**Visual Walkthrough:**
+```
+candidates = [10,1,2,7,6,1,5], target = 8
+Sorted: [1, 1, 2, 5, 6, 7, 10]
+
+backtrack(0, [], rem=8)
+  i=0: v=1 → [1], rem=7
+    i=1: v=1 → [1,1], rem=6
+      i=2: v=2 → [1,1,2], rem=4
+        i=3: v=5 > 4 → break
+      → ADD [1,1,6] at i=4! (1+1+6=8)
+    i=2: v=2 → [1,2], rem=5
+      i=3: v=5 → [1,2,5], rem=0 → ADD [1,2,5]!
+    i=3: v=5 → [1,5], rem=2 → 5>2 break
+    i=4: v=6 → [1,6], rem=1 → 6>1 break
+  i=1: v=1, i=1>start=0 and nums[1]=nums[0]? Yes → SKIP (duplicate at root)
+  i=2: v=2 → [2], rem=6
+    i=3: v=5 → [2,5], rem=1 → break
+    i=4: v=6 → [2,6], rem=0 → ADD [2,6]!
+  i=3: v=5, i=3>start=0 and nums[3]=nums[2]? No (5≠2) → ... → ADD [1,7] at i=5!
+  i=4: v=6 → [6], rem=2
+    i=5: v=7 > 2 → break
+  i=5: v=7 → [7], rem=1 → 7>1 break
+  i=6: v=10 > 8 → break
+
+Result: [[1,1,6], [1,2,5], [1,7], [2,6]]
+```
+
+**Key Insight:**
+Two changes from Combination Sum: (1) `i+1` instead of `i` prevents reusing the same element, and (2) `i > start and nums[i] == nums[i-1]` skips duplicates at the same recursion level (same as Subsets II). The sorting handles the duplicate adjacency, and the skip prevents generating `[1,2,5]` twice (once for each 1 in the input).
+
+**Solution:**
 ```python
 def combinationSum2(candidates, target):
-    candidates.sort()
+    candidates.sort()  # Sort for duplicate skipping and pruning
     result = []
+    
     def backtrack(start, path, remaining):
         if remaining == 0:
             result.append(path[:])
             return
         for i in range(start, len(candidates)):
+            # Skip duplicates at the same recursion level
             if i > start and candidates[i] == candidates[i - 1]:
                 continue
+            # Prune: remaining candidates are too large
             if candidates[i] > remaining:
                 break
             path.append(candidates[i])
+            # i+1: each candidate used at most once
             backtrack(i + 1, path, remaining - candidates[i])
             path.pop()
+    
     backtrack(0, [], target)
     return result
 ```
 
-- **Time:** O(2ⁿ) | **Space:** O(target)
-- **Tip:** Key difference from Combination Sum: `i+1` prevents reuse. The duplicate skip prevents same-level duplicates.
+- **Time:** O(2ⁿ) — each element either included or excluded
+- **Space:** O(target) — recursion depth bounded by target
+- **Edge Cases:** Large duplicates `[1,1,1,1,1,1,1]` target=2: Only result is `[1,1]` (appears once). Empty candidates: Return []. target smaller than smallest candidate: Return [].
+- **Common Mistakes:** Using `i` instead of `i+1` (allows infinite reuse — breaks the "at most once" rule). Not sorting (duplicate skip requires adjacent duplicates, and pruning requires sorted order). Confusing with Combination Sum's reuse pattern.
+- **Pattern Recognition:** "Combinations with duplicates, no reuse" → sort + `i+1` + same-level duplicate skip; hybrid of Subsets II and Combination Sum patterns.
 
 ---
 
 ## Problem 26 — Combination Sum III (Medium)
 
-**Statement:** Find all combinations of `k` numbers from 1-9 that sum to `n`. Each number used at most once.
+**Problem Explanation:**
+Find all combinations of exactly `k` numbers (each 1-9, used at most once) that sum to exactly `n`. This is a restricted Combination Sum: the candidate pool is fixed as `[1,...,9]`, exactly `k` numbers must be chosen, and no reuse is allowed. If no combination exists, return [].
 
-**Approach:** Backtrack from 1 to 9. Prune when remaining < 0 or count exceeds k.
+**Algorithm Steps:**
+1. Initialize result list
+2. Define `backtrack(start, path, remaining)`:
+   a. Base case: if `len(path) == k` and `remaining == 0`: add path to result
+   b. Prune: if `len(path) > k` or `remaining < 0`: return (dead end)
+   c. For `i` from `start` to 9:
+      - Append i, recurse with `i+1`, pop
+3. Call `backtrack(1, [], n)` and return result
 
+**Visual Walkthrough:**
+```
+k=3, n=7
+
+Numbers 1-9, choose exactly 3 that sum to 7
+
+Backtrack trace:
+backtrack(1, [], 7)
+  i=1: [1], rem=6
+    i=2: [1,2], rem=4
+      i=3: [1,2,3], rem=1 → len=3, rem≠0
+      i=4: [1,2,4], rem=0 → len=3, rem=0 → ADD [1,2,4]!
+      i=5: [1,2,5], rem=-1 → prune (rem<0)
+      ...
+    i=3: [1,3], rem=3
+      i=4: [1,3,4], rem=-1 (7-1-3-4=-1) → prune
+    i=4: [1,4], rem=2 → can't reach sum with just 1 more number ≥5
+    ...
+  i=2: [2], rem=5
+    i=3: [2,3], rem=2
+      i=4: [2,3,4], rem=-2 → prune
+    i=4: [2,4], rem=1 → can't reach sum (min remaining = 5)
+    ...
+  i=3: [3], rem=4
+    i=4: [3,4], rem=0 → len=2 < k=3, but remaining=0 already
+    ... (no 3-number combination starting with 3 sums to 7)
+
+Result: [[1,2,4]]
+```
+
+**Key Insight:**
+The search space is bounded: only numbers 1-9, and k ≤ 9. Two pruning strategies work together: (1) `len(path) > k` prevents exceeding the size limit, and (2) `remaining < 0` prevents overshooting the target. Since numbers are positive, if `remaining` reaches 0 before we have k numbers, we can't add any more (they'd all be positive and ruin the sum).
+
+**Solution:**
 ```python
 def combinationSum3(k, n):
     result = []
+    
     def backtrack(start, path, remaining):
+        # Base: correct size and exact sum
         if len(path) == k and remaining == 0:
             result.append(path[:])
             return
+        # Prune: too many numbers or overshot target
         if len(path) > k or remaining < 0:
             return
+        # Try numbers from start to 9 (each used at most once)
         for i in range(start, 10):
             path.append(i)
             backtrack(i + 1, path, remaining - i)
             path.pop()
-    backtrack(1, [], n)
+    
+    backtrack(1, [], n)  # Start from 1 (not 0)
     return result
 ```
 
-- **Time:** O(C(9, k)) | **Space:** O(k)
-- **Tip:** Since k ≤ 9 and numbers are 1-9, the search space is tiny. Early pruning on count and remaining makes this very efficient.
+- **Time:** O(C(9, k)) — combinatorial, but 9 choose k is at most 126
+- **Space:** O(k) — recursion depth
+- **Edge Cases:** Impossible sum (k=2, n=18): Max sum of 2 from 1-9 is 9+8=17, so return []. k=9, n=45: Only [1,2,3,4,5,6,7,8,9] works. k=9, n=44: Impossible. k=1, n=5: Return [[5]].
+- **Common Mistakes:** Not pruning by path length (exploring beyond k numbers). Including 0 in the range (problem says 1-9). Forgetting that start=1 (not 0). Not checking that sum is achievable (trying combinations that can never work due to bounds).
+- **Pattern Recognition:** "Fixed-size combinations from 1-9" → simple bounded backtracking; extension of the combination sum family with fixed pool.
 
 ---
 
 ## Problem 27 — Palindrome Partitioning (Medium)
 
-**Statement:** Given a string `s`, partition it such that every substring is a palindrome. Return all valid partitioning.
+**Problem Explanation:**
+Given a string `s`, partition it into substrings (contiguous segments) such that every substring is a palindrome. Return all possible ways to partition the string. For example, "aab" can be partitioned as ["a","a","b"] or ["aa","b"] because "a", "aa", and "b" are all palindromes.
 
-**Approach:** Backtrack: try every prefix. If palindrome, recurse on the remainder.
+**Algorithm Steps:**
+1. Initialize result list
+2. Define `backtrack(start, path)`:
+   a. If `start == len(s)`: add path copy to result (base case — partitioned entire string)
+   b. For each `end` from `start + 1` to `len(s)`:
+      - Extract substring `s[start:end]`
+      - If palindrome: append to path, recurse from `end`, pop
+3. Call `backtrack(0, [])` and return result
 
+**Visual Walkthrough:**
+```
+s = "aab"
+
+Backtrack tree:
+                    ""
+        ┌───────────┼───────────┐
+      "a"✓         "aa"✓       "aab"✗
+        |             |
+      "ab"✗       ["aa","b"]
+      ["a",?]
+        |
+      ["a","a"]
+        |
+    ["a","a","b"]✓
+
+Execution:
+backtrack(0, [])
+  end=1: sub="a" → palindrome ✓ → path=["a"]
+    backtrack(1, ["a"])
+      end=2: sub="a" → palindrome ✓ → path=["a","a"]
+        backtrack(2, ["a","a"])
+          end=3: sub="b" → palindrome ✓ → path=["a","a","b"]
+            backtrack(3, ["a","a","b"]) → start==len → ADD ["a","a","b"]!
+          pop → ["a","a"]
+        pop → ["a"]
+      end=3: sub="ab" → palindrome ✗ → skip
+    pop → []
+  end=2: sub="aa" → palindrome ✓ → path=["aa"]
+    backtrack(2, ["aa"])
+      end=3: sub="b" → palindrome ✓ → path=["aa","b"]
+        backtrack(3, ["aa","b"]) → ADD ["aa","b"]!
+    pop → []
+  end=3: sub="aab" → palindrome ✗ → skip
+
+Result: [["a","a","b"], ["aa","b"]]
+```
+
+**Key Insight:**
+This problem combines string traversal with palindrome checking. At each position, we try all possible ending positions, checking if each substring is a palindrome. When we find one, we recurse on the remainder. This is essentially a "partition" problem — we make cuts between characters, and each cut creates a substring that must be a palindrome.
+
+**Solution:**
 ```python
 def partition(s):
     result = []
+    
     def backtrack(start, path):
+        # Base: partitioned entire string into palindromes
         if start == len(s):
             result.append(path[:])
             return
+        # Try every possible ending for the current substring
         for end in range(start + 1, len(s) + 1):
             sub = s[start:end]
-            if sub == sub[::-1]:
-                path.append(sub)
-                backtrack(end, path)
-                path.pop()
+            if sub == sub[::-1]:  # Check if substring is palindrome
+                path.append(sub)          # Choose this palindrome segment
+                backtrack(end, path)      # Recurse on the remainder
+                path.pop()                # Backtrack
+    
     backtrack(0, [])
     return result
 ```
 
-- **Time:** O(n × 2ⁿ) | **Space:** O(n)
-- **Tip:** Precomputing palindrome checks (DP table) can reduce the O(n) check to O(1), but `sub == sub[::-1]` is fast enough for most cases.
+- **Time:** O(n × 2ⁿ) — up to 2ⁿ possible partitions, each substring check O(n)
+- **Space:** O(n) — recursion depth
+- **Edge Cases:** Single character "a": Return [["a"]]. Empty string "": Return [[]]. All palindrome "aaa": 4 partitions. No palindrome possible: Can't happen — every single character is a palindrome.
+- **Common Mistakes:** Off-by-one in `range(start+1, len(s)+1)` — the +1 for end is critical for slicing (Python slice end is exclusive). Not copying path in base case. Forgetting that single characters are always palindromes (base case is always reachable).
+- **Pattern Recognition:** "Partition string with constraints" → backtracking on substring boundaries; similar to: Restore IP Addresses, Word Break (different DP approach).
 
 ---
 
 ## Problem 28 — Word Search (Medium)
 
-**Statement:** Given a 2D board of characters and a word, return `True` if the word exists in the board. You can use each cell **at most once**.
+**Problem Explanation:**
+Given an m×n grid of characters and a word, determine if the word can be found in the grid by moving up, down, left, or right. You can use each cell **at most once**. The word must be formed by adjacent (not diagonal) cells in sequence. For example, "ABCCED" exists in the classic board but "ABCB" does not.
 
-**Approach:** DFS from each cell. Mark visited cells, explore 4 directions, backtrack.
+**Algorithm Steps:**
+1. Store board dimensions
+2. Define recursive `dfs(r, c, idx)`:
+   a. If `idx == len(word)`: found entire word → return True
+   b. If out of bounds or character doesn't match: return False
+   c. Save current cell, mark as visited (`'#'`)
+   d. Recursively explore 4 directions: up, down, left, right
+   e. Restore cell value
+   f. Return True if any direction found the word
+3. For each cell in grid, if `dfs(r, c, 0)` returns True: return True
+4. Return False if no path found
 
+**Visual Walkthrough:**
+```
+board = [['A','B','C','E'],
+         ['S','F','C','S'],
+         ['A','D','E','E']]
+word = "ABCCED"
+
+DFS from (0,0)='A':
+  idx=0: 'A' matches → mark as '#'
+    → down (1,0)='S' ≠ 'B' ✗
+    → up out of bounds ✗
+    → right (0,1)='B' matches → mark '#' → idx=2
+        → down (1,1)='F' ≠ 'C' ✗
+        → right (0,2)='C' matches → mark '#' → idx=3
+            → down (1,2)='C' matches → mark '#' → idx=4
+                → down (2,2)='E' matches → mark '#' → idx=5
+                    → down out ✗ up (1,2)='#' ✗ right (2,3)='E' matches! → idx=6
+                        → idx==len(word)=6 → return True!
+                restore (2,2)='E'
+            restore (1,2)='C'
+        restore (0,2)='C'
+    restore (0,1)='B'
+  restore (0,0)='A'
+
+Result: True
+```
+
+**Key Insight:**
+In-place marking (`'#'`) eliminates the need for a separate visited set, reducing memory overhead. The 4-direction DFS explores all possible paths. Backtracking (restoring the cell) ensures each cell can be reused in different search branches. Early exit via `return True` short-circuits the search as soon as any valid path is found.
+
+**Solution:**
 ```python
 def exist(board, word):
     rows, cols = len(board), len(board[0])
 
     def dfs(r, c, idx):
+        # Found entire word
         if idx == len(word):
             return True
+        # Out of bounds or character mismatch
         if r < 0 or r >= rows or c < 0 or c >= cols or board[r][c] != word[idx]:
             return False
+        
+        # Mark as visited (in-place)
         temp = board[r][c]
         board[r][c] = '#'
-        found = (dfs(r + 1, c, idx + 1) or dfs(r - 1, c, idx + 1) or
-                 dfs(r, c + 1, idx + 1) or dfs(r, c - 1, idx + 1))
+        
+        # Explore all 4 directions
+        found = (dfs(r + 1, c, idx + 1) or  # down
+                 dfs(r - 1, c, idx + 1) or  # up
+                 dfs(r, c + 1, idx + 1) or  # right
+                 dfs(r, c - 1, idx + 1))    # left
+        
+        # Restore cell (backtrack)
         board[r][c] = temp
         return found
 
+    # Start DFS from every cell
     for r in range(rows):
         for c in range(cols):
             if dfs(r, c, 0):
@@ -1030,200 +2022,547 @@ def exist(board, word):
     return False
 ```
 
-- **Time:** O(m × n × 4^L) where L = word length | **Space:** O(L)
-- **Tip:** In-place marking (`'#'`) avoids a separate visited set. The 4^L factor is the branching factor at each step.
+- **Time:** O(m × n × 4^L) — each starting cell explores up to 4 branches per character
+- **Space:** O(L) — recursion stack depth (word length)
+- **Edge Cases:** Empty word: return True (always exists). Word longer than total cells: return False quickly (but algorithm still explores). Single cell board with matching single char: return True.
+- **Common Mistakes:** Not restoring cell after recursive call (visited cells stay marked for other search branches, causing false negatives). Checking bounds after marking (must check before accessing `board[r][c]`). Using `board[r][c]` instead of `temp` for restoration.
+- **Pattern Recognition:** "Word existence in 2D grid" → DFS + backtracking with in-place marking; same traversal pattern in Word Search II (with Trie optimization).
 
 ---
 
 ## Problem 29 — N-Queens (Medium)
 
-**Statement:** Place `n` queens on an `n×n` chessboard so no two queens attack each other. Return all **distinct solutions**.
+**Problem Explanation:**
+Place `n` queens on an n×n chessboard so that no two queens attack each other. Queens attack along rows, columns, and both diagonals. Return all distinct board configurations. This is the classic constraint satisfaction problem. For n=4, there are 2 solutions.
 
-**Approach:** Backtrack row by row. Use sets to track used columns, positive diagonals, and negative diagonals.
+**Algorithm Steps:**
+1. Initialize result list, column set, positive diagonal set (`row + col`), negative diagonal set (`row - col`)
+2. Initialize board as n×n grid of `'.'`
+3. Define `backtrack(row)`:
+   a. If `row == n`: all queens placed → add board snapshot to result
+   b. For each `col` in 0..n-1:
+      - Skip if column, positive diagonal, or negative diagonal is already used
+      - Place queen: add to sets, set board cell to 'Q'
+      - Recurse on next row
+      - Remove queen: clear sets, set board cell to '.'
+4. Call `backtrack(0)` and return result
 
+**Visual Walkthrough:**
+```
+n=4, solving for valid queen positions:
+
+Row 0: Try col=0
+  Place Q at (0,0): cols={0}, pos_diag={0}, neg_diag={0}
+  Row 1:
+    col=0: in cols → skip
+    col=1: pos_diag=2, neg_diag=0 (0 in neg_diag) → skip
+    col=2: pos_diag=3, neg_diag=-1 → valid! Place Q
+      cols={0,2}, pos_diag={0,3}, neg_diag={0,-1}
+      Row 2:
+        col=0,1,2: in cols → skip
+        col=3: pos_diag=5, neg_diag=-1 (-1 in neg_diag) → skip
+        → dead end! Backtrack
+    col=3: pos_diag=4, neg_diag=-2 → valid! Place Q
+      cols={0,3}, pos_diag={0,4}, neg_diag={0,-2}
+      Row 2: Try col=1
+        pos_diag=3 ✓, neg_diag=-1 ✓ → valid! Place Q at (2,1)
+        cols={0,1,3}, pos_diag={0,1,4}, neg_diag={0,-1,-2}
+        Row 3: Try col=2
+          pos_diag=5 ✓, neg_diag=1 ✓ → valid! Place Q at (3,2)
+          → FOUND SOLUTION!
+            . Q . .
+            . . . Q
+            Q . . .
+            . . Q .
+
+(Similar process for Solution 2 starting with Q at (0,1))
+```
+
+**Key Insight:**
+The diagonal encoding is the key insight: cells on the same `/` diagonal share the same `row + col` value, and cells on the same `\` diagonal share the same `row - col` value. Using sets for columns and diagonals gives O(1) conflict checks. Placing queens row by row ensures no two queens share a row.
+
+**Solution:**
 ```python
 def solveNQueens(n):
     result = []
-    cols = set()
-    pos_diag = set()
-    neg_diag = set()
+    cols = set()          # Columns that have queens
+    pos_diag = set()      # Positive diagonals (row + col) — '/' direction
+    neg_diag = set()      # Negative diagonals (row - col) — '\' direction
     board = [['.'] * n for _ in range(n)]
-
+    
     def backtrack(row):
+        # All queens placed successfully
         if row == n:
             result.append([''.join(r) for r in board])
             return
         for col in range(n):
+            # Skip if attacked by another queen
             if col in cols or (row + col) in pos_diag or (row - col) in neg_diag:
                 continue
+            # Place queen
             cols.add(col)
             pos_diag.add(row + col)
             neg_diag.add(row - col)
             board[row][col] = 'Q'
             backtrack(row + 1)
+            # Remove queen (backtrack)
             board[row][col] = '.'
             cols.remove(col)
             pos_diag.remove(row + col)
             neg_diag.remove(row - col)
-
+    
     backtrack(0)
     return result
 ```
 
-- **Time:** O(n!) | **Space:** O(n²)
-- **Tip:** Diagonal property: cells on the same `\` diagonal have the same `row - col`; on the same `/` diagonal have the same `row + col`.
+- **Time:** O(n!) — first row has n choices, second at most n-1, etc.
+- **Space:** O(n²) — board storage + O(n) for sets
+- **Edge Cases:** n=1: Return `[["Q"]]`. n=2,3: Return [] (no solutions). n=8: 92 solutions.
+- **Common Mistakes:** Forgetting to restore board state (both sets and board cells). Using `row + col` and `row - col` correctly (not swapping them). Not joining list to string in result. Off-by-one in `range(n)`.
+- **Pattern Recognition:** "Constraint satisfaction on grid" → row-by-row backtracking with O(1) conflict sets; same pattern: Sudoku Solver (row, col, box constraints), N-Queens II (count only).
 
 ---
 
 ## Problem 30 — Sudoku Solver (Hard)
 
-**Statement:** Fill a 9×9 Sudoku grid so each row, column, and 3×3 box contains 1-9 exactly. The input has empty cells marked as `'.'`. Guaranteed to have a unique solution.
+**Problem Explanation:**
+You're given a partially filled 9×9 Sudoku board (empty cells are `'.'`). Fill all empty cells so that each row, column, and 3×3 box contains digits 1-9 exactly once. The puzzle is guaranteed to have exactly one solution. This is the classic "constraint satisfaction" backtracking problem.
 
-**Approach:** Backtrack on empty cells. Try digits 1-9, validate row/col/box constraints.
+**Algorithm Steps:**
+1. Define `is_valid(row, col, num)`: check if `num` can be placed at (row, col):
+   a. Check row: no other cell in `board[row]` has `num`
+   b. Check column: no other cell in `board[:][col]` has `num`
+   c. Check 3×3 box: compute box start indexes, check all 9 cells
+2. Define `solve()`:
+   a. Find the first empty cell (nested loop over r, c)
+   b. If no empty cell: board is solved → return True
+   c. For each digit `'1'` to `'9'`:
+      - If valid: place digit, recursively call solve()
+      - If recursion returns True: solution found → return True
+      - If not: undo placement (backtrack), try next digit
+   d. If no digit works: return False (trigger backtrack)
+3. Call `solve()` (modifies board in-place)
 
+**Visual Walkthrough:**
+```
+Initial board (partial):
+[["5","3",".",".","7",".",".",".","."],
+ ["6",".",".","1","9","5",".",".","."],
+ [".","9","8",".",".",".",".","6","."],
+ ["8",".",".",".","6",".",".",".","3"],
+ ["4",".",".","8",".","3",".",".","1"],
+ ["7",".",".",".","2",".",".",".","6"],
+ [".","6",".",".",".",".","2","8","."],
+ [".",".",".","4","1","9",".",".","5"],
+ [".",".",".",".","8",".",".","7","9"]]
+
+solve() starts scanning:
+  (0,0)='5' → skip, (0,1)='3' → skip, (0,2)='.' → try digits 1-9
+  Try '1': is_valid(0,2,'1')? 
+    row0 has 5,3,7 → 1 not in row ✓
+    col2 has 8 → 1 not in col ✓
+    box (0-2,0-2) has 5,3,6,9,8 → 1 not in box ✓
+    Place '1' at (0,2)
+    Recursively solve...
+    If failure, try '2', '3', ...
+```
+
+**Key Insight:**
+The simple "find first empty cell, try 1-9" strategy, combined with immediate validation, is surprisingly effective for standard 9×9 Sudoku due to constraint propagation. Each placed digit eliminates options for other cells, quickly pruning invalid branches. The key optimizations are: (1) only check empty cells, and (2) the triple-constraint (row, column, box) validation.
+
+**Solution:**
 ```python
 def solveSudoku(board):
     def is_valid(row, col, num):
+        """Check if num can be placed at board[row][col]."""
         for i in range(9):
+            # Check row and column simultaneously
             if board[row][i] == num or board[i][col] == num:
                 return False
-            br, bc = 3 * (row // 3) + i // 3, 3 * (col // 3) + i % 3
+            # Check 3x3 box using i to iterate its 9 cells
+            br = 3 * (row // 3) + i // 3
+            bc = 3 * (col // 3) + i % 3
             if board[br][bc] == num:
                 return False
         return True
 
     def solve():
+        # Find the first empty cell
         for r in range(9):
             for c in range(9):
                 if board[r][c] == '.':
+                    # Try digits 1-9
                     for ch in '123456789':
                         if is_valid(r, c, ch):
-                            board[r][c] = ch
-                            if solve():
+                            board[r][c] = ch  # Place digit
+                            if solve():       # Recurse
                                 return True
-                            board[r][c] = '.'
-                    return False
-        return True
+                            board[r][c] = '.'  # Undo (backtrack)
+                    return False  # No digit works → dead end
+        return True  # No empty cells → solved!
 
-    solve()
+    solve()  # Board is modified in-place
 ```
 
-- **Time:** O(9^(empty cells)) worst case | **Space:** O(1) (in-place)
-- **Tip:** Optimization: precompute which cells are empty and iterate only over them. Also, try digits that actually appear less frequently first.
+- **Time:** O(9^(empty cells)) worst case — pruning makes it far faster in practice
+- **Space:** O(1) — recursion stack up to 81 levels (negligible)
+- **Edge Cases:** Fully filled board already: solve() immediately returns True. Single empty cell: Try 9 digits, one will pass is_valid.
+- **Common Mistakes:** Forgetting to undo placement (board cell stays filled on backtrack). Using `0` vs `'0'` — digits are strings. Not checking all three constraints (row, column, box). Off-by-one in box calculation (3*(r//3) + i//3 is correct for 0-indexed).
+- **Pattern Recognition:** "Constraint satisfaction with grid" → find-first-empty + try-all-values + validate; same as N-Queens approach. Advanced version: use backtracking + constraint propagation (like MRV heuristic).
 
 ---
 
 ## Problem 31 — Restore IP Addresses (Medium)
 
-**Statement:** Given a string `s` of digits, restore all possible valid IP addresses.
+**Problem Explanation:**
+Given a string of digits, insert dots to form a valid IP address. A valid IPv4 address has exactly 4 segments separated by dots, each segment is a number 0-255, and no segment has leading zeros (unless the segment is exactly "0"). Return all possible valid IP addresses.
 
-**Approach:** Backtrack: try segments of length 1-3 at each position. Validate each segment.
+**Algorithm Steps:**
+1. Initialize result list
+2. Define `backtrack(start, path)`:
+   a. If `len(path) == 4`: if `start == len(s)`, join with dots and add to result; return
+   b. For `length` in 1 to 3:
+      - If `start + length > len(s)`: break (not enough remaining chars)
+      - Extract segment `s[start:start+length]`
+      - Skip if length > 1 and starts with '0' (leading zero invalid)
+      - Skip if int > 255
+      - Append segment, recurse with `start+length`, pop
+3. Call `backtrack(0, [])` and return result
 
+**Visual Walkthrough:**
+```
+s = "25525511135"
+
+Backtrack tree (X = invalid segment):
+              ""
+   ┌──────────┼──────────┐
+  "2"        "25"       "255"
+   |          |           |
+   X        X        ┌────┼────┐
+                   "2"  "25" "255"
+                    |     |    ...
+                 ┌──┼──┐  X
+               "5" "55" "551"
+                       ┌──┼──┐
+                     "1" "11" "113"
+                         |
+                       "1" "13" "135"
+                         |    |
+                        ✓     X
+
+Execution:
+backtrack(0, [])
+  len=1: seg="2"
+    len=2: seg="25"
+      len=3: seg="255"
+        backtrack(3, ["255"])
+          len=1: seg="2" → ... → dead end
+          len=2: seg="25" → ... → dead end
+          len=3: seg="255"
+            backtrack(6, ["255","255"])
+              len=1: seg="1" → ... → dead end (not enough for 4 segs)
+              len=2: seg="11"
+                backtrack(8, ["255","255","11"])
+                  len=1: seg="1" → ... → dead end
+                  len=2: seg="13" → int=13 ≤ 255 ✓
+                    backtrack(10, ["255","255","11","13"])
+                      start(10)≠len(11) → seg len=1: "1"
+                        backtrack(11, [...])
+                          len(path)=4, start=11=len → ADD "255.255.11.135"!
+                  len=3: seg="135" → int=135 ≤ 255 ✓
+                    backtrack(11, ["255","255","11","135"])
+                      len(path)=4, start=11=len → ADD "255.255.111.35"!
+
+Result: ["255.255.11.135", "255.255.111.35"]
+```
+
+**Key Insight:**
+The search space is bounded: at most 3 choices per segment (length 1, 2, or 3), and exactly 4 segments, so at most 3⁴ = 81 combinations. The constraints (leading zero, max 255) prune invalid branches immediately. This is a rare example of a backtracking problem with O(1) complexity.
+
+**Solution:**
 ```python
 def restoreIpAddresses(s):
     result = []
+    
     def backtrack(start, path):
+        # Base: 4 segments placed
         if len(path) == 4:
-            if start == len(s):
+            if start == len(s):           # Used all characters
                 result.append('.'.join(path))
             return
+        
+        # Try segment lengths 1, 2, 3
         for length in range(1, 4):
-            if start + length > len(s):
+            if start + length > len(s):   # Not enough characters
                 break
             seg = s[start:start + length]
+            # Leading zeros are invalid (except "0" itself)
             if len(seg) > 1 and seg[0] == '0':
                 break
+            # Segment must be 0-255
             if int(seg) > 255:
                 continue
+            
             path.append(seg)
             backtrack(start + length, path)
             path.pop()
+    
     backtrack(0, [])
     return result
 ```
 
-- **Time:** O(1) (at most 3⁴ = 81 combinations) | **Space:** O(1)
-- **Tip:** Leading zeros are invalid for segments longer than 1 character. The small search space makes this very fast.
+- **Time:** O(1) — at most 3⁴ = 81 combinations
+- **Space:** O(1) — recursion depth at most 4
+- **Edge Cases:** s length < 4 or > 12: Return [] (not enough or too many digits for 4 segments). All zeros "0000": Return ["0.0.0.0"]. "010010": Returns ["0.10.0.10", "0.100.1.0"].
+- **Common Mistakes:** Using `break` instead of `continue` for the >255 check — smaller lengths might still work (e.g., seg "25" in "255" → 25 ≤ 255, continue to length 2). Forgetting leading zero check (segments like "01" are invalid). Treating "0" as invalid leading zero (it's valid as a single-digit segment).
+- **Pattern Recognition:** "Restore addresses from string" → bounded backtracking with segment validation; similar to Palindrome Partitioning (partition with constraints).
 
 ---
 
 ## Problem 32 — Generate Parentheses (Medium)
 
-**Statement:** Given `n` pairs of parentheses, generate all combinations of **well-formed** parentheses.
+**Problem Explanation:**
+Given `n` pairs of parentheses, generate all **well-formed** combinations. A well-formed string has matching open/close parentheses — at any point, the number of closing parentheses never exceeds the number of opening ones. Example for n=3: "((()))", "(()())", "(())()", "()(())", "()()()".
 
-**Approach:** Backtrack: add `(` if count_open < n, add `)` if count_close < count_open.
+**Algorithm Steps:**
+1. Initialize result list
+2. Define `backtrack(path, open_count, close_count)`:
+   a. If `len(path) == 2*n`: add joined string to result
+   b. If `open_count < n`: add `(`, recurse with `open_count+1`, pop
+   c. If `close_count < open_count`: add `)`, recurse with `close_count+1`, pop
+3. Call `backtrack([], 0, 0)` and return result
 
+**Visual Walkthrough:**
+```
+n=3, target = 2*n = 6 characters
+
+Backtrack tree (depth-first):
+                    ""
+          ┌─────────┴─────────┐
+         "("               (close<open? No)
+     ┌────┴────┐
+   "(("       "()"
+   ┌─┴─┐     ┌─┴─┐
+ "(((" "(()" "()(" "(())"
+   |     |     |
+... ... ... ...
+
+Detailed trace:
+backtrack("", o=0, c=0)
+  add '(' → "(", o=1
+    add '(' → "((", o=2
+      add '(' → "(((", o=3
+        can't add '(' (o=n)
+        add ')' → "((()", c=1
+          add ')'→ "((())", c=2
+            add ')'→ "((()))", c=3 → len=6 → ADD!
+      pop → "(()", remove '(' attempt
+      add ')' → "(()", o=2, c=1
+        add '(' → "(()(", o=3
+          add ')'→ "(()()", c=2
+            add ')'→ "(()())", c=3 → ADD!
+        add ')' → "(())", o=2, c=2
+          add '(' → "(())(", o=3
+            add ')'→ "(())()", c=3 → ADD!
+    ...
+  (continues to find "()(())" and "()()()")
+
+5 total combinations = Catalan(3) = 5
+```
+
+**Key Insight:**
+Two simple rules guarantee well-formed parentheses: (1) you can add `(` as long as you haven't used all n; (2) you can add `)` as long as there's an unmatched `(` (close_count < open_count). This elegantly avoids invalid strings without explicit validation. The number of valid strings is the Catalan number C(n) = (2n)!/((n+1)!×n!).
+
+**Solution:**
 ```python
 def generateParenthesis(n):
     result = []
+    
     def backtrack(path, open_count, close_count):
+        # Base: used all 2*n characters
         if len(path) == 2 * n:
             result.append(''.join(path))
             return
+        # Add '(' if we can still open a new pair
         if open_count < n:
             path.append('(')
             backtrack(path, open_count + 1, close_count)
             path.pop()
+        # Add ')' if we have an unmatched '(' to close
         if close_count < open_count:
             path.append(')')
             backtrack(path, open_count, close_count + 1)
             path.pop()
+    
     backtrack([], 0, 0)
     return result
 ```
 
-- **Time:** O(4ⁿ / √n) — Catalan number | **Space:** O(n)
-- **Tip:** The Catalan number C(n) = (2n)! / ((n+1)! * n!) counts valid parentheses. For n=8, that's 1430 combinations.
+- **Time:** O(4ⁿ/√n) — Catalan number; for n=8, only 1430 combinations
+- **Space:** O(n) — recursion depth
+- **Edge Cases:** n=0: Return [""] (one empty string). n=1: Return ["()"]. Large n: Catalan numbers grow quickly (n=12 → 208012 combinations).
+- **Common Mistakes:** Using `open_count <= close_count` instead of `<` for the `)` rule (would allow `)(` which is invalid). Not converting path list to string before adding. Adding `)` when `close_count == open_count` (no unmatched open paren).
+- **Pattern Recognition:** "Generate balanced parentheses" → tracking open/close counts; same pattern used in: checking valid parentheses (stack), different bracket types problems. Catalan number structure appears in: Unique BSTs, valid parentheses, Dyck paths.
 
 ---
 
 ## Problem 33 — Expression Add Operators (Hard)
 
-**Statement:** Given a string of digits `num` and target `target`, insert `+`, `-`, or `*` between digits to form expressions that evaluate to target. Return all valid expressions.
+**Problem Explanation:**
+Given a string of digits (like "123") and a target number, insert the operators `+`, `-`, or `*` between some digits (not necessarily between every pair) to form expressions that evaluate to the target. Return all valid expressions. For example, "123" with target 6 gives "1+2+3" and "1*2*3".
 
-**Approach:** Backtrack with tracking of previous operand (for multiplication precedence).
+**Algorithm Steps:**
+1. Initialize result list
+2. Define `backtrack(index, path, prev, curr)`:
+   a. If `index == len(num)`: if `curr == target`, add path to result
+   b. For `i` from `index` to `len(num)-1`:
+      - Break if multi-digit segment starts with '0' (leading zero invalid)
+      - Extract segment `num[index:i+1]`, convert to `val`
+      - If `index == 0`: start with first number (no operator before it)
+      - Else: try `+`, `-`, `*`:
+        - `+`: curr + val, prev = val
+        - `-`: curr - val, prev = -val
+        - `*`: undo previous op, apply multiplication: `curr - prev + prev * val`, `prev = prev * val`
+3. Call `backtrack(0, '', 0, 0)` and return result
 
+**Visual Walkthrough:**
+```
+num = "123", target = 6
+
+Backtrack tree (showing significant paths only):
+
+index=0: segment "1" → start path="1", prev=1, curr=1
+  index=1: segment "2"
+    +: path="1+2", prev=2, curr=3
+      index=2: segment "3"
+        +: path="1+2+3", prev=3, curr=6 → target=6 ✓ → ADD!
+        -: path="1+2-3", prev=-3, curr=0
+        *: undo prev=2 → curr=3-2+2*3=7, prev=6
+    -: path="1-2", prev=-2, curr=-1
+      index=2: segment "3"
+        +: path="1-2+3", prev=3, curr=2
+        -: path="1-2-3", prev=-3, curr=-4
+        *: undo prev=-2 → curr=-1-(-2)+(-2*3)=-5
+    *: path="1*2", prev=2, curr=2
+      index=2: segment "3"
+        +: path="1*2+3", prev=3, curr=5
+        -: path="1*2-3", prev=-3, curr=-1
+        *: path="1*2*3", prev=6, curr=6 → target=6 ✓ → ADD!
+
+  index=1: segment "23" (i=1, len=2)
+    val=23 → "1+23"=24, "1-23"=-22, "1*23"=23
+
+Result: ["1+2+3", "1*2*3"]
+```
+
+**Key Insight:**
+Multiplication has higher precedence than addition/subtraction, so `1+2*3` should be 7, not 9. To handle this without building an AST: track `prev` (the last operand with its sign). For `+` and `-`, `prev` is just `val` or `-val`. For `*`, we undo the previous operation's effect on curr: `curr - prev + prev * val`. This effectively "replaces" the previous operand with the multiplied result.
+
+**Solution:**
 ```python
 def addOperators(num, target):
     result = []
 
     def backtrack(index, path, prev, curr):
+        # Base: used all digits
         if index == len(num):
             if curr == target:
                 result.append(path)
             return
+        
         for i in range(index, len(num)):
+            # Skip leading zeros (e.g., "05" is invalid)
             if i != index and num[index] == '0':
                 break
             seg = num[index:i + 1]
             val = int(seg)
+            
             if index == 0:
+                # First number — no operator before it
                 backtrack(i + 1, seg, val, val)
             else:
+                # Addition: prev=val, curr += val
                 backtrack(i + 1, path + '+' + seg, val, curr + val)
+                # Subtraction: prev=-val, curr -= val
                 backtrack(i + 1, path + '-' + seg, -val, curr - val)
-                backtrack(i + 1, path + '*' + seg, prev * val, curr - prev + prev * val)
+                # Multiplication: undo prev, apply multiply
+                backtrack(i + 1, path + '*' + seg, prev * val,
+                          curr - prev + prev * val)
 
     backtrack(0, '', 0, 0)
     return result
 ```
 
-- **Time:** O(4ⁿ) (3 operators × n split points) | **Space:** O(n)
-- **Tip:** For multiplication, undo the previous addition: `curr - prev + prev * val`. This handles operator precedence correctly without building an AST.
+- **Time:** O(4ⁿ) — at each split point, choose: end-segment or one of 3 operators
+- **Space:** O(n) — recursion depth
+- **Edge Cases:** Leading zeros: "105" with target 5 allows "1*0+5" and "10-5" but not "1*05". Single digit "5" with target 5: Return ["5"]. Very large numbers (inputs up to 10 digits) can cause integer overflow in some languages.
+- **Common Mistakes:** Incorrect multiplication handling — `curr += val` doesn't account for precedence. Using `int(seg)` on very long segments (Python handles big ints but other languages may not). Forgetting the leading zero check (`num[index] == '0'` for segments longer than 1).
+- **Pattern Recognition:** "Add operators to form target" → backtracking with `prev` tracking for precedence; advanced version of: Target Sum, Expression Evaluation.
 
 ---
 
 ## Problem 34 — Word Search II (Hard)
 
-**Statement:** Given a 2D board and a list of words, return all words from the list that can be found on the board. Each cell used at most once per word.
+**Problem Explanation:**
+Given an m×n board of characters and a list of words, find all words from the list that exist on the board. Each cell can be used at most once per word, and you can move up/down/left/right. This is Word Search (Problem 28) with multiple words. Using a simple DFS per word would be too slow — we need a Trie to check all words simultaneously.
 
-**Approach:** Build a Trie from the words. DFS from each cell following the Trie, pruning branches early.
+**Algorithm Steps:**
+1. Build a Trie from the word list (each node has children dict and optional `word` marker)
+2. Initialize result list
+3. Define `dfs(r, c, node)`:
+   a. Get character `ch` at board[r][c]
+   b. If `ch` not in node.children: return (no word has this prefix)
+   c. Move to child node
+   d. If node has a word: add to result, set node.word = None (deduplicate)
+   e. Mark cell as visited (`'#'`)
+   f. Explore 4 directions (if within bounds and not visited)
+   g. Restore cell
+4. For each cell, call `dfs(r, c, root)`
+5. Return result
 
+**Visual Walkthrough:**
+```
+board = [['o','a','a','n'],
+         ['e','t','a','e'],
+         ['i','h','k','r'],
+         ['i','f','l','v']]
+words = ["oath","pea","eat","rain"]
+
+Trie structure:
+        root
+       / |  \
+      o  p   r
+      |  |   |
+      a  e   a
+      |  |   |
+      t  a   i
+      |      |
+      h(oath) t(pea?) → no, e→a→t? no (but "eat" is at e→a→t)
+      
+DFS from (0,0)='o':
+  node=root's child 'o'
+    'o'→'a'→'t'→'h': found "oath"! result=["oath"]
+    Continue DFS...
+
+DFS from (1,0)='e':
+  node=root's child 'e' → 'a' (1,1) → 't' (1,2) → found "eat"!
+  result=["oath", "eat"]
+
+"pea": starts at (1,0)='e' ≠ 'p', (1,1)='t' ≠ 'p'... never matches
+"rain": (2,3)='r'... r→a→i→n? (3,3)='v' ≠ 'n' → fails
+
+Result: ["oath", "eat"]
+```
+
+**Key Insight:**
+Without a Trie, you'd run DFS once per word (O(words × board × 4^L)). With a Trie, a single DFS explores all word prefixes simultaneously — if the current DFS path doesn't match any prefix in the Trie, you prune immediately. This reduces complexity to O(board × 3^L) regardless of the number of words. Setting `node.word = None` after finding a word prevents adding it twice.
+
+**Solution:**
 ```python
 class TrieNode:
     def __init__(self):
-        self.children = {}
-        self.word = None
+        self.children = {}  # Character → TrieNode mapping
+        self.word = None    # Set to the word when this node is a word end
 
 def buildTrie(words):
     root = TrieNode()
@@ -1233,7 +2572,7 @@ def buildTrie(words):
             if ch not in node.children:
                 node.children[ch] = TrieNode()
             node = node.children[ch]
-        node.word = w
+        node.word = w  # Store word at the terminal node
     return root
 
 def findWords(board, words):
@@ -1244,17 +2583,18 @@ def findWords(board, words):
     def dfs(r, c, node):
         ch = board[r][c]
         if ch not in node.children:
-            return
-        node = node.children[ch]
-        if node.word:
+            return                   # No word with this prefix
+        node = node.children[ch]     # Move to child node
+        if node.word:                # Found a complete word
             result.append(node.word)
-            node.word = None
+            node.word = None         # Prevent duplicate addition
+        # Mark visited and explore 4 directions
         board[r][c] = '#'
         for dr, dc in [(0,1),(0,-1),(1,0),(-1,0)]:
             nr, nc = r + dr, c + dc
             if 0 <= nr < rows and 0 <= nc < cols and board[nr][nc] != '#':
                 dfs(nr, nc, node)
-        board[r][c] = ch
+        board[r][c] = ch  # Restore (backtrack)
 
     for r in range(rows):
         for c in range(cols):
@@ -1262,27 +2602,43 @@ def findWords(board, words):
     return result
 ```
 
-- **Time:** O(m × n × 3^L) where L = max word length | **Space:** O(total chars in words)
-- **Tip:** Trie pruning is the key optimization — once a path doesn't match any word prefix, we stop. Setting `node.word = None` after finding prevents duplicates.
+- **Time:** O(m × n × 3^L) — each cell starts DFS, 3 directions per step (not 4, since one is "back")
+- **Space:** O(total chars in all words) — Trie storage
+- **Edge Cases:** Empty word list: Return []. Words not on board: Return []. Words that are prefixes of other words: Both should be found if they exist.
+- **Common Mistakes:** Forgetting to restore board cell after DFS (breaks subsequent searches). Not removing found words from Trie (adds duplicates). Starting DFS from cells that don't match the first character of any word (wasteful).
+- **Pattern Recognition:** "Multiple word search in grid" → Trie + DFS backtracking; combines Problem 28 (Word Search) with Trie data structure. Also useful for: autocomplete, spell checking, prefix matching.
 
 ---
 
 ## Problem 35 — N-Queens II (Hard)
 
-**Statement:** Same as N-Queens but return only the **count** of distinct solutions.
+**Problem Explanation:**
+Same as N-Queens (Problem 29), but instead of returning all distinct board configurations, just return the **count** of valid solutions. For n=8, the answer is 92. This is a counting-only version that avoids storing boards, using less memory.
 
-**Approach:** Same backtracking as N-Queens but increment a counter instead of storing board states.
+**Algorithm Steps:**
+1. Initialize `count = [0]` (use list for mutable closure), column and diagonal sets
+2. Define `backtrack(row)`:
+   a. If `row == n`: increment count, return
+   b. For each `col` in 0..n-1:
+      - Skip if column/diagonal conflict
+      - Place queen (add to sets), recurse, remove queen
+3. Call `backtrack(0)` and return count
 
+**Key Insight:**
+The algorithm is identical to N-Queens — same recursive structure, same conflict detection. The only difference is we increment a counter instead of building a board representation. This is slightly faster and uses O(n) instead of O(n²) space since we don't store the board.
+
+**Solution:**
 ```python
 def totalNQueens(n):
+    # Use a list to allow mutation in nested function
     count = [0]
     cols = set()
-    pos_diag = set()
-    neg_diag = set()
-
+    pos_diag = set()  # row + col — '/' diagonals
+    neg_diag = set()  # row - col — '\' diagonals
+    
     def backtrack(row):
         if row == n:
-            count[0] += 1
+            count[0] += 1   # Found one valid placement
             return
         for col in range(n):
             if col in cols or (row + col) in pos_diag or (row - col) in neg_diag:
@@ -1294,38 +2650,88 @@ def totalNQueens(n):
             cols.remove(col)
             pos_diag.remove(row + col)
             neg_diag.remove(row - col)
-
+    
     backtrack(0)
     return count[0]
 ```
 
-- **Time:** O(n!) | **Space:** O(n)
-- **Tip:** Known answers: n=1→1, n=2→0, n=3→0, n=4→2, n=5→10, n=6→4, n=7→40, n=8→92, n=9→352.
+- **Time:** O(n!) — same as N-Queens
+- **Space:** O(n) — sets only, no board storage
+- **Edge Cases:** Known values: 1→1, 2→0, 3→0, 4→2, 5→10, 6→4, 7→40, 8→92, 9→352.
+- **Common Mistakes:** Using a plain integer `count` instead of a list (closures in Python can't rebind non-local integers without `nonlocal` keyword). Forgetting to backtrack by removing from sets. Using `=` instead of `+=` to increment (resets count).
+- **Pattern Recognition:** "Count solutions to constraint problem" → backtracking with counter; same as N-Queens but without board storage. Variants: count solutions to Sudoku, count ways to place non-attacking rooks.
 
 ---
 
 ## Problem 36 — Alien Dictionary (Hard)
 
-**Statement:** Given a sorted list of words in an alien language, derive the character order (a valid topological sort of character dependencies).
+**Problem Explanation:**
+You have a list of words from an alien language, sorted lexicographically according to some unknown character order. Determine the order of characters in the alien alphabet. For example, given `["wrt", "wrf", "er", "ett", "rftt"]`, the order might be `"wertf"`. This is essentially a topological sort problem — each pair of adjacent words gives a directed edge between characters.
 
-**Approach:** Compare adjacent words to build directed edges. Then topological sort (Kahn's or DFS).
+**Algorithm Steps:**
+1. Build adjacency list and in-degree map for all unique characters in words
+2. For each adjacent pair `(w1, w2)`:
+   a. If `w1` is longer than `w2` and `w1` starts with `w2`: invalid → return ""
+   b. Find first differing character `(c1, c2)`: add edge `c1 → c2` (if not already present), increment in-degree of `c2`
+3. Kahn's algorithm for topological sort:
+   a. Initialize queue with all nodes having in-degree 0
+   b. Pop node, add to order, decrement in-degree of neighbors, add to queue if in-degree becomes 0
+4. If order length equals total unique characters: return order string. Else: return "" (cycle detected)
 
+**Visual Walkthrough:**
+```
+words = ["wrt", "wrf", "er", "ett", "rftt"]
+
+All unique chars: {w, r, t, f, e}
+
+Comparing adjacent words:
+  "wrt" vs "wrf": first diff at index 2: 't' vs 'f' → t → f
+  "wrf" vs "er":  first diff at index 0: 'w' vs 'e' → w → e
+  "er" vs "ett":  first diff at index 1: 'r' vs 't' → r → t
+  "ett" vs "rftt": first diff at index 0: 'e' vs 'r' → e → r
+
+Graph: t → f, w → e, r → t, e → r
+
+In-degree: w:0, e:1, r:1, t:1, f:1
+
+Kahn's algorithm:
+  Queue: [w] (in-degree 0)
+  Pop w → order=[w], neighbor e in-degree=0 → queue=[e]
+  Pop e → order=[w,e], neighbor r in-degree=0 → queue=[r]
+  Pop r → order=[w,e,r], neighbor t in-degree=0 → queue=[t]
+  Pop t → order=[w,e,r,t], neighbor f in-degree=0 → queue=[f]
+  Pop f → order=[w,e,r,t,f]
+
+len(order)=5 = len(unique chars) ✓
+Result: "wertf"
+```
+
+**Key Insight:**
+Comparing adjacent words in a sorted list reveals the order relationships. The first differing character between adjacent words gives a direct edge `char_before → char_after`. The special case where a longer word appears before its prefix (`"abc"` before `"ab"`) is always invalid — no ordering can make this work. Topological sort (Kahn's algorithm) then gives the character order, or detects a cycle if the input is contradictory.
+
+**Solution:**
 ```python
 from collections import defaultdict, deque
 
 def alienOrder(words):
+    # Adjacency list and in-degree for each unique character
     adj = defaultdict(set)
     in_degree = {c: 0 for w in words for c in w}
-
+    
     for i in range(len(words) - 1):
         w1, w2 = words[i], words[i + 1]
+        # Invalid: longer word before its prefix
         if len(w1) > len(w2) and w1.startswith(w2):
             return ""
+        # Find first differing character → add directed edge
         for c1, c2 in zip(w1, w2):
-            if c1 != c2 and c2 not in adj[c1]:
-                adj[c1].add(c2)
-                in_degree[c2] += 1
-
+            if c1 != c2:
+                if c2 not in adj[c1]:
+                    adj[c1].add(c2)
+                    in_degree[c2] += 1
+                break  # Only first diff matters
+    
+    # Kahn's topological sort
     queue = deque([c for c in in_degree if in_degree[c] == 0])
     order = []
     while queue:
@@ -1335,54 +2741,119 @@ def alienOrder(words):
             in_degree[neighbor] -= 1
             if in_degree[neighbor] == 0:
                 queue.append(neighbor)
-
+    
+    # If cycle exists, order won't include all chars
     return ''.join(order) if len(order) == len(in_degree) else ""
 ```
 
-- **Time:** O(C) where C = total chars in all words | **Space:** O(1) (at most 26 chars)
-- **Tip:** The invalid case `len(w1) > len(w2) and w1.startswith(w2)` catches the scenario where a longer word comes before its prefix — this is never valid in any ordering.
+- **Time:** O(C) — total characters across all words
+- **Space:** O(1) — at most 26 unique characters
+- **Edge Cases:** Only one word: Return all unique chars in any order (no constraints). Words not providing enough information: May return partial order. Cycle detection: If input contradicts itself (e.g., w→e and e→w), return "".
+- **Common Mistakes:** Not handling the prefix case (`w1.startswith(w2)` and `len(w1) > len(w2)`). Adding edges for ALL differing characters (only the FIRST difference matters). Forgetting to break after adding the edge. Not checking for cycles after topological sort.
+- **Pattern Recognition:** "Derive order from sorted words" → character-level topological sort; classic problem that combines two patterns: pairwise comparison and graph traversal.
 
 ---
 
 ## Problem 37 — Factor Combinations (Hard)
 
-**Statement:** Given an integer `n > 1`, return all possible factorizations (all ways to write n as a product of factors > 1).
+**Problem Explanation:**
+Given an integer `n > 1`, find all possible ways to factor it into integers greater than 1. The factors in each combination should be in non-decreasing order. For example, 12 can be factored as [2,6], [2,2,3], and [3,4]. Prime numbers have no valid factorizations.
 
-**Approach:** Backtrack: try dividing by factors from `start` to `sqrt(remaining)`.
+**Algorithm Steps:**
+1. Initialize result list
+2. Define `backtrack(start, remaining, path)`:
+   a. If `path` is not empty: add `path + [remaining]` as a valid factorization
+   b. For `i` from `start` to `sqrt(remaining)`:
+      - If `remaining % i == 0`:
+        - Append i, recurse with `backtrack(i, remaining // i, path)`, pop
+3. Call `backtrack(2, n, [])` and return result
 
+**Visual Walkthrough:**
+```
+n = 12
+
+backtrack(2, 12, [])
+  i=2: 12%2=0 → path=[2]
+    backtrack(2, 6, [2])
+      path non-empty → add [2, 6] to result
+      sqrt(6)=2.44, i=2: 6%2=0 → path=[2,2]
+        backtrack(2, 3, [2,2])
+          path non-empty → add [2,2,3] to result
+          sqrt(3)=1.73, loop: i=2 > 1.73 → no iterations
+        pop → [2]
+      i=3: 3 > 2.44 → loop ends
+    pop → []
+  i=3: 12%3=0 → path=[3]
+    backtrack(3, 4, [3])
+      path non-empty → add [3,4] to result
+      sqrt(4)=2, i=3 > 2 → no iterations
+    pop → []
+  i=4: sqrt(12)=3.46, i=4 > 3.46 → loop ends
+
+Result: [[2,6], [2,2,3], [3,4]]
+```
+
+**Key Insight:**
+The factorization is recursive: if `i` divides `remaining`, then `(i, remaining//i)` is a factor pair, and we can further factor `remaining//i`. The √n bound on trial division is crucial: if `i` is a factor, `i <= sqrt(remaining)`, and the complement `remaining//i` is already captured by the recursive call or added directly. Starting from `i` (not 2) prevents duplicate factorizations like `[2,2,3]` and `[2,3,2]`.
+
+**Solution:**
 ```python
 def getFactors(n):
     result = []
+    
     def backtrack(start, remaining, path):
+        # Every non-empty path produces a valid factorization
         if path:
             result.append(path + [remaining])
+        # Try factors from start to sqrt(remaining)
         for i in range(start, int(remaining**0.5) + 1):
             if remaining % i == 0:
                 path.append(i)
+                # Recurse with quotient, using i as new start
                 backtrack(i, remaining // i, path)
                 path.pop()
+    
     backtrack(2, n, [])
     return result
 ```
 
-- **Time:** O(√n × log n) branches | **Space:** O(log n)
-- **Tip:** Only try factors up to `sqrt(remaining)` — if `i` is a factor, `remaining // i` is also a factor and will be handled naturally. Starting from `i` (not 2) ensures non-decreasing order.
+- **Time:** O(√n^(log n)) — branching factor decreases with depth
+- **Space:** O(log n) — recursion depth (number of factors)
+- **Edge Cases:** Prime numbers (like 37): Return [] (no factorizations). n=2: Return [] (no factor > 1). n=1: Return [] (input constraint says n>1). Large prime n: Loop still runs √n steps but no factors found.
+- **Common Mistakes:** Including n itself as a factor (like `[12]`). Allowing factor 1 (invalid — factors must be > 1). Not adding `path + [remaining]` when path is non-empty (misses complete factorizations). Using `range(2, ...)` instead of `range(start, ...)` (creates duplicate factorizations in different orders).
+- **Pattern Recognition:** "All factorizations of a number" → recursive factorization with √n bound; similar pattern to: prime factorization, combination sum (with multiplication instead of addition).
 
 ---
 
 ## Problem 38 — Crossword Solver (Hard)
 
-**Statement:** Given a crossword grid (2D array with `'+'` as blocked, `'-'` as empty, letters as filled) and a list of words, place all words on the board in across/down positions to fill all `'-'` cells.
+**Problem Explanation:**
+You have a crossword grid where `'+'` represents blocked cells, `'-'` represents empty cells, and letters represent pre-filled cells. You also have a list of words to place. Words can go across (left to right) or down (top to bottom). Each word must be placed in a slot that exactly matches its length, and letters must match any pre-filled cells. Find a placement for all words that fills all empty cells.
 
-**Approach:** Find all slots (horizontal/vertical consecutive empty cells). Backtrack: assign words to slots checking compatibility.
+**Algorithm Steps:**
+1. `find_slots()`: Scan board for horizontal and vertical consecutive `'-'` sequences (length > 1). Return list of slots with direction, start position, and length
+2. `can_place(slot, word)`: Check if word fits in slot — exact length match, and any filled cells match corresponding word letters
+3. `place(slot, word)`: Fill slot with word letters, tracking which cells were newly filled
+4. `unplace(placed)`: Restore newly filled cells back to `'-'`
+5. `backtrack(idx, remaining_words)`:
+   a. If no remaining words: return True
+   b. Find all slots; if none: return `len(remaining_words) == 0`
+   c. Pick the first slot (or most constrained)
+   d. For each word that fits: place it, recurse, unplace if fails
+6. Call `backtrack(0, set(words))`, return solved board
 
+**Key Insight:**
+The most important optimization is picking slots strategically — choosing the shortest slot or the one with the most pre-filled letters reduces branching. The backtracking structure here is a "constraint assignment" problem: assign words to slots, checking compatibility. The slot-finding algorithm scans the board each time to handle the dynamic nature (placing a word in one slot may affect overlapping slots).
+
+**Solution:**
 ```python
 def solveCrossword(board, words):
     rows, cols = len(board), len(board[0])
 
     def find_slots():
+        """Find all unfilled horizontal and vertical slots."""
         slots = []
-        # Horizontal
+        # Horizontal slots (scan each row)
         for r in range(rows):
             count = 0
             for c in range(cols + 1):
@@ -1392,7 +2863,7 @@ def solveCrossword(board, words):
                     if count > 1:
                         slots.append(('h', r, c - count, count))
                     count = 0
-        # Vertical
+        # Vertical slots (scan each column)
         for c in range(cols):
             count = 0
             for r in range(rows + 1):
@@ -1405,17 +2876,20 @@ def solveCrossword(board, words):
         return slots
 
     def can_place(slot, word):
+        """Check if word fits in the given slot."""
         direction, r, c, length = slot
         if len(word) != length:
             return False
         for i in range(length):
             cr = r + (i if direction == 'v' else 0)
             cc = c + (i if direction == 'h' else 0)
+            # Cell must match if pre-filled
             if board[cr][cc] != '-' and board[cr][cc] != word[i]:
                 return False
         return True
 
     def place(slot, word):
+        """Place word into slot, return list of newly filled cells."""
         direction, r, c, length = slot
         placed = []
         for i in range(length):
@@ -1427,34 +2901,38 @@ def solveCrossword(board, words):
         return placed
 
     def unplace(placed):
+        """Restore cells back to empty."""
         for cr, cc in placed:
             board[cr][cc] = '-'
 
     def backtrack(idx, remaining_words):
         if not remaining_words:
-            return True
-        # Find first unfilled slot
-        slots = find_slots()
+            return True                     # All words placed
+        slots = find_slots()                # Find current empty slots
         if not slots:
             return len(remaining_words) == 0
-        slot = slots[0]
+        
+        slot = slots[0]  # Pick first slot (can be optimized: pick most constrained)
         for word in list(remaining_words):
             if can_place(slot, word):
                 placed = place(slot, word)
                 remaining_words.remove(word)
                 if backtrack(idx + 1, remaining_words):
                     return True
-                remaining_words.add(word)
-                unplace(placed)
+                remaining_words.add(word)   # Restore word
+                unplace(placed)             # Restore board
         return False
 
     word_set = set(words)
     backtrack(0, word_set)
-    return board
+    return board  # Board is modified in-place
 ```
 
-- **Time:** O(m! × n) factorial in worst case | **Space:** O(m × n)
-- **Tip:** Always pick the most constrained slot first (shortest or most pre-filled). Use a set for `remaining_words` for O(1) removal.
+- **Time:** O(m! × n) factorial in worst case — but heavily pruned by constraints
+- **Space:** O(m × n) — board size
+- **Edge Cases:** No words left but empty slots: backtrack returns false. All words placed and no empty slots: success. Overlapping slots (across + down at same cell) must agree on the shared letter.
+- **Common Mistakes:** Not placing words correctly (direction confusion with r/c indexing). Not tracking which cells were newly filled vs pre-filled (restoring pre-filled cells ruins the board). Finding slots once at the beginning instead of dynamically (slots change as words are placed). Forgetting to convert to list when iterating over `remaining_words` set during modification.
+- **Pattern Recognition:** "Crossword/word placement on grid" → constraint satisfaction with backtracking; similar to Sudoku and N-Queens (assign values to constrained positions). Optimization tactic: "most constrained variable" heuristic is common in CSP problems.
 
 ---
 

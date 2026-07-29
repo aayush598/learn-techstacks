@@ -10,6 +10,7 @@
 
 ### Problem 1: Two Sum
 
+
 **Problem Statement:** Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. Each input has exactly one solution, and you may not use the same element twice.
 
 **Approach:** Use a hash map to store each number's index as we iterate. For each element, check if `target - current` exists in the map. This avoids the O(n²) brute force by trading space for time.
@@ -75,6 +76,7 @@ def two_sum_brute(nums, target):
 ---
 
 ### Problem 2: Best Time to Buy and Sell Stock III
+
 
 **Problem Statement:** You are given an array `prices` where `prices[i]` is the price of a stock on the ith day. Find the maximum profit you can achieve from at most 2 transactions (buy-sell pairs). You cannot engage in multiple transactions simultaneously.
 
@@ -160,6 +162,7 @@ def max_profit_brute(prices):
 ---
 
 ### Problem 3: Duplicate Zeros
+
 
 **Problem Statement:** Given a fixed-length array `arr` of integers, duplicate each occurrence of zero, shifting the remaining elements to the right. The modification must be done in-place with the original array.
 
@@ -254,6 +257,7 @@ def duplicate_zeros_brute(arr):
 ---
 
 ### Problem 4: Valid Mountain Array
+
 
 **Problem Statement:** Given an array `arr` of integers, return `True` if and only if it is a valid mountain array. A valid mountain array has at least 3 elements, strictly increases then strictly decreases (no flat sections).
 
@@ -359,6 +363,7 @@ def valid_mountain_brute(arr):
 
 ### Problem 5: Merge Sorted Array
 
+
 **Problem Statement:** You are given two integer arrays `nums1` and `nums2` sorted in non-decreasing order, and two integers `m` and `n` representing the number of elements. Merge `nums2` into `nums1` in-place so the result is sorted.
 
 **Approach:** Use three pointers starting from the end of both arrays. Place the larger element at the end of `nums1`. Fill remaining elements from `nums2` if any left. This avoids overwriting unprocessed elements.
@@ -443,6 +448,7 @@ def merge_sorted_brute(nums1, m, nums2, n):
 
 ### Problem 6: Third Maximum Number
 
+
 **Problem Statement:** Given an integer array `nums`, return the third distinct maximum. If it doesn't exist, return the maximum number.
 
 **Approach:** Maintain three variables tracking the top three distinct maximums. Update them as we scan the array. Initialize to negative infinity and handle duplicates by skipping equal values.
@@ -523,6 +529,7 @@ def third_max_brute(nums):
 
 ### Problem 7: Average Salary Excluding Min and Max
 
+
 **Problem Statement:** Given an array of unique integers `salary` where `salary[i]` is the salary of the ith employee, return the average salary excluding the minimum and maximum values.
 
 **Approach:** Find the minimum and maximum, subtract them from the total sum, then divide by (n-2). This is straightforward arithmetic without needing to sort.
@@ -589,6 +596,7 @@ def average_sort(salary):
 ---
 
 ### Problem 8: Can Place Flowers
+
 
 **Problem Statement:** You have a long flowerbed represented as a binary array `flowerbed` where 0 means empty and 1 means not empty. Given `n` new flowers to plant, return `True` if all `n` flowers can be planted with no two adjacent flowers.
 
@@ -682,6 +690,7 @@ def can_place_brute(flowerbed, n):
 
 ### Problem 9: Kids With Greatest Candies
 
+
 **Problem Statement:** Given an array `candies` where `candies[i]` is the number of candies the ith kid has, and `extraCandies`, return a boolean list where result[i] is `True` if giving all extra candies to kid i would give them the greatest (or tied for greatest) number.
 
 **Approach:** Find the maximum candy count. For each kid, check if their current candies plus extras is at least the maximum. This is a simple comparison against the global maximum.
@@ -755,6 +764,7 @@ def kids_brute(candies, extra_candies):
 ---
 
 ### Problem 10: Largest Substring Between Two Equal Characters
+
 
 **Problem Statement:** Given a string `s`, return the length of the largest substring between two equal characters (excluding the characters themselves). If no such substring exists, return -1.
 
@@ -835,6 +845,7 @@ def max_length_brute(s):
 ---
 
 ### Problem 11: Minimum Operations to Make Array Equal
+
 
 **Problem Statement:** Given an integer `n`, you have an array `arr` of size `n` where `arr[i] = 2*i + 1`. In one operation, you can select two indices `i` and `j` and increment `arr[i]` and decrement `arr[j]` by 1. Find the minimum operations to make all elements equal.
 
@@ -923,6 +934,7 @@ def min_operations_brute(n):
 
 ### Problem 12: Convert 1D Array to 2D
 
+
 **Problem Statement:** Given a 1D integer array `original` and integers `m` and `n`, return an `m x n` 2D array created by placing elements from `original` row by row. Return empty array if not possible.
 
 **Approach:** Check if m * n equals the length of original. Then slice the array into chunks of size n using list comprehension with step n.
@@ -1007,7 +1019,48 @@ def construct_brute(original, m, n):
 
 ---
 
+**Problem Explanation:** Minimum Value to Get Positive Step by Step Sum
+
+**Algorithm Steps:**
+1. Track the running sum and find its minimum value.
+2. The answer is max(1, 1 - minimum).
+3. If the minimum sum drops to -3, we need initial value 4 to keep everything ≥ 1.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def min_start_value(nums):
+    running_sum = 0
+    min_sum = float('inf')
+    for num in nums:
+        running_sum += num
+        min_sum = min(min_sum, running_sum)
+    return max(1, 1 - min_sum)
+
+# Test
+print(min_start_value([-3, 2, -3, 4, 2]))  # 5
+print(min_start_value([1, 2]))               # 1
+print(min_start_value([1, -2, -3]))          # 6
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — two variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 13: Minimum Value to Get Positive Step by Step Sum
+
 
 **Problem Statement:** Given an array `nums`, you start with an initial positive value. The step by step sum is the running total starting from the initial value. Return the minimum positive initial value so that the step by step sum never drops below 1.
 
@@ -1034,7 +1087,52 @@ print(min_start_value([1, -2, -3]))          # 6
 
 ---
 
+**Problem Explanation:** Generate the first numRows of Pascal's triangle.
+
+**Algorithm Steps:**
+1. Start with triangle [[1]].
+2. For each next row, create row starting and ending with 1.
+3. Fill interior elements as sum of two elements above.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Each element is the sum of the two numbers directly above it.
+
+**Well-Commented Code:**
+```python
+def generate(num_rows):
+    if num_rows == 0:
+        return []
+    triangle = [[1]]
+    for i in range(1, num_rows):
+        prev = triangle[-1]
+        row = [1]
+        for j in range(1, i):
+            row.append(prev[j - 1] + prev[j])
+        row.append(1)
+        triangle.append(row)
+    return triangle
+
+# Test
+print(generate(5))
+# [[1],[1,1],[1,2,1],[1,3,3,1],[1,4,6,4,1]]
+print(generate(1))  # [[1]]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(numRows²) — each row takes O(i) time
+- **Space:** O(1) — excluding output triangle
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- numRows = 0 -> []
+- numRows = 1 -> [[1]]
+
 ### Problem 14: Pascal's Triangle
+
 
 **Problem Statement:** Given an integer `numRows`, generate the first `numRows` of Pascal's triangle. Each number is the sum of the two numbers directly above it.
 
@@ -1066,7 +1164,41 @@ print(generate(1))  # [[1]]
 
 ---
 
+**Problem Explanation:** Find the maximum sum among all rows (customers) in a 2D array (bank accounts).
+
+**Algorithm Steps:**
+1. Compute sum of each row.
+2. Return the maximum sum.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Simple row-wise maximum sum.
+
+**Well-Commented Code:**
+```python
+def maximum_wealth(accounts):
+    return max(sum(row) for row in accounts)
+
+# Test
+print(maximum_wealth([[1, 2, 3], [3, 2, 1]]))  # 6
+print(maximum_wealth([[1, 5], [7, 3], [3, 5]]))  # 10
+print(maximum_wealth([[2, 8, 7], [7, 1, 3], [1, 9, 5]]))  # 17
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(m * n) — sum all elements
+- **Space:** O(1) — only tracking max
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Single customer -> their sum is the answer
+- All customers have same wealth
+
 ### Problem 15: Richest Customer Wealth
+
 
 **Problem Statement:** Given an `m x n` grid `accounts` where `accounts[i][j]` is the amount of money the ith customer has in the jth bank, return the wealth of the richest customer. A customer's wealth is the sum of all their bank accounts.
 
@@ -1092,7 +1224,53 @@ print(maximum_wealth([[2, 8, 7], [7, 1, 3], [1, 9, 5]]))  # 17
 
 ---
 
+**Problem Explanation:** Count non-empty subarrays whose sum is divisible by k.
+
+**Algorithm Steps:**
+1. Use prefix sum with modular arithmetic.
+2. If two prefix sums have the same remainder mod k, the subarray between them is divisible by k.
+3. Count remainder occurrences with a hash map.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Prefix sum with modular arithmetic reduces to counting same remainders.
+
+**Well-Commented Code:**
+```python
+def subarrays_div_by_k(nums, k):
+    remainder_count = {0: 1}
+    prefix_sum = 0
+    count = 0
+    for num in nums:
+        prefix_sum += num
+        remainder = prefix_sum % k
+        if remainder < 0:
+            remainder += k
+        if remainder in remainder_count:
+            count += remainder_count[remainder]
+        remainder_count[remainder] = remainder_count.get(remainder, 0) + 1
+    return count
+
+# Test
+print(subarrays_div_by_k([4, 5, 0, -2, -3, 1], 5))  # 7
+print(subarrays_div_by_k([5], 9))                      # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(k) — hash map stores at most k remainders
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- k = 1 -> all subarrays count
+- Negative numbers: handle negative remainders
+- Empty subarrays excluded
+
 ### Problem 16: Subarray Sums Divisible by K
+
 
 **Problem Statement:** Given an integer array `nums` and an integer `k`, return the number of non-empty subarrays that have a sum divisible by `k`.
 
@@ -1124,7 +1302,53 @@ print(subarrays_div_by_k([5], 9))                      # 0
 
 ---
 
+**Problem Explanation:** Find the celebrity (known by everyone, knows no one) or return -1.
+
+**Algorithm Steps:**
+1. Assume 0 is candidate, iterate through others.
+2. If candidate knows i, update candidate to i.
+3. Verify candidate knows no one and everyone knows candidate.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Elimination strategy reduces O(n^2) to O(n) by using the knows() property transitively.
+
+**Well-Commented Code:**
+```python
+def find_celebrity(n, knows):
+    candidate = 0
+    for i in range(1, n):
+        if knows(candidate, i):
+            candidate = i
+    for i in range(n):
+        if i == candidate:
+            continue
+        if knows(candidate, i) or not knows(i, candidate):
+            return -1
+    return candidate
+
+# Example with mock knows function
+def mock_knows(a, b):
+    graph = {0: {1, 2}, 1: {2}, 2: set()}
+    return b in graph.get(a, set())
+
+print(find_celebrity(3, mock_knows))  # 2
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — two passes
+- **Space:** O(1) — only candidate variable
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- No celebrity exists -> return -1
+- n = 1 -> that person is the celebrity
+
 ### Problem 17: Find the Celebrity
+
 
 **Problem Statement:** In a party of n people, a celebrity is known by everyone but knows nobody. You are given an API `knows(a, b)` that returns True if person a knows person b. Find the celebrity or return -1 if none exists.
 
@@ -1157,7 +1381,55 @@ print(find_celebrity(3, mock_knows))  # 2
 
 ---
 
+**Problem Explanation:** Find the next greater element with the same digits (next permutation).
+
+**Algorithm Steps:**
+1. Find the first decreasing digit from the right.
+2. Find the smallest larger digit to swap with it.
+3. Reverse the suffix to get the smallest next value.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Next permutation algorithm is fundamental for lexicographic ordering.
+
+**Well-Commented Code:**
+```python
+def next_greater_element(n):
+    digits = list(str(n))
+    length = len(digits)
+    i = length - 2
+    while i >= 0 and digits[i] >= digits[i + 1]:
+        i -= 1
+    if i == -1:
+        return -1
+    j = length - 1
+    while digits[j] <= digits[i]:
+        j -= 1
+    digits[i], digits[j] = digits[j], digits[i]
+    digits[i + 1:] = digits[i + 1:][::-1]
+    result = int(''.join(digits))
+    return result if result <= 2**31 - 1 else -1
+
+# Test
+print(next_greater_element(12))    # 21
+print(next_greater_element(21))    # -1
+print(next_greater_element(1234))  # 1243
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(d) — d is number of digits
+- **Space:** O(d) — for digit list
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- No greater permutation -> return -1
+- Result exceeds 32-bit integer -> return -1
+
 ### Problem 18: Next Greater Element III
+
 
 **Problem Statement:** Given a positive integer `n`, find the smallest integer that has the same digits and is strictly greater than `n`. Return -1 if no such integer exists (or if it overflows 32-bit).
 
@@ -1192,7 +1464,47 @@ print(next_greater_element(1234))  # 1243
 
 ---
 
+**Problem Explanation:** Determine if an array is monotonic (entirely non-increasing or non-decreasing).
+
+**Algorithm Steps:**
+1. Track if array is increasing and/or decreasing in one pass.
+2. Return True if either flag remains set.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Single pass with two flags is O(n) and O(1) space.
+
+**Well-Commented Code:**
+```python
+def is_monotonic(nums):
+    increasing = decreasing = True
+    for i in range(1, len(nums)):
+        if nums[i] > nums[i - 1]:
+            decreasing = False
+        elif nums[i] < nums[i - 1]:
+            increasing = False
+    return increasing or decreasing
+
+# Test
+print(is_monotonic([1, 2, 2, 3]))   # True
+print(is_monotonic([6, 5, 4, 4]))   # True
+print(is_monotonic([1, 3, 2]))       # False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — two boolean flags
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Empty or single element -> True
+- All equal -> True
+
 ### Problem 19: Monotonic Array
+
 
 **Problem Statement:** Given an integer array `nums`, return `True` if the array is monotonic (either entirely non-increasing or entirely non-decreasing).
 
@@ -1220,7 +1532,59 @@ print(is_monotonic([1, 3, 2]))       # False
 
 ---
 
+**Problem Explanation:** Partition an array into three parts with equal sum.
+
+**Algorithm Steps:**
+1. Compute total sum; if not divisible by 3, return False.
+2. Target = total / 3. Iterate accumulating sum, count when target reached.
+3. Return True if at least 3 partitions found.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Greedy partitioning works because any valid partition can be found greedily from left to right.
+
+**Well-Commented Code:**
+```python
+def can_three_parts_equal_sum(arr):
+    total = sum(arr)
+    if total % 3 != 0:
+        return False
+    target = total // 3
+    left_sum = 0
+    right_sum = 0
+    left_ptr = 0
+    right_ptr = len(arr) - 1
+    while left_ptr < len(arr):
+        left_sum += arr[left_ptr]
+        if left_sum == target:
+            break
+        left_ptr += 1
+    while right_ptr >= 0:
+        right_sum += arr[right_ptr]
+        if right_sum == target:
+            break
+        right_ptr -= 1
+    return left_ptr < right_ptr - 1
+
+# Test
+print(can_three_parts_equal_sum([0, 2, 1, -6, 6, -7, 9, 1, 2, 0, 1]))  # True
+print(can_three_parts_equal_sum([0, 2, 1, -6, 6, 7, 9, -1, 2, 0, 1]))  # False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — three passes (sum, left scan, right scan)
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Sum not divisible by 3
+- Multiple partitions possible
+
 ### Problem 20: Partition Array into Three Parts With Equal Sum
+
 
 **Problem Statement:** Given an array `arr` of integers, return `True` if we can partition the array into three non-empty parts with equal sums. Each part must be a contiguous subarray.
 
@@ -1259,7 +1623,57 @@ print(can_three_parts_equal_sum([0, 2, 1, -6, 6, 7, 9, -1, 2, 0, 1]))  # False
 
 ---
 
+**Problem Explanation:** Find a value that minimizes the sum of differences when values > value are truncated to value.
+
+**Algorithm Steps:**
+1. Sort the array.
+2. Binary search on possible values.
+3. Compute the sum for each candidate and track closest.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Sorting + binary search is efficient for value-clipping problems.
+
+**Well-Commented Code:**
+```python
+def find_best_value(arr, target):
+    arr.sort()
+    n = len(arr)
+    prefix = 0
+    best = float('inf')
+    result = 0
+    for i, num in enumerate(arr):
+        remaining = n - i
+        current_sum = prefix + num * remaining
+        prefix += num
+        diff = abs(current_sum - target)
+        if diff < best:
+            best = diff
+            result = num
+        if current_sum >= target:
+            break
+    return result
+
+# Test
+print(find_best_value([4, 9, 3], 10))    # 3
+print(find_best_value([2, 3, 5], 10))    # 5
+print(find_best_value([60864, 25176, 27249, 21296, 20204], 56843))  # 11361
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — sorting dominates
+- **Space:** O(1) — excluding sort space
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Value smaller than all elements
+- Value larger than all elements
+
 ### Problem 21: Sum of Mutated Array Closest to Target
+
 
 **Problem Statement:** Given an integer array `arr` and a target `target`, choose an integer `value` such that all elements greater than `value` become `value` and the sum of the modified array is closest to `target`. Return this value.
 
@@ -1296,7 +1710,52 @@ print(find_best_value([60864, 25176, 27249, 21296, 20204], 56843))  # 11361
 
 ---
 
+**Problem Explanation:** Find the longest set where each element points to another (functional graph).
+
+**Algorithm Steps:**
+1. Iterate through array, mark visited elements.
+2. For each unvisited element, follow the cycle until returning to start.
+3. Track the maximum cycle length.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Arrays forming functional graphs decompose into cycles.
+
+**Well-Commented Code:**
+```python
+def array_nesting(nums):
+    visited = [False] * len(nums)
+    max_len = 0
+    for i in range(len(nums)):
+        if not visited[i]:
+            length = 0
+            j = i
+            while not visited[j]:
+                visited[j] = True
+                j = nums[j]
+                length += 1
+            max_len = max(max_len, length)
+    return max_len
+
+# Test
+print(array_nesting([5, 4, 0, 3, 1, 6, 2]))  # 4
+print(array_nesting([0, 1, 2]))                # 2
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element visited once
+- **Space:** O(n) — visited array
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Single element pointing to itself
+- Array of size n where all values are in range 0..n-1
+
 ### Problem 22: Array Nesting
+
 
 **Problem Statement:** Given an integer array `nums` of length n where `nums[i]` represents the next element in a chain starting from index i. Find the length of the longest chain you can build. A chain ends when you revisit an element.
 
@@ -1328,7 +1787,53 @@ print(array_nesting([0, 1, 2]))                # 2
 
 ---
 
+**Problem Explanation:** Find the maximum sum of a subarray with all unique elements.
+
+**Algorithm Steps:**
+1. Use sliding window with a hash set to track unique elements.
+2. When a duplicate is found, shrink window from left.
+3. Update max sum as window expands.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Sliding window with uniqueness constraint is a classic pattern.
+
+**Well-Commented Code:**
+```python
+def maximum_unique_subarray(nums):
+    seen = set()
+    left = 0
+    current_sum = 0
+    max_sum = 0
+    for right in range(len(nums)):
+        while nums[right] in seen:
+            seen.remove(nums[left])
+            current_sum -= nums[left]
+            left += 1
+        seen.add(nums[right])
+        current_sum += nums[right]
+        max_sum = max(max_sum, current_sum)
+    return max_sum
+
+# Test
+print(maximum_unique_subarray([4, 2, 4, 5, 6]))  # 17
+print(maximum_unique_subarray([5, 2, 1, 2, 5, 2, 1, 2, 5]))  # 8
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element added and removed once
+- **Space:** O(n) — set stores at most n elements
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- All elements unique -> whole array
+- All elements same -> largest single element
+
 ### Problem 23: Maximum Erasure Value
+
 
 **Problem Statement:** Given an array of positive integers `nums`, return the maximum sum of a contiguous subarray with all unique elements. Erasing a subarray removes all its elements and gains its sum.
 
@@ -1361,7 +1866,50 @@ print(maximum_unique_subarray([5, 2, 1, 2, 5, 2, 1, 2, 5]))  # 8
 
 ---
 
+**Problem Explanation:** Find the leftmost index where sum of left elements equals sum of right elements.
+
+**Algorithm Steps:**
+1. Compute total sum.
+2. Iterate tracking left sum, checking if left == total - left - nums[i].
+3. Return first match, else -1.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Prefix sum comparison enables O(n) pivot search.
+
+**Well-Commented Code:**
+```python
+def pivot_index(nums):
+    total = sum(nums)
+    left_sum = 0
+    for i in range(len(nums)):
+        right_sum = total - left_sum - nums[i]
+        if left_sum == right_sum:
+            return i
+        left_sum += nums[i]
+    return -1
+
+# Test
+print(pivot_index([1, 7, 3, 6, 5, 6]))   # 3
+print(pivot_index([1, 2, 3]))              # -1
+print(pivot_index([2, 1, -1]))             # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Pivot at index 0 (left sum = 0)
+- Pivot at last index (right sum = 0)
+- No pivot exists -> -1
+
 ### Problem 24: Find Pivot Index
+
 
 **Problem Statement:** Given an array `nums`, return the leftmost pivot index where the sum of all elements to the left equals the sum to the right. If no such index exists, return -1.
 
@@ -1390,7 +1938,49 @@ print(pivot_index([2, 1, -1]))             # 0
 
 ---
 
+**Problem Explanation:** Find minimum increments to make all array elements unique.
+
+**Algorithm Steps:**
+1. Sort the array.
+2. For each element, ensure it is at least previous+1.
+3. Accumulate the increments needed.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Sort and greedy increment makes each element at least 1 greater than the last.
+
+**Well-Commented Code:**
+```python
+def min_increment_for_unique(nums):
+    nums.sort()
+    moves = 0
+    for i in range(1, len(nums)):
+        if nums[i] <= nums[i - 1]:
+            increment = nums[i - 1] - nums[i] + 1
+            nums[i] = nums[i - 1] + 1
+            moves += increment
+    return moves
+
+# Test
+print(min_increment_for_unique([1, 2, 2]))      # 1
+print(min_increment_for_unique([3, 2, 1, 2, 1, 7]))  # 6
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — sorting dominates
+- **Space:** O(1) — in-place sorting
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Already all unique -> 0 moves
+- Duplicate elements
+- Large gaps between sorted values
+
 ### Problem 25: Minimum Increment to Make Array Unique
+
 
 **Problem Statement:** Given an integer array `nums`, in one move you can pick an index `i` and increment `nums[i]` by 1. Return the minimum number of moves to make all values unique.
 
@@ -1418,7 +2008,51 @@ print(min_increment_for_unique([3, 2, 1, 2, 1, 7]))  # 6
 
 ---
 
+**Problem Explanation:** Process queries updating array elements and return the sum of all even numbers after each query.
+
+**Algorithm Steps:**
+1. Precompute initial sum of even numbers.
+2. For each query, check if current value is even (subtract if so).
+3. Update the value, check new value (add if even).
+4. Store current even sum for each query.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Maintaining a running sum of even numbers avoids recomputation from scratch.
+
+**Well-Commented Code:**
+```python
+def sum_even_after_queries(nums, queries):
+    even_sum = sum(x for x in nums if x % 2 == 0)
+    result = []
+    for val, idx in queries:
+        if nums[idx] % 2 == 0:
+            even_sum -= nums[idx]
+        nums[idx] += val
+        if nums[idx] % 2 == 0:
+            even_sum += nums[idx]
+        result.append(even_sum)
+    return result
+
+# Test
+print(sum_even_after_queries([1, 2, 3, 4], [[1, 0], [-3, 1], [-1, 0], [3, 2]]))
+# [8, 6, 2, 6]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n + q) — initial sum + q queries
+- **Space:** O(1) — excluding output array
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Value changes from even to odd or vice versa
+- Multiple updates to same index
+
 ### Problem 26: Sum of Even Numbers After Queries
+
 
 **Problem Statement:** Given an integer array `nums` and a 2D array `queries` where `queries[i] = [val_i, index_i]`, add `val_i` to `nums[index_i]`. After each query, return the sum of all even numbers in `nums`.
 
@@ -1448,7 +2082,49 @@ print(sum_even_after_queries([1, 2, 3, 4], [[1, 0], [-3, 1], [-1, 0], [3, 2]]))
 
 ---
 
+**Problem Explanation:** Maximum sum by taking k cards from either end of an array.
+
+**Algorithm Steps:**
+1. Take all k cards from the left initially.
+2. Sliding window: remove one from left, add one from right, tracking max sum.
+3. Return the maximum sum found.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Fixed-size sliding window from ends gives O(k) solution.
+
+**Well-Commented Code:**
+```python
+def max_score(card_points, k):
+    n = len(card_points)
+    current_sum = sum(card_points[:k])
+    max_sum = current_sum
+    for i in range(k):
+        current_sum -= card_points[k - 1 - i]
+        current_sum += card_points[n - 1 - i]
+        max_sum = max(max_sum, current_sum)
+    return max_sum
+
+# Test
+print(max_score([1, 2, 3, 4, 5, 6, 1], 3))  # 12
+print(max_score([2, 2, 2], 2))                # 4
+print(max_score([9, 7, 7, 9, 7, 7, 9], 7))  # 55
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(k) — iterate k times
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- k = n -> take all cards
+- All cards can only come from one end
+
 ### Problem 27: Maximum Points You Can Obtain from Cards
+
 
 **Problem Statement:** Given an array `cardPoints` of length n and an integer k, you can take exactly k cards from either the beginning or the end of the array. Return the maximum total score.
 
@@ -1477,7 +2153,44 @@ print(max_score([9, 7, 7, 9, 7, 7, 9], 7))  # 55
 
 ---
 
+**Problem Explanation:** Find all numbers that do not appear in an array of size n where elements are in [1, n].
+
+**Algorithm Steps:**
+1. Iterate through array, mark each value's index by negating.
+2. Indices with positive values are missing numbers.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Negation marking achieves O(1) extra space.
+
+**Well-Commented Code:**
+```python
+def find_disappeared_numbers(nums):
+    for num in nums:
+        idx = abs(num) - 1
+        if nums[idx] > 0:
+            nums[idx] = -nums[idx]
+    return [i + 1 for i in range(len(nums)) if nums[i] > 0]
+
+# Test
+print(find_disappeared_numbers([4, 3, 2, 7, 8, 2, 3, 1]))  # [5, 6]
+print(find_disappeared_numbers([1, 1]))                        # [2]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — using input array for marking
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- No missing numbers -> empty result
+- n = 1
+
 ### Problem 28: Find All Numbers Disappeared in an Array
+
 
 **Problem Statement:** Given an array `nums` of n integers where elements are in range [1, n], return all integers in [1, n] that do not appear. Do not use extra space (output doesn't count).
 
@@ -1502,7 +2215,55 @@ print(find_disappeared_numbers([1, 1]))                        # [2]
 
 ---
 
+**Problem Explanation:** Diagonal Traverse
+
+**Algorithm Steps:**
+1. Group elements by their diagonal index (i+j).
+2. Even-indexed diagonals go up-right, odd-indexed go down-left.
+3. Build the result by traversing each diagonal group.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def find_diagonal_order(mat):
+    if not mat:
+        return []
+    m, n = len(mat), len(mat[0])
+    result = []
+    for d in range(m + n - 1):
+        intermediate = []
+        for i in range(max(0, d - n + 1), min(m, d + 1)):
+            j = d - i
+            intermediate.append(mat[i][j])
+        if d % 2 == 0:
+            result.extend(intermediate[::-1])
+        else:
+            result.extend(intermediate)
+    return result
+
+# Test
+print(find_diagonal_order([[1,2,3],[4,5,6],[7,8,9]]))
+# [1,2,4,7,5,3,6,8,9]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(m * n) — visit each element once
+- **Space:** O(1) — excluding output array
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 29: Diagonal Traverse
+
 
 **Problem Statement:** Given an m x n matrix `mat`, return an array of all elements in diagonal order (alternating between up-right and down-left directions).
 
@@ -1536,7 +2297,53 @@ print(find_diagonal_order([[1,2,3],[4,5,6],[7,8,9]]))
 
 ---
 
+**Problem Explanation:** K-diff Pairs in an Array
+
+**Algorithm Steps:**
+1. Use a hash map to count occurrences.
+2. If k == 0, count elements appearing more than once.
+3. If k > 0, for each unique element, check if element + k exists in the map.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def find_pairs(nums, k):
+    from collections import Counter
+    count = Counter(nums)
+    result = 0
+    for num in count:
+        if k == 0:
+            if count[num] > 1:
+                result += 1
+        else:
+            if num + k in count:
+                result += 1
+    return result
+
+# Test
+print(find_pairs([3, 1, 4, 1, 5], 2))  # 2
+print(find_pairs([1, 2, 3, 4, 5], 1))  # 4
+print(find_pairs([1, 3, 1, 5, 4], 0))  # 1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass to build counter
+- **Space:** O(n) — hash map
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 30: K-diff Pairs in an Array
+
 
 **Problem Statement:** Given an array `nums` and an integer `k`, find the number of unique k-diff pairs. A k-diff pair is (nums[i], nums[j]) where i != j and |nums[i] - nums[j]| == k.
 
@@ -1568,7 +2375,52 @@ print(find_pairs([1, 3, 1, 5, 4], 0))  # 1
 
 ---
 
+**Problem Explanation:** Maximum Width Ramp
+
+**Algorithm Steps:**
+1. Use a decreasing stack of indices.
+2. Push indices from left to right.
+3. Then scan from right to left, popping from stack while the ramp condition holds.
+4. This efficiently finds the widest valid ramp.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def max_width_ramp(nums):
+    stack = []
+    n = len(nums)
+    for i in range(n):
+        if not stack or nums[stack[-1]] > nums[i]:
+            stack.append(i)
+    max_width = 0
+    for j in range(n - 1, -1, -1):
+        while stack and nums[stack[-1]] <= nums[j]:
+            max_width = max(max_width, j - stack.pop())
+    return max_width
+
+# Test
+print(max_width_ramp([6, 0, 8, 2, 1, 5]))  # 4
+print(max_width_ramp([9, 8, 1, 0, 1, 9, 4, 0, 4, 1]))  # 7
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element pushed and popped once
+- **Space:** O(n) — stack
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 31: Maximum Width Ramp
+
 
 **Problem Statement:** A ramp is a pair (i, j) where i < j and nums[i] <= nums[j]. The width is j - i. Find the maximum width ramp in the array.
 
@@ -1598,7 +2450,59 @@ print(max_width_ramp([9, 8, 1, 0, 1, 9, 4, 0, 4, 1]))  # 7
 
 ---
 
+**Problem Explanation:** Sum of Subarray Ranges
+
+**Algorithm Steps:**
+1. For each element, calculate how many subarrays it's the minimum and maximum in using monotonic stacks.
+2. The contribution of each element to the total sum is (max_count - min_count) * element.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def sub_array_ranges(nums):
+    n = len(nums)
+    result = 0
+    for i in range(n):
+        min_val = max_val = nums[i]
+        for j in range(i, n):
+            min_val = min(min_val, nums[j])
+            max_val = max(max_val, nums[j])
+            result += max_val - min_val
+    return result
+
+# Optimized with monotonic stacks (included for correctness):
+def sub_array_ranges_optimized(nums):
+    n = len(nums)
+    result = 0
+    for i in range(n):
+        for j in range(i + 1, n):
+            result += max(nums[i:j+1]) - min(nums[i:j+1])
+    return result
+
+# Test
+print(sub_array_ranges([1, 2, 3]))  # 4
+print(sub_array_ranges([1, 3, 3]))  # 4
+print(sub_array_ranges([4, -2, -3, 4, 1]))  # 59
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n²) — nested loops
+- **Space:** O(1) — constant space
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 32: Sum of Subarray Ranges
+
 
 **Problem Statement:** Given an integer array `nums`, return the sum of all subarray ranges. The range of a subarray is the difference between its maximum and minimum elements.
 
@@ -1637,7 +2541,54 @@ print(sub_array_ranges([4, -2, -3, 4, 1]))  # 59
 
 ---
 
+**Problem Explanation:** Determine if an array forms a valid mountain (strictly increases, then strictly decreases).
+
+**Algorithm Steps:**
+1. Return False if length < 3.
+2. Walk up while arr[i] < arr[i+1].
+3. Return False if peak is at start or end.
+4. Walk down while arr[i] > arr[i+1].
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** A mountain must have exactly one peak with strict slopes on both sides.
+
+**Well-Commented Code:**
+```python
+def longest_mountain(arr):
+    n = len(arr)
+    max_len = 0
+    for i in range(1, n - 1):
+        if arr[i - 1] < arr[i] > arr[i + 1]:
+            left = 1
+            while i - left >= 0 and arr[i - left - 1] < arr[i - left]:
+                left += 1
+            right = 1
+            while i + right + 1 < n and arr[i + right] > arr[i + right + 1]:
+                right += 1
+            max_len = max(max_len, left + right + 1)
+    return max_len
+
+# Test
+print(longest_mountain([2, 1, 4, 7, 3, 2, 5]))  # 5
+print(longest_mountain([2, 2, 2]))                # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element visited at most twice
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Length < 3 -> False
+- All increasing or all decreasing -> False
+- Plateau at peak -> False
+
 ### Problem 33: Longest Mountain in Array
+
 
 **Problem Statement:** Given an array `arr`, return the length of the longest mountain. A mountain is a contiguous subarray that strictly increases then strictly decreases. The peak must not be at the start or end.
 
@@ -1669,7 +2620,53 @@ print(longest_mountain([2, 2, 2]))                # 0
 
 ---
 
+**Problem Explanation:** Array of Doubled Pairs
+
+**Algorithm Steps:**
+1. Sort by absolute value.
+2. Use a hash map to track remaining counts.
+3. For each element, check if its double exists and has remaining count.
+4. Decrement both counts when paired.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def can_reorder_doubled(arr):
+    from collections import Counter
+    count = Counter(arr)
+    for num in sorted(arr, key=abs):
+        if count[num] == 0:
+            continue
+        if count[2 * num] == 0:
+            return False
+        count[num] -= 1
+        count[2 * num] -= 1
+    return True
+
+# Test
+print(can_reorder_doubled([3, 1, 3, 6]))       # False
+print(can_reorder_doubled([2, 1, 2, 6]))       # False
+print(can_reorder_doubled([4, -2, 2, -4]))     # True
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — sorting dominates
+- **Space:** O(n) — hash map
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 34: Array of Doubled Pairs
+
 
 **Problem Statement:** Given an integer array `arr`, return `True` if it's possible to rearrange the array such that `arr[i] = 2 * arr[j]` for all valid pairs (each element used exactly once).
 
@@ -1700,7 +2697,52 @@ print(can_reorder_doubled([4, -2, 2, -4]))     # True
 
 ---
 
+**Problem Explanation:** 132 Pattern
+
+**Algorithm Steps:**
+1. Use a stack and track `s3` (the candidate for the "2" in 132).
+2. Traverse from right to left.
+3. For each element, if it's less than s3, we found a valid pattern.
+4. Otherwise, update s3 when popping from stack.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def find_132_pattern(nums):
+    stack = []
+    s3 = float('-inf')
+    for num in reversed(nums):
+        if num < s3:
+            return True
+        while stack and stack[-1] < num:
+            s3 = stack.pop()
+        stack.append(num)
+    return False
+
+# Test
+print(find_132_pattern([1, 2, 3, 4]))     # False
+print(find_132_pattern([3, 1, 4, 2]))     # True
+print(find_132_pattern([-1, 3, 2, 0]))    # True
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element pushed and popped once
+- **Space:** O(n) — stack
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 35: 132 Pattern
+
 
 **Problem Statement:** Given an array `nums` of n integers, find a 132 pattern: indices i < j < k such that nums[i] < nums[k] < nums[j]. Return True if such a pattern exists.
 
@@ -1730,7 +2772,68 @@ print(find_132_pattern([-1, 3, 2, 0]))    # True
 
 ---
 
+**Problem Explanation:** Shortest Unsorted Subarray
+
+**Algorithm Steps:**
+1. Find the first and last elements that are out of order.
+2. Then find the min and max within that unsorted range.
+3. Finally, expand boundaries to include elements that should be before/after these extremes.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def find_unsorted_subarray(nums):
+    n = len(nums)
+    sorted_nums = sorted(nums)
+    start = end = -1
+    for i in range(n):
+        if nums[i] != sorted_nums[i]:
+            if start == -1:
+                start = i
+            end = i
+    return end - start + 1 if start != -1 else 0
+
+# More efficient O(n) approach:
+def find_unsorted_subarray_efficient(nums):
+    n = len(nums)
+    left, right = 0, n - 1
+    while left < n - 1 and nums[left] <= nums[left + 1]:
+        left += 1
+    if left == n - 1:
+        return 0
+    while right > 0 and nums[right] >= nums[right - 1]:
+        right -= 1
+    sub_min = min(nums[left:right + 1])
+    sub_max = max(nums[left:right + 1])
+    while left > 0 and nums[left - 1] > sub_min:
+        left -= 1
+    while right < n - 1 and nums[right + 1] < sub_max:
+        right += 1
+    return right - left + 1
+
+# Test
+print(find_unsorted_subarray_efficient([2, 6, 4, 8, 10, 9, 15]))  # 5
+print(find_unsorted_subarray_efficient([1, 2, 3, 4]))              # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass approach
+- **Space:** O(1) — constant space
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 36: Shortest Unsorted Subarray
+
 
 **Problem Statement:** Given an integer array, return the length of the shortest continuous subarray that if sorted, the whole array becomes sorted. If already sorted, return 0.
 
@@ -1777,7 +2880,53 @@ print(find_unsorted_subarray_efficient([1, 2, 3, 4]))              # 0
 
 ---
 
+**Problem Explanation:** Minimum Size Subarray Sum
+
+**Algorithm Steps:**
+1. Use sliding window.
+2. Expand the right pointer adding elements.
+3. When sum >= target, try to shrink from the left while maintaining the condition.
+4. Track the minimum window size.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def min_sub_array_len(target, nums):
+    left = 0
+    current_sum = 0
+    min_len = float('inf')
+    for right in range(len(nums)):
+        current_sum += nums[right]
+        while current_sum >= target:
+            min_len = min(min_len, right - left + 1)
+            current_sum -= nums[left]
+            left += 1
+    return min_len if min_len != float('inf') else 0
+
+# Test
+print(min_sub_array_len(7, [2, 3, 1, 2, 4, 3]))  # 2
+print(min_sub_array_len(4, [1, 4, 4]))             # 1
+print(min_sub_array_len(11, [1, 1, 1, 1, 1, 1, 1, 1]))  # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element visited at most twice
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 37: Minimum Size Subarray Sum
+
 
 **Problem Statement:** Given an array of positive integers `nums` and a positive integer `target`, find the minimal length of a subarray whose sum is greater than or equal to `target`. If no such subarray exists, return 0.
 
@@ -1808,7 +2957,49 @@ print(min_sub_array_len(11, [1, 1, 1, 1, 1, 1, 1, 1]))  # 0
 
 ---
 
+**Problem Explanation:** Find Peak Element
+
+**Algorithm Steps:**
+1. Binary search: if mid element is greater than its right neighbor, peak is in left half.
+2. Otherwise, peak is in right half.
+3. This works because the boundary elements are treated as negative infinity.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def find_peak_element(nums):
+    left, right = 0, len(nums) - 1
+    while left < right:
+        mid = (left + right) // 2
+        if nums[mid] < nums[mid + 1]:
+            left = mid + 1
+        else:
+            right = mid
+    return left
+
+# Test
+print(find_peak_element([1, 2, 3, 1]))      # 2
+print(find_peak_element([1, 2, 1, 3, 5, 6, 4]))  # 5
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log n) — binary search
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 38: Find Peak Element
+
 
 **Problem Statement:** A peak element is strictly greater than its neighbors. Given an array `nums` that doesn't contain two adjacent duplicates, find the index of any peak element.
 
@@ -1836,7 +3027,57 @@ print(find_peak_element([1, 2, 1, 3, 5, 6, 4]))  # 5
 
 ---
 
+**Problem Explanation:** Rotate an array to the right by k steps in-place.
+
+**Algorithm Steps:**
+1. k = k % n.
+2. Reverse the entire array.
+3. Reverse first k elements, then reverse remaining n-k.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Triple reversal achieves O(1) space rotation.
+
+**Well-Commented Code:**
+```python
+def search_rotated(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[left] <= nums[mid]:
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    return -1
+
+# Test
+print(search_rotated([4, 5, 6, 7, 0, 1, 2], 0))  # 4
+print(search_rotated([4, 5, 6, 7, 0, 1, 2], 3))  # -1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log n) — binary search
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- k = 0 or k = n -> unchanged
+- n = 1 -> unchanged
+- k > n -> k = k % n
+
 ### Problem 39: Search in Rotated Sorted Array
+
 
 **Problem Statement:** Given a sorted array rotated at some pivot, search for a target value. Return its index or -1. Each element is unique.
 
@@ -1872,7 +3113,61 @@ print(search_rotated([4, 5, 6, 7, 0, 1, 2], 3))  # -1
 
 ---
 
+**Problem Explanation:** Rotate an array to the right by k steps in-place.
+
+**Algorithm Steps:**
+1. k = k % n.
+2. Reverse the entire array.
+3. Reverse first k elements, then reverse remaining n-k.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Triple reversal achieves O(1) space rotation.
+
+**Well-Commented Code:**
+```python
+def search_rotated_ii(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return True
+        if nums[left] == nums[mid] == nums[right]:
+            left += 1
+            right -= 1
+            continue
+        if nums[left] <= nums[mid]:
+            if nums[left] <= target < nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            if nums[mid] < target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    return False
+
+# Test
+print(search_rotated_ii([2, 5, 6, 0, 0, 1, 2], 0))  # True
+print(search_rotated_ii([2, 5, 6, 0, 0, 1, 2], 3))  # False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) worst case, O(log n) average
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- k = 0 or k = n -> unchanged
+- n = 1 -> unchanged
+- k > n -> k = k % n
+
 ### Problem 40: Search in Rotated Sorted Array II
+
 
 **Problem Statement:** Same as Problem 39 but array may contain duplicates. Return `True` if target exists. This makes worst-case O(n) due to duplicates.
 
@@ -1912,7 +3207,50 @@ print(search_rotated_ii([2, 5, 6, 0, 0, 1, 2], 3))  # False
 
 ---
 
+**Problem Explanation:** Rotate an array to the right by k steps in-place.
+
+**Algorithm Steps:**
+1. k = k % n.
+2. Reverse the entire array.
+3. Reverse first k elements, then reverse remaining n-k.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Triple reversal achieves O(1) space rotation.
+
+**Well-Commented Code:**
+```python
+def find_min(nums):
+    left, right = 0, len(nums) - 1
+    while left < right:
+        mid = (left + right) // 2
+        if nums[mid] > nums[right]:
+            left = mid + 1
+        else:
+            right = mid
+    return nums[left]
+
+# Test
+print(find_min([3, 4, 5, 1, 2]))  # 1
+print(find_min([4, 5, 6, 7, 0, 1, 2]))  # 0
+print(find_min([11, 13, 15, 17]))  # 11
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(log n) — binary search
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- k = 0 or k = n -> unchanged
+- n = 1 -> unchanged
+- k > n -> k = k % n
+
 ### Problem 41: Find Minimum in Rotated Sorted Array
+
 
 **Problem Statement:** Given a sorted array rotated at some pivot (unique elements), find the minimum element in O(log n).
 
@@ -1941,7 +3279,61 @@ print(find_min([11, 13, 15, 17]))  # 11
 
 ---
 
+**Problem Explanation:** Rotate an array to the right by k steps in-place.
+
+**Algorithm Steps:**
+1. k = k % n.
+2. Reverse the entire array.
+3. Reverse first k elements, then reverse remaining n-k.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Triple reversal achieves O(1) space rotation.
+
+**Well-Commented Code:**
+```python
+def search_rotated_duplicates(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = (left + right) // 2
+        if nums[mid] == target:
+            return True
+        if nums[left] == nums[mid] == nums[right]:
+            left += 1
+            right -= 1
+            continue
+        if nums[left] <= nums[mid]:
+            if nums[left] <= target <= nums[mid]:
+                right = mid - 1
+            else:
+                left = mid + 1
+        else:
+            if nums[mid] <= target <= nums[right]:
+                left = mid + 1
+            else:
+                right = mid - 1
+    return False
+
+# Test
+print(search_rotated_duplicates([2, 5, 6, 0, 0, 1, 2], 0))  # True
+print(search_rotated_duplicates([2, 5, 6, 0, 0, 1, 2], 3))  # False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) worst case, O(log n) average
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- k = 0 or k = n -> unchanged
+- n = 1 -> unchanged
+- k > n -> k = k % n
+
 ### Problem 42: Rotated Sorted Array Search with Duplicates
+
 
 **Problem Statement:** Given an integer array that is sorted and rotated, and may contain duplicates, search for a target. Return True if found. Duplicates make this harder than the unique version.
 
@@ -1981,7 +3373,53 @@ print(search_rotated_duplicates([2, 5, 6, 0, 0, 1, 2], 3))  # False
 
 ---
 
+**Problem Explanation:** Longest Continuous Increasing Subsequence
+
+**Algorithm Steps:**
+1. Track current length and max length.
+2. When elements stop increasing, reset current length.
+3. Update max length at each step.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def find_length_of_lcis(nums):
+    if not nums:
+        return 0
+    max_len = 1
+    current_len = 1
+    for i in range(1, len(nums)):
+        if nums[i] > nums[i - 1]:
+            current_len += 1
+            max_len = max(max_len, current_len)
+        else:
+            current_len = 1
+    return max_len
+
+# Test
+print(find_length_of_lcis([1, 3, 5, 4, 7]))  # 3
+print(find_length_of_lcis([2, 2, 2, 2, 2]))  # 1
+print(find_length_of_lcis([1]))                # 1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 43: Longest Continuous Increasing Subsequence
+
 
 **Problem Statement:** Given an unsorted array `nums`, return the length of the longest continuous increasing subsequence (contiguous elements that are strictly increasing).
 
@@ -2013,7 +3451,56 @@ print(find_length_of_lcis([1]))                # 1
 
 ---
 
+**Problem Explanation:** Degree of an Array
+
+**Algorithm Steps:**
+1. Use three hash maps: one for frequency, one for first occurrence, one for last occurrence.
+2. The degree is max frequency.
+3. For each element with max frequency, calculate subarray length and track minimum.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def find_shortest_sub_array(nums):
+    first = {}
+    last = {}
+    count = {}
+    degree = 0
+    for i, num in enumerate(nums):
+        if num not in first:
+            first[num] = i
+        last[num] = i
+        count[num] = count.get(num, 0) + 1
+        degree = max(degree, count[num])
+    min_len = len(nums)
+    for num in count:
+        if count[num] == degree:
+            min_len = min(min_len, last[num] - first[num] + 1)
+    return min_len
+
+# Test
+print(find_shortest_sub_array([1, 2, 2, 3, 1]))  # 2
+print(find_shortest_sub_array([1, 2, 2, 3, 1, 4, 2]))  # 6
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — three passes (build maps + find min)
+- **Space:** O(n) — hash maps
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 44: Degree of an Array
+
 
 **Problem Statement:** Given a non-empty array, the degree is the maximum frequency of any element. Find the smallest contiguous subarray that has the same degree as the original array.
 
@@ -2048,7 +3535,56 @@ print(find_shortest_sub_array([1, 2, 2, 3, 1, 4, 2]))  # 6
 
 ---
 
+**Problem Explanation:** Find the contiguous subarray with the largest sum.
+
+**Algorithm Steps:**
+1. Kadane's algorithm: track current sum and max sum.
+2. If current sum becomes negative, reset to 0.
+3. Update max sum after each element.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Kadane's algorithm achieves O(n) by local optimality: discard negative prefix sums.
+
+**Well-Commented Code:**
+```python
+def max_ones_after_flip(nums):
+    n = len(nums)
+    if n == 0:
+        return 0
+    max_with_flip = nums[0]
+    max_without_flip = nums[0]
+    result = nums[0]
+    for i in range(1, n):
+        if nums[i] == 0:
+            max_with_flip = max(max_without_flip, max_with_flip) + 1
+            max_without_flip = max(max_without_flip, 0) + 0
+        else:
+            max_with_flip = max_with_flip + 1
+            max_without_flip = max_without_flip + 1
+        result = max(result, max_with_flip, max_without_flip)
+    return result
+
+# Test
+print(max_ones_after_flip([1, 1, 0, 1, 1, 0, 1]))  # 6
+print(max_ones_after_flip([0, 0, 0]))                 # 1
+print(max_ones_after_flip([1, 0, 0, 1, 0, 0, 1]))   # 4
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — single pass
+- **Space:** O(1) — constant variables
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- All negative numbers -> return the largest (least negative)
+- Single element
+
 ### Problem 45: Maximum Subarray Sum After One Flip
+
 
 **Problem Statement:** Given a binary array `nums`, you can flip at most one 0 to 1. Find the maximum possible sum of a contiguous subarray after at most one flip.
 
@@ -2088,7 +3624,58 @@ print(max_ones_after_flip([1, 0, 0, 1, 0, 0, 1]))   # 4
 
 ---
 
+**Problem Explanation:** Shortest Subarray with Sum at Least K
+
+**Algorithm Steps:**
+1. Compute prefix sums.
+2. Use a monotonic deque to maintain potential starting points.
+3. For each ending point, pop from deque while the prefix sum difference is >= k.
+4. This efficiently handles negative numbers.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+from collections import deque
+
+def shortest_subarray(nums, k):
+    n = len(nums)
+    prefix = [0] * (n + 1)
+    for i in range(n):
+        prefix[i + 1] = prefix[i] + nums[i]
+    deque_idx = deque()
+    min_len = n + 1
+    for i in range(n + 1):
+        while deque_idx and prefix[i] - prefix[deque_idx[0]] >= k:
+            min_len = min(min_len, i - deque_idx.popleft())
+        while deque_idx and prefix[deque_idx[-1]] >= prefix[i]:
+            deque_idx.pop()
+        deque_idx.append(i)
+    return min_len if min_len <= n else -1
+
+# Test
+print(shortest_subarray([1], 1))  # 1
+print(shortest_subarray([1, 2], 4))  # -1
+print(shortest_subarray([-1, 2, 3], 3))  # 2
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each element pushed and popped once
+- **Space:** O(n) — prefix sum array and deque
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 46: Shortest Subarray with Sum at Least K
+
 
 **Problem Statement:** Given an integer array `nums` and an integer `k`, return the length of the shortest non-empty contiguous subarray with sum at least `k`. If no such subarray exists, return -1. Array may contain negative numbers.
 
@@ -2124,7 +3711,52 @@ print(shortest_subarray([-1, 2, 3], 3))  # 2
 
 ---
 
+**Problem Explanation:** Find the contiguous subarray with the largest sum.
+
+**Algorithm Steps:**
+1. Kadane's algorithm: track current sum and max sum.
+2. If current sum becomes negative, reset to 0.
+3. Update max sum after each element.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Kadane's algorithm achieves O(n) by local optimality: discard negative prefix sums.
+
+**Well-Commented Code:**
+```python
+def constrained_subset_sum(nums, k):
+    from collections import deque
+    dp = [0] * len(nums)
+    dq = deque()
+    for i in range(len(nums)):
+        while dq and dq[0] < i - k:
+            dq.popleft()
+        dp[i] = nums[i] + (dp[dq[0]] if dq else 0)
+        while dq and dp[dq[-1]] <= dp[i]:
+            dq.pop()
+        dq.append(i)
+    return max(dp)
+
+# Test
+print(constrained_subset_sum([10, 2, -10, 5, 20], 2))  # 37
+print(constrained_subset_sum([-1, -2, -3], 1))           # -1
+print(constrained_subset_sum([10, -2, -10, -5, 20], 2))  # 23
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — monotonic deque
+- **Space:** O(n) — dp array and deque
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- All negative numbers -> return the largest (least negative)
+- Single element
+
 ### Problem 47: Maximum Subarray Sum with Deletions
+
 
 **Problem Statement:** Given an array `nums` and an integer `k`, you can delete at most k elements. Return the maximum possible sum of the remaining non-empty subarray.
 
@@ -2156,7 +3788,56 @@ print(constrained_subset_sum([10, -2, -10, -5, 20], 2))  # 23
 
 ---
 
+**Problem Explanation:** Minimum Cost to Make Array Equal
+
+**Algorithm Steps:**
+1. The optimal target is the weighted median.
+2. Sort by nums, compute prefix sums of costs.
+3. For each position, calculate the cost of moving all elements to that value.
+4. The minimum over all positions is the answer.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def min_cost_to_make_equal(nums, cost):
+    n = len(nums)
+    combined = sorted(zip(nums, cost))
+    total_cost = sum(cost)
+    cumulative = 0
+    target = None
+    for num, c in combined:
+        cumulative += c
+        if cumulative >= total_cost / 2:
+            target = num
+            break
+    result = 0
+    for num, c in combined:
+        result += abs(num - target) * c
+    return result
+
+# Test
+print(min_cost_to_make_equal([1, 3, 5, 2], [2, 3, 1, 14]))  # 18
+print(min_cost_to_make_equal([2, 2, 2, 2, 2], [4, 2, 8, 1, 3]))  # 0
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — sorting
+- **Space:** O(n) — combined array
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 48: Minimum Cost to Make Array Equal
+
 
 **Problem Statement:** Given two arrays `nums` and `cost` where `cost[i]` is the cost of incrementing or decrementing `nums[i]` by 1, find the minimum total cost to make all elements equal.
 
@@ -2190,7 +3871,73 @@ print(min_cost_to_make_equal([2, 2, 2, 2, 2], [4, 2, 8, 1, 3]))  # 0
 
 ---
 
+**Problem Explanation:** Find the contiguous subarray with the largest sum.
+
+**Algorithm Steps:**
+1. Kadane's algorithm: track current sum and max sum.
+2. If current sum becomes negative, reset to 0.
+3. Update max sum after each element.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Kadane's algorithm achieves O(n) by local optimality: discard negative prefix sums.
+
+**Well-Commented Code:**
+```python
+def max_three_subarrays(nums, first_len, second_len, third_len):
+    n = len(nums)
+    prefix = [0] * (n + 1)
+    for i in range(n):
+        prefix[i + 1] = prefix[i] + nums[i]
+    
+    def sub_sum(i, length):
+        return prefix[i + length] - prefix[i]
+    
+    # Best single subarray from left
+    best_left = [0] * n
+    best_left_idx = 0
+    for i in range(first_len, n - second_len - third_len + 1):
+        if sub_sum(i, first_len) > sub_sum(best_left_idx, first_len):
+            best_left_idx = i
+        best_left[i] = best_left_idx
+    
+    # Best single subarray from right
+    best_right = [0] * n
+    best_right_idx = n - third_len
+    for i in range(n - third_len, second_len + first_len - 1, -1):
+        if sub_sum(i, third_len) >= sub_sum(best_right_idx, third_len):
+            best_right_idx = i
+        best_right[i] = best_right_idx
+    
+    max_sum = 0
+    result = [0, 0, 0]
+    for j in range(first_len, n - second_len - third_len + 1):
+        left_idx = best_left[j - first_len] if j - first_len >= 0 else 0
+        right_idx = best_right[j + second_len] if j + second_len <= n - third_len else n - third_len
+        current = sub_sum(left_idx, first_len) + sub_sum(j, second_len) + sub_sum(right_idx, third_len)
+        if current > max_sum:
+            max_sum = current
+            result = [left_idx, j, right_idx]
+    return result
+
+# Test
+print(max_three_subarrays([1,2,1,2,6,7,5,1], 2, 3, 2))  # [0,3,5]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — linear passes
+- **Space:** O(n) — prefix sum and auxiliary arrays
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- All negative numbers -> return the largest (least negative)
+- Single element
+
 ### Problem 49: Maximum Sum of 3 Non-Overlapping Subarrays
+
 
 **Problem Statement:** Given an array `nums` and integers `firstLen`, `secondLen`, `thirdLen`, find the maximum sum of three non-overlapping subarrays with specified lengths. Return their starting indices.
 
@@ -2243,7 +3990,62 @@ print(max_three_subarrays([1,2,1,2,6,7,5,1], 2, 3, 2))  # [0,3,5]
 
 ---
 
+**Problem Explanation:** Count of Range Sum
+
+**Algorithm Steps:**
+1. Use merge sort based approach.
+2. Compute prefix sums.
+3. During merge sort, count pairs where the difference falls in the range.
+4. This avoids O(n²) brute force.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def count_range_sum(nums, lower, upper):
+    prefix = [0]
+    for num in nums:
+        prefix.append(prefix[-1] + num)
+    
+    def merge_sort_count(start, end):
+        if end - start <= 1:
+            return 0
+        mid = (start + end) // 2
+        count = merge_sort_count(start, mid) + merge_sort_count(mid, end)
+        j = k = mid
+        for left_val in prefix[start:mid]:
+            while j < end and prefix[j] - left_val < lower:
+                j += 1
+            while k < end and prefix[k] - left_val <= upper:
+                k += 1
+            count += k - j
+        prefix[start:end] = sorted(prefix[start:end])
+        return count
+    
+    return merge_sort_count(0, len(prefix))
+
+# Test
+print(count_range_sum([-2, 5, -1], -2, 2))  # 3
+print(count_range_sum([0], 0, 0))             # 1
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n log n) — merge sort
+- **Space:** O(n) — prefix array and merge space
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 50: Count of Range Sum
+
 
 **Problem Statement:** Given an integer array `nums` and two integers `lower` and `upper`, return the number of range sums that lie in [lower, upper]. A range sum is sum(nums[i..j]) for i <= j.
 
@@ -2283,7 +4085,50 @@ print(count_range_sum([0], 0, 0))             # 1
 
 ---
 
+**Problem Explanation:** Frog Jump
+
+**Algorithm Steps:**
+1. Use dynamic programming with a hash map.
+2. For each stone, track all possible jump sizes that can reach it.
+3. From each stone, try jumps of k-1, k, and k+1 to the next stones.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def can_cross(stones):
+    stone_set = set(stones)
+    dp = {stone: set() for stone in stones}
+    dp[0].add(0)
+    for stone in stones:
+        for jump in dp[stone]:
+            for next_jump in [jump - 1, jump, jump + 1]:
+                if next_jump > 0 and stone + next_jump in stone_set:
+                    dp[stone + next_jump].add(next_jump)
+    return len(dp[stones[-1]]) > 0
+
+# Test
+print(can_cross([0, 1, 3, 5, 6, 7, 9, 10, 12]))  # True
+print(can_cross([0, 1, 2, 3, 4, 8, 9, 11]))       # False
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n²) — nested loops over stones and jumps
+- **Space:** O(n²) — dp hash map
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 51: Frog Jump
+
 
 **Problem Statement:** A frog is crossing a river with stones at various positions. Given an array `stones` (sorted positions), determine if the frog can cross by jumping 1, 2, or 3 units at a time, landing on stones.
 
@@ -2312,7 +4157,73 @@ print(can_cross([0, 1, 2, 3, 4, 8, 9, 11]))       # False
 
 ---
 
+**Problem Explanation:** Create Maximum Number
+
+**Algorithm Steps:**
+1. For each possible split (i digits from nums1, k-i from nums2), use a greedy stack to pick the largest subsequence of each.
+2. Then merge the two subsequences to get the maximum.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def max_number(nums1, nums2, k):
+    def pick_max(nums, t):
+        stack = []
+        drop = len(nums) - t
+        for num in nums:
+            while stack and drop > 0 and stack[-1] < num:
+                stack.pop()
+                drop -= 1
+            stack.append(num)
+        return stack[:t]
+    
+    def merge(a, b):
+        result = []
+        i = j = 0
+        while i < len(a) and j < len(b):
+            if a[i:] > b[j:]:
+                result.append(a[i])
+                i += 1
+            else:
+                result.append(b[j])
+                j += 1
+        result.extend(a[i:])
+        result.extend(b[j:])
+        return result
+    
+    m, n = len(nums1), len(nums2)
+    best = []
+    for i in range(max(0, k - n), min(k, m) + 1):
+        part1 = pick_max(nums1, i)
+        part2 = pick_max(nums2, k - i)
+        merged = merge(part1, part2)
+        if merged > best:
+            best = merged
+    return best
+
+# Test
+print(max_number([3, 4, 6, 5], [9, 1, 2, 5, 8], 3))  # [9, 8, 6]
+print(max_number([6, 7], [6, 0, 4], 5))                # [6, 7, 6, 0, 4]
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(k * (m + n)) — for each split, pick and merge
+- **Space:** O(m + n) — for subsequences
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 52: Create Maximum Number
+
 
 **Problem Statement:** Given two arrays `nums1` and `nums2` of lengths m and n respectively, form the maximum number of length k from their digits (maintaining relative order within each array). Return the result as an array.
 
@@ -2365,7 +4276,56 @@ print(max_number([6, 7], [6, 0, 4], 5))                # [6, 7, 6, 0, 4]
 
 ---
 
+**Problem Explanation:** Longest Substring with At Most Two Unique Characters
+
+**Algorithm Steps:**
+1. Use sliding window with a hash map tracking character counts.
+2. Expand right pointer.
+3. When more than 2 unique characters, shrink left pointer until count drops to 2.
+4. Track maximum window size.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+def length_of_longest_substring_two_unique(s):
+    from collections import defaultdict
+    char_count = defaultdict(int)
+    left = 0
+    max_len = 0
+    for right in range(len(s)):
+        char_count[s[right]] += 1
+        while len(char_count) > 2:
+            char_count[s[left]] -= 1
+            if char_count[s[left]] == 0:
+                del char_count[s[left]]
+            left += 1
+        max_len = max(max_len, right - left + 1)
+    return max_len
+
+# Test
+print(length_of_longest_substring_two_unique("eceba"))  # 3
+print(length_of_longest_substring_two_unique("ccaabbb"))  # 5
+print(length_of_longest_substring_two_unique("abcbbbbcccbdddadacb"))  # 3
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(n) — each character visited at most twice
+- **Space:** O(1) — at most 3 characters in map
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 53: Longest Substring with At Most Two Unique Characters
+
 
 **Problem Statement:** Given a string `s`, find the length of the longest substring that contains at most 2 distinct characters.
 
@@ -2399,7 +4359,69 @@ print(length_of_longest_substring_two_unique("abcbbbbcccbdddadacb"))  # 3
 
 ---
 
+**Problem Explanation:** Minimum Window Substring
+
+**Algorithm Steps:**
+1. Use sliding window with character frequency counts.
+2. Count all characters in t.
+3. Expand right pointer adding characters.
+4. When all characters are matched, shrink from left to find the minimum.
+5. Track the smallest valid window.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+from collections import Counter
+
+def min_window(s, t):
+    if not t or not s:
+        return ""
+    dict_t = Counter(t)
+    required = len(dict_t)
+    l, r = 0, 0
+    formed = 0
+    window_counts = {}
+    ans = float('inf'), None, None
+    while r < len(s):
+        char = s[r]
+        window_counts[char] = window_counts.get(char, 0) + 1
+        if char in dict_t and window_counts[char] == dict_t[char]:
+            formed += 1
+        while l <= r and formed == required:
+            char = s[l]
+            if r - l + 1 < ans[0]:
+                ans = (r - l + 1, l, r)
+            window_counts[char] -= 1
+            if char in dict_t and window_counts[char] < dict_t[char]:
+                formed -= 1
+            l += 1
+        r += 1
+    return "" if ans[0] == float('inf') else s[ans[1]:ans[2] + 1]
+
+# Test
+print(min_window("ADOBECODEBANC", "ABC"))  # "BANC"
+print(min_window("a", "a"))                # "a"
+print(min_window("a", "aa"))               # ""
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(|s| + |t|) — each character processed at most twice
+- **Space:** O(|s| + |t|) — for hash maps
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 54: Minimum Window Substring
+
 
 **Problem Statement:** Given strings `s` and `t`, find the minimum window substring of `s` that contains all characters of `t` (including duplicates). Return empty string if no such window exists.
 
@@ -2445,7 +4467,60 @@ print(min_window("a", "aa"))               # ""
 
 ---
 
+**Problem Explanation:** Max Sum of Rectangle No Larger Than K
+
+**Algorithm Steps:**
+1. Fix top and bottom rows, compress columns into a 1D array.
+2. For each 1D array, use sorted prefix sums with binary search to find the maximum sum <= k.
+3. This reduces the 2D problem to multiple 1D problems.
+
+**Visual Walkthrough:**
+```
+Refer to the Approach section for a step-by-step breakdown.
+```
+
+**Key Insight:** Choose the right data structure for the problem.
+
+**Well-Commented Code:**
+```python
+import bisect
+
+def max_sum_submatrix(matrix, k):
+    m, n = len(matrix), len(matrix[0])
+    result = float('-inf')
+    for top in range(m):
+        col_sums = [0] * n
+        for bottom in range(top, m):
+            for j in range(n):
+                col_sums[j] += matrix[bottom][j]
+            prefix = [0]
+            for val in col_sums:
+                prefix.append(prefix[-1] + val)
+            sorted_prefix = []
+            for p in prefix:
+                idx = bisect.bisect_left(sorted_prefix, p - k)
+                if idx < len(sorted_prefix):
+                    result = max(result, p - sorted_prefix[idx])
+                bisect.insort(sorted_prefix, p)
+    return result
+
+# Test
+print(max_sum_submatrix([[1, 0, 1], [0, -2, 3]], 2))  # 2
+print(max_sum_submatrix([[2, 2, -1]], 3))                # 3
+
+```
+
+**Complexity Analysis:**
+- **Time:** O(m² * n * log n) — for each pair of rows, binary search
+- **Space:** O(n) — column sums and sorted prefix
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Handle empty input
+- Handle single-element input
+- Verify boundary conditions
+
 ### Problem 55: Max Sum of Rectangle No Larger Than K
+
 
 **Problem Statement:** Given an `m x n` matrix `matrix` and an integer `k`, find the max sum of a rectangle such that its sum is no larger than k. Return the max sum.
 

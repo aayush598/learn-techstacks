@@ -3108,14 +3108,98 @@ print(lastStoneWeight([9, 10, 1, 2, 3, 4]))     # 3
 
 ## Problem 30: K Closest Points to Origin [EASY]
 
-**Problem:** Given an array of points where `points[i] = [xi, yi]` represents a point on the X-Y plane and an integer `k`, return the k closest points to the origin (0, 0). Distance is measured by Euclidean distance.
+### Problem Explanation (Simple Words)
+We need the k points nearest to the origin (0, 0). Instead of sorting all points by distance (O(n log n)), we maintain a max-heap of size k that keeps the k closest points seen so far. The farthest point among the k closest sits at the heap root — when a closer point arrives, the farthest gets evicted.
 
-**Approach:**
-Use a max-heap of size k:
-1. For each point, compute squared distance (no need for sqrt).
-2. Push (negative_distance, x, y) to the heap.
-3. If heap exceeds k, pop the farthest (the most negative = largest distance).
-4. The heap at the end contains the k closest points.
+### Step-by-Step Algorithm
+1. **Create an empty max-heap** (use min-heap with negated distances for Python).
+2. **For each point** `(x, y)`:
+   - Compute squared distance: `dist = x*x + y*y`.
+   - Push `(-dist, x, y)` onto the heap (negated for max-heap behavior).
+   - If heap size exceeds k, pop the largest distance (most negative = farthest point).
+3. **After processing** all points, the heap contains exactly k closest points.
+4. **Return** the points from the heap (ignore the distance values).
+
+### Visual Walkthrough
+**Input:** `points = [[1, 3], [-2, 2], [5, 8], [0, 1]]`, `k = 2`
+
+```
+Compute squared distances:
+  (1,3) → 1+9  = 10
+  (-2,2) → 4+4 = 8
+  (5,8) → 25+64 = 89
+  (0,1) → 0+1  = 1
+
+Heap process (max-heap via negation, size k=2):
+  Step 1: push (-10,1,3) → heap=[(-10,1,3)]
+  Step 2: push (-8,-2,2) → heap=[(-10,1,3), (-8,-2,2)]
+  Step 3: push (-89,5,8) → heap=[(-89,5,8), (-8,-2,2), (-10,1,3)]
+          len=3 > k=2 → pop farthest: (-89,5,8)→evicts (5,8)
+          heap=[(-10,1,3), (-8,-2,2)]
+  Step 4: push (-1,0,1) → heap=[(-10,1,3), (-8,-2,2), (-1,0,1)]
+          len=3 > k=2 → pop farthest: (-10,1,3)→evicts (1,3)
+          heap=[(-1,0,1), (-8,-2,2)]
+
+Result: [[0,1], [-2,2]]  (k=2 closest points)
+```
+
+### Key Insight
+Use squared distance `x*x + y*y` instead of Euclidean distance `sqrt(x*x + y*y)`. Since sqrt is monotonically increasing, squared distance preserves the same ordering and avoids expensive sqrt computations.
+
+### Well-Commented Code
+
+```python
+import heapq
+
+def kClosest(points, k):
+    heap = []
+    for x, y in points:
+        # Squared distance from origin (no sqrt needed, ordering preserved)
+        dist = x * x + y * y
+        # Negate for max-heap: heap root = farthest among k closest
+        heapq.heappush(heap, (-dist, x, y))
+        if len(heap) > k:
+            # Pop the farthest (most negative distance = largest distance)
+            heapq.heappop(heap)
+
+    # Extract points from heap (ignore distance)
+    return [[x, y] for _, x, y in heap]
+
+
+# Test cases
+print(kClosest([[1, 3], [-2, 2]], 1))            # [[-2, 2]]
+print(kClosest([[3, 3], [5, -1], [-2, 4]], 2))   # [[3, 3], [-2, 4]]
+print(kClosest([[0, 0]], 1))                       # [[0, 0]]
+print(kClosest([[1, 1], [1, 1], [2, 2], [2, 2]], 2))  # [[1,1],[1,1]]
+print(kClosest([[-5, 4], [-6, -5], [4, 6], [-2, 3], [-4, -3]], 3))
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(n log k) — each of n points is pushed/popped from a heap of size k in O(log k) time.
+- **Space Complexity:** O(k) — the heap stores at most k points.
+- **Comparison:** Sorting all points would be O(n log n). The heap approach is better when k ≪ n.
+- **Quickselect Alternative:** O(n) average time for static arrays, but doesn't handle streams.
+
+### Edge Cases
+- **k = 1:** Heap never exceeds size 1; always keeps the single closest point.
+- **k = n:** All points fit in the heap; no evictions happen.
+- **Duplicate coordinates:** Multiple points at same location are treated independently (both included if within top k).
+- **Origin point [0, 0]:** Distance 0 — always kept as closest.
+- **Points at same distance:** Any ordering is acceptable (heap doesn't guarantee tie order).
+- **Negative coordinates:** Squared distance `x*x + y*y` is always positive, so negatives work trivially.
+
+### Common Mistakes
+1. **Computing sqrt unnecessarily:** `math.sqrt(dist)` adds computation cost and floating-point imprecision. Use squared distance.
+2. **Using a min-heap of size k:** A min-heap keeps the k *smallest* at the root, but when pushing/popping, you'd lose the smallest instead of the largest (the farthest). Use a max-heap (negated) of size k.
+3. **Forgetting to negate back:** When extracting from the heap, the distance stored is negative. Just ignore it and return `(x, y)`.
+4. **Returning in sorted order:** The problem accepts any order. Sorting adds unnecessary O(k log k) cost.
+5. **Using `heapq.heapreplace` incorrectly:** For this pattern (push, then pop if oversized), separate `heappush` + conditional `heappop` is cleaner.
+
+### Pattern Recognition
+- **Max-Heap of Size k:** The standard pattern for "k smallest/closest/nearest" problems. The heap root is the largest among the top k.
+- **Streaming Data:** New points can be added incrementally — this approach naturally handles data streams.
+- **Negation for Max-Heap:** Python's `heapq` is a min-heap. Negate values for max-heap behavior.
+- **Similar Problems:** Kth Largest Element in a Stream, Top K Frequent Elements, K Closest Points to Origin (different variants).
 
 ```python
 import heapq
@@ -3144,14 +3228,89 @@ print(kClosest([[-5, 4], [-6, -5], [4, 6], [-2, 3], [-4, -3]], 3))
 
 ## Problem 31: Reduce Array Size to Half [EASY]
 
-**Problem:** Given an array `arr`, you can remove any set of unique values from the array. Return the minimum number of unique values you need to remove so that at least half of the array's elements are removed.
+### Problem Explanation (Simple Words)
+We can remove entire groups of identical numbers. Removing a group means every occurrence of that number is gone. We want to remove the fewest distinct values such that at least half of the total elements are removed. The greedy approach: remove the most frequent numbers first — that way, each "removal slot" eliminates the most elements.
 
-**Approach:**
-Greedy strategy:
-1. Count frequency of each unique value.
-2. Sort frequencies in descending order.
-3. Remove most frequent values first — this minimizes the number of distinct values removed.
-4. Stop when cumulative removed ≥ n/2.
+### Step-by-Step Algorithm
+1. **Count frequencies** of each unique value using `Counter`.
+2. **Sort frequencies** in descending order (most frequent first).
+3. **Accumulate removed count:** Start `removed = 0`, iterate through sorted frequencies.
+4. **Check threshold:** After adding each frequency, if `removed >= n/2`, return how many distinct values we've used.
+5. **Return** the count of distinct values removed.
+
+### Visual Walkthrough
+**Input:** `arr = [3, 3, 3, 3, 5, 5, 5, 2, 2, 7]`
+
+```
+n = 10, half = 5
+
+Frequencies: 3→4, 5→3, 2→2, 7→1
+Sorted descending: [4, 3, 2, 1]
+
+Step 1: remove=4 (value 3), removed=4 < 5 → continue
+Step 2: remove=3 (value 5), removed=4+3=7 ≥ 5 → STOP
+
+Result: 2 distinct values removed (3 and 5) ✓
+```
+
+### Key Insight
+Removing a high-frequency value eliminates many elements with a single "removal slot." Sorting by frequency descending and greedily removing guarantees the minimum number of distinct values removed. This is optimal because swapping a high-frequency removal for a low-frequency one would only increase the count of distinct values needed.
+
+### Well-Commented Code
+
+```python
+def minSetSize(arr):
+    from collections import Counter
+
+    # Count how many times each unique value appears
+    # Sort frequencies from highest to lowest
+    counts = sorted(Counter(arr).values(), reverse=True)
+
+    removed = 0
+    half = len(arr) // 2
+
+    # Greedily remove the most frequent values first
+    for i, count in enumerate(counts):
+        removed += count
+        # Once we've removed at least half the elements, stop
+        if removed >= half:
+            return i + 1   # Number of distinct values removed
+
+    return len(counts)  # Fallback (shouldn't reach here)
+
+
+# Test cases
+print(minSetSize([3, 3, 3, 3, 5, 5, 5, 2, 2, 7]))  # 2
+print(minSetSize([7, 7, 7, 7, 7, 7]))                 # 1
+print(minSetSize([1, 9]))                               # 1
+print(minSetSize([1000, 1000, 3, 7]))                   # 1
+print(minSetSize([1, 2, 3, 4, 5, 6]))                  # 3
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(n log n) — sorting frequencies dominates. Counting is O(n).
+- **Space Complexity:** O(n) — Counter stores up to n unique entries.
+- **Note:** If we used a heap instead of sorting, we could achieve O(n log k) where k is unique values, but since we need all values anyway, full sort is fine.
+
+### Edge Cases
+- **All elements distinct:** Each value appears once. Need to remove half of n distinct values → answer = n/2.
+- **All elements same:** Single value with frequency n. Removing it removes 100% → answer = 1.
+- **Minimum array (n=2):** Half = 1. If both elements distinct, need to remove 1 value. If same, also 1.
+- **Already satisfied by first value:** Most frequent element already constitutes ≥ n/2 elements → answer = 1.
+- **Large duplicates spread across values:** Always remove most frequent first.
+
+### Common Mistakes
+1. **Not sorting in descending order:** Ascending would remove low-frequency values first, requiring more distinct values.
+2. **Confusing "unique values removed" with "elements removed":** The problem asks for count of distinct values, not count of individual elements.
+3. **Forgetting to return the count of distinct values:** Return `i + 1` (number of frequencies used), not `removed`.
+4. **Off-by-one in half calculation:** `len(arr) // 2` floors — if n=5, half=2, need to remove at least 2 elements.
+5. **Using a while loop with pop:** The loop with index is cleaner; `enumerate` gives us the count directly.
+
+### Pattern Recognition
+- **Greedy with Frequency:** When you want to minimize the number of "groups" removed to achieve a coverage target, always pick the largest groups first.
+- **Frequency Sorting:** Count first, then sort by frequency — a very common two-step pattern.
+- **Similar Problems:** Minimum Number of Arrows to Burst Balloons, Minimum Operations to Reduce X to Zero, Task Scheduler.
+- **Variation:** If the problem asked to minimize removed elements to cover half the distinct values, the strategy would reverse (pick least frequent).
 
 ```python
 def minSetSize(arr):
@@ -3180,14 +3339,101 @@ print(minSetSize([1, 2, 3, 4, 5, 6]))                  # 3
 
 ## Problem 32: Top K Frequent Elements (Heap Approach) [MEDIUM]
 
-**Problem:** Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. The answer can be returned in any order.
+### Problem Explanation (Simple Words)
+Find the k elements that appear most frequently. Instead of sorting all unique elements by frequency (O(n log n)), we maintain a min-heap of size k that keeps only the top k frequent elements. The heap root is the least frequent among the top k — when a more frequent element arrives, the least frequent gets evicted.
 
-**Approach:**
-Use a min-heap of size k:
-1. Count all element frequencies.
-2. For each unique element, push (frequency, element) to heap.
-3. If heap exceeds k, pop the element with lowest frequency.
-4. The k most frequent elements remain in the heap.
+### Step-by-Step Algorithm
+1. **Count frequencies** of each number using `Counter`.
+2. **Initialize an empty min-heap**.
+3. **For each unique element** `(num, freq)`:
+   - Push `(freq, num)` onto the min-heap.
+   - If heap size exceeds k, pop the smallest frequency (the least frequent among the top k).
+4. **After processing**, the heap contains the k most frequent elements.
+5. **Return** the element values from the heap.
+
+### Visual Walkthrough
+**Input:** `nums = [1, 1, 1, 2, 2, 3]`, `k = 2`
+
+```
+Frequencies: 1→3, 2→2, 3→1
+
+Min-heap of size k=2 (stores (freq, num)):
+  Process 1: push (3,1) → heap=[(3,1)]
+  Process 2: push (2,2) → heap=[(2,2), (3,1)]
+  Process 3: push (1,3) → heap=[(1,3), (3,1), (2,2)]
+            len=3 > k=2 → pop min freq: (1,3) → evicts 3
+            heap=[(2,2), (3,1)]
+
+Result: [2, 1] (order doesn't matter, [1, 2] also valid)
+```
+
+### Key Insight
+A min-heap of size k naturally keeps the k largest frequencies at the expense of the smallest. The root is always the least frequent among the top k. When we see a new element, if it's more frequent than the root, we replace the root — but the min-heap automatically handles this by keeping the smallest at root.
+
+### Well-Commented Code
+
+```python
+import heapq
+from collections import Counter
+
+def topKFrequent(nums, k):
+    # Step 1: Count frequencies of each element
+    count = Counter(nums)
+
+    # Step 2: Min-heap of size k — stores (frequency, element)
+    heap = []
+    for num, freq in count.items():
+        heapq.heappush(heap, (freq, num))
+        # If heap exceeds k, evict the least frequent element
+        if len(heap) > k:
+            heapq.heappop(heap)  # Removes smallest frequency
+
+    # Step 3: Extract elements from heap (ignore frequency)
+    return [num for freq, num in heap]
+
+
+# Alternative: Max-heap approach (push all, pop k times)
+def topKFrequent_maxheap(nums, k):
+    count = Counter(nums)
+    # Negate frequencies for max-heap behavior
+    heap = [(-freq, num) for num, freq in count.items()]
+    heapq.heapify(heap)
+    return [heapq.heappop(heap)[1] for _ in range(k)]
+
+
+# Test cases
+print(sorted(topKFrequent([1, 1, 1, 2, 2, 3], 2)))     # [1, 2]
+print(topKFrequent([1], 1))                               # [1]
+print(sorted(topKFrequent([4, 1, -1, 2, -1, 2, 3], 2))) # [-1, 2]
+print(sorted(topKFrequent([1, 2, 2, 3, 3, 3], 2)))      # [2, 3]
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(n log k) — counting is O(n), each heap push/pop is O(log k). For k ≤ n, this is better than O(n log n) sorting.
+- **Space Complexity:** O(n) — Counter stores frequencies for all unique elements.
+- **Bucket Sort Alternative:** O(n) time using frequency buckets (Problem 22). Mention both in interviews.
+- **Max-Heap Alternative:** Pushing all to max-heap + popping k times is O(n + k log n). Better when k is small.
+
+### Edge Cases
+- **k = 1:** Heap keeps only 1 element — the most frequent one.
+- **k = number of unique elements:** All unique elements fit in the heap; no evictions.
+- **All elements same:** Only 1 unique element with frequency n. Return that single element for any k ≥ 1.
+- **All elements distinct:** All frequencies = 1. Return any k elements (heap root ties broken by heap ordering).
+- **Ties in frequency:** Any among tied elements is acceptable (the problem says "any order").
+- **Large k:** If k approaches n, this degrades to O(n log n). Consider bucket sort for O(n).
+
+### Common Mistakes
+1. **Storing elements directly instead of (freq, element):** The heap compares by the first tuple element. Push `(freq, num)`, not just `num`.
+2. **Using a max-heap when k is large:** The min-heap of size k is O(n log k). Max-heap approach pushes everything → O(n log n).
+3. **Confusing with Bucket Sort:** Both solve the same problem. Heap approach is better for streams; bucket sort is better for static arrays with O(n) requirement.
+4. **Returning frequencies instead of elements:** The problem asks for the elements, not how often they occur.
+5. **Not handling k=0:** Though not in problem constraints, defensive coding would handle it.
+
+### Pattern Recognition
+- **Min-Heap for Top k:** This pattern (maintain a min-heap of size k to track top-k elements by a key) appears in many problems.
+- **Frequency + Heap:** Count frequencies, then use a heap to find top k by frequency. Two-step pattern.
+- **Comparison with Bucket Sort:** Heap = O(n log k), works for streams. Bucket sort = O(n), but needs static array.
+- **Similar Problems:** Top K Frequent Words (with lexicographic tie-breaking), K Closest Points to Origin, Sort Characters By Frequency.
 
 ```python
 import heapq
@@ -3223,13 +3469,96 @@ print(sorted(topKFrequent([1, 2, 2, 3, 3, 3], 2)))      # [2, 3]
 
 ## Problem 33: Sort Array by Increasing Frequency [MEDIUM]
 
-**Problem:** Given an array of integers `nums`, sort the array in decreasing order based on the frequency of the values. If multiple values have the same frequency, sort them in decreasing order.
+### Problem Explanation (Simple Words)
+Sort numbers so that less frequent numbers come first. If two numbers have the same frequency, the larger number comes first (decreasing order). For example, `[1, 1, 2, 2, 2, 3]` → 3 appears once, 1 appears twice, 2 appears three times → result `[3, 1, 1, 2, 2, 2]`.
 
-**Approach:**
-Use a heap with custom ordering:
-1. Count frequencies.
-2. Push (frequency, -value) to heap — negative value ensures descending order for ties.
-3. Pop from heap and build result by repeating each value `freq` times.
+### Step-by-Step Algorithm
+1. **Count frequencies** using `Counter`.
+2. **Sort by custom key** `(frequency, -value)`:
+   - Primary key: frequency (ascending) — lower frequency first.
+   - Secondary key: -value (descending) — higher value first when frequencies tie.
+3. **Return** the sorted array.
+
+### Visual Walkthrough
+**Input:** `nums = [1, 1, 2, 2, 2, 3]`
+
+```
+Frequencies: 1→2, 2→3, 3→1
+
+Custom sort key (frequency, -value):
+  3: (1, -3)  → sorted first (lowest freq)
+  1: (2, -1)  → sorted second
+  2: (3, -2)  → sorted last (highest freq)
+
+Sorting by key → [3, 1, 1, 2, 2, 2] ✓
+```
+
+**Tie-breaking example:** `nums = [2, 3, 5, 3, 7, 9, 5, 3, 7]`
+```
+Frequencies: 2→1, 3→3, 5→2, 7→2, 9→1
+
+Keys:
+  2: (1, -2)
+  9: (1, -9) → 9 has higher value, comes first among freq=1
+  5: (2, -5)
+  7: (2, -7) → 7 has higher value, comes first among freq=2
+  3: (3, -3)
+
+Result: [9, 2, 5, 5, 7, 7, 3, 3, 3]
+```
+
+### Key Insight
+The Python sort key `lambda x: (count[x], -x)` elegantly handles both the primary sort (frequency ascending) and the tie-breaker (value descending) in a single expression. The negative sign before `x` reverses the natural ascending order.
+
+### Well-Commented Code
+
+```python
+from collections import Counter
+
+def frequencySort(nums):
+    # Count how often each value appears
+    count = Counter(nums)
+
+    # Sort by (frequency, -value):
+    #   frequency ascending — less frequent first
+    #   -value descending — larger values first when frequencies tie
+    nums.sort(key=lambda x: (count[x], -x))
+    return nums
+
+
+# Test cases
+print(frequencySort([1, 1, 2, 2, 2, 3]))  # [3, 1, 1, 2, 2, 2]
+print(frequencySort([2, 3, 5, 3, 7, 9, 5, 3, 7]))
+# [9, 2, 5, 5, 7, 7, 3, 3, 3]
+print(frequencySort([-1, 1, -6, 4, 5, -6, 1, 4, 1]))
+# [5, -1, 4, 4, -6, -6, 1, 1, 1]
+print(frequencySort([1]))  # [1]
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(n log n) — sorting dominates. Counting is O(n).
+- **Space Complexity:** O(n) — Counter stores frequencies; sort may use O(n) additional space.
+- **Heap Alternative:** O(n log k) using a heap, but since we need the full sorted output, full sort is necessary.
+
+### Edge Cases
+- **All elements same frequency:** Only the value tie-breaker matters. For `[1, 2, 3]`, all freq=1 → sorted by value descending: `[3, 2, 1]`.
+- **All same value:** Single frequency, single value → array unchanged.
+- **Single element:** Returns that element.
+- **Negative numbers:** The `-x` trick works correctly with negatives (e.g., `-(-5) = 5`, which is larger than `-(-1) = 1`, so -5 sorts before -1).
+- **Large values:** Python handles arbitrary precision.
+
+### Common Mistakes
+1. **Forgetting the tie-breaker:** Without `-x`, the secondary sort is by original order (stable sort), which may not be descending by value.
+2. **Using `-x` incorrectly for the primary sort:** The primary sort should be by frequency ascending. If you use `(-count[x], -x)`, the result would be decreasing by frequency.
+3. **Reversing the key order:** Remember: Python sorts tuples left-to-right. `(count[x], -x)` means frequency first, then -value.
+4. **Confusing with "Sort Characters By Frequency":** That problem sorts by frequency descending. This problem sorts by frequency ascending (increasing frequency).
+5. **Not using `Counter` and manually counting:** `Counter` is cleaner and O(n). Manual dict with `get()` also works but `Counter` is preferred.
+
+### Pattern Recognition
+- **Custom Sort with Tuple Key:** Multi-level sorting using tuple keys is the standard Python approach.
+- **Frequency Sort Variants:** This problem (ascending frequency) complements "Sort Characters By Frequency" (descending frequency). Know both.
+- **In-Place vs New List:** Using `nums.sort()` modifies in-place; `sorted()` returns a new list.
+- **Similar Problems:** Relative Sort Array, Sort Integers by Number of 1 Bits, Custom Sort String.
 
 ```python
 import heapq
@@ -3265,14 +3594,122 @@ print(frequencySort([1]))  # [1]
 
 ## Problem 34: Reorganize String [MEDIUM]
 
-**Problem:** Given a string `s`, rearrange the characters of `s` so that any two adjacent characters are not the same. Return any valid rearrangement, or "" if not possible.
+### Problem Explanation (Simple Words)
+Rearrange a string so no two adjacent characters are the same. For "aab", we can rearrange to "aba". For "aaab", it's impossible. The key insight: if any character appears more than `(n+1)//2` times, rearrangement is impossible (pigeonhole principle). Otherwise, we always pick the most frequent remaining character that's different from the last placed one.
 
-**Approach:**
-Greedy approach with max-heap:
-1. Check if rearrangement is possible: max frequency ≤ (n+1) // 2.
-2. Use max-heap to always pick the most frequent remaining character.
-3. Track the previous character and re-insert it after using current one.
-4. This prevents adjacent duplicates by always using a "cooldown" for each character.
+### Step-by-Step Algorithm
+1. **Count frequencies** of each character using `Counter`.
+2. **Check feasibility:** If `max_freq > (n + 1) // 2`, return `""` (impossible).
+3. **Build a max-heap** `(-freq, char)` to always access the most frequent character.
+4. **Initialize `prev = None`** (stores the previously used char for cooldown).
+5. **While heap is not empty:**
+   - Pop the most frequent character from heap.
+   - Append it to result.
+   - Push the previous character back into the heap (its cooldown is over).
+   - Store the current character as `prev` (it cannot be used next turn).
+6. **Return** the result string.
+
+### Visual Walkthrough
+**Input:** `s = "aab"`
+
+```
+n = 3, max_freq = 2, (3+1)//2 = 2 → 2 ≤ 2 → feasible
+
+Heap: [(-2, 'a'), (-1, 'b')]
+
+Step 1: pop (-2,'a'), append 'a', push prev (None → skip)
+        prev = ('a', -1)   [remaining freq of 'a' = 1]
+        result = "a"
+
+Step 2: pop (-1,'b'), append 'b', push prev (-1,'a') back
+        prev = None  [b's freq becomes 0]
+        heap = [(-1,'a')]
+        result = "ab"
+
+Step 3: pop (-1,'a'), append 'a', push prev (None → skip)
+        prev = None  [a's freq becomes 0]
+        heap = []
+        result = "aba"
+
+Result: "aba" ✓
+```
+
+### Key Insight
+The cooldown mechanism (`prev` variable) separates identical characters by at least one position. By always picking the most frequent character, we ensure we never leave a high-frequency character stranded at the end where it can't be placed.
+
+### Well-Commented Code
+
+```python
+import heapq
+from collections import Counter
+
+def reorganizeString(s):
+    n = len(s)
+    count = Counter(s)
+
+    # Pigeonhole principle: if any character appears more than (n+1)/2 times,
+    # it's impossible to separate them all
+    if max(count.values()) > (n + 1) // 2:
+        return ""
+
+    # Max-heap of (-frequency, character)
+    heap = [(-freq, ch) for ch, freq in count.items()]
+    heapq.heapify(heap)
+
+    result = []
+    prev = None  # Cooldown: character used in the previous step
+
+    while heap:
+        freq, ch = heapq.heappop(heap)
+        result.append(ch)
+
+        # Push the previous character back — its cooldown is over
+        if prev:
+            heapq.heappush(heap, prev)
+            prev = None
+
+        # freq is negative; increment makes it less negative
+        # If freq+1 < 0, the character still has remaining occurrences
+        freq += 1
+        if freq < 0:
+            prev = (freq, ch)
+
+    return ''.join(result)
+
+
+# Test cases
+print(reorganizeString("aab"))         # "aba"
+print(reorganizeString("aaab"))        # "" (impossible)
+print(reorganizeString("aaabbb"))      # "ababab"
+print(reorganizeString("aaabc"))       # "abaca" or similar valid
+print(reorganizeString("vvvlo"))       # "vlvov" or similar valid
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(n log k) where k is the number of unique characters (k ≤ 26 for lowercase letters). Each heap operation is O(log k).
+- **Space Complexity:** O(n) for the result string plus O(k) for the heap.
+- **Feasibility Check:** The `(n+1)//2` check is O(1) and catches impossible cases early.
+
+### Edge Cases
+- **Impossible case:** `"aaab"` — max_freq=3, (4+1)//2=2, 3>2 → impossible.
+- **Already valid:** `"abc"` — all frequencies 1, heap returns them in any order, valid.
+- **Single character repeated:** `"aaaa"` — impossible if n>1 and max_freq > (n+1)//2.
+- **Two alternating characters:** `"ababab"` — already valid, returns any valid rearrangement.
+- **Single character:** `"a"` — trivially valid, returns "a".
+- **All same characters with one different:** `"aaab"` — impossible. `"aabc"` — possible.
+
+### Common Mistakes
+1. **Forgetting the feasibility check:** Without it, the algorithm might produce an invalid result or fail silently.
+2. **Incorrect cooldown logic:** Pushing `prev` back immediately after popping (not waiting one turn) would cause adjacent duplicates.
+3. **Using `>` instead of `> (n+1)//2`:** The correct condition is `max_freq > (n + 1) // 2`. For n=3, (n+1)//2=2. If max_freq=3 (like "aaa"), 3>2 → impossible. If max_freq=2 (like "aab"), 2>2? No → possible.
+4. **Not handling freq correctly:** Since frequencies are negated, `freq += 1` decreases the absolute count. When `freq >= 0`, all occurrences of that character are used.
+5. **Forgetting to return `""` for impossible cases:** The function should check the result length matches the original.
+
+### Pattern Recognition
+- **Max-Heap with Cooldown:** This "use then cooldown" pattern prevents adjacent identical elements.
+- **Feasibility via Pigeonhole Principle:** If one character dominates more than half the positions (rounded up), it can't be separated.
+- **Task Scheduler Comparison:** Task Scheduler uses the same idea but with a fixed cooldown n. Here, cooldown is exactly 1.
+- **Similar Problems:** Task Scheduler, Rearrange String K Distance Apart, Minimum Domino Rotations For Equal Row.
 
 ```python
 import heapq
@@ -3315,13 +3752,103 @@ print(reorganizeString("vvvlo"))       # "vlvov"
 
 ## Problem 35: Task Scheduler [MEDIUM]
 
-**Problem:** You are given a character array `tasks` representing tasks a CPU needs to do. Each task takes one unit of time. The CPU can only do one task at a time. There is a non-negative integer `n` that represents the cooldown period between two same tasks. Return the least number of intervals the CPU will take to finish all tasks.
+### Problem Explanation (Simple Words)
+CPU tasks of different types need to be scheduled. Each task takes 1 unit of time. The same task type must wait n units before it can run again. We can arrange tasks in any order and insert idle slots if needed. We want the minimum total time to finish all tasks. The key insight: the most frequent task determines the minimum time — we place it with n gaps between occurrences, then fill those gaps with other tasks.
 
-**Approach:**
-Mathematical formula approach:
-1. Find the maximum frequency task and count how many tasks share that frequency.
-2. The minimum intervals = `(max_freq - 1) * (n + 1) + count_of_max_freq`.
-3. If there are many different tasks, we can fill all idle slots, so answer = len(tasks).
+### Step-by-Step Algorithm
+1. **Count frequencies** of each task type.
+2. **Identify** `max_freq` (highest frequency) and `max_count` (how many task types share this max frequency).
+3. **Compute formula:**
+   - `part_length = n + 1` — the length of one cycle (task + cooldown).
+   - `idle_slots = (max_freq - 1) * part_length` — total slots in the frame.
+   - `total_with_idle = idle_slots + max_count` — place max-freq tasks at the end of each cycle.
+4. **Return** `max(total_with_idle, len(tasks))` — if tasks fill all slots, no idle needed.
+
+### Visual Walkthrough
+**Input:** `tasks = ["A", "A", "A", "B", "B", "B"]`, `n = 2`
+
+```
+Frequencies: A→3, B→3
+max_freq = 3, max_count = 2 (both A and B have freq=3)
+
+Visual schedule (n=2 means 2 units gap between same tasks):
+  A → _ → _ → A → _ → _ → A
+  Fill with B: A → B → _ → A → B → _ → A → B
+
+  Frame: (max_freq-1)*(n+1) + max_count = 2*3 + 2 = 8
+  len(tasks) = 6
+  Answer = max(8, 6) = 8 ✓
+```
+
+**Input:** `tasks = ["A", "A", "A", "B", "C", "D"]`, `n = 2`
+
+```
+Frequencies: A→3, B→1, C→1, D→1
+max_freq = 3, max_count = 1 (only A has freq=3)
+
+Frame: (3-1)*(2+1) + 1 = 2*3 + 1 = 7
+Schedule: A → B → C → A → D → _ → A
+idle slot at position 6 (could be filled by any other task if available)
+len(tasks) = 6
+Answer = max(7, 6) = 7
+```
+
+### Key Insight
+The most frequent task dictates the minimum schedule length. Visualize placing the most frequent task with n gaps between each occurrence. Other tasks fill the gaps. If gaps remain after filling, idle slots are needed. If tasks overflow the gaps, no idle is needed and total time = total tasks.
+
+### Well-Commented Code
+
+```python
+def leastInterval(tasks, n):
+    from collections import Counter
+
+    freq = Counter(tasks)
+    max_freq = max(freq.values())
+
+    # Count how many task types have the maximum frequency
+    # These tasks will occupy the last row in the schedule frame
+    max_count = sum(1 for v in freq.values() if v == max_freq)
+
+    # Minimum schedule length using the formula:
+    # (max_freq - 1) cycles of (n+1) slots + final row with max_count tasks
+    frame = (max_freq - 1) * (n + 1) + max_count
+
+    # If we have enough other tasks to fill all gaps, no idle needed
+    return max(len(tasks), frame)
+
+
+# Test cases
+print(leastInterval(["A", "A", "A", "B", "B", "B"], 2))  # 8
+print(leastInterval(["A", "A", "A", "B", "B", "B"], 0))  # 6 (no cooldown)
+print(leastInterval(["A", "A", "A", "A", "A", "A", "B", "C", "D", "E", "F", "G"], 2))  # 16
+print(leastInterval(["A", "B", "C", "D"], 2))  # 4 (no idle needed)
+print(leastInterval(["A", "A", "A", "B", "B", "B"], 1))  # 6
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(n) — single pass to count frequencies and find max. The `sum` over values is O(k) where k ≤ 26 (for uppercase letters).
+- **Space Complexity:** O(1) — at most 26 distinct uppercase letters (assuming standard task naming).
+- **Note:** The formula gives the optimal answer without simulation.
+
+### Edge Cases
+- **n = 0:** No cooldown needed. All tasks can run back-to-back → total time = len(tasks).
+- **All tasks distinct:** max_freq = 1. Frame = 0*(n+1) + max_count = 1. Since len(tasks) > 1, answer = len(tasks) (no idle).
+- **Single task type repeated:** `["A", "A", "A"]`, n=2. max_freq=3, max_count=1. Frame = 2*3 + 1 = 7. Schedule: A _ _ A _ _ A → 7.
+- **n larger than len(tasks):** The frame calculation still works; idle slots dominate.
+- **Multiple tasks share max frequency:** They share the final row, reducing idle slots.
+
+### Common Mistakes
+1. **Forgetting `max(len(tasks), frame)`:** Without this, you'd underestimate when tasks can fill all idle slots.
+2. **Using `(max_freq - 1) * n` instead of `(max_freq - 1) * (n + 1)`:** The cooldown n means n gaps between tasks, giving n+1 slots per cycle including the task itself.
+3. **Off-by-one in cycles:** There are `max_freq - 1` full cycles, not `max_freq` cycles, because the last occurrence has no following cooldown.
+4. **Confusing `max_count` usage:** `max_count` is the number of task types with max_freq, not the frequency itself.
+5. **Not considering that the formula assumes the most frequent task determines the frame:** If other tasks dominate differently, the formula still works because it computes the lower bound.
+
+### Pattern Recognition
+- **Greedy Scheduling with Formula:** This problem has a closed-form formula. Many scheduling problems do — look for patterns.
+- **Pigeonhole Principle Analogy:** The most frequent task creates "slots" that must be filled by other tasks or idle.
+- **Max-Heap Simulation Alternative:** A max-heap simulation (like Reorganize String) also works but is O(n log k) — the formula is O(n) and the preferred solution.
+- **Similar Problems:** Reorganize String (cooldown=1), Task Scheduler II (with actual cooldown tracking), Minimum Time to Complete All Tasks.
 
 ```python
 def leastInterval(tasks, n):
@@ -3347,14 +3874,124 @@ print(leastInterval(["A", "A", "A", "B", "B", "B"], 1))  # 6
 
 ## Problem 36: Meeting Rooms II (Heap Version) [MEDIUM]
 
-**Problem:** Given an array of meeting time intervals consisting of start and end times `[[s1, e1], [s2, e2], ...]`, find the minimum number of conference rooms required. (Duplicate of Problem 7, presented as a heap-focused solution.)
+### Problem Explanation (Simple Words)
+We have meetings with start and end times. We need the minimum number of rooms so no two meetings overlap in the same room. By sorting by start time and using a min-heap of end times, we track when rooms become free. When a new meeting starts, if a room is free (earliest ending meeting has ended), we reuse it; otherwise, we need a new room.
 
-**Approach:**
-Sort by start time, use min-heap:
-1. Sort all meetings by their start time.
-2. The heap stores end times of currently active meetings.
-3. For each meeting, if the earliest meeting has ended, reuse that room.
-4. Always add current meeting's end time.
+### Step-by-Step Algorithm
+1. **Sort intervals** by start time (earliest first).
+2. **Initialize min-heap** with the first meeting's end time.
+3. **For each remaining meeting** `(start, end)`:
+   - If the earliest ending meeting ends ≤ current start → pop it (room is free).
+   - Push the current meeting's end time (allocating a room).
+4. **Return** the size of the heap (= rooms needed simultaneously).
+
+### Visual Walkthrough
+**Input:** `intervals = [[0, 30], [5, 10], [15, 20]]`
+
+```
+Sorted by start: [[0, 30], [5, 10], [15, 20]]
+
+Step 1: Meeting [0, 30]: heap = [30], rooms = 1
+Step 2: Meeting [5, 10]: heap[0]=30 > 5 → no free room
+        Push 10 → heap = [10, 30], rooms = 2
+Step 3: Meeting [15, 20]: heap[0]=10 ≤ 15 → room free! Pop 10
+        Push 20 → heap = [20, 30], rooms = 2
+
+Result: 2 rooms ✓
+```
+
+**Alternative — Event-based approach:**
+```
+Events: (0, +1), (5, +1), (10, -1), (15, +1), (20, -1), (30, -1)
+Sorted: (0,+1), (5,+1), (10,-1), (15,+1), (20,-1), (30,-1)
+Running count: 1 → 2 → 1 → 2 → 1 → 0
+Maximum: 2
+```
+
+### Key Insight
+The heap stores the end times of all currently active meetings. The root is the earliest ending meeting. When a new meeting starts, if the earliest active meeting has already ended, we can reuse that room (pop the root). The heap size at any point equals the number of rooms needed.
+
+### Well-Commented Code
+
+```python
+import heapq
+
+def minMeetingRooms(intervals):
+    if not intervals:
+        return 0
+
+    # Sort meetings by start time
+    intervals.sort(key=lambda x: x[0])
+
+    # Min-heap to track end times of active meetings
+    heap = [intervals[0][1]]  # First meeting's end time
+
+    for i in range(1, len(intervals)):
+        start, end = intervals[i]
+
+        # If the earliest ending meeting is already over, reuse that room
+        if heap[0] <= start:
+            heapq.heappop(heap)
+
+        # Allocate a room for this meeting
+        heapq.heappush(heap, end)
+
+    # Heap size = number of concurrently active rooms
+    return len(heap)
+
+
+# Alternative: event-based approach (no heap needed)
+def minMeetingRooms_events(intervals):
+    events = []
+    for start, end in intervals:
+        events.append((start, 1))    # Meeting starts → need a room
+        events.append((end, -1))     # Meeting ends → free a room
+
+    events.sort()  # Sort by time
+    current = 0
+    max_rooms = 0
+
+    for _, delta in events:
+        current += delta
+        max_rooms = max(max_rooms, current)
+
+    return max_rooms
+
+
+# Test cases
+print(minMeetingRooms([[0, 30], [5, 10], [15, 20]]))  # 2
+print(minMeetingRooms([[7, 10], [2, 4]]))              # 1
+print(minMeetingRooms([[1, 5], [2, 3], [4, 6]]))      # 2
+print(minMeetingRooms([[1, 5], [5, 10]]))              # 1
+print(minMeetingRooms([[9, 10], [4, 5], [2, 3], [5, 6], [7, 8]]))  # 1
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(n log n) — sorting is O(n log n), each heap operation is O(log n).
+- **Space Complexity:** O(n) — the heap can hold up to n end times in worst case.
+- **Event-based Alternative:** Also O(n log n) for sorting events, but uses O(n) space for events array.
+- **Note:** The event-based approach is simpler and doesn't require a heap, but the heap approach is more commonly asked in interviews.
+
+### Edge Cases
+- **Empty input:** Returns 0 (no meetings, no rooms).
+- **Single meeting:** Returns 1 (one room needed).
+- **Back-to-back meetings:** `[1,5]` and `[5,10]` → 1 room (end=start is allowed).
+- **All meetings overlap:** Heap grows to n → returns n.
+- **No overlapping meetings:** Heap size stays at 1 → returns 1.
+- **Unsorted input:** The sort handles this.
+
+### Common Mistakes
+1. **Using `<` instead of `<=` for room reuse:** If a meeting ends at 5 and the next starts at 5, the room can be reused. `heap[0] < start` would require a new room unnecessarily.
+2. **Forgetting to sort:** Processing unsorted intervals breaks the chronological logic.
+3. **Not handling empty input:** `intervals[0]` raises IndexError on empty list.
+4. **Pushing start times instead of end times:** The heap should track when rooms become free (end times).
+5. **Tracking max separately vs final heap size:** The final heap size equals the maximum because we process chronologically and rooms are only freed when needed.
+
+### Pattern Recognition
+- **Interval Scheduling with Heap:** The standard pattern for "minimum resources needed for overlapping intervals."
+- **Event-Based Sweep Line:** An alternative approach using (+1, -1) events. Good for problems where you need to track concurrent counts.
+- **Chronological Processing:** Sort by time, then process sequentially — essential for interval problems.
+- **Similar Problems:** Minimum Number of Arrows to Burst Balloons, Maximum Population Year, Car Pooling, Minimum Platforms (railway).
 
 ```python
 import heapq
@@ -3400,14 +4037,99 @@ print(minMeetingRooms([[9, 10], [4, 5], [2, 3], [5, 6], [7, 8]]))  # 1
 
 ## Problem 37: Kth Smallest Element in a Sorted Matrix [MEDIUM]
 
-**Problem:** Given an n x n matrix where each row and column is sorted in ascending order, find the kth smallest element in the matrix. Note that it's the kth smallest element in sorted order, not the kth distinct element.
+### Problem Explanation (Simple Words)
+We have a matrix where every row and every column is sorted ascending. We need the kth smallest element without flattening and sorting everything (which would be O(n² log n)). Since each row is sorted, we can merge them like k sorted lists using a min-heap. We start with the first element of each row, repeatedly pop the smallest, and push the next element from the same row.
 
-**Approach:**
-Min-heap with merge-like approach:
-1. Initialize heap with the first element of each row: `(matrix[i][0], i, 0)`.
-2. Pop the smallest element k times.
-3. Each time you pop from row `r` at column `c`, push the next element from the same row `(matrix[r][c+1], r, c+1)`.
-4. After k pops, the last popped value is the answer.
+### Step-by-Step Algorithm
+1. **Initialize min-heap** with the first element of each row: `(value, row, col)`.
+2. **Pop k times:**
+   - Pop the smallest element from the heap.
+   - If there's a next element in the same row, push it: `(matrix[row][col+1], row, col+1)`.
+3. **After k pops**, the last popped value is the kth smallest element.
+4. **Return** that value.
+
+### Visual Walkthrough
+**Input:** `matrix = [[1, 5, 9], [10, 11, 13], [12, 13, 15]]`, `k = 8`
+
+```
+Matrix:
+  Row 0: [1,  5,  9]
+  Row 1: [10, 11, 13]
+  Row 2: [12, 13, 15]
+
+Initialize heap: [(1,0,0), (10,1,0), (12,2,0)]
+  heapify → [(1,0,0), (10,1,0), (12,2,0)]
+
+Pop 1: pop (1,0,0), push (5,0,1) → heap = [(5,0,1), (10,1,0), (12,2,0)]
+Pop 2: pop (5,0,1), push (9,0,2) → heap = [(9,0,2), (10,1,0), (12,2,0)]
+Pop 3: pop (9,0,2), push none → heap = [(10,1,0), (12,2,0)]
+Pop 4: pop (10,1,0), push (11,1,1) → heap = [(11,1,1), (12,2,0)]
+Pop 5: pop (11,1,1), push (13,1,2) → heap = [(12,2,0), (13,1,2)]
+Pop 6: pop (12,2,0), push (13,2,1) → heap = [(13,1,2), (13,2,1)]
+Pop 7: pop (13,1,2), push none → heap = [(13,2,1)]
+Pop 8: pop (13,2,1) → 8th element = 13 ✓
+```
+
+### Key Insight
+The sorted rows property lets us treat this as merging k sorted lists. We only push elements to the right (same row, next column) because pushing down would cause duplicate processing — rows are sorted, so the next element in the same row is always the smallest remaining element from that row.
+
+### Well-Commented Code
+
+```python
+import heapq
+
+def kthSmallest(matrix, k):
+    n = len(matrix)
+
+    # Initialize heap with first element of each row
+    # Only need min(k, n) rows since we'll pop k times
+    heap = [(matrix[i][0], i, 0) for i in range(min(n, k))]
+    heapq.heapify(heap)
+
+    # Pop k times to reach the kth smallest
+    for _ in range(k):
+        val, row, col = heapq.heappop(heap)
+        # If there's a next element in the same row, push it
+        if col + 1 < n:
+            heapq.heappush(heap, (matrix[row][col + 1], row, col + 1))
+
+    # The kth popped value is the answer
+    return val
+
+
+# Test cases
+print(kthSmallest([[1, 5, 9], [10, 11, 13], [12, 13, 15]], 8))  # 13
+print(kthSmallest([[-5]], 1))                                      # -5
+print(kthSmallest([[1, 2], [3, 3]], 2))                           # 2
+print(kthSmallest([[1, 3, 5], [6, 7, 8], [9, 10, 11]], 5))       # 7
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(k log n) — each heap operation is O(log n) where n is the number of rows (heap size ≤ n). We pop k times.
+- **Space Complexity:** O(n) — the heap stores at most n elements (one per row).
+- **Alternative (Binary Search):** O(n log(max-min)) using binary search on the value range (Problem 28). Better when k is large (close to n²).
+- **Trade-off:** Heap approach is better for small k; binary search is better for large k.
+
+### Edge Cases
+- **k = 1:** Pop once; the smallest element is always `matrix[0][0]`.
+- **k = n²:** The largest element is `matrix[n-1][n-1]`. Heap approach pops all n² elements — O(n² log n). Binary search is better here.
+- **Single element matrix:** n=1, the only element is the answer for k=1.
+- **Duplicates in matrix:** The algorithm handles duplicates correctly since we compare values (not distinctness).
+- **Negative numbers:** Heap comparisons work correctly with negative values.
+- **k > n²:** Problem guarantees k ≤ n², so this doesn't occur.
+
+### Common Mistakes
+1. **Pushing both right and down:** Pushing `(row+1, col)` in addition to `(row, col+1)` would create duplicate entries (the same element pushed from two different paths). Only push to the right.
+2. **Not limiting initial heap to n rows:** Pushing all n rows into the heap is correct, but for k < n, we only need k rows initially.
+3. **Confusing with Kth Largest:** This problem asks for kth smallest. Binary search approach (Problem 28) finds kth largest; adjust by looking for `(n² - k + 1)`th smallest.
+4. **Heap size exceeding n:** The heap should never exceed n elements (one per row).
+5. **Not handling rows that get exhausted:** When a row runs out of columns, we don't push anything from it.
+
+### Pattern Recognition
+- **Merge k Sorted Lists:** This is essentially the same problem as merging k sorted lists. The heap merges sorted rows into a single sorted stream.
+- **Heap + Matrix:** When a matrix has sorted rows/columns, a heap can efficiently traverse elements in sorted order.
+- **Binary Search Alternative:** When the matrix is sorted both row-wise and column-wise, binary search on the value range with a counting function is often more efficient for large k.
+- **Similar Problems:** Merge k Sorted Lists (Problem 39), Kth Smallest Element in a Sorted Matrix (binary search version), Find K Pairs with Smallest Sums (Problem 36 Batch 2).
 
 ```python
 import heapq
@@ -3436,13 +4158,110 @@ print(kthSmallest([[1, 3, 5], [6, 7, 8], [9, 10, 11]], 5))       # 7
 
 ## Problem 38: Employee Free Time [MEDIUM]
 
-**Problem:** We are given a list of `schedule` (each element is a list of non-overlapping intervals sorted by start time) representing the schedules of employees. Find all intervals of time that are free for all employees. Return the answer in sorted order.
+### Problem Explanation (Simple Words)
+Each employee has a schedule of busy intervals. We want to find time slots that are free for ALL employees (no one is busy). By flattening all schedules, merging overlapping intervals, and finding the gaps between them, we get the common free time. If employee 1 is busy [1,3] and employee 2 is busy [2,4], the merged busy time is [1,4] — the gap before or after is free time.
 
-**Approach:**
-1. Flatten all employee schedules into one list of intervals.
-2. Sort by start time.
-3. Merge overlapping intervals (standard merge intervals).
-4. Gaps between merged intervals are free times for all employees.
+### Step-by-Step Algorithm
+1. **Flatten** all employee schedules into a single list of intervals.
+2. **Sort intervals** by start time.
+3. **Merge overlapping intervals** to find the union of all busy times:
+   - Track the current `end` of the merged interval.
+   - If next interval's start > current `end`, a gap (free time) exists between them.
+   - Update `end = max(end, next_end)`.
+4. **Return** all gaps found.
+
+### Visual Walkthrough
+**Input:** `schedule = [[[1, 2], [5, 6]], [[1, 3]], [[4, 10]]]`
+
+```
+Employee 1: busy [1,2], [5,6]
+Employee 2: busy [1,3]
+Employee 3: busy [4,10]
+
+Step 1: Flatten → [[1,2], [5,6], [1,3], [4,10]]
+Step 2: Sort by start → [[1,2], [1,3], [4,10], [5,6]]
+
+Step 3: Merge:
+  interval [1,2]: end = 2
+  interval [1,3]: start=1 ≤ end=2 → overlap, end = max(2,3) = 3
+  interval [4,10]: start=4 > end=3 → GAP [3,4] found! end = 10
+  interval [5,6]: start=5 ≤ end=10 → overlap, end = max(10,6) = 10
+
+Result: [[3, 4]] ✓
+```
+
+### Key Insight
+The union of all busy intervals (merged) covers the times when at least one employee is busy. Gaps in this merged timeline are times when NO employee is busy. Flattening and merging effectively combines all employees' schedules into a single busy timeline.
+
+### Well-Commented Code
+
+```python
+def employeeFreeTime(schedule):
+    # Flatten all employee intervals into one list
+    intervals = []
+    for emp in schedule:
+        for interval in emp:
+            intervals.append(interval)
+
+    # Sort by start time
+    intervals.sort(key=lambda x: x[0])
+
+    # Merge intervals and find gaps
+    result = []
+    end = intervals[0][1]
+
+    for i in range(1, len(intervals)):
+        start, finish = intervals[i]
+
+        if start > end:
+            # No overlap → gap found! This time is free for all
+            result.append([end, start])
+
+        # Extend the current merged interval's end
+        end = max(end, finish)
+
+    return result
+
+
+# Test cases
+schedule1 = [[[1, 2], [5, 6]], [[1, 3]], [[4, 10]]]
+print(employeeFreeTime(schedule1))  # [[3, 4]]
+
+schedule2 = [[[1, 3], [6, 7]], [[2, 4]], [[2, 5], [9, 12]]]
+print(employeeFreeTime(schedule2))  # [[5, 6], [7, 9]]
+
+schedule3 = [[[1, 2], [3, 4], [5, 6]]]
+print(employeeFreeTime(schedule3))  # [[2, 3], [4, 5]]
+
+schedule4 = [[[1, 2], [5, 6]], [[1, 3]], [[4, 10]], [[0, 15]]]
+print(employeeFreeTime(schedule4))  # [] (no free time for all)
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(N log N) where N is the total number of intervals across all employees — sorting dominates.
+- **Space Complexity:** O(N) for the flattened intervals list.
+- **Note:** Each employee's own intervals are non-overlapping and sorted, but flattening from all employees may create overlaps that need merging.
+
+### Edge Cases
+- **No common free time:** One employee is busy 24/7 — merged interval covers entire range. Returns `[]`.
+- **Single employee:** Free time = gaps in that employee's schedule between their intervals.
+- **All employees have same schedule:** Merged intervals = that schedule. Free time = gaps in the schedule.
+- **Adjacent intervals (end == start of next):** By the problem's convention, [1,2] and [2,3] are adjacent but not overlapping. Gap [2,2] is zero-width and should not be included.
+- **Intervals that span the entire timeline:** No free time at all — returns `[]`.
+- **Negative times:** Not expected (time intervals are non-negative). But the algorithm handles any numeric values.
+
+### Common Mistakes
+1. **Forgetting to flatten:** Processing per-employee without combining misses the global overlap picture.
+2. **Not merging correctly:** Using `end = interval[1]` instead of `end = max(end, interval[1])` fails when a later interval starts before the current end but extends further.
+3. **Including zero-width gaps:** If `start == end` (adjacent intervals), no real free time exists. But typically `start > end` catches this.
+4. **Assuming each employee's intervals are already globally sorted:** They're sorted per-employee, but flattening mixes them. Always sort the flattened list.
+5. **Returning gaps in wrong order:** The gaps naturally appear in sorted order since we merge sorted intervals from left to right.
+
+### Pattern Recognition
+- **Merge Intervals Variant:** This is a twist on the classic "merge intervals" problem — instead of returning merged intervals, we return the gaps between them.
+- **Flatten + Process:** When data comes in groups, flattening to a single list simplifies processing.
+- **Common Free Time Problems:** Problems about finding overlapping availability, meeting times, etc. often use this merge-intervals approach.
+- **Similar Problems:** Merge Intervals, Interval List Intersections (common busy time), Check if Any Two Intervals Overlap.
 
 ```python
 def employeeFreeTime(schedule):
@@ -3484,14 +4303,140 @@ print(employeeFreeTime(schedule4))  # [] (no common free time)
 
 ## Problem 39: Merge k Sorted Lists [HARD]
 
-**Problem:** You are given an array of `k` linked-lists `lists`, each linked-list is sorted in ascending order. Merge all the linked-lists into one sorted linked-list and return it.
+### Problem Explanation (Simple Words)
+We have k linked lists, each already sorted. We need to merge them into one sorted linked list. The naive approach compares all k heads repeatedly (O(kN)). A min-heap reduces the comparison overhead: we push all k heads into a min-heap, then repeatedly pop the smallest, add it to the result, and push the next node from the same list.
 
-**Approach:**
-Min-heap approach:
-1. Push the head of each non-empty list into the heap as `(value, list_index, node)`.
-2. Pop the smallest, add it to the result.
-3. Push the next node from the same list (if exists).
-4. Use list_index to break ties when values are equal (avoids comparing node objects).
+### Step-by-Step Algorithm
+1. **Initialize min-heap** with the head of each non-empty list: `(node.val, list_index, node)`.
+2. **Create a dummy head** for the result list.
+3. **While heap is not empty:**
+   - Pop the smallest node (by value).
+   - Append it to the result list.
+   - If the popped node has a `next`, push `(next.val, unique_id, next)` onto the heap.
+4. **Return** `dummy.next` (head of the merged list).
+
+### Visual Walkthrough
+**Input:** `lists = [1→4→5, 1→3→4, 2→6]`
+
+```
+Step 0: heap = [(1,0,node0), (1,1,node3), (2,2,node6)]
+         tie-breaking uses list_index (0, 1, 2)
+
+Step 1: pop (1,0) → take node from list 0 → push (4,3,next)
+        result: 1→
+        heap = [(1,1), (2,2), (4,3)]
+
+Step 2: pop (1,1) → take node from list 1 → push (3,4,next)
+        result: 1→1→
+        heap = [(2,2), (3,4), (4,3)]
+
+Step 3: pop (2,2) → take node from list 2 → push (6,5,next)
+        result: 1→1→2→
+        heap = [(3,4), (4,3), (6,5)]
+
+Step 4: pop (3,4) → take node from list 1 → push (4,6,next)
+        result: 1→1→2→3→
+        heap = [(4,3), (4,6), (6,5)]
+
+Step 5: pop (4,3) → take node from list 0 (no next)
+        result: 1→1→2→3→4→
+        heap = [(4,6), (6,5)]
+
+Step 6: pop (4,6) → take node from list 1 (no next)
+        result: 1→1→2→3→4→4→
+        heap = [(6,5)]
+
+Step 7: pop (6,5) → take node from list 2 (no next)
+        result: 1→1→2→3→4→4→6→
+
+Final: 1→1→2→3→4→4→6
+```
+
+### Key Insight
+We use a monotonically increasing unique index (not the original list index) for tie-breaking in heap comparisons. This ensures that when two nodes have the same value, the heap can still compare them without accessing the node objects directly (which would cause TypeError for non-comparable objects).
+
+### Well-Commented Code
+
+```python
+import heapq
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def mergeKLists(lists):
+    heap = []
+
+    # Push the head of each non-empty list into the heap
+    # Use (value, unique_id, node) to avoid direct node comparison
+    for i, node in enumerate(lists):
+        if node:
+            heapq.heappush(heap, (node.val, i, node))
+
+    dummy = ListNode(0)
+    curr = dummy
+    idx = len(lists)  # Start counter beyond existing indices
+
+    while heap:
+        val, _, node = heapq.heappop(heap)
+        curr.next = node
+        curr = curr.next
+
+        # Push the next node from the same list
+        if node.next:
+            heapq.heappush(heap, (node.next.val, idx, node.next))
+            idx += 1  # Increment for unique ordering
+
+    return dummy.next
+
+
+# Helper function for testing
+def list_to_arr(head):
+    result = []
+    while head:
+        result.append(head.val)
+        head = head.next
+    return result
+
+# Test cases
+# list1: 1->4->5
+l1 = ListNode(1, ListNode(4, ListNode(5)))
+# list2: 1->3->4
+l2 = ListNode(1, ListNode(3, ListNode(4)))
+# list3: 2->6
+l3 = ListNode(2, ListNode(6))
+print(list_to_arr(mergeKLists([l1, l2, l3])))  # [1, 1, 2, 3, 4, 4, 5, 6]
+print(list_to_arr(mergeKLists([])))              # []
+print(list_to_arr(mergeKLists([ListNode(1)])))   # [1]
+```
+
+### Complexity Analysis
+- **Time Complexity:** O(N log k) — each node (total N) is pushed/popped once in O(log k) time.
+- **Space Complexity:** O(k) — the heap stores at most k elements (one per list).
+- **Alternative (Divide and Conquer):** Merge pairs of lists repeatedly (k/2 + k/4 + ... = k-1 merges). Each merge is O(N) → total O(N log k). Uses O(1) extra space.
+- **Brute Force:** Collect all values, sort, rebuild. O(N log N) time, O(N) space.
+
+### Edge Cases
+- **Empty list array:** `lists = []` → heap stays empty → returns `None` (dummy.next).
+- **Some lists empty:** Only non-empty heads are pushed to heap.
+- **Single list:** Effectively returns the list unchanged.
+- **All lists empty:** Returns `None`.
+- **Duplicate values across lists:** The unique index breaks ties, ensuring stable comparison.
+- **Very long lists:** Number of heap operations = total nodes = N, no issue.
+
+### Common Mistakes
+1. **Directly comparing node objects in heap:** Pushing `(val, node)` without a tie-breaker raises TypeError when values are equal (Python can't compare ListNode objects). Always include a unique index.
+2. **Using the same list index for all pushes from one list:** The index must be unique per heap entry. Using the original list index for all pushes from that list would cause tie-breaking issues.
+3. **Forgetting to advance the result pointer:** `curr = curr.next` after each append.
+4. **Not checking `if node:` before pushing:** An empty list has no head to push.
+5. **Memory leak in dummy node:** Create a single dummy node, not one per iteration.
+
+### Pattern Recognition
+- **Min-Heap for Merging Sorted Sequences:** This is the classic "merge k sorted" pattern. The heap always contains the smallest unprocessed element from each sequence.
+- **Divide and Conquer Alternative:** For linked lists, merging pairs sequentially has O(1) space and avoids heap overhead.
+- **Unique Index for Heap Tie-breaking:** When heap elements can have equal priorities, add a unique incrementing counter as the second tuple element.
+- **Similar Problems:** Merge Two Sorted Lists, Kth Smallest Element in a Sorted Matrix, Find K Pairs with Smallest Sums.
 
 ```python
 import heapq
@@ -3547,15 +4492,142 @@ print(list_to_arr(mergeKLists([ListNode(1)])))   # [1]
 
 ## Problem 40: Find Median from Data Stream (Heap Version) [HARD]
 
-**Problem:** The median is the middle value in an ordered integer list. Design a data structure that supports `addNum(num)` and `findMedian()`. Both operations must be efficient.
+### Problem Explanation (Simple Words)
+Numbers arrive one at a time (a stream). After each addition, we need the median (middle value). Re-sorting after every addition is O(n log n). Using two heaps — a max-heap for the lower half and a min-heap for the upper half — we maintain the median in O(log n) per addition and O(1) to retrieve. The invariant: the lower half has either the same number or one more element than the upper half.
 
-**Approach:**
-Two-heap approach (detailed version of Problem 11):
-1. `max_heap` (lower half): stores the smaller half of numbers. We negate values since Python has min-heap.
-2. `min_heap` (upper half): stores the larger half of numbers.
-3. Invariant: `len(max_heap) >= len(min_heap)` and `len(max_heap) - len(min_heap) <= 1`.
-4. When adding: push to max_heap first, then move max from max_heap to min_heap, then rebalance if needed.
-5. Median: if odd count, max_heap root. If even, average of both roots.
+### Step-by-Step Algorithm
+1. **Maintain two heaps:**
+   - `lo` (max-heap via negation): stores the smaller half of numbers.
+   - `hi` (min-heap): stores the larger half of numbers.
+2. **Adding a number:**
+   - Push into `lo` (max-heap).
+   - Move the maximum of `lo` to `hi` (ensures all elements in `lo` ≤ all in `hi`).
+   - If `hi` has more elements, move the minimum of `hi` back to `lo` (balance sizes).
+3. **Finding median:**
+   - If `lo` has more elements: return root of `lo` (the largest in the lower half).
+   - If equal: return average of both roots.
+
+### Visual Walkthrough
+**Stream:** `[1, 2, 3, 4, 5]`
+
+```
+addNum(1):
+  lo=[], hi=[]
+  → push 1 to lo: lo=[-1]
+  → move max(-1→1) to hi: lo=[], hi=[1]
+  → hi(1) > lo(0): move min(1) to lo: lo=[-1], hi=[]
+  median: lo > hi → -(-1) = 1
+
+addNum(2):
+  lo=[-1], hi=[]
+  → push 2 to lo: lo=[-2, -1]
+  → move max(-2→2) to hi: lo=[-1], hi=[2]
+  → sizes equal
+  median: lo=hi → (-(-1)+2)/2 = 1.5
+
+addNum(3):
+  lo=[-1], hi=[2]
+  → push 3 to lo: lo=[-3, -1]
+  → move max(-3→3) to hi: lo=[-1], hi=[2, 3]
+  → hi(2) > lo(1): move min(2) to lo: lo=[-2, -1], hi=[3]
+  median: lo > hi → -(-2) = 2
+
+addNum(4):
+  lo=[-2, -1], hi=[3]
+  → push 4 to lo: lo=[-4, -2, -1]
+  → move max(-4→4) to hi: lo=[-2, -1], hi=[3, 4]
+  → sizes equal
+  median: lo=hi → (-(-2)+3)/2 = 2.5
+
+addNum(5):
+  lo=[-2, -1], hi=[3, 4]
+  → push 5 to lo: lo=[-5, -2, -1]
+  → move max(-5→5) to hi: lo=[-2, -1], hi=[3, 4, 5]
+  → hi(3) > lo(2): move min(3) to lo: lo=[-3, -2, -1], hi=[4, 5]
+  median: lo > hi → -(-3) = 3
+```
+
+### Key Insight
+The two-heap approach maintains two invariants with just 3 operations per insertion: (1) all elements in the lower half ≤ all elements in the upper half, achieved by moving the max of `lo` to `hi` after each push; (2) size balance, achieved by moving one element back if `hi` is larger.
+
+### Well-Commented Code
+
+```python
+import heapq
+
+class MedianFinder:
+    def __init__(self):
+        # Max-heap for the lower half (store negated values)
+        self.lo = []   # e.g., [-3, -2, -1] → roots are 3, 2, 1
+        # Min-heap for the upper half
+        self.hi = []   # e.g., [4, 5] → roots are 4, 5
+
+    def addNum(self, num):
+        # Step 1: Add to max-heap (negated for Python)
+        heapq.heappush(self.lo, -num)
+
+        # Step 2: Move the largest of lo to hi
+        # This ensures every element in lo <= every element in hi
+        heapq.heappush(self.hi, -heapq.heappop(self.lo))
+
+        # Step 3: Rebalance — hi should never have more elements than lo
+        if len(self.hi) > len(self.lo):
+            heapq.heappush(self.lo, -heapq.heappop(self.hi))
+
+    def findMedian(self):
+        # If odd count, lo has the extra element (median)
+        if len(self.lo) > len(self.hi):
+            return -self.lo[0]
+        # If even count, median is average of both roots
+        return (-self.lo[0] + self.hi[0]) / 2.0
+
+
+# Test cases
+mf = MedianFinder()
+mf.addNum(1)
+mf.addNum(2)
+print(mf.findMedian())   # 1.5
+mf.addNum(3)
+print(mf.findMedian())   # 2
+mf.addNum(4)
+print(mf.findMedian())   # 2.5
+mf.addNum(5)
+print(mf.findMedian())   # 3
+mf.addNum(6)
+print(mf.findMedian())   # 3.5
+mf.addNum(7)
+print(mf.findMedian())   # 4
+mf.addNum(8)
+print(mf.findMedian())   # 4.5
+```
+
+### Complexity Analysis
+- **Add Time:** O(log n) — heap push and pop operations are O(log n) where n is the total number of elements.
+- **Find Median Time:** O(1) — just reading heap roots.
+- **Space Complexity:** O(n) — storing all elements across the two heaps.
+- **Note:** Without the two-heap approach, we would need O(n log n) per insertion (re-sort) or O(n) per insertion (insert into sorted array).
+
+### Edge Cases
+- **Single element:** Only `lo` has one element; median is that element.
+- **Two elements:** `lo` has the smaller, `hi` has the larger; median is their average.
+- **All elements equal:** Both halves contain equal values; median is that value.
+- **Even count:** Median is the average of the two middle elements (may be fractional).
+- **Odd count:** Median is the exact middle element (root of `lo`).
+- **Negative numbers:** Heaps handle negative values correctly since negation for max-heap still preserves ordering.
+- **Large stream:** O(log n) per insertion is efficient even for millions of elements.
+
+### Common Mistakes
+1. **Forgetting to negate when pushing to `lo`:** Without negation, `heapq` would create a min-heap for the lower half — meaning `lo[0]` would be the smallest (not largest) of the lower half.
+2. **Not negating when reading from `lo`:** `self.lo[0]` is negative (since we stored negated values). Must negate back: `-self.lo[0]`.
+3. **Incorrect balancing logic:** The standard "push to lo, move max to hi, rebalance if hi is larger" is cleaner than comparing values to decide which heap gets the new number.
+4. **Using integer division for even-case median:** `(-self.lo[0] + self.hi[0]) // 2` gives floor division. Use `/ 2.0` for proper float median.
+5. **Not handling empty stream:** If `findMedian()` is called before any `addNum()`, it would error. But the problem guarantees at least one addition before median retrieval.
+
+### Pattern Recognition
+- **Two-Heap Median:** This is the canonical solution for streaming median. One heap for each half, balanced by size.
+- **Invariant Maintenance:** The key insight is maintaining the invariant that all elements in `lo` ≤ all elements in `hi`, and size difference is at most 1.
+- **Order Statistics on a Stream:** For streaming problems requiring order statistics (percentiles, quartiles), consider extending this two-heap approach to k-heaps.
+- **Similar Problems:** Sliding Window Median (Problem 39 Batch 2), Find Median from Data Stream (repeated), Find Running Median (HackerRank).
 
 ```python
 import heapq

@@ -8,6 +8,46 @@
 
 ---
 
+**Problem Explanation:** Count the number of prime numbers less than a non-negative integer n.
+
+**Algorithm Steps:**
+1. If n <= 2, return 0.
+2. Use Sieve of Eratosthenes with a boolean array of size n.
+3. Mark 0 and 1 as not prime.
+4. For i from 2 to sqrt(n), if i is prime, mark its multiples as not prime.
+5. Count the remaining True values.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Sieve of Eratosthenes marks composite numbers, leaving primes unmarked. O(n log log n).
+
+**Well-Commented Code:**
+```python
+def countPrimes(n: int) -> int:
+    if n <= 2:
+        return 0
+    is_prime = [True] * n
+    is_prime[0] = is_prime[1] = False
+    for i in range(2, int(n**0.5) + 1):
+        if is_prime[i]:
+            for j in range(i*i, n, i):
+                is_prime[j] = False
+    return sum(is_prime)
+
+# Test
+print(countPrimes(10))  # Output: 4 (primes: 2, 3, 5, 7)
+print(countPrimes(20))  # Output: 8
+print(countPrimes(100)) # Output: 25
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- n < 2 -> 0
+- n = 2 -> 0 (primes less than 2)
+
 ## Problem 1: Count Primes
 
 **Statement:** Count the number of prime numbers less than a non-negative number `n`.
@@ -40,6 +80,47 @@ print(countPrimes(100)) # Output: 25
 **Trick/Tip:** The Sieve of Eratosthenes is the most efficient way to find all primes up to a given limit. Start marking multiples from i*i since smaller multiples would have already been marked.
 
 ---
+
+**Problem Explanation:** Determine if an integer is a power of three.
+
+**Algorithm Steps:**
+1. Check divisibility by 3 in a loop until n becomes 1.
+2. Alternative: 3^19 (max power in 32-bit) % n == 0.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** The largest power of 3 within integer range divides any smaller power of 3 evenly.
+
+**Well-Commented Code:**
+```python
+def isPowerOfThree(n: int) -> bool:
+    if n <= 0:
+        return False
+    max_power_of_3 = 3**19  # 1162261467
+    return max_power_of_3 % n == 0
+
+# Alternative iterative approach
+def isPowerOfThree_v2(n: int) -> bool:
+    if n <= 0:
+        return False
+    while n % 3 == 0:
+        n //= 3
+    return n == 1
+
+# Test
+print(isPowerOfThree(27))   # Output: True (3^3 = 27)
+print(isPowerOfThree(0))    # Output: False
+print(isPowerPowerOfThree(1))    # Output: True (3^0 = 1)
+print(isPowerOfThree(45))   # Output: False
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- n <= 0 -> False
+- n = 1 -> True (3^0 = 1)
 
 ## Problem 2: Power of Three
 
@@ -78,6 +159,48 @@ print(isPowerOfThree(45))   # Output: False
 
 ---
 
+**Problem Explanation:** Convert a Roman numeral string to an integer.
+
+**Algorithm Steps:**
+1. Map each symbol to its integer value.
+2. Iterate the string: if a smaller value precedes a larger, subtract it; otherwise add.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Subtractive notation (IV = 4) is handled by comparing adjacent symbols.
+
+**Well-Commented Code:**
+```python
+def romanToInt(s: str) -> int:
+    roman_map = {
+        'I': 1, 'V': 5, 'X': 10, 'L': 50,
+        'C': 100, 'D': 500, 'M': 1000
+    }
+    result = 0
+    for i in range(len(s)):
+        if i + 1 < len(s) and roman_map[s[i]] < roman_map[s[i+1]]:
+            result -= roman_map[s[i]]
+        else:
+            result += roman_map[s[i]]
+    return result
+
+# Test
+print(romanToInt("III"))      # Output: 3
+print(romanToInt("IV"))       # Output: 4
+print(romanToInt("IX"))       # Output: 9
+print(romanToInt("LVIII"))    # Output: 58
+print(romanToInt("MCMXCIV"))  # Output: 1994
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Single symbol
+- All additive (VI)
+- All subtractive (IV)
+
 ## Problem 3: Roman to Integer
 
 **Statement:** Convert a Roman numeral string to an integer.
@@ -115,6 +238,45 @@ print(romanToInt("MCMXCIV"))  # Output: 1994
 
 ---
 
+**Problem Explanation:** Convert an integer to a Roman numeral.
+
+**Algorithm Steps:**
+1. Use sorted value-symbol pairs from largest to smallest.
+2. Repeatedly subtract the largest possible value, appending its symbol.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Greedy subtraction with a sorted symbol table produces the standard Roman numeral.
+
+**Well-Commented Code:**
+```python
+def intToRoman(num: int) -> str:
+    values = [1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1]
+    symbols = ["M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"]
+    result = ""
+    for i in range(len(values)):
+        while num >= values[i]:
+            result += symbols[i]
+            num -= values[i]
+    return result
+
+# Test
+print(intToRoman(3))     # Output: "III"
+print(intToRoman(4))     # Output: "IV"
+print(intToRoman(9))     # Output: "IX"
+print(intToRoman(58))    # Output: "LVIII"
+print(intToRoman(1994))  # Output: "MCMXCIV"
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- 1 -> 'I'
+- 4 -> 'IV'
+- 1994 -> 'MCMXCIV'
+
 ## Problem 4: Integer to Roman
 
 **Statement:** Convert an integer to a Roman numeral.
@@ -149,6 +311,45 @@ print(intToRoman(1994))  # Output: "MCMXCIV"
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def trailingZeroes(n: int) -> int:
+    count = 0
+    while n >= 5:
+        n //= 5
+        count += n
+    return count
+
+# Alternative one-liner
+def trailingZeroes_v2(n: int) -> int:
+    return n // 5 + n // 25 + n // 125 + n // 625 + n // 3125
+
+# Test
+print(trailingZeroes(5))   # Output: 1 (5! = 120)
+print(trailingZeroes(10))  # Output: 2 (10! = 3628800)
+print(trailingZeroes(25))  # Output: 6
+print(trailingZeroes(100)) # Output: 24
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 5: Factorial Trailing Zeroes
 
 **Statement:** Given an integer `n`, return the number of trailing zeroes in `n!` (factorial of n).
@@ -182,6 +383,47 @@ print(trailingZeroes(100)) # Output: 24
 **Trick/Tip:** Remember to count multiples of 25, 125, etc. as they contribute multiple factors of 5.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def missingNumber(nums: list[int]) -> int:
+    n = len(nums)
+    expected_sum = n * (n + 1) // 2
+    actual_sum = sum(nums)
+    return expected_sum - actual_sum
+
+# Alternative XOR approach
+def missingNumber_v2(nums: list[int]) -> int:
+    result = len(nums)
+    for i, num in enumerate(nums):
+        result ^= i ^ num
+    return result
+
+# Test
+print(missingNumber([3, 0, 1]))        # Output: 2
+print(missingNumber([0, 1]))           # Output: 2
+print(missingNumber([9, 6, 4, 2, 3, 5, 7, 0, 1]))  # Output: 8
+print(missingNumber([0]))              # Output: 1
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 6: Missing Number
 
@@ -219,6 +461,48 @@ print(missingNumber([0]))              # Output: 1
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def maximumProduct(nums: list[int]) -> int:
+    nums.sort()
+    # Either last three or first two (negatives) times last
+    return max(nums[-1] * nums[-2] * nums[-3],
+               nums[0] * nums[1] * nums[-1])
+
+# Alternative without full sort (O(n) using min/max tracking)
+def maximumProduct_v2(nums: list[int]) -> int:
+    import heapq
+    largest = heapq.nlargest(3, nums)
+    smallest = heapq.nsmallest(2, nums)
+    return max(largest[0] * largest[1] * largest[2],
+               smallest[0] * smallest[1] * largest[0])
+
+# Test
+print(maximumProduct([1, 2, 3]))           # Output: 6
+print(maximumProduct([1, 2, 3, 4]))        # Output: 24
+print(maximumProduct([-1, -2, -3]))        # Output: -6
+print(maximumProduct([-10, -10, 1, 3, 2])) # Output: 300
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 7: Maximum Product of Three Numbers
 
 **Statement:** Given an integer array `nums`, find three numbers whose product is maximum and return the maximum product.
@@ -255,6 +539,67 @@ print(maximumProduct([-10, -10, 1, 3, 2])) # Output: 300
 **Trick/Tip:** Don't forget about negative numbers! Two negatives multiplied give a positive, which could give a larger product.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def isHappy(n: int) -> bool:
+    seen = set()
+    while n != 1 and n not in seen:
+        seen.add(n)
+        n = sum(int(digit)**2 for digit in str(n))
+    return n == 1
+
+# Alternative without string conversion
+def isHappy_v2(n: int) -> bool:
+    seen = set()
+    while n != 1 and n not in seen:
+        seen.add(n)
+        total = 0
+        while n > 0:
+            total += (n % 10) ** 2
+            n //= 10
+        n = total
+    return n == 1
+
+# Fast/slow pointer approach (Floyd's cycle detection)
+def isHappy_v3(n: int) -> bool:
+    def get_next(num):
+        total = 0
+        while num > 0:
+            total += (num % 10) ** 2
+            num //= 10
+        return total
+    slow = n
+    fast = get_next(n)
+    while fast != 1 and slow != fast:
+        slow = get_next(slow)
+        fast = get_next(get_next(fast))
+    return fast == 1
+
+# Test
+print(isHappy(19))  # Output: True
+print(isHappy(2))   # Output: False
+print(isHappy(1))   # Output: True
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 8: Happy Number
 
@@ -312,6 +657,44 @@ print(isHappy(1))   # Output: True
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def isPalindrome(x: int) -> bool:
+    if x < 0 or (x % 10 == 0 and x != 0):
+        return False
+    reversed_half = 0
+    while x > reversed_half:
+        reversed_half = reversed_half * 10 + x % 10
+        x //= 10
+    return x == reversed_half or x == reversed_half // 10
+
+# Test
+print(isPalindrome(121))     # Output: True
+print(isPalindrome(-121))    # Output: False
+print(isPalindrome(10))      # Output: False
+print(isPalindrome(12321))   # Output: True
+print(isPalindrome(123321))  # Output: True
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 9: Palindrome Number
 
 **Statement:** Determine whether an integer is a palindrome without converting to string.
@@ -344,6 +727,42 @@ print(isPalindrome(123321))  # Output: True
 **Trick/Tip:** Only reverse half the number to avoid overflow issues and improve efficiency.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def isUgly(n: int) -> bool:
+    if n <= 0:
+        return False
+    for factor in [2, 3, 5]:
+        while n % factor == 0:
+            n //= factor
+    return n == 1
+
+# Test
+print(isUgly(6))   # Output: True (6 = 2 × 3)
+print(isUgly(1))   # Output: True (1 is ugly by convention)
+print(isUgly(14))  # Output: False (14 = 2 × 7)
+print(isUgly(0))   # Output: False
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 10: Ugly Number
 
@@ -380,6 +799,42 @@ print(isUgly(0))   # Output: False
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def combinationSum4(nums: list[int], target: int) -> int:
+    dp = [0] * (target + 1)
+    dp[0] = 1  # Base case: one way to make sum 0 (use no numbers)
+    for i in range(1, target + 1):
+        for num in nums:
+            if i >= num:
+                dp[i] += dp[i - num]
+    return dp[target]
+
+# Test
+print(combinationSum4([1, 2, 3], 4))   # Output: 7
+print(combinationSum4([9], 3))          # Output: 0
+print(combinationSum4([1, 2, 3], 32))  # Output: 181997601
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 11: Combination Sum IV
 
 **Statement:** Given an array of distinct positive integers `nums` and an integer `target`, return the number of combinations that add up to `target`.
@@ -410,6 +865,47 @@ print(combinationSum4([1, 2, 3], 32))  # Output: 181997601
 **Trick/Tip:** Order matters here (permutations, not combinations), which is why we iterate target first, then nums. This is different from Combination Sum problems where order doesn't matter.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def kthGrammar(n: int, k: int) -> int:
+    if n == 1:
+        return 0
+    parent = kthGrammar(n - 1, (k + 1) // 2)
+    if k % 2 == 0:
+        return 1 - parent
+    return parent
+
+# Iterative approach using bit counting
+def kthGrammar_v2(n: int, k: int) -> int:
+    return bin(k - 1).count('1') % 2
+
+# Test
+print(kthGrammar(1, 1))  # Output: 0
+print(kthGrammar(2, 1))  # Output: 0
+print(kthGrammar(2, 2))  # Output: 1
+print(kthGrammar(3, 1))  # Output: 0
+print(kthGrammar(3, 3))  # Output: 1
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 12: Kth Symbol in Grammar
 
@@ -446,6 +942,61 @@ print(kthGrammar(3, 3))  # Output: 1
 **Trick/Tip:** The bit counting approach is very elegant - count the number of 1 bits in (k-1) and return parity.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def lexicalOrder(n: int) -> list[int]:
+    result = []
+    def dfs(current):
+        if current > n:
+            return
+        result.append(current)
+        for i in range(10):
+            next_num = current * 10 + i
+            if next_num > n:
+                break
+            dfs(next_num)
+    for i in range(1, 10):
+        dfs(i)
+    return result
+
+# Iterative approach
+def lexicalOrder_v2(n: int) -> list[int]:
+    result = []
+    current = 1
+    for _ in range(n):
+        result.append(current)
+        if current * 10 <= n:
+            current *= 10
+        else:
+            while current % 10 == 9 or current >= n:
+                current //= 10
+            current += 1
+    return result
+
+# Test
+print(lexicalOrder(13))  # Output: [1,10,11,12,13,2,3,4,5,6,7,8,9]
+print(lexicalOrder(2))   # Output: [1,2]
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 13: Lexicographical Numbers
 
@@ -497,6 +1048,47 @@ print(lexicalOrder(2))   # Output: [1,2]
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def validSquare(p1: list[int], p2: list[int], p3: list[int], p4: list[int]) -> bool:
+    def dist(a, b):
+        return (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2
+    points = [p1, p2, p3, p4]
+    distances = []
+    for i in range(4):
+        for j in range(i + 1, 4):
+            distances.append(dist(points[i], points[j]))
+    distances.sort()
+    # 4 equal sides, 2 equal diagonals, no zero length
+    return (distances[0] > 0 and
+            distances[0] == distances[1] == distances[2] == distances[3] and
+            distances[4] == distances[5])
+
+# Test
+print(validSquare([0,0], [1,1], [1,0], [0,1]))  # Output: True
+print(validSquare([0,0], [1,1], [1,0], [0,12])) # Output: False
+print(validSquare([1,0], [-1,0], [0,1], [0,-1])) # Output: True
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 14: Valid Square
 
 **Statement:** Given the coordinates of four points in 2D space, return `true` if they form a square.
@@ -533,6 +1125,46 @@ print(validSquare([1,0], [-1,0], [0,1], [0,-1])) # Output: True
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def bulbSwitch(n: int) -> int:
+    import math
+    return int(math.sqrt(n))
+
+# Alternative explanation with simulation for small n
+def bulbSwitch_simulate(n: int) -> int:
+    bulbs = [False] * (n + 1)
+    for i in range(1, n + 1):
+        for j in range(i, n + 1, i):
+            bulbs[j] = not bulbs[j]
+    return sum(bulbs[1:])
+
+# Test
+print(bulbSwitch(0))  # Output: 0
+print(bulbSwitch(1))  # Output: 1
+print(bulbSwitch(3))  # Output: 1
+print(bulbSwitch(999999))  # Output: 999
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 15: Bulb Switcher
 
 **Statement:** There are `n` bulbs that are initially off. For each round `i` from 1 to n, toggle every i-th bulb. After n rounds, return how many bulbs are on.
@@ -567,6 +1199,56 @@ print(bulbSwitch(999999))  # Output: 999
 **Trick/Tip:** This is a classic math puzzle - the answer is always floor(sqrt(n)) because only perfect squares have odd number of divisors.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def integerBreak(n: int) -> int:
+    if n == 2:
+        return 1
+    if n == 3:
+        return 2
+    product = 1
+    while n > 4:
+        product *= 3
+        n -= 3
+    product *= n
+    return product
+
+# DP approach
+def integerBreak_dp(n: int) -> int:
+    dp = [0] * (n + 1)
+    dp[1] = 1
+    dp[2] = 1
+    for i in range(3, n + 1):
+        for j in range(1, i):
+            dp[i] = max(dp[i], max(j * (i - j), j * dp[i - j]))
+    return dp[n]
+
+# Test
+print(integerBreak(2))  # Output: 1 (1+1=2, 1*1=1)
+print(integerBreak(3))  # Output: 2 (1+2=3, 1*2=2)
+print(integerBreak(4))  # Output: 4 (2+2=4, 2*2=4)
+print(integerBreak(10)) # Output: 36 (3+3+4=10, 3*3*4=36)
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 16: Integer Break
 
@@ -613,6 +1295,53 @@ print(integerBreak(10)) # Output: 36 (3+3+4=10, 3*3*4=36)
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def nextGreaterElement(n: int) -> int:
+    digits = list(str(n))
+    length = len(digits)
+    i = length - 2
+    # Find first decreasing digit from right
+    while i >= 0 and digits[i] >= digits[i + 1]:
+        i -= 1
+    if i < 0:
+        return -1
+    # Find smallest digit larger than digits[i] on right
+    j = length - 1
+    while digits[j] <= digits[i]:
+        j -= 1
+    # Swap and reverse suffix
+    digits[i], digits[j] = digits[j], digits[i]
+    digits[i+1:] = reversed(digits[i+1:])
+    result = int(''.join(digits))
+    return result if result <= 2**31 - 1 else -1
+
+# Test
+print(nextGreaterElement(12))    # Output: 21
+print(nextGreaterElement(21))    # Output: -1
+print(nextGreaterElement(1234))  # Output: 1243
+print(nextGreaterElement(23041)) # Output: 23104
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 17: Next Greater Element III
 
 **Statement:** Given a positive integer `n`, find the smallest integer which has exactly the same digits and is greater than `n`. If no such integer exists, return -1 (32-bit signed integer range).
@@ -654,6 +1383,67 @@ print(nextGreaterElement(23041)) # Output: 23104
 **Trick/Tip:** This is essentially the next permutation algorithm applied to digits. Watch out for the 32-bit integer overflow check.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def canMeasureWater(jug1Capacity: int, jug2Capacity: int, targetCapacity: int) -> bool:
+    from math import gcd
+    if targetCapacity > jug1Capacity + jug2Capacity:
+        return False
+    if targetCapacity == 0:
+        return True
+    return targetCapacity % gcd(jug1Capacity, jug2Capacity) == 0
+
+# BFS approach for understanding
+def canMeasureWater_bfs(jug1: int, jug2: int, target: int) -> bool:
+    from collections import deque
+    visited = set()
+    queue = deque([(0, 0)])
+    while queue:
+        j1, j2 = queue.popleft()
+        if j1 == target or j2 == target or j1 + j2 == target:
+            return True
+        if (j1, j2) in visited:
+            continue
+        visited.add((j1, j2))
+        # All possible operations
+        states = [
+            (jug1, j2),      # Fill jug1
+            (j1, jug2),      # Fill jug2
+            (0, j2),         # Empty jug1
+            (j1, 0),         # Empty jug2
+            (j1 - min(j1, jug2 - j2), j2 + min(j1, jug2 - j2)),  # Pour 1->2
+            (j1 + min(j2, jug1 - j1), j2 - min(j2, jug1 - j1)),  # Pour 2->1
+        ]
+        for state in states:
+            if state not in visited:
+                queue.append(state)
+    return False
+
+# Test
+print(canMeasureWater(3, 5, 4))  # Output: True
+print(canMeasureWater(2, 6, 5))  # Output: False
+print(canMeasureWater(1, 2, 3))  # Output: True
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 18: Water and Jug Problem
 
@@ -711,6 +1501,62 @@ print(canMeasureWater(1, 2, 3))  # Output: True
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def updateBoard(board: list[list[str]], click: list[int]) -> list[list[str]]:
+    rows, cols = len(board), len(board[0])
+    r, c = click
+    # Game over
+    if board[r][c] == 'M':
+        board[r][c] = 'X'
+        return board
+    def count_mines(x, y):
+        count = 0
+        for dx in [-1, 0, 1]:
+            for dy in [-1, 0, 1]:
+                nx, ny = x + dx, y + dy
+                if 0 <= nx < rows and 0 <= ny < cols and board[nx][ny] == 'M':
+                    count += 1
+        return count
+    def dfs(x, y):
+        if not (0 <= x < rows and 0 <= y < cols) or board[x][y] != 'E':
+            return
+        mines = count_mines(x, y)
+        if mines > 0:
+            board[x][y] = str(mines)
+        else:
+            board[x][y] = 'B'
+            for dx in [-1, 0, 1]:
+                for dy in [-1, 0, 1]:
+                    dfs(x + dx, y + dy)
+    dfs(r, c)
+    return board
+
+# Test
+board1 = [["E","E","E","E","E"],["E","E","M","E","E"],["E","E","E","E","E"],["E","E","E","E","E"]]
+click1 = [3, 0]
+print(updateBoard(board1, click1))
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 19: Minesweeper
 
 **Statement:** Given a minesweeper board (2D array) and a click position, update the board according to the click. If clicking on a mine ('M'), game over. If clicking on empty cell ('E'), reveal it and count adjacent mines.
@@ -761,6 +1607,67 @@ print(updateBoard(board1, click1))
 **Trick/Tip:** The key insight is that when a cell has 0 adjacent mines, we reveal all neighbors (like the flood fill in actual Minesweeper).
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def maxPoints(points: list[list[int]]) -> int:
+    if len(points) <= 2:
+        return len(points)
+    def get_slope(p1, p2):
+        dx = p2[0] - p1[0]
+        dy = p2[1] - p1[1]
+        if dx == 0:
+            return float('inf')
+        if dy == 0:
+            return 0
+        # Normalize to avoid floating point issues
+        from math import gcd
+        g = gcd(abs(dx), abs(dy))
+        dx //= g
+        dy //= g
+        if dx < 0:
+            dx, dy = -dx, -dy
+        return (dx, dy)
+    max_count = 0
+    for i, p1 in enumerate(points):
+        slopes = {}
+        duplicates = 1
+        for j in range(i + 1, len(points)):
+            p2 = points[j]
+            if p1 == p2:
+                duplicates += 1
+                continue
+            slope = get_slope(p1, p2)
+            slopes[slope] = slopes.get(slope, 0) + 1
+        current_max = duplicates
+        for count in slopes.values():
+            current_max = max(current_max, count + duplicates)
+        max_count = max(max_count, current_max)
+    return max_count
+
+# Test
+print(maxPoints([[1,1],[2,2],[3,3]]))           # Output: 3
+print(maxPoints([[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]))  # Output: 4
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 20: Max Points on a Line
 
@@ -822,6 +1729,54 @@ print(maxPoints([[1,1],[3,2],[5,3],[4,1],[2,3],[1,4]]))  # Output: 4
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def countDigitOne(n: int) -> int:
+    count = 0
+    factor = 1
+    while factor <= n:
+        lower = n % factor
+        current = (n // factor) % 10
+        higher = n // (factor * 10)
+        if current == 0:
+            count += higher * factor
+        elif current == 1:
+            count += higher * factor + lower + 1
+        else:
+            count += (higher + 1) * factor
+        factor *= 10
+    return count
+
+# Brute force for verification (small n only)
+def countDigitOne_brute(n: int) -> int:
+    return sum(str(i).count('1') for i in range(n + 1))
+
+# Test
+print(countDigitOne(13))   # Output: 6 (1,10,11,12,13 -> six 1s)
+print(countDigitOne(0))    # Output: 0
+print(countDigitOne(100))  # Output: 21
+print(countDigitOne(1000)) # Output: 301
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 21: Number of Digit One
 
 **Statement:** Given an integer `n`, count the total number of digit 1 appearing in all non-negative integers less than or equal to n.
@@ -864,6 +1819,66 @@ print(countDigitOne(1000)) # Output: 301
 **Trick/Tip:** Think about each digit position independently. The count depends on whether the current digit is 0, 1, or greater than 1.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def numberToWords(num: int) -> str:
+    if num == 0:
+        return "Zero"
+    ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven",
+            "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen",
+            "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"]
+    tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty",
+            "Seventy", "Eighty", "Ninety"]
+    def convert_group(n):
+        result = ""
+        if n >= 100:
+            result += ones[n // 100] + " Hundred "
+            n %= 100
+        if n >= 20:
+            result += tens[n // 10] + " "
+            n %= 10
+        if n > 0:
+            result += ones[n] + " "
+        return result.strip()
+    result = ""
+    if num >= 1000000000:
+        result += convert_group(num // 1000000000) + " Billion "
+        num %= 1000000000
+    if num >= 1000000:
+        result += convert_group(num // 1000000) + " Million "
+        num %= 1000000
+    if num >= 1000:
+        result += convert_group(num // 1000) + " Thousand "
+        num %= 1000
+    result += convert_group(num)
+    return result.strip()
+
+# Test
+print(numberToWords(123))      # Output: "One Hundred Twenty Three"
+print(numberToWords(12345))    # Output: "Twelve Thousand Three Hundred Forty Five"
+print(numberToWords(1234567))  # Output: "One Million Two Hundred Thirty Four Thousand Five Hundred Sixty Seven"
+print(numberToWords(0))        # Output: "Zero"
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 22: Integer to English Words
 
@@ -920,6 +1935,56 @@ print(numberToWords(0))        # Output: "Zero"
 
 ---
 
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def maximalRectangle(matrix: list[list[str]]) -> int:
+    if not matrix or not matrix[0]:
+        return 0
+    rows, cols = len(matrix), len(matrix[0])
+    heights = [0] * cols
+    max_area = 0
+    for i in range(rows):
+        # Update heights
+        for j in range(cols):
+            if matrix[i][j] == '1':
+                heights[j] += 1
+            else:
+                heights[j] = 0
+        # Find largest rectangle in histogram
+        stack = [-1]
+        for j in range(cols + 1):
+            current_height = heights[j] if j < cols else 0
+            while stack[-1] != -1 and current_height < heights[stack[-1]]:
+                h = heights[stack.pop()]
+                w = j - stack[-1] - 1
+                max_area = max(max_area, h * w)
+            stack.append(j)
+    return max_area
+
+# Test
+matrix1 = [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
+print(maximalRectangle(matrix1))  # Output: 6
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
+
 ## Problem 23: Maximal Rectangle
 
 **Statement:** Given a 2D binary matrix filled with 0s and 1s, find the largest rectangle containing only 1s and return its area.
@@ -964,6 +2029,85 @@ print(maximalRectangle(matrix1))  # Output: 6
 **Trick/Tip:** The key insight is converting the 2D problem into multiple 1D largest rectangle in histogram problems.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def minStickers(stickers: list[str], target: str) -> int:
+    from collections import Counter
+    sticker_counts = [Counter(s) for s in stickers]
+    memo = {}
+    def dfs(remaining):
+        if not remaining:
+            return 0
+        remaining_key = tuple(sorted(remaining.items()))
+        if remaining_key in memo:
+            return memo[remaining_key]
+        result = float('inf')
+        for sticker in sticker_counts:
+            # Check if sticker has any character we need
+            if not any(remaining[ch] > 0 for ch in sticker):
+                continue
+            # Apply sticker
+            new_remaining = remaining.copy()
+            for ch, count in sticker.items():
+                new_remaining[ch] = max(0, new_remaining[ch] - count)
+            # Remove zeros
+            new_remaining = Counter({k: v for k, v in new_remaining.items() if v > 0})
+            result = min(result, 1 + dfs(new_remaining))
+        memo[remaining_key] = result
+        return result
+    target_count = Counter(target)
+    result = dfs(target_count)
+    return result if result != float('inf') else -1
+
+# Simpler BFS approach
+def minStickers_bfs(stickers: list[str], target: str) -> int:
+    from collections import deque
+    stickers = [Counter(s) for s in stickers]
+    queue = deque([(target, 0)])
+    visited = {target}
+    while queue:
+        current, steps = queue.popleft()
+        if not current:
+            return steps
+        for sticker in stickers:
+            if not any(current[ch] > 0 for ch in sticker):
+                continue
+            next_word = list(current)
+            for ch, count in sticker.items():
+                idx = next_word.find(ch) if isinstance(next_word, str) else -1
+                # Simplified: just remove matching characters
+            new_remaining = current
+            for ch, count in sticker.items():
+                new_remaining = new_remaining.replace(ch, '', count)
+            if new_remaining not in visited:
+                visited.add(new_remaining)
+                queue.append((new_remaining, steps + 1))
+    return -1
+
+# Test
+print(minStickers(["with","example","science"], "thehat"))  # Output: 3
+print(minStickers(["notice","possible"], "basicbasic"))     # Output: -1
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 24: Stickers to Spell Word
 
@@ -1038,6 +2182,70 @@ print(minStickers(["notice","possible"], "basicbasic"))     # Output: -1
 **Trick/Tip:** Use character frequency counts instead of strings for efficiency. The memoization key should be the sorted remaining characters.
 
 ---
+
+**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+
+**Algorithm Steps:**
+1. Compute expected sum = n*(n+1)/2.
+2. Subtract actual sum to find the missing number.
+
+**Visual Walkthrough:**
+```
+Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+```
+
+**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+
+**Well-Commented Code:**
+```python
+def smallestGoodBase(n: str) -> str:
+    n = int(n)
+    # Maximum possible length (2^60 > 10^18)
+    for m in range(60, 1, -1):
+        # Binary search for base k
+        lo, hi = 2, int(n ** (1.0 / m)) + 1
+        while lo <= hi:
+            mid = (lo + hi) // 2
+            # Calculate 1 + mid + mid^2 + ... + mid^m
+            total = 0
+            power = 1
+            for _ in range(m + 1):
+                total += power
+                if total > n:
+                    break
+                power *= mid
+            if total == n:
+                return str(mid)
+            elif total < n:
+                lo = mid + 1
+            else:
+                hi = mid - 1
+    return str(n - 1)
+
+# Alternative mathematical approach
+def smallestGoodBase_math(n: str) -> str:
+    n = int(n)
+    for m in range(60, 1, -1):
+        k = int(round(n ** (1.0 / m)))
+        if k < 2:
+            continue
+        # Verify: sum = (k^(m+1) - 1) / (k - 1)
+        power = k ** (m + 1) - 1
+        if power == n * (k - 1):
+            return str(k)
+    return str(n - 1)
+
+# Test
+print(smallestGoodBase("13"))    # Output: "3" (13 = 111 in base 3)
+print(smallestGoodBase("4681"))  # Output: "8" (4681 = 11111 in base 8)
+print(smallestGoodBase("1000000000000000000"))  # Output: "999999999999999999"
+
+```
+
+**Edge Cases / Common Mistakes / Pattern Recognition:**
+- Missing 0
+- Missing n
+- n = 1
 
 ## Problem 25: Smallest Good Base
 
