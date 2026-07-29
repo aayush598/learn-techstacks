@@ -9,6 +9,10 @@
 
 ---
 
+
+
+
+
 ### 1. Number of Islands
 
 **Problem:** Given an `m x n` grid of `'1'`s (land) and `'0'`s (water), count the number of islands. An island is formed by connecting adjacent lands horizontally or vertically.
@@ -17,6 +21,7 @@
 
 **Code:**
 ```python
+# numIslands: implement solution
 def numIslands(grid):
     if not grid:
         return 0
@@ -83,6 +88,10 @@ Total: 4 islands
 
 ---
 
+
+
+
+
 ### 2. Flood Fill
 
 **Problem:** Given an image (2D array), a starting pixel `(sr, sc)`, and a new color, replace the color of the starting pixel and all adjacent pixels of the same original color with the new color.
@@ -91,6 +100,7 @@ Total: 4 islands
 
 **Code:**
 ```python
+# floodFill: implement solution
 def floodFill(image, sr, sc, newColor):
     rows, cols = len(image), len(image[0])
     orig = image[sr][sc]
@@ -114,7 +124,53 @@ def floodFill(image, sr, sc, newColor):
 
 **Tip:** Early return if `orig == newColor` to avoid infinite recursion.
 
+**Visual Walkthrough:**
+```
+image = [[1,1,1],[1,1,0],[1,0,1]], sr=1, sc=1, newColor=2
+
+Before (orig=1):        After:
+1 1 1                   2 2 2
+1 1 0                   2 2 0
+1 0 1                   2 0 1
+
+DFS from (1,1):
+(1,1): orig=1 → change to 2
+  (0,1): orig=1 → change to 2
+    (0,0): orig=1 → change to 2
+      (-1,0): out of bounds ←
+    (1,0): orig=1 → change to 2
+      ...
+  (2,1): orig=0 ≠ 1 ← stop
+  (1,0): already visited
+  (1,2): orig=0 ≠ 1 ← stop
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| DFS (recursive) | O(m×n) | O(m×n) | Simple recursion, may overflow |
+| **BFS (iterative)** | **O(m×n)** | **O(m×n)** | **Queue-based, safe for large** |
+| Stack (iterative) | O(m×n) | O(m×n) | Manual stack, avoids recursion limit |
+
+**Common Mistakes:**
+- Not handling `orig == newColor` → infinite recursion
+- Forgetting to check bounds before accessing array
+- Not marking visited (or changing color) before recursing → potential stack overflow
+
+**Edge Cases:**
+- Single pixel → return image as-is
+- `orig == newColor` → return image immediately (no change needed)
+- Starting pixel at corner → only 2 directions to check
+
+**Pattern Recognition:**
+**Grid DFS/BFS Flood Fill**: Standard flood fill from seed point. Used in: Number of Islands, Paint Bucket Tool.
+
+
 ---
+
+
+
+
 
 ### 3. Find if Path Exists in Graph
 
@@ -124,6 +180,7 @@ def floodFill(image, sr, sc, newColor):
 
 **Code:**
 ```python
+# validPath: implement solution
 def validPath(n, edges, source, destination):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -148,7 +205,51 @@ def validPath(n, edges, source, destination):
 
 **Tip:** Union-Find is also valid here — unite all edges, then check `find(source) == find(destination)`.
 
+**Visual Walkthrough:**
+```
+n=6, edges=[[0,1],[0,2],[3,5],[5,4],[4,3]], source=0, destination=5
+
+Graph:
+0 ─ 1    3 ─ 5
+│        │
+2        4
+
+BFS from 0:
+Queue=[0], visited={0}
+Visit 0 → neighbors={1,2} → queue=[1,2]
+Visit 1 → neighbors={0} → all visited
+Visit 2 → neighbors={0} → all visited
+Queue empty, 5 never reached
+
+Answer: False (disconnected graph)
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| BFS | O(V+E) | O(V) | Queue-based, shortest path in unweighted |
+| DFS (recursive) | O(V+E) | O(V) | May overflow stack |
+| **Union-Find** | **O(V+E·α(V))** | **O(V)** | **Best for static connectivity queries** |
+
+**Common Mistakes:**
+- Forgetting to add reverse edges (graph is undirected)
+- Not using visited set → infinite loop in cycles
+- Not handling source == destination case
+
+**Edge Cases:**
+- source == destination → True
+- Disconnected graph → False (if source and dest in different components)
+- Single node with no edges → True if source == dest
+
+**Pattern Recognition:**
+**Graph Traversal (Connectivity)**: BFS/DFS from source to check reachability. Used in: All Paths From Source to Target, Can Visit All Rooms.
+
+
 ---
+
+
+
+
 
 ### 4. Find Center of Star Graph
 
@@ -158,6 +259,7 @@ def validPath(n, edges, source, destination):
 
 **Code:**
 ```python
+# findCenter: implement solution
 def findCenter(edges):
     a, b = edges[0]
     c, d = edges[1]
@@ -170,7 +272,45 @@ def findCenter(edges):
 
 **Tip:** No need to build the full graph. Two edges are enough because the center is in all of them.
 
+**Visual Walkthrough:**
+```
+n=5, edges=[[1,2],[2,3],[4,2]]
+
+Star graph center is the common node in all edges.
+
+First edge: [1,2] → candidates = {1, 2}
+Second edge: [2,3] → common = {1,2} ∩ {2,3} = {2}
+Center = 2
+
+Proof: The center appears in EVERY edge of a star graph.
+Just check first 2 edges for the common node.
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Count degrees | O(V) | O(V) | Count occurrences of each node |
+| **First 2 edges** | **O(1)** | **O(1)** | **Center is common node in first 2 edges** |
+
+**Common Mistakes:**
+- Building the full graph (O(n)) when O(1) suffices
+- Forgetting that star center appears in every edge
+- Not handling n < 3 (but problem guarantees at least 3 nodes)
+
+**Edge Cases:**
+- Minimum n=3 per problem constraints
+- First edge contains the center
+- Two edges always enough to identify center
+
+**Pattern Recognition:**
+**Star Graph Property**: Center node appears in all edges. Check first two edges.
+
+
 ---
+
+
+
+
 
 ### 5. Maximum Number of Vowels in a Substring of Given Length
 
@@ -180,6 +320,7 @@ def findCenter(edges):
 
 **Code:**
 ```python
+# maxVowels: implement solution
 def maxVowels(s, k):
     vowels = set('aeiou')
     count = sum(1 for c in s[:k] if c in vowels)
@@ -195,7 +336,47 @@ def maxVowels(s, k):
 
 **Tip:** Use a set for O(1) vowel lookups.
 
+**Visual Walkthrough:**
+```
+s = "abciiidef", k = 3
+
+Sliding window:
+Window "abc": vowels=1 (a)
+Window "bci": vowels=1 (i)
+Window "cii": vowels=2 (i,i) → max
+Window "iii": vowels=3 (i,i,i) → max ✓
+Window "iid": vowels=2 (i,i)
+Window "ide": vowels=2 (i,e)
+Window "def": vowels=1 (e)
+
+Answer: 3 (window "iii")
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Brute Force | O(n×k) | O(1) | Check each window individually |
+| **Sliding Window** | **O(n)** | **O(1)** | **Slide, add right, subtract left** |
+
+**Common Mistakes:**
+- Forgetting to use a set for O(1) vowel lookup
+- Off-by-one: adding and removing at the right positions
+- Not handling k > len(s) case
+
+**Edge Cases:**
+- k > len(s) → can't form any valid window (treat as 0, though problem likely has k ≤ n)
+- All vowels → k
+- No vowels → 0
+
+**Pattern Recognition:**
+**Sliding Window (Fixed Size)**: Slide window of size k, update count incrementally. Used in: Max Consecutive Ones, Permutation in String.
+
+
 ---
+
+
+
+
 
 ### 6. Rotting Oranges
 
@@ -205,6 +386,7 @@ def maxVowels(s, k):
 
 **Code:**
 ```python
+# orangesRotting: implement solution
 from collections import deque
 
 def orangesRotting(grid):
@@ -269,6 +451,10 @@ BFS layers expand simultaneously from all rotten oranges
 
 ---
 
+
+
+
+
 ### 7. Is Graph Bipartite
 
 **Problem:** Given an adjacency matrix of an undirected graph, return `True` if the graph is bipartite (2-colorable).
@@ -277,6 +463,7 @@ BFS layers expand simultaneously from all rotten oranges
 
 **Code:**
 ```python
+# isBipartite: implement solution
 def isBipartite(graph):
     n = len(graph)
     color = [-1] * n
@@ -301,7 +488,51 @@ def isBipartite(graph):
 
 **Tip:** The graph may be disconnected — loop over all nodes to handle components.
 
+**Visual Walkthrough:**
+```
+graph = [[1,2,3],[0,2],[0,1,3],[0,2]]
+
+0 ─ 1
+│ ╱ │
+│ ╱ │
+2 ─ 3
+
+Color with BFS:
+Color 0 = RED
+  Neighbors {1,2,3} = BLUE
+    1's neighbors {0(RED),2,3} → check 2: 2 is BLUE but 1's neighbor? 
+    This graph has an odd cycle (0-1-2-0, length 3) → NOT bipartite
+
+Use BFS coloring: if neighbor has same color as current → not bipartite
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| BFS coloring | O(V+E) | O(V) | Level-by-level, alternating colors |
+| DFS coloring | O(V+E) | O(V) | Recursive, may overflow |
+| **Union-Find** | **O(V+E)** | **O(V)** | **Graph splitting approach** |
+
+**Common Mistakes:**
+- Not handling disconnected components (each component must be bipartite)
+- Checking only one component and assuming whole graph is bipartite
+- Forgetting the graph may have self-loops (always not bipartite)
+
+**Edge Cases:**
+- Single node → bipartite
+- Empty graph → bipartite
+- Odd cycle (triangle) → NOT bipartite
+- Even cycle (square) → bipartite
+
+**Pattern Recognition:**
+**Graph Bipartite Coloring**: 2-color graph with BFS/DFS, check for conflicts. Used in: Possible Bipartition, Is Graph Bipartite.
+
+
 ---
+
+
+
+
 
 ### 8. Number of Provinces
 
@@ -311,6 +542,7 @@ def isBipartite(graph):
 
 **Code:**
 ```python
+# findCircleNum: implement solution
 def findCircleNum(isConnected):
     n = len(isConnected)
     visited = set()
@@ -333,7 +565,51 @@ def findCircleNum(isConnected):
 
 **Tip:** Union-Find also works — unite connected nodes and count unique roots.
 
+**Visual Walkthrough:**
+```
+isConnected = [[1,1,0],[1,1,0],[0,0,1]]
+
+Matrix:
+  0 1 2
+0 1 1 0
+1 1 1 0
+2 0 0 1
+
+Graph: 0 ─ 1, 2 (isolated)
+
+DFS from 0: visit {0,1}
+DFS from 2: visit {2}
+Provinces = 2
+
+Key: Use adjacency matrix (isConnected[i][j] = 1 means edge i-j)
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| DFS | O(n²) | O(n) | Visit neighbors via matrix |
+| BFS | O(n²) | O(n) | Queue-based traversal |
+| **Union-Find** | **O(n²)** | **O(n)** | **Union all connected pairs, count roots** |
+
+**Common Mistakes:**
+- Confusing adjacency matrix index with node value
+- Not marking visited before recursing through neighbors
+- Forgetting the graph is undirected (matrix[i][j] = matrix[j][i])
+
+**Edge Cases:**
+- n=1 → 1 province
+- All connected → 1 province
+- All isolated → n provinces
+
+**Pattern Recognition:**
+**Component Counting (Adjacency Matrix)**: DFS/BFS from each unvisited node. Used in: Friend Circles, Number of Connected Components.
+
+
 ---
+
+
+
+
 
 ### 9. Clone Graph
 
@@ -343,6 +619,7 @@ def findCircleNum(isConnected):
 
 **Code:**
 ```python
+# cloneGraph: implement solution
 class Node:
     def __init__(self, val=0, neighbors=None):
         self.val = val
@@ -368,7 +645,55 @@ def cloneGraph(node):
 
 **Tip:** The hashmap prevents re-cloning. Always check `if nei not in clones` before creating.
 
+**Visual Walkthrough:**
+```
+Original: 1 ── 2
+          │    │
+          3 ── 4
+
+Cloning process:
+dfs(1): clone node 1 → {1'}
+  dfs(2): clone node 2 → {1'─2'}
+    dfs(1): already cloned (visited) → add 1' to 2'.neighbors
+    dfs(4): clone 4 → {1'─2'─4'}
+      dfs(2): already cloned
+      dfs(3): clone 3 → {1'─2'─4'─3'}
+        dfs(1): already cloned
+        dfs(4): already cloned
+      3'.neighbors = [1',4']
+    4'.neighbors = [2',3']
+  2'.neighbors = [1',4']
+  dfs(3): already cloned → add 3' to 1'.neighbors
+1'.neighbors = [2',3']
+
+Clone complete! Structure matches original exactly.
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| **DFS + HashMap** | **O(V+E)** | **O(V)** | **Recursive, map original→clone** |
+| BFS + HashMap | O(V+E) | O(V) | Iterative queue approach |
+
+**Common Mistakes:**
+- Shallow copy (new node but same neighbor references)
+- Not checking visited map before recursing → stack overflow from cycles
+- Forgetting to clone all neighbors (not just first)
+
+**Edge Cases:**
+- Empty graph (None) → return None
+- Single node (no neighbors) → return cloned node
+- Disconnected graph → all components cloned via hashmap
+
+**Pattern Recognition:**
+**Graph Clone with HashMap**: DFS/BFS + map<original→clone>. Used in: Copy List with Random Pointer, Clone Graph.
+
+
 ---
+
+
+
+
 
 ### 10. Find the Town Judge
 
@@ -378,6 +703,7 @@ def cloneGraph(node):
 
 **Code:**
 ```python
+# findJudge: implement solution
 def findJudge(n, trust):
     score = [0] * (n + 1)
     for a, b in trust:
@@ -393,11 +719,52 @@ def findJudge(n, trust):
 
 **Tip:** Exactly one person must have score `n - 1`. If multiple or none, return `-1`.
 
+**Visual Walkthrough:**
+```
+n=3, trust=[[1,3],[2,3]]
+
+Trust relationships:
+1 → 3 (1 trusts 3)
+2 → 3 (2 trusts 3)
+
+Indegree (trusted by): [0,0,0,2]
+Outdegree (trusts):    [0,1,1,0]
+
+Judge = person with indegree = n-1 = 2 AND outdegree = 0
+Person 3: indegree=2, outdegree=0 → Judge = 3
+
+Key: Judge trusts nobody, everyone (except judge) trusts judge
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Degree counting | O(n + trust) | O(n) | Track in/out degrees |
+| **Single array** | **O(n + trust)** | **O(n)** | **Balance array: +1 for trusted, -1 for trusts** |
+
+**Common Mistakes:**
+- People are 1-indexed (not 0-indexed) → array of size n+1
+- Forgetting judge must have outdegree 0 (trusts nobody)
+- Returning first person with indegree=n-1 without checking outdegree=0
+
+**Edge Cases:**
+- n=1, trust=[] → person 1 is judge (no one else)
+- No trust relationships → impossible if n>1 (no one has indegree=n-1)
+- Multiple candidates with indegree=n-1 → only first check? Actually only judge has indegree=n-1
+
+**Pattern Recognition:**
+**Graph Degree Pattern**: Track trust flow as indegree/outdegree. Used in: Find Celebrity, Star Graph Center.
+
+
 ---
 
 ## MEDIUM (Problems 11–25)
 
 ---
+
+
+
+
 
 ### 11. Course Schedule
 
@@ -407,6 +774,7 @@ def findJudge(n, trust):
 
 **Code:**
 ```python
+# canFinish: implement solution
 def canFinish(numCourses, prerequisites):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -431,7 +799,54 @@ def canFinish(numCourses, prerequisites):
 
 **Tip:** If `taken != numCourses`, there's a cycle. Kahn's algorithm is clean and easy to extend for Course Schedule II.
 
+**Visual Walkthrough:**
+```
+numCourses=4, prerequisites=[[1,0],[2,0],[3,1],[3,2]]
+
+Graph: 0 → 1 → 3
+       0 → 2 → 3
+
+Indegrees: [0, 1, 1, 2]
+
+Kahn's algorithm:
+Queue = [0] (indegree 0)
+Process 0: taken=1, reduce indegree of 1,2
+Queue = [1,2]
+Process 1: taken=2, reduce indegree of 3 (now indegree 1)
+Queue = [2]
+Process 2: taken=3, reduce indegree of 3 (now indegree 0)
+Queue = [3]
+Process 3: taken=4
+taken=4 == numCourses=4 → True (no cycle)
+
+If there were a cycle: taken < numCourses
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| DFS (3-color) | O(V+E) | O(V) | White/gray/black cycle detection |
+| **Kahn's (BFS)** | **O(V+E)** | **O(V+E)** | **In-degree based, returns order** |
+
+**Common Mistakes:**
+- Forgetting to decrement indegree for all neighbors
+- Not checking if taken == numCourses at end
+- Not building graph with both directions (prereq → course)
+
+**Edge Cases:**
+- No prerequisites → True
+- Cycle exists → False
+- Single course → True
+
+**Pattern Recognition:**
+**Cycle Detection (DAG)**: Kahn's algorithm or DFS 3-color. Used in: Course Schedule II, Alien Dictionary.
+
+
 ---
+
+
+
+
 
 ### 12. Course Schedule II
 
@@ -441,6 +856,7 @@ def canFinish(numCourses, prerequisites):
 
 **Code:**
 ```python
+# findOrder: implement solution
 def findOrder(numCourses, prerequisites):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -497,6 +913,10 @@ Return [0,1,2,3] or [0,2,1,3] (both valid)
 
 ---
 
+
+
+
+
 ### 13. Pacific Atlantic Water Flow
 
 **Problem:** Given an `m x n` matrix of heights, water can flow from a cell to an adjacent cell with equal or lower height. Find cells where water can reach both the Pacific and Atlantic oceans.
@@ -505,6 +925,7 @@ Return [0,1,2,3] or [0,2,1,3] (both valid)
 
 **Code:**
 ```python
+# pacificAtlantic: implement solution
 def pacificAtlantic(heights):
     rows, cols = len(heights), len(heights[0])
     pacific, atlantic = set(), set()
@@ -532,7 +953,49 @@ def pacificAtlantic(heights):
 
 **Tip:** BFS/DFS from borders is much simpler than checking from each cell individually.
 
+**Visual Walkthrough:**
+```
+heights = [[1,2,2,3,5],
+            [3,2,3,4,4],
+            [2,4,5,3,1],
+            [6,7,1,4,5],
+            [5,1,1,2,4]]
+
+Pacific (←↑) and Atlantic (→↓):
+Start from Pacific borders (top, left) → mark all reachable cells
+Start from Atlantic borders (bottom, right) → mark all reachable cells
+Intersection of both = answer
+
+Reverse thinking: instead of flowing from each cell to ocean,
+start from ocean and flow INLAND (higher or equal height allowed)
+This avoids checking each cell individually.
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| Check each cell | O(m²n²) | O(mn) | Flow from each cell to both oceans |
+| **Borders BFS/DFS** | **O(mn)** | **O(mn)** | **Reverse flow from oceans** |
+
+**Common Mistakes:**
+- Forward thinking (checking each cell instead of reverse from borders)
+- Not allowing equal height (water flows from higher to equal)
+- Off-by-one in detecting border cells (row 0, m-1; col 0, n-1)
+
+**Edge Cases:**
+- Single cell → belongs to both oceans
+- Monotonic increasing → diagonal from start to end
+- Wall border can't be crossed → no cell reaches both
+
+**Pattern Recognition:**
+**Reverse Border BFS**: Start from ocean borders, flow inland. Used in: Surrounded Regions, Number of Enclaves.
+
+
 ---
+
+
+
+
 
 ### 14. Word Ladder
 
@@ -542,6 +1005,7 @@ def pacificAtlantic(heights):
 
 **Code:**
 ```python
+# ladderLength: implement solution
 def ladderLength(beginWord, endWord, wordList):
     wordSet = set(wordList)
     if endWord not in wordSet:
@@ -566,7 +1030,51 @@ def ladderLength(beginWord, endWord, wordList):
 
 **Tip:** Bidirectional BFS can speed this up significantly for large word lists.
 
+**Visual Walkthrough:**
+```
+beginWord="hit", endWord="cog", wordList=["hot","dot","dog","lot","log","cog"]
+
+BFS shortest path:
+hit → hot → dot → dog → cog
+           → lot → log → cog
+
+Level 1: hit
+Level 2: hot
+Level 3: dot, lot
+Level 4: dog, log
+Level 5: cog
+
+Shortest path length = 5 (hit→hot→dot→dog→cog)
+
+Each transformation changes exactly 1 letter.
+Use a set for O(1) word lookups.
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| BFS (one-way) | O(M²×N) | O(M×N) | Standard BFS |
+| **Bidirectional BFS** | **O(M²×N/2)** | **O(M×N)** | **BFS from both ends, much faster** |
+
+**Common Mistakes:**
+- Not using a set for word list (O(N) lookup)
+- Forgetting to check if endWord is in wordList first
+- Generating neighbors by iterating wordList (instead of letter-by-letter)
+
+**Edge Cases:**
+- endWord not in wordList → 0
+- beginWord == endWord → 1
+- No possible transformation → 0
+
+**Pattern Recognition:**
+**Shortest Path (Unweighted Graph)**: BFS for shortest transformation sequence. Used in: Word Ladder II, Genetic Mutation.
+
+
 ---
+
+
+
+
 
 ### 15. Walls and Gates
 
@@ -576,6 +1084,7 @@ def ladderLength(beginWord, endWord, wordList):
 
 **Code:**
 ```python
+# wallsAndGates: implement solution
 from collections import deque
 
 def wallsAndGates(rooms):
@@ -600,7 +1109,56 @@ def wallsAndGates(rooms):
 
 **Tip:** Multi-source BFS guarantees shortest distance because all gates expand at the same rate.
 
+**Visual Walkthrough:**
+```
+rooms = [[INF, -1,  0, INF],
+         [INF, INF, INF, -1],
+         [INF, -1, INF, -1],
+         [0,  -1, INF, INF]]
+
+Multi-source BFS from all gates (0):
+Initialize queue with all gates at distance 0.
+
+BFS expands evenly:
+  Queue: (0,2)=0, (3,0)=0
+  Process (0,2): set (0,1)=1, (1,2)=1
+  Process (3,0): set (2,0)=1
+  Process (0,1): set (0,0)=2, (1,1)=2
+  Process (1,2): set (1,3)=2, (2,2)=2
+  ...
+
+Final distances:
+  2  -1   0   1
+  1   2   1  -1
+  1  -1   2  -1
+  0  -1   1   2
+```
+
+**Brute Force vs Optimal:**
+| Approach | Time | Space | Description |
+|----------|------|-------|-------------|
+| DFS from each gate | O(m²n²) | O(mn) | Visit each cell from each gate |
+| **Multi-source BFS** | **O(mn)** | **O(mn)** | **Start BFS from all gates simultaneously** |
+
+**Common Mistakes:**
+- Running BFS/DFS from each gate separately (O(mn) times)
+- Forgetting that INF is a specific large number (2147483647)
+- Not checking bounds before accessing array
+
+**Edge Cases:**
+- No gates → no change
+- No empty rooms → no change
+- Walls block propagation completely
+
+**Pattern Recognition:**
+**Multi-source BFS**: All sources start at distance 0, BFS expands evenly. Used in: Rotting Oranges, 01 Matrix, As Far from Land as Possible.
+
+
 ---
+
+
+
+
 
 ### 16. Redundant Connection
 
@@ -610,6 +1168,7 @@ def wallsAndGates(rooms):
 
 **Code:**
 ```python
+# findRedundantConnection: implement solution
 def findRedundantConnection(edges):
     parent = list(range(len(edges) + 1))
 
@@ -635,7 +1194,37 @@ def findRedundantConnection(edges):
 
 **Tip:** Path compression + union by rank makes Union-Find nearly O(1) per operation.
 
+**Visual Walkthrough:**
+```
+edges = [[1,2],[1,3],[2,3]] n=3
+
+Union-Find process:
+Add (1,2): 1-2 connected
+Add (1,3): 1-2-3 connected
+Add (2,3): 2 and 3 already connected → this edge is redundant!
+
+Answer: [2,3]
+```
+
+**Common Mistakes:**
+- Confusing find() and union() implementation
+- Not compressing paths (O(n) without optimization)
+- Forgetting Union-Find on undirected graphs detects the redundant edge
+
+**Edge Cases:**
+- Empty graph → []
+- Single edge → not applicable (problem says at least one extra edge)
+- Tree with n nodes (no extra) → []
+
+**Pattern Recognition:**
+**Union-Find Cycle Detection**: Add edges, if find(u)==find(v) then edge creates cycle. Used in: Redundant Connection II, Number of Connected Components.
+
+
 ---
+
+
+
+
 
 ### 17. Accounts Merge
 
@@ -645,6 +1234,7 @@ def findRedundantConnection(edges):
 
 **Code:**
 ```python
+# accountsMerge: implement solution
 def accountsMerge(accounts):
     email_to_name = {}
     email_to_id = {}
@@ -684,7 +1274,41 @@ def accountsMerge(accounts):
 
 **Tip:** The key insight is that any two accounts sharing even one email should be merged entirely.
 
+**Visual Walkthrough:**
+```
+accounts = [["John","john1@m.com","john2@m.com"],
+            ["John","john3@m.com","john1@m.com"],
+            ["Mary","mary@m.com"]]
+
+Union email addresses:
+  john1@ – john2@ (from account 0)
+  john3@ – john1@ (from account 1)
+  → All john's emails connected via union-find
+  Account 2 (Mary) is separate.
+
+Answer: [["John","john1@...","john2@...","john3@..."],
+         ["Mary","mary@..."]]
+```
+
+**Common Mistakes:**
+- People can have the same name but be different (merge by email, not name)
+- Not sorting emails in output
+- Forgetting to map emails back to owner's name
+
+**Edge Cases:**
+- Single account → return as-is
+- Two accounts with same name but no shared email → separate
+- Duplicate email across accounts → merge occurs
+
+**Pattern Recognition:**
+**Union-Find on Emails**: Union emails within each account, find connected components. Used in: Accounts Merge, Number of Connected Components in Graph.
+
+
 ---
+
+
+
+
 
 ### 18. Graph Valid Tree
 
@@ -694,6 +1318,7 @@ def accountsMerge(accounts):
 
 **Code:**
 ```python
+# validTree: implement solution
 def validTree(n, edges):
     if len(edges) != n - 1:
         return False
@@ -717,7 +1342,40 @@ def validTree(n, edges):
 
 **Tip:** `n - 1` edges + connected = valid tree. Two simple checks, no complex DFS needed.
 
+**Visual Walkthrough:**
+```
+n=5, edges=[[0,1],[0,2],[0,3],[1,4]]
+
+A valid tree must have exactly n-1 edges and be connected with no cycles.
+
+Edges=4, n=5 → edges == n-1 ✓
+Union-Find:
+(0,1): connect, (0,2): connect, (0,3): connect, (1,4): connect
+All nodes in one component, no cycle.
+
+With extra edge (1,3): find(1)==find(3) → cycle! Not a tree.
+```
+
+**Common Mistakes:**
+- Only checking edge count (n-1) without connectivity — may have multiple components
+- Not handling V=0 or V=1 edge cases
+- Forgetting graph is undirected
+
+**Edge Cases:**
+- n=1, edges=[] → True (single node is a tree)
+- n=2, edges=[[0,1]] → True
+- n=2, edges=[] → False (disconnected)
+- n=2, edges=[[0,1],[1,0]] → False (duplicate edges form cycle)
+
+**Pattern Recognition:**
+**Tree Validation**: Connected + no cycles + n-1 edges. Used in: Redundant Connection, Number of Connected Components.
+
+
 ---
+
+
+
+
 
 ### 19. Network Delay Time
 
@@ -727,6 +1385,7 @@ def validTree(n, edges):
 
 **Code:**
 ```python
+# networkDelayTime: implement solution
 import heapq
 from collections import defaultdict
 
@@ -751,7 +1410,43 @@ def networkDelayTime(times, n, k):
 
 **Tip:** Dijkstra handles positive weights. For negative weights, use Bellman-Ford instead.
 
+**Visual Walkthrough:**
+```
+times = [[2,1,1],[2,3,1],[3,4,1]], n=4, k=2
+
+Graph: 2 → 1 (1ms), 2 → 3 (1ms), 3 → 4 (1ms)
+
+Dijkstra from node 2:
+dist[2]=0
+Process 2: update dist[1]=1, dist[3]=1
+Process 1: no outgoing edges
+Process 3: update dist[4]=2
+Process 4: no outgoing edges
+
+Distances: [inf, 1, 0, 1, 2]
+Max finite distance = 2 → Answer: 2ms
+```
+
+**Common Mistakes:**
+- Forgetting to initialize all distances to infinity
+- Not checking if any node is unreachable (return -1)
+- Using BFS instead of Dijkstra (edges have weights!)
+
+**Edge Cases:**
+- k unreachable from some nodes → -1
+- n=1 → 0 (only one node)
+- No edges → -1 (unless n=1)
+- Disconnected graph → -1
+
+**Pattern Recognition:**
+**Single-Source Shortest Path (Dijkstra)**: PQ-based for non-negative weights. Used in: Cheapest Flights Within K Stops, Path with Maximum Probability.
+
+
 ---
+
+
+
+
 
 ### 20. Cheapest Flights Within K Stops
 
@@ -761,6 +1456,7 @@ def networkDelayTime(times, n, k):
 
 **Code:**
 ```python
+# findCheapestPrice: implement solution
 import heapq
 from collections import defaultdict
 
@@ -787,7 +1483,45 @@ def findCheapestPrice(n, flights, src, dst, k):
 
 **Tip:** Unlike standard Dijkstra, we may revisit a node with a different number of remaining stops. Track `visited[node] = max stops remaining`.
 
+**Visual Walkthrough:**
+```
+n=3, flights=[[0,1,100],[1,2,100],[0,2,500]], src=0, dst=2, k=1
+
+Bellman-Ford (k+1 iterations):
+Initialize dist = [0, inf, inf]
+Iteration 1 (0 stops):
+  [0,1]=100 → dist=[0,100,inf]
+  [1,2]=100 → need dist[1]={100}+100=200 → dist=[0,100,200]
+  [0,2]=500 → dist[2]=min(inf,500)=500
+  After: dist=[0,100,200]
+Iteration 2 (1 stop):
+  [0,1]=100 → min(100,0+100)=100
+  [1,2]=100 → min(200,100+100)=200
+  [0,2]=500 → min(500,0+500)=500
+  After: dist=[0,100,200]
+
+Answer: 200 (0→1→2, uses 1 stop)
+```
+
+**Common Mistakes:**
+- Confusing stops with edges: K stops = K+1 edges
+- Not using a temp array (original dist gets updated mid-iteration causing >K edges used)
+- Forgetting to check if dst is reachable within K stops
+
+**Edge Cases:**
+- src == dst → 0 (no flight needed)
+- K=0 → only direct flights
+- No flights within K stops → -1
+
+**Pattern Recognition:**
+**K-Limited Shortest Path**: Bellman-Ford with exactly K+1 iterations. Used in: Network Delay Time, Minimum Cost to Reach Destination with K Stops.
+
+
 ---
+
+
+
+
 
 ### 21. Alien Dictionary
 
@@ -797,6 +1531,7 @@ def findCheapestPrice(n, flights, src, dst, k):
 
 **Code:**
 ```python
+# alienOrder: implement solution
 from collections import defaultdict, deque
 
 def alienOrder(words):
@@ -830,7 +1565,40 @@ def alienOrder(words):
 
 **Tip:** Return `""` if there's a cycle (topological sort result length < unique characters).
 
+**Visual Walkthrough:**
+```
+words = ["wrt","wrf","er","ett","rftt"]
+
+Compare adjacent words:
+wrt vs wrf: 't' < 'f' → t→f
+wrf vs er: 'w' < 'e' → w→e  
+er vs ett: 'r' < 't' → r→t
+ett vs rftt: 'e' < 'r' → e→r
+
+Graph: w→e→r→t→f
+Topological order: "wertf"
+```
+
+**Common Mistakes:**
+- Not handling invalid order when word2 is prefix of word1 (e.g., ["abc","ab"])
+- Forgetting to include all letters, even those without edges
+- Building incorrect graph direction
+
+**Edge Cases:**
+- Empty list → ""
+- Single word → its unique letters in any order
+- Cycle in graph → "" (impossible)
+- Words with same prefix → compare next differing letter
+
+**Pattern Recognition:**
+**Topological Sort on Letters**: Compare adjacent words, build directed edges. Used in: Course Schedule, Alien Dictionary II.
+
+
 ---
+
+
+
+
 
 ### 22. Parallel Courses
 
@@ -840,6 +1608,7 @@ def alienOrder(words):
 
 **Code:**
 ```python
+# minimumSemesters: implement solution
 from collections import defaultdict, deque
 
 def minimumSemesters(n, relations):
@@ -868,7 +1637,44 @@ def minimumSemesters(n, relations):
 
 **Tip:** BFS level count = minimum semesters. Each level represents courses that can be taken simultaneously.
 
+**Visual Walkthrough:**
+```
+n=3, relations=[[1,3],[2,3]]
+
+Graph: 1→3, 2→3
+
+Kahn's algorithm with semesters:
+Indegrees: [0,0,0] (1-indexed)
+Init: 1→3: indeg[3]=1, 2→3: indeg[3]=2
+
+Semester 1: Queue=[1,2] (both indegree=0)
+  Process 1: indeg[3]-- → indeg[3]=1
+  Process 2: indeg[3]-- → indeg[3]=0
+Semester 2: Queue=[3]
+  Process 3
+
+Answer: 2 semesters
+```
+
+**Common Mistakes:**
+- Not processing all nodes in a level at once (should count levels, not steps)
+- Forgetting cycle detection (return -1 if cycle)
+- Not handling disconnected nodes (they can be taken in semester 1)
+
+**Edge Cases:**
+- No prerequisites → 1 semester (all courses taken together)
+- Cycle → -1
+- Single course → 1 semester
+
+**Pattern Recognition:**
+**Topological Sort with Levels**: Kahn's algorithm, process level by level. Used in: Course Schedule IV, Minimum Time to Complete Tasks.
+
+
 ---
+
+
+
+
 
 ### 23. Longest Path in a DAG
 
@@ -878,6 +1684,7 @@ def minimumSemesters(n, relations):
 
 **Code:**
 ```python
+# longestPath: implement solution
 from collections import defaultdict, deque
 
 def longestPath(n, edges):
@@ -903,7 +1710,44 @@ def longestPath(n, edges):
 
 **Tip:** Topological sort ensures we process each node after all its predecessors, making DP straightforward.
 
+**Visual Walkthrough:**
+```
+n=5, edges=[[0,1],[0,2],[1,3],[2,3],[3,4]]
+
+Graph: 0→1→3→4, 0→2→3→4
+
+Topological order: [0,1,2,3,4]
+DP from start:
+dist[0]=0
+dist[1]=1, dist[2]=1
+dist[3]=max(dist[1]+1, dist[2]+1)=2
+dist[4]=dist[3]+1=3
+
+Answer: 3 (path 0→1→3→4 or 0→2→3→4)
+
+For longest path: negate weights and use shortest path algorithm, OR
+use topological sort + relaxation.
+```
+
+**Common Mistakes:**
+- Not using topological order (trying BFS/DFS on graph with cycles → infinite loop)
+- Forgetting the graph must be a DAG (no cycles allowed)
+- Not handling disconnected nodes (distance = 0)
+
+**Edge Cases:**
+- Single node → 0
+- No edges → 0
+- Disconnected DAG → 0 for isolated nodes
+
+**Pattern Recognition:**
+**DP on DAG**: Process nodes in topological order, relax outgoing edges. Used in: Critical Path, PERT Chart Analysis.
+
+
 ---
+
+
+
+
 
 ### 24. Swim in Rising Water
 
@@ -913,6 +1757,7 @@ def longestPath(n, edges):
 
 **Code:**
 ```python
+# swimInWater: implement solution
 import heapq
 
 def swimInWater(grid):
@@ -935,7 +1780,49 @@ def swimInWater(grid):
 
 **Tip:** Dijkstra naturally picks the path minimizing the maximum elevation encountered.
 
+**Visual Walkthrough:**
+```
+grid = [[0,2],[1,3]]
+
+At time t, water level = t. You can swim through cells with grid[r][c] ≤ t.
+
+Mini-max path: minimize the maximum elevation along the path.
+
+Option 1: Dijkstra (priority queue): start at (0,0), pop min max-height
+  (0,0)=0 → max=0
+  (0,1)=2 → max=2
+  (1,0)=1 → max=1
+  (1,1)=3 → max=3
+  Instead of typical distance, track min(max height so far)
+
+Option 2: Binary search on answer t.
+  Can we reach (n-1,n-1) with max cell ≤ t?
+  t=0: No (need 2,1,3)
+  t=1: No (still need 2,3)
+  t=2: Yes (cells with ≤2: (0,0),(0,1),(1,0)) → but (1,1)=3 > 2... 
+  t=3: All cells reachable → Yes
+  Answer: 3
+```
+
+**Common Mistakes:**
+- Confusing with shortest path (sum) instead of min-max path
+- Not visiting cells where grid[r][c] > current max
+- Forgetting 4-directional movement
+
+**Edge Cases:**
+- n=1 → return grid[0][0]
+- All values same → return that value
+- Path always exists (can wait long enough)
+
+**Pattern Recognition:**
+**Mini-max Path (Dijkstra variant)**: PQ on max elevation so far. Used in: Path With Minimum Effort, Minimum Obstacle Removal.
+
+
 ---
+
+
+
+
 
 ### 25. Path with Maximum Probability
 
@@ -945,6 +1832,7 @@ def swimInWater(grid):
 
 **Code:**
 ```python
+# maxProbability: implement solution
 import heapq
 from collections import defaultdict
 
@@ -973,11 +1861,48 @@ def maxProbability(n, edges, succProb, start, end):
 
 **Tip:** Python's `heapq` is a min-heap, so negate probabilities to simulate a max-heap.
 
+**Visual Walkthrough:**
+```
+n=3, edges=[[0,1],[1,2],[0,2]], succProb=[0.5,0.5,0.3], start=0, end=2
+
+Graph:
+0 → 1 (prob 0.5), 0 → 2 (prob 0.3)
+1 → 2 (prob 0.5)
+
+Path 0→2: prob = 0.3
+Path 0→1→2: prob = 0.5 × 0.5 = 0.25
+
+Answer: 0.3 (direct edge is better than two hops with lower combined prob)
+
+Use Dijkstra with max-heap (negate probabilities for min-heap).
+prob[0]=1.0
+Pop 0: update prob[1]=1.0×0.5=0.5, prob[2]=1.0×0.3=0.3
+Pop 1 (0.5): update prob[2]=max(0.3, 0.5×0.5)=max(0.3,0.25)=0.3
+```
+
+**Common Mistakes:**
+- Using sum instead of product for path probability
+- Forgetting probability multiplies (not adds) along path
+- Not initializing start node with prob=1.0
+
+**Edge Cases:**
+- start == end → 1.0
+- No path → 0.0
+- Disconnected → 0.0
+
+**Pattern Recognition:**
+**Max Product Path (Dijkstra)**: Use probability product with max-heap. Used in: Network Delay Time, Minimum Cost Path.
+
+
 ---
 
 ## HARD (Problems 26–35)
 
 ---
+
+
+
+
 
 ### 26. Critical Connections (Bridges)
 
@@ -987,6 +1912,7 @@ def maxProbability(n, edges, succProb, start, end):
 
 **Code:**
 ```python
+# criticalConnections: implement solution
 def criticalConnections(n, connections):
     from collections import defaultdict
     graph = defaultdict(list)
@@ -1019,7 +1945,45 @@ def criticalConnections(n, connections):
 
 **Tip:** Use `disc[v]` (not `low[v]`) when checking back-edges. This is a common mistake.
 
+**Visual Walkthrough:**
+```
+graph with 4 edges, find all bridges:
+
+0 ─ 1
+│   │
+3 ─ 2
+
+Edges: (0,1), (0,3), (1,2), (2,3)
+
+Tarjan's algorithm:
+discovery times: [0:0, 1:1, 2:2, 3:3]
+low values:     [0:0, 1:0, 2:0, 3:0]
+
+Back edge (3,0): low[3]=min(3,0)=0
+Update low[2]=min(2,0)=0, low[1]=min(1,0)=0
+
+No edge has low[neighbor] > discovery[current] → no bridges!
+
+The edge (1,2): low[2]=0 < disc[1]=1 → not a bridge (it's in a cycle)
+```
+
+**Common Mistakes:**
+- Not updating low values after DFS returns from a neighbor
+- Confusing discovery time with low value
+- Forgetting that root node needs special handling for bridge detection
+
+**Edge Cases:**
+- Single node → no bridges
+- Tree → ALL edges are bridges
+- Fully connected cycle → no bridges
+
+**Pattern Recognition:**
+**Tarjan's Bridges**: DFS with discovery/low values. Edge (u,v) is bridge if low[v] > disc[u]. Used in: Critical Connections, Articulation Points.
 ---
+
+
+
+
 
 ### 27. Word Ladder II
 
@@ -1029,6 +1993,7 @@ def criticalConnections(n, connections):
 
 **Code:**
 ```python
+# findLadders: implement solution
 from collections import defaultdict, deque
 
 def findLadders(beginWord, endWord, wordList):
@@ -1074,7 +2039,52 @@ def findLadders(beginWord, endWord, wordList):
 
 **Tip:** Level-by-level BFS is critical. Mark words as visited only after processing an entire level to allow multiple paths through the same word.
 
+**Visual Walkthrough:**
+```
+beginWord="hit", endWord="cog", wordList=["hot","dot","dog","lot","log","cog"]
+
+BFS from beginWord to find shortest distance + all paths:
+
+Level 1: hit
+Level 2: hot
+Level 3: dot, lot
+Level 4: dog, log
+Level 5: cog
+
+Build adjacency with parent tracking:
+hit → hot
+hot → dot, lot
+dot → dog
+dog → cog
+lot → log
+log → cog
+
+Backtrack from cog:
+cog ← dog ← dot ← hot ← hit
+cog ← log ← lot ← hot ← hit
+
+All shortest paths:
+1. hit→hot→dot→dog→cog
+2. hit→hot→lot→log→cog
+```
+
+**Common Mistakes:**
+- Not removing used words from word set at the right level (not per path)
+- Generating paths by iterating wordList (letter-by-letter is faster)
+- Forgetting to track visited per level (not globally for path reconstruction)
+
+**Edge Cases:**
+- endWord not in wordList → []
+- beginWord == endWord → [[beginWord]]
+- No transformation possible → []
+
+**Pattern Recognition:**
+**BFS + Backtracking**: Find shortest paths, then reconstruct all. Used in: Word Ladder I, Minimum Height Trees (reverse).
 ---
+
+
+
+
 
 ### 28. Minimum Cost to Make at Least One Valid Path in Grid
 
@@ -1084,6 +2094,7 @@ def findLadders(beginWord, endWord, wordList):
 
 **Code:**
 ```python
+# minCost: implement solution
 from collections import deque
 
 def minCost(grid):
@@ -1110,7 +2121,40 @@ def minCost(grid):
 
 **Tip:** 0-1 BFS works when edge weights are only 0 or 1. It's faster than Dijkstra for this case.
 
+**Visual Walkthrough:**
+```
+grid = [[1,1,1,1],[2,2,2,2],[1,1,1,1],[2,2,2,2]]
+
+0-1 BFS (deque): moving with the arrow costs 0, changing costs 1.
+
+Start at (0,0) with arrow → (0,1) cost=0
+Reach (0,0) with cost 0
+  Right direction → neighbor (0,1) cost 0 (push front)
+    At (0,1) right → (0,2) cost 0
+      ... all the way to (0,3)
+    Change dir at (0,1) → push back with cost 1
+
+Min cost to make at least one valid path from (0,0) to (3,3) = 0
+(if there's already a path following arrows)
+```
+
+**Common Mistakes:**
+- Not using 0-1 BFS (deque) for O(1) insertion
+- Forgetting to check all 4 directions for modification costs
+- Not tracking visited with distances (revisit with lower cost)
+
+**Edge Cases:**
+- Starting cell already has a valid path to target → 0
+- Grid 1×1 → 0
+- No path possible without modification → worst case is min distance
+
+**Pattern Recognition:**
+**0-1 BFS (Deque)**: Cost 0 moves → push front, cost 1 → push back. Used in: Minimum Cost to Make Path Valid, Shortest Path with Obstacle Removal.
 ---
+
+
+
+
 
 ### 29. Shortest Path in a Binary Matrix
 
@@ -1120,6 +2164,7 @@ def minCost(grid):
 
 **Code:**
 ```python
+# shortestPathBinaryMatrix: implement solution
 from collections import deque
 
 def shortestPathBinaryMatrix(grid):
@@ -1147,7 +2192,44 @@ def shortestPathBinaryMatrix(grid):
 
 **Tip:** 8-directional movement means diagonals count as 1 step. BFS handles this naturally.
 
+**Visual Walkthrough:**
+```
+grid = [[0,0,0],[1,1,0],[1,1,0]]
+
+BFS from (0,0) in 8 directions.
+
+Level 0: (0,0)
+Level 1: (0,1), (1,0), (1,1) — but (1,1)=1 blocked → skip
+         (0,1)=0, (1,0)=1 blocked
+         Only (0,1) is valid
+Level 2: From (0,1): (0,2), (1,2), (2,2)
+         (0,2)=0, (1,2)=0, (2,2)=0
+         All valid
+Level 3: From (1,2): (2,1)=1 blocked, (2,2)=0 already visited
+         From (2,2): (2,1)=1 blocked
+         From (0,2): (1,2) visited, (-1,2) OOB
+
+Shortest path length = 3
+Path: (0,0)→(0,1)→(1,2)→(2,2)
+```
+
+**Common Mistakes:**
+- Using only 4 directions (problem allows 8, including diagonals)
+- Forgetting that blocked cells (1) can't be traversed
+- Not handling start or end blocked → -1
+
+**Edge Cases:**
+- Start or end cell = 1 → -1
+- n=1, grid[0][0]=0 → 1
+- n=1, grid[0][0]=1 → -1
+
+**Pattern Recognition:**
+**Grid BFS (8-directional)**: Shortest path in binary matrix. Used in: Minimum Path Sum, Shortest Path in Grid with Obstacle Elimination.
 ---
+
+
+
+
 
 ### 30. Reconstruct Itinerary
 
@@ -1157,6 +2239,7 @@ def shortestPathBinaryMatrix(grid):
 
 **Code:**
 ```python
+# findItinerary: implement solution
 from collections import defaultdict
 
 def findItinerary(tickets):
@@ -1180,7 +2263,49 @@ def findItinerary(tickets):
 
 **Tip:** Sort in reverse and use `pop()` to get lexical order efficiently. Hierholzer's algorithm naturally produces the correct path.
 
+**Visual Walkthrough:**
+```
+tickets = [["JFK","SFO"],["JFK","ATL"],["SFO","ATL"],["ATL","JFK"],["ATL","SFO"]]
+
+Graph:
+JFK → ATL, SFO (lexicographically: ATL before SFO)
+ATL → JFK, SFO
+SFO → ATL
+
+Hierholzer's algorithm (DFS post-order):
+Start at JFK.
+Visit ATL (lexicographically first):
+  Visit JFK: done → push JFK
+  Visit SFO: done → push SFO
+ATL done → push ATL
+Visit SFO:
+  Visit ATL:
+    Visit SFO: done → push SFO
+  ATL done → push ATL
+SFO done → push SFO
+
+Reverse: JFK→ATL→JFK→SFO→ATL→SFO
+
+Itinerary: ["JFK","ATL","JFK","SFO","ATL","SFO"]
+```
+
+**Common Mistakes:**
+- Using BFS instead of DFS (Hierholzer is DFS-based)
+- Not using a multiset/multimap (tickets can have duplicates)
+- Forgetting to reverse the result (post-order gives reverse itinerary)
+
+**Edge Cases:**
+- Single ticket → just that route
+- Multiple tickets from same source → take lexicographically smallest first
+- Tickets forming a cycle → Eulerian circuit, return to start
+
+**Pattern Recognition:**
+**Eulerian Path (Hierholzer)**: Find path using all edges exactly once. Used in: Reconstruct Itinerary, Eulerian Circuit in Directed Graph.
 ---
+
+
+
+
 
 ### 31. Minimum Height Trees
 
@@ -1190,6 +2315,7 @@ def findItinerary(tickets):
 
 **Code:**
 ```python
+# findMinHeightTrees: implement solution
 from collections import defaultdict, deque
 
 def findMinHeightTrees(n, edges):
@@ -1220,7 +2346,45 @@ def findMinHeightTrees(n, edges):
 
 **Tip:** There are at most 2 MHT roots. Peeling leaves is equivalent to finding the graph's "center".
 
+**Visual Walkthrough:**
+```
+n=6, edges=[[0,3],[1,3],[2,3],[4,3],[5,4]]
+
+Topological peeling (leaf removal):
+
+Step 1: Leaves = {0,1,2,5}
+Remove leaves and their edges:
+  3 loses edges to 0,1,2 → degree=1 (only 4 left)
+  4 loses edge to 5 → degree=1 (only 3 left)
+
+Step 2: Leaves = {3,4}
+Remove leaves:
+  3 removed, 4 removed
+
+Remaining nodes ≤ 2 → centroids = {3,4}
+
+MHT roots: [3, 4]
+
+Key insight: Centroids are the middle of the longest path.
+```
+
+**Common Mistakes:**
+- Trying DFS from each node (O(n²))
+- Not handling n=1 or n=2 edge cases
+- Forgetting that MHT can have 1 or 2 roots
+
+**Edge Cases:**
+- n=1 → [0]
+- n=2 → [0,1] (both are centroids)
+- Line graph (path) → 1 or 2 centroids (middle nodes)
+
+**Pattern Recognition:**
+**Topological Peeling (Leaf Removal)**: Repeatedly remove leaves until 1-2 nodes remain. Used in: Minimum Height Trees, Find Eventual Safe States.
 ---
+
+
+
+
 
 ### 32. Strongly Connected Components (Kosaraju's Algorithm)
 
@@ -1230,6 +2394,7 @@ def findMinHeightTrees(n, edges):
 
 **Code:**
 ```python
+# kosaraju: implement solution
 def kosaraju(n, graph):
     visited = [False] * n
     order = []
@@ -1273,7 +2438,46 @@ def kosaraju(n, graph):
 
 **Tip:** The first DFS determines processing order; the second DFS on the transposed graph finds SCCs.
 
+**Visual Walkthrough:**
+```
+graph:
+0 → 1 → 2
+↑   ↓   ↓
+4 ← 3 ← 5
+
+Step 1: DFS to get finishing order (post-order times):
+Start 0: visit 1, visit 2, visit 3... 
+Order (finishing): [5, 4, 3, 2, 1, 0]
+
+Step 2: Transpose graph (reverse all edges):
+0 ← 1 ← 2
+↓   ↑   ↑
+4 → 3 → 5
+
+Step 3: DFS on transposed graph in reverse finishing order:
+DFS from 0: visit 0 → no more → SCC = {0}
+DFS from 1: visit 1, visit 5, visit 4, visit 3, visit 2 → SCC = {1,2,3,4,5}
+
+SCCs: {0}, {1,2,3,4,5}
+```
+
+**Common Mistakes:**
+- Not reversing graph for second pass
+- Getting the DFS post-order wrong
+- Forgetting to process ALL nodes (disconnected components may exist)
+
+**Edge Cases:**
+- Single node → one SCC
+- DAG → each node is its own SCC
+- Fully connected graph → one SCC
+
+**Pattern Recognition:**
+**Kosaraju's SCC**: 2-pass DFS (order + transpose). Used in: Strongly Connected Components, Tarjan's SCC.
 ---
+
+
+
+
 
 ### 33. Number of Islands II
 
@@ -1283,6 +2487,7 @@ def kosaraju(n, graph):
 
 **Code:**
 ```python
+# numIslands2: implement solution
 def numIslands2(m, n, positions):
     parent = {}
     rank = {}
@@ -1326,7 +2531,42 @@ def numIslands2(m, n, positions):
 
 **Tip:** Union-Find with path compression and union by rank is perfect for dynamic connectivity.
 
+**Visual Walkthrough:**
+```
+m=3, n=3, positions=[[0,0],[0,1],[1,2],[2,1]]
+
+Union-Find with virtual island count:
+
+init: grid=all water, islandCount=0
+
+Add (0,0): new island → count=1 → [1]
+Add (0,1): adjacent to (0,0) → union → count=1 → [1,1]
+  Actually: count=2 (new island), then union with (0,0) reduces to 1
+Add (1,2): isolated → count=2 → [1,1,2]
+Add (2,1): adjacent to none → count=3 → [1,1,2,3]
+
+Answer: [1, 1, 2, 3]
+
+Key: Each new island starts count+1, but unions with adjacent islands reduce count.
+```
+
+**Common Mistakes:**
+- Not checking 4-directional adjacency for unions
+- Double-counting islands (new island + union multiple neighbors)
+- Not handling duplicate positions (problem may add same position multiple times)
+
+**Edge Cases:**
+- Empty positions → []
+- All positions same cell → [1]
+- Positions that connect multiple islands → count drops by number of merged islands - 1
+
+**Pattern Recognition:**
+**Dynamic Union-Find**: Union adjacent land cells as they're added. Used in: Number of Islands II, Number of Connected Components (dynamic).
 ---
+
+
+
+
 
 ### 34. Shortest Path Visiting All Nodes
 
@@ -1336,6 +2576,7 @@ def numIslands2(m, n, positions):
 
 **Code:**
 ```python
+# shortestPathLength: implement solution
 from collections import deque
 
 def shortestPathLength(graph):
@@ -1364,7 +2605,47 @@ def shortestPathLength(graph):
 
 **Tip:** Bitmask DP/BFS is key for "visit all nodes" problems. `1 << i` sets the i-th bit.
 
+**Visual Walkthrough:**
+```
+n=4, graph=[[1,2,3],[0],[0],[0]]
+
+We need shortest path visiting ALL nodes.
+
+DP + BFS: dp[mask][node] = visited nodes (mask) ending at node
+
+Start: dp[1][0]=0 (visited node 0 only)
+        dp[2][1]=0 (visited node 1 only)
+        dp[4][2]=0
+        dp[8][3]=0
+
+BFS expand:
+mask=1 (0): visit neighbors 1,2,3
+  mask=3=011 (0,1): dp[3][1]=1
+  mask=5=101 (0,2): dp[5][2]=1
+  mask=9=1001 (0,3): dp[9][3]=1
+...
+mask=15=1111 (all nodes): when first reached, return distance
+
+Answer: shortest path covering all nodes
+```
+
+**Common Mistakes:**
+- Trying pure BFS/DFS without bitmask (state explosion)
+- Not using DP + BFS (Dijkstra on state: (mask, node))
+- Forgetting the graph is unweighted (BFS works, not Dijkstra)
+
+**Edge Cases:**
+- n=1 → 0 (already visited all)
+- n=2, one edge → 1
+- Complete graph → n-1
+
+**Pattern Recognition:**
+**Bitmask DP + BFS**: State = (visited_mask, current_node). Used in: Traveling Salesman Problem, Shortest Path Visiting All Nodes.
 ---
+
+
+
+
 
 ### 35. Parallel Courses III
 
@@ -1374,6 +2655,7 @@ def shortestPathLength(graph):
 
 **Code:**
 ```python
+# minimumTime: implement solution
 from collections import defaultdict, deque
 
 def minimumTime(n, relations, time):
@@ -1405,6 +2687,45 @@ def minimumTime(n, relations, time):
 
 **Tip:** This is topological sort + DP. The answer is the max value in `dp[]` because all courses must finish.
 
+**Visual Walkthrough:**
+```
+n=3, relations=[[1,3],[2,3]], time=[3,2,5]
+
+Graph: 1→3, 2→3
+Course 1 takes 3 months, course 2 takes 2, course 3 takes 5.
+
+Topological order + DP for earliest finish:
+
+Indegrees: [0,0,0] (1-indexed)
+1→3: indeg[3]++, 2→3: indeg[3]++
+
+Queue: [1,2] (indeg=0)
+dist[1]=3, dist[2]=2
+
+Process 1: indeg[3]-- → indeg[3]=1
+  dist[3]=max(dist[3], dist[1]+time[3]) = max(0, 3+5) = 8
+Process 2: indeg[3]-- → indeg[3]=0
+  Queue push 3
+
+Process 3: no dependents
+
+Max dist = max(3, 2, 8) = 8
+
+Answer: 8 months (take courses 1+3 or 2+3)
+```
+
+**Common Mistakes:**
+- Not adding the course's own time to the DP (dp[node] = time[node] + max(dp[prereqs]))
+- Forgetting that courses can be taken in parallel (no limit on concurrent courses)
+- Wrong initialization for incoming degree
+
+**Edge Cases:**
+- No prerequisites → max(time) (all courses in parallel)
+- Single course → its time
+- Chain dependency → sum of all times
+
+**Pattern Recognition:**
+**DP on DAG (Parallel/Distributed Processing)**: Topological sort + DP for earliest completion. Used in: Parallel Courses I/II, Schedule Tasks with Dependencies.
 ---
 
 ## Quick Reference — Algorithm Selection
@@ -1478,11 +2799,13 @@ else:
 
 ## Detailed Approach Notes for Every Problem
 
+
 ### Problem 1 — Number of Islands
 - **Why DFS over BFS?** DFS is simpler to write recursively and the grid size (typically ≤ 300×300) won't hit stack limits in Python.
 - **Key insight:** Every time you find a `'1'`, you've discovered a new island. Flood-fill to mark the entire island as visited by changing `'1'` to `'0'`.
 - **Edge cases:** Empty grid (`[]`), grid with no land, grid entirely land.
 - **Interview follow-up:** "What if diagonals also count?" → Add 4 more directions: `[(1,1),(1,-1),(-1,1),(-1,-1)]`.
+
 
 ### Problem 2 — Flood Fill
 - **Why check `orig == newColor`?** Without this check, if the original color equals the new color, DFS would recurse infinitely.
@@ -1490,11 +2813,13 @@ else:
 - **Edge cases:** Single pixel image, all pixels already the new color.
 - **Interview follow-up:** "Can you do it iteratively?" → Use a stack or queue for BFS/DFS.
 
+
 ### Problem 3 — Find if Path Exists in Graph
 - **BFS vs DFS:** Both work. BFS is slightly better for very deep graphs (avoids stack overflow).
 - **Union-Find alternative:** `O(α(n))` per operation. Build by iterating edges, then `find(source) == find(destination)`.
 - **Edge cases:** Single node (`n=1`), no edges, source == destination.
 - **Interview follow-up:** "What if edges are directed?" → Same approach, just don't add reverse edges.
+
 
 ### Problem 4 — Find Center of Star Graph
 - **Why it works:** The center connects to ALL other nodes, so it must appear in every edge. The intersection of the first two edges gives the center.
@@ -1502,11 +2827,13 @@ else:
 - **Edge cases:** `n=2` (only one edge).
 - **Interview follow-up:** "What if it's not a star graph?" → You'd need DFS/BFS to find the node with max degree.
 
+
 ### Problem 5 — Maximum Number of Vowels in Substring
 - **Sliding window:** Remove one element, add one element — O(1) update per step.
 - **Why a set?** O(1) membership test for vowel checking.
 - **Edge cases:** `k == len(s)` (whole string), `k == 1`, no vowels.
 - **Interview follow-up:** "What about uppercase vowels?" → Add `.lower()` or extend the set to `'AEIOUaeiou'`.
+
 
 ### Problem 6 — Rotting Oranges
 - **Multi-source BFS:** All rotten oranges start at minute 0. This naturally computes the minimum time because BFS explores layer by layer.
@@ -1514,11 +2841,13 @@ else:
 - **Edge cases:** No fresh oranges (return 0), unreachable fresh oranges (return -1).
 - **Interview follow-up:** "What if rotten oranges have different ages?" → Use a priority queue (Dijkstra-like approach).
 
+
 ### Problem 7 — Is Graph Bipartite
 - **2-coloring:** If you can color every node with 2 colors such that no adjacent nodes share a color, the graph is bipartite.
 - **Disconnected components:** Must check all nodes — some component might not be bipartite even if the first one is.
 - **Edge cases:** Single node (bipartite), self-loop (not bipartite).
 - **Interview follow-up:** "How many colors for general graph coloring?" → NP-hard in general, but 2-color is polynomial.
+
 
 ### Problem 8 — Number of Provinces
 - **Province = connected component:** Each DFS/BFS call from an unvisited node discovers one province.
@@ -1526,11 +2855,13 @@ else:
 - **Edge cases:** All isolated nodes (n provinces), fully connected (1 province).
 - **Interview follow-up:** "Can you do it with Union-Find?" → Yes, unite connected nodes, count unique parents.
 
+
 ### Problem 9 — Clone Graph
 - **HashMap is essential:** Maps original node → cloned node. Prevents re-cloning and infinite loops.
 - **BFS order doesn't matter:** DFS or BFS both work since we're just copying structure.
 - **Edge cases:** `None` input, single node, cycle in graph.
 - **Interview follow-up:** "Deep copy vs shallow copy?" → Deep copy means cloned nodes are independent objects.
+
 
 ### Problem 10 — Find the Town Judge
 - **Trust score = in-degree − out-degree:** Judge has score `n-1` (everyone trusts them, they trust nobody).
@@ -1538,17 +2869,20 @@ else:
 - **Edge cases:** `n=1` (return 1), no trust relationships, multiple candidates.
 - **Interview follow-up:** "What if there could be multiple judges?" → Return list of all with score `n-1`.
 
+
 ### Problem 11 — Course Schedule
 - **Cycle detection = can't finish:** If there's a cycle in the prerequisite graph, at least one course depends on itself.
 - **Kahn's algorithm:** If the topological sort doesn't include all courses, there's a cycle.
 - **Edge cases:** No prerequisites (all finishable), single course with self-prerequisite.
 - **Interview follow-up:** "What courses can you take first?" → Use Course Schedule II (topological order).
 
+
 ### Problem 12 — Course Schedule II
 - **Kahn's gives the order:** Nodes with zero in-degree are available to take. Process them first.
 - **Multiple valid orders:** Any topological sort is acceptable.
 - **Edge cases:** Cycle (return `[]`), no prerequisites (any order).
 - **Interview follow-up:** "Lexicographically smallest order?" → Use a min-heap instead of a queue.
+
 
 ### Problem 13 — Pacific Atlantic Water Flow
 - **Reverse thinking:** Instead of "can water flow FROM this cell TO ocean?", ask "can ocean water REACH this cell?"
@@ -1557,12 +2891,14 @@ else:
 - **Edge cases:** 1×1 grid (both oceans if any height), single row/column.
 - **Interview follow-up:** "What if water can only flow downhill?" → Reverse the comparison.
 
+
 ### Problem 14 — Word Ladder
 - **BFS for shortest path:** BFS guarantees the minimum number of transformations.
 - **Try all 26 letters:** For each position in the word, try changing it to each letter.
 - **Word set for O(1) lookup:** Convert word list to set for fast membership checking.
 - **Edge cases:** `beginWord == endWord` (return 1), no valid path (return 0).
 - **Interview follow-up:** "Can you do bidirectional BFS?" → Start from both ends, meeting in the middle.
+
 
 ### Problem 15 — Walls and Gates
 - **Multi-source BFS:** All gates are sources. Each level of BFS represents one unit of distance.
@@ -1571,12 +2907,14 @@ else:
 - **Edge cases:** No gates (nothing changes), no empty rooms.
 - **Interview follow-up:** "What if gates have different priorities?" → Use Dijkstra instead of BFS.
 
+
 ### Problem 16 — Redundant Connection
 - **Union-Find is perfect:** If both endpoints are already connected, adding this edge creates a cycle.
 - **Path compression:** `parent[x] = parent[parent[x]]` flattens the tree during find.
 - **Last edge in cycle:** Processing edges in order and returning the first conflicting edge gives the correct answer.
 - **Edge cases:** Multiple cycles (return the last conflicting edge), single edge.
 - **Interview follow-up:** "What if you need to find ALL redundant edges?" → Collect all edges where `find(u) == find(v)`.
+
 
 ### Problem 17 — Accounts Merge
 - **Union emails:** Emails in the same account are connected. Shared emails across accounts merge them.
@@ -1585,11 +2923,13 @@ else:
 - **Edge cases:** No shared emails (no merging), all accounts share emails (one big merge).
 - **Interview follow-up:** "What if names differ for same email?" → That's a data inconsistency — handle per requirements.
 
+
 ### Problem 18 — Graph Valid Tree
 - **Two conditions:** Exactly `n-1` edges AND the graph is connected.
 - **Tree properties:** A connected graph with `n-1` edges is always a tree (no cycles, fully connected).
 - **Edge cases:** `n=1` with no edges (valid tree), disconnected components.
 - **Interview follow-up:** "How to find the tree's root?" → Any node can be root in an undirected tree.
+
 
 ### Problem 19 — Network Delay Time
 - **Dijkstra for weighted shortest path:** Finds minimum time to reach each node.
@@ -1598,12 +2938,14 @@ else:
 - **Edge cases:** Disconnected graph (return -1), single node (return 0).
 - **Interview follow-up:** "What if there are negative weights?" → Use Bellman-Ford instead.
 
+
 ### Problem 20 — Cheapest Flights Within K Stops
 - **K constraint changes everything:** Standard Dijkstra doesn't account for stops.
 - **Track stops in state:** `(cost, city, remaining_stops)`.
 - **Revisiting is okay:** A node might be reachable with lower cost but fewer remaining stops.
 - **Edge cases:** Direct flight (0 stops), no valid path within K stops.
 - **Interview follow-up:** "What about unlimited stops?" → Standard Dijkstra (remove K constraint).
+
 
 ### Problem 21 — Alien Dictionary
 - **Compare adjacent words:** The first differing character gives a precedence rule.
@@ -1613,11 +2955,13 @@ else:
 - **Edge cases:** Single word (no ordering info), words with no common prefix.
 - **Interview follow-up:** "What if there are multiple valid orderings?" → Return any valid one (BFS order might vary).
 
+
 ### Problem 22 — Parallel Courses
 - **BFS levels = semesters:** Each BFS level represents courses that can be taken simultaneously.
 - **Same as topological sort:** Just count the number of levels.
 - **Edge cases:** No prerequisites (1 semester), impossible (return -1).
 - **Interview follow-up:** "What if each course has a duration?" → Use Course Schedule III (DP + topological sort).
+
 
 ### Problem 23 — Longest Path in DAG
 - **Topological sort + DP:** Process nodes in topo order, relax distances to neighbors.
@@ -1626,12 +2970,14 @@ else:
 - **Edge cases:** Single node (length 0), disconnected components.
 - **Interview follow-up:** "What if there are cycles?" → Longest path in general graph is NP-hard.
 
+
 ### Problem 24 — Swim in Rising Water
 - **Dijkstra on time:** The "cost" is the maximum elevation encountered along the path.
 - **Priority on minimum time:** Always explore the path with the smallest maximum elevation first.
 - **Visited set:** Once visited, we've found the optimal time for that cell.
 - **Edge cases:** Single cell (return its value), all same elevation.
 - **Interview follow-up:** "Binary search approach?" → Binary search on time + BFS to check connectivity.
+
 
 ### Problem 25 — Path with Maximum Probability
 - **Maximize product, not sum:** Standard Dijkstra minimizes sum of weights; here we maximize the product.
@@ -1640,12 +2986,14 @@ else:
 - **Edge cases:** No path (return 0), direct edge (might be best).
 - **Interview follow-up:** "What about log probabilities?" → Convert to logs and use standard Dijkstra (sum of logs = log of product).
 
+
 ### Problem 26 — Critical Connections (Bridges)
 - **Tarjan's algorithm:** Uses DFS discovery times and low-link values.
 - **Bridge condition:** `low[v] > disc[u]` means no back-edge from subtree of `v` reaches `u` or above.
 - **Low-link update:** `low[u] = min(low[u], disc[v])` for back-edges (NOT `low[v]`).
 - **Edge cases:** No bridges (complete graph), all edges are bridges (linear chain).
 - **Interview follow-up:** "Find articulation points?" → Similar algorithm, condition: `low[v] >= disc[u]`.
+
 
 ### Problem 27 — Word Ladder II
 - **Two-phase approach:** BFS builds shortest-path DAG, DFS enumerates all paths.
@@ -1654,12 +3002,14 @@ else:
 - **Edge cases:** No path (return `[]`), multiple shortest paths of same length.
 - **Interview follow-up:** "Can you do it in one pass?" → Extremely complex; the two-pass approach is standard.
 
+
 ### Problem 28 — Minimum Cost to Make Valid Path
 - **0-1 BFS:** When edge weights are only 0 or 1, use a deque instead of a heap.
 - **Cost 0 = following arrow:** Moving in the direction the arrow points costs nothing.
 - **Cost 1 = changing arrow:** Moving in a different direction costs 1.
 - **Edge cases:** Already valid path (cost 0), blocked paths.
 - **Interview follow-up:** "What if costs are 0, 1, 2?" → Use a 0-1-2 BFS or Dijkstra.
+
 
 ### Problem 29 — Shortest Path in Binary Matrix
 - **BFS on grid:** Standard shortest path in unweighted graph.
@@ -1668,12 +3018,14 @@ else:
 - **Edge cases:** 1×1 grid (return 1 if open), blocked start/end.
 - **Interview follow-up:** "What about weighted cells?" → Use Dijkstra.
 
+
 ### Problem 30 — Reconstruct Itinerary
 - **Eulerian path:** Uses every edge exactly once.
 - **Hierholzer's algorithm:** DFS greedily, push to result when stuck.
 - **Reverse sort + pop:** Ensures lexical order efficiently.
 - **Edge cases:** Single ticket, multiple valid itineraries (return lexical smallest).
 - **Interview follow-up:** "What if not all tickets can be used?" → That would make it impossible; constraints guarantee a valid itinerary exists.
+
 
 ### Problem 31 — Minimum Height Trees
 - **Leaf peeling:** Remove leaves layer by layer. The last 1-2 nodes are the centers.
@@ -1682,12 +3034,14 @@ else:
 - **Edge cases:** Single node (return `[0]`), two nodes (return either).
 - **Interview follow-up:** "Why at most 2?" → A path has at most 2 center nodes (middle of the longest path).
 
+
 ### Problem 32 — Strongly Connected Components (Kosaraju's)
 - **Two-pass DFS:** First pass gets finish order, second pass on transposed graph finds SCCs.
 - **Transpose graph:** Reverse all edges. SCCs become disconnected components.
 - **Finish order matters:** Processing in reverse finish order ensures we visit sink SCCs first.
 - **Edge cases:** Single SCC (entire graph), no edges (each node is its own SCC).
 - **Interview follow-up:** "Tarjan's vs Kosaraju's?" → Tarjan's is one-pass; Kosaraju's is conceptually simpler.
+
 
 ### Problem 33 — Number of Islands II
 - **Dynamic Union-Find:** As land is added, unite with adjacent lands and track count.
@@ -1696,12 +3050,14 @@ else:
 - **Edge cases:** Duplicate positions, positions outside grid.
 - **Interview follow-up:** "What if land can also be removed?" → Much harder; need fully dynamic connectivity (Euler tour tree, etc.).
 
+
 ### Problem 34 — Shortest Path Visiting All Nodes
 - **Bitmask state:** `visited_mask` tracks which nodes have been visited using bit operations.
 - **BFS on state space:** States are `(current_node, visited_mask)`.
 - **Bit operations:** `mask | (1 << i)` adds node i to visited set.
 - **Edge cases:** Single node (return 0), fully connected (shortest path might be small).
 - **Interview follow-up:** "What if n > 20?" → Bitmask is infeasible; need approximation or different approach.
+
 
 ### Problem 35 — Parallel Courses III
 - **Topological sort + DP:** `dp[node]` stores the earliest finish time for that course.

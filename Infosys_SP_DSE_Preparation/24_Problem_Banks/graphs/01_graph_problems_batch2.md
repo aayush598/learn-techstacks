@@ -35,6 +35,7 @@ Scan: balance[1]=0, balance[2]=-1, balance[3]=1, none = n-1=3 → return -1
 **Approach:** Use an array to track trust balance. +1 for being trusted, -1 for trusting. Judge has balance = n-1.
 
 ```python
+# findTownJudge: implement solution
 def findTownJudge(n, trust):
     balance = [0] * (n + 1)
     for a, b in trust:
@@ -79,6 +80,7 @@ Common node between first two edges → 2 is the center
 **Approach:** The center appears in every edge. Just check first two edges - common node is center.
 
 ```python
+# findCenter: implement solution
 def findCenter(edges):
     if edges[0][0] == edges[1][0] or edges[0][0] == edges[1][1]:
         return edges[0][0]
@@ -120,6 +122,7 @@ Return: False (nodes 0-2 and 3-5 are separate components)
 **Approach:** Simple BFS/DFS from source to see if we reach destination.
 
 ```python
+# validPath: implement solution
 def validPath(n, edges, source, destination):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -174,6 +177,7 @@ Return: 2
 **Approach:** DFS/BFS from each unvisited node, increment count.
 
 ```python
+# countComponents: implement solution
 def countComponents(n, edges):
     from collections import defaultdict
     graph = defaultdict(list)
@@ -232,6 +236,7 @@ Return: False (this is an odd cycle, not bipartite)
 **Approach:** BFS/DFS coloring. If we find a node with same color as current, not bipartite.
 
 ```python
+# isBipartite: implement solution
 def isBipartite(graph):
     n = len(graph)
     color = [-1] * n
@@ -293,6 +298,7 @@ Node 0 merges all → {a:3,b:1,e:1,d:1,c:1} → result[0]=3
 **Approach:** DFS returning frequency map of labels in subtree. Merge children's maps.
 
 ```python
+# countSubTrees: implement solution
 def countSubTrees(n, edges, labels):
     from collections import defaultdict
     graph = defaultdict(list)
@@ -348,6 +354,7 @@ Edges used = 3, total = 6, max removable = 3
 **Approach:** Count connected components using Union-Find. Need (components-1) more edges.
 
 ```python
+# maxNumEdgesToRemove: implement solution
 def maxNumEdgesToRemove(n, edges):
     class UnionFind:
         def __init__(self, n):
@@ -409,6 +416,7 @@ def maxNumEdgesToRemove(n, edges):
 **Statement:** Same as Problem 5 but using DFS approach.
 
 ```python
+# isBipartite: implement solution
 def isBipartite(graph):
     n = len(graph)
     color = [-1] * n
@@ -466,6 +474,7 @@ Return: [[0,1,3], [0,2,3]]
 **Approach:** Simple DFS, add path when reaching target.
 
 ```python
+# allPathsSourceTarget: implement solution
 def allPathsSourceTarget(graph):
     n = len(graph)
     result = []
@@ -516,6 +525,7 @@ All 4 rooms visited! → True
 **Approach:** DFS/BFS from room 0, count visited rooms.
 
 ```python
+# canVisitAllRooms: implement solution
 def canVisitAllRooms(rooms):
     visited = set([0])
     stack = [0]
@@ -565,6 +575,7 @@ Return: 2
 **Approach:** DFS on adjacency matrix.
 
 ```python
+# findCircleNum: implement solution
 def findCircleNum(isConnected):
     n = len(isConnected)
     visited = set()
@@ -615,6 +626,7 @@ Return: False (odd cycle exists)
 **Approach:** Build graph, check bipartite using BFS coloring.
 
 ```python
+# possibleBipartition: implement solution
 def possibleBipartition(n, dislikes):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -673,6 +685,7 @@ Max distance = 4 (bottom-right cell is farthest from any land)
 **Approach:** Multi-source BFS from all land cells simultaneously.
 
 ```python
+# maxDistance: implement solution
 def maxDistance(grid):
     from collections import deque
     n = len(grid)
@@ -732,6 +745,7 @@ X X X O X         X X X S X             X X X O X
 **Approach:** DFS from border 'O's, mark safe. Then flip remaining 'O's to 'X'.
 
 ```python
+# solve: implement solution
 def solve(board):
     if not board: return
     m, n = len(board), len(board[0])
@@ -784,6 +798,7 @@ Remaining 1s: bottom row → 2 enclaves.
 **Approach:** DFS from boundary 1s, mark reachable. Count remaining 1s.
 
 ```python
+# numEnclaves: implement solution
 def numEnclaves(grid):
     m, n = len(grid), len(grid[0])
     def dfs(i, j):
@@ -833,6 +848,7 @@ Result: new independent graph with same structure
 **Approach:** DFS + HashMap to map original nodes to copies.
 
 ```python
+# cloneGraph: implement solution
 def cloneGraph(node):
     if not node: return None
     visited = {}
@@ -886,6 +902,7 @@ Need: 2-1 = 1 operation
 **Approach:** Need (components-1) cables to connect. Count extra cables and components.
 
 ```python
+# makeConnected: implement solution
 def makeConnected(n, connections):
     if len(connections) < n - 1: return -1
     class UF:
@@ -949,6 +966,7 @@ Answer: max(0,3) = 3 (tie between 0 and 3, pick larger)
 **Approach:** Floyd-Warshall or Dijkstra from each city.
 
 ```python
+# findTheCity: implement solution
 def findTheCity(n, edges, distanceThreshold):
     dist = [[float('inf')]*n for _ in range(n)]
     for i in range(n): dist[i][i] = 0
@@ -989,6 +1007,7 @@ def findTheCity(n, edges, distanceThreshold):
 **Pattern Recognition:** **Graph Reachability (BFS)**: BFS finds if all nodes reachable from source. Used in: Same as Problem 10.
 
 ```python
+# canVisitAllRooms: implement solution
 def canVisitAllRooms(rooms):
     from collections import deque
     visited = {0}
@@ -1040,6 +1059,7 @@ Shortest = 4
 **Approach:** BFS on grid (unweighted, BFS gives shortest path).
 
 ```python
+# shortestPathBinaryMatrix: implement solution
 def shortestPathBinaryMatrix(grid):
     from collections import deque
     n = len(grid)
@@ -1092,6 +1112,7 @@ Number of islands = 2
 **Approach:** DFS/BFS to mark connected land.
 
 ```python
+# numIslands: implement solution
 def numIslands(grid):
     if not grid: return 0
     count = 0
@@ -1140,6 +1161,7 @@ Before:      After DFS:
 **Approach:** DFS from starting pixel.
 
 ```python
+# floodFill: implement solution
 def floodFill(image, sr, sc, newColor):
     m, n = len(image), len(image[0])
     old = image[sr][sc]
@@ -1189,6 +1211,7 @@ Minute 3:  2 2 2    → still fresh at (1,2)? No.
 **Approach:** Multi-source BFS from all rotten oranges.
 
 ```python
+# orangesRotting: implement solution
 def orangesRotting(grid):
     from collections import deque
     m, n = len(grid), len(grid[0])
@@ -1249,6 +1272,7 @@ Intersection = [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]
 **Approach:** Reverse DFS from both oceans, find intersection.
 
 ```python
+# pacificAtlantic: implement solution
 def pacificAtlantic(grid):
     if not grid: return []
     m, n = len(grid), len(grid[0])
@@ -1301,6 +1325,7 @@ INF -1 INF -1     1  -1   2  -1
 **Approach:** Multi-source BFS from all gates.
 
 ```python
+# wallsAndGates: implement solution
 def wallsAndGates(rooms):
     from collections import deque
     m, n = len(rooms), len(rooms[0])
@@ -1350,6 +1375,7 @@ Process [2,3]: find(2)=1, find(3)=1 → already connected! Return [2,3]
 **Approach:** Union-Find. Edge where both nodes already connected is the answer.
 
 ```python
+# findRedundantConnection: implement solution
 def findRedundantConnection(edges):
     class UF:
         def __init__(self,n): self.p=list(range(n+1))
@@ -1402,6 +1428,7 @@ Output: [["John","j1","j2","j3"], ["Mary","m1"]]
 **Approach:** Union-Find on email indices. Group emails by owner.
 
 ```python
+# accountsMerge: implement solution
 def accountsMerge(accounts):
     from collections import defaultdict
     email_to_id = {}
@@ -1467,6 +1494,7 @@ DFS from 0: visit 0→1→2→3→1 (state[1]==1 visiting!) → cycle! → False
 **Approach:** DFS with state array (0=unvisited, 1=visiting, 2=visited).
 
 ```python
+# canFinish: implement solution
 def canFinish(numCourses, prerequisites):
     from collections import defaultdict
     graph = defaultdict(list)
@@ -1521,6 +1549,7 @@ Return [0,1,2,3] (also valid: [0,2,1,3])
 **Approach:** Topological sort using DFS or Kahn's.
 
 ```python
+# findOrder: implement solution
 def findOrder(numCourses, prerequisites):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -1577,6 +1606,7 @@ Max dist = 2 → answer: 2
 **Approach:** Dijkstra's shortest path, return max distance.
 
 ```python
+# networkDelayTime: implement solution
 def networkDelayTime(times, n, k):
     import heapq
     from collections import defaultdict
@@ -1642,6 +1672,7 @@ Wait, with k=1, we can check: 0→1→2→3 needs 2 stops (cities 1 and 2).
 **Approach:** Bellman-Ford variant or BFS with stops tracking.
 
 ```python
+# findCheapestPrice: implement solution
 def findCheapestPrice(n, flights, src, dst, k):
     prices = [float('inf')] * n
     prices[src] = 0
@@ -1691,6 +1722,7 @@ Answer: "wertf"
 **Approach:** Build graph from adjacent character comparisons, topological sort.
 
 ```python
+# alienOrder: implement solution
 def alienOrder(words):
     from collections import defaultdict, deque
     graph = defaultdict(set)
@@ -1750,6 +1782,7 @@ Both paths have max elevation 3 → answer: 3
 **Approach:** Binary search + BFS/DFS, or Dijkstra.
 
 ```python
+# swimInWater: implement solution
 def swimInWater(grid):
     import heapq
     n = len(grid)
@@ -1802,6 +1835,7 @@ Answer: 0.25
 **Approach:** Modified Dijkstra (maximize instead of minimize).
 
 ```python
+# maxProbability: implement solution
 def maxProbability(n, edges, succProb, start, end):
     import heapq
     from collections import defaultdict
@@ -1862,6 +1896,7 @@ Answer: max(dp) = max(3,2,8) = 8
 **Approach:** Topological sort + DP (max time to reach each course).
 
 ```python
+# minimumTime: implement solution
 def minimumTime(n, relations, time):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -1925,6 +1960,7 @@ Answer: 3
 **Approach:** Topological sort + DP.
 
 ```python
+# longestPath: implement solution
 def longestPath(n, edges):
     from collections import defaultdict, deque
     graph = defaultdict(list)
@@ -1980,6 +2016,7 @@ Tree:   0-3-1    Original leaves: [0,1,2,5]
 **Approach:** Strip leaves iteratively until 1-2 nodes remain.
 
 ```python
+# findMinHeightTrees: implement solution
 def findMinHeightTrees(n, edges):
     if n == 1: return [0]
     from collections import defaultdict, deque
@@ -2041,6 +2078,7 @@ Answer: 2
 **Approach:** Multi-source BFS for distances, then binary search + BFS.
 
 ```python
+# maximumSafenessFactor: implement solution
 def maximumSafenessFactor(grid):
     from collections import deque
     n = len(grid)
@@ -2093,6 +2131,7 @@ def maximumSafenessFactor(grid):
 **Pattern Recognition:** **Path Enumeration (BFS)**: BFS alternative for enumerating paths. Used in: Same as Problem 9.
 
 ```python
+# allPathsSourceTarget: implement solution
 def allPathsSourceTarget(graph):
     from collections import deque
     n = len(graph)
@@ -2142,6 +2181,7 @@ Result reversed: [JFK,MUC,LHR,SFO,SJC]
 **Approach:** DFS with stack, remove edges as used.
 
 ```python
+# findItinerary: implement solution
 def findItinerary(tickets):
     from collections import defaultdict
     graph = defaultdict(list)

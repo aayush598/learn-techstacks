@@ -480,6 +480,7 @@ Output: 4
 
 **Python Code (DP with Hash):**
 ```python
+# xorSubarrays: implement solution
 from collections import defaultdict
 
 def xorSubarrays(arr, k):
@@ -1261,6 +1262,7 @@ Output: True
 
 **Python Code (Tabulation):**
 ```python
+# isInterleave: implement solution
 def isInterleave(s1, s2, s3):
     m, n = len(s1), len(s2)
     
@@ -1316,6 +1318,7 @@ Output: 231
 
 **Python Code (Tabulation):**
 ```python
+# minimumDeleteSum: implement solution
 def minimumDeleteSum(s1, s2):
     m, n = len(s1), len(s2)
     dp = [[0] * (n + 1) for _ in range(m + 1)]
@@ -1458,6 +1461,7 @@ Output: 4
 
 **Python Code (Tabulation + Hash Map):**
 ```python
+# longestArithSeqLength: implement solution
 def longestArithSeqLength(nums):
     n = len(nums)
     if n <= 2:
@@ -1709,6 +1713,7 @@ Output: True
 
 **Python Code (Tabulation):**
 ```python
+# winnerSquareGame: implement solution
 def winnerSquareGame(n):
     dp = [False] * (n + 1)
     
@@ -1753,6 +1758,7 @@ Output: 4
 
 **Python Code (Tabulation + Sorting):**
 ```python
+# longestStrChain: implement solution
 def longestStrChain(words):
     words.sort(key=len)
     dp = {}
@@ -2045,6 +2051,7 @@ Output: 11
 
 **Python Code (Tabulation):**
 ```python
+# mincostTickets: implement solution
 def mincostTickets(days, costs):
     travel_days = set(days)
     last_day = days[-1]
@@ -2342,6 +2349,7 @@ Output: 6
 
 **Python Code (Tabulation):**
 ```python
+# longestBitonicSubsequence: implement solution
 def longestBitonicSubsequence(nums):
     n = len(nums)
     lis = [1] * n
@@ -2464,6 +2472,7 @@ Output: 3
 
 **Python Code (Tabulation):**
 ```python
+# numberOfWays: implement solution
 def numberOfWays(startPos, endPos, k):
     MOD = 10**9 + 7
     offset = k
@@ -2515,6 +2524,7 @@ Output: 3
 
 **Python Code (BFS):**
 ```python
+# minimumJumps: implement solution
 def minimumJumps(forbidden, a, b, start):
     forbidden_set = set(forbidden)
     max_pos = max(max(forbidden) + a + b, start + a) + 100
@@ -2631,6 +2641,7 @@ Output: 7
 
 **Python Code (Tabulation):**
 ```python
+# minDifficulty: implement solution
 def minDifficulty(jobDifficulty, d):
     n = len(jobDifficulty)
     if n < d:
@@ -2682,6 +2693,7 @@ Output: 1
 
 **Python Code (DP with Bitmask):**
 ```python
+# numberWays: implement solution
 def numberWays(hats):
     MOD = 10**9 + 7
     n = len(hats)
@@ -2743,6 +2755,7 @@ Output: True
 
 **Python Code (Tabulation):**
 ```python
+# canCross: implement solution
 def canCross(stones):
     stone_set = set(stones)
     dp = {stone: set() for stone in stones}
@@ -2793,6 +2806,7 @@ Output: 167
 
 **Python Code (Tabulation):**
 ```python
+# maxCoins: implement solution
 def maxCoins(nums):
     nums = [1] + nums + [1]
     n = len(nums)
@@ -2838,6 +2852,7 @@ Output: 20
 
 **Python Code (Tabulation):**
 ```python
+# mergeStones: implement solution
 def mergeStones(stones, k):
     n = len(stones)
     if (n - 1) % (k - 1) != 0:
@@ -2894,6 +2909,7 @@ Output: 16
 
 **Python Code (Tabulation):**
 ```python
+# minCost: implement solution
 def minCost(n, cuts):
     cuts = [0] + sorted(cuts) + [n]
     m = len(cuts)
@@ -2940,6 +2956,7 @@ Output: 2
 
 **Python Code (Tabulation):**
 ```python
+# strangePrinter: implement solution
 def strangePrinter(s):
     if not s:
         return 0
@@ -2996,6 +3013,7 @@ Output: "Bob"
 
 **Python Code (Tabulation):**
 ```python
+# stoneGameIII: implement solution
 def stoneGameIII(stoneValue):
     n = len(stoneValue)
     dp = [0] * (n + 3)
@@ -3046,6 +3064,7 @@ Output: True
 
 **Python Code (Tabulation):**
 ```python
+# winnerSquareGame: implement solution
 def winnerSquareGame(n):
     dp = [False] * (n + 1)
     
@@ -3091,6 +3110,7 @@ Output: 23
 
 **Python Code (Memoization):**
 ```python
+# removeBoxes: implement solution
 def removeBoxes(boxes):
     from functools import lru_cache
     
@@ -3591,6 +3611,7 @@ Explanation: GCDs are: 1, 2, 3, 5, 6
 
 **Python Code (DP on GCD):**
 ```python
+# countDifferentSubsequenceGCDs: implement solution
 from math import gcd
 from collections import Counter
 

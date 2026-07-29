@@ -75,7 +75,7 @@ def create_cycle(head, pos):
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Reverse Linked List (Easy).
 ```
 
 **Key Insight:** Save the next pointer before overwriting current.next -- the golden rule of linked list reversal.
@@ -163,7 +163,7 @@ def reverse_list_recursive(head):
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Merge Two Sorted Lists (Easy).
 ```
 
 **Key Insight:** Dummy head eliminates special-case handling for the first node.
@@ -246,7 +246,7 @@ def merge_two_lists(l1, l2):
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Linked List Cycle (Easy).
 ```
 
 **Key Insight:** Floyd's Tortoise and Hare: if there's a cycle, the fast pointer will lap the slow one.
@@ -318,7 +318,7 @@ def has_cycle(head):
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Middle of the Linked List (Easy).
 ```
 
 **Key Insight:** Fast/slow pointer finds the middle in one pass without knowing the length.
@@ -373,18 +373,17 @@ def middle_node(head):
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a sorted linked list, delete all duplicates such that each element appears only once.**Example:**```Input: 1 -> 1 -> 2 -> 3 -> 3Output: 1 -> 2 -> 3```**Approach:** Traverse with a pointer. If current.val equals next.val, skip next. Otherwise, advance current.**Python Code:**```pythondef delete_duplicates(head):    curr = head    while curr and curr.next:        if curr.val == curr.next.val:            curr.next = curr.next.next        else:            curr = curr.next    return head```**Complexity:** Time O(n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Remove Duplicates from Sorted List (Easy)**Problem Statement:** Given a sorted linked list, delete all duplicates such that each element appears only once.**Example:**```Input: 1 -> 1 -> 2 -> 3 -> 3Output: 1 -> 2 -> 3```**Approach:** Traverse with a pointer. If current.val equals next.val, skip next. Otherwise, advance current.**Python Code:**```pythondef delete_duplicates(head):    curr = head    while curr and curr.next:        if curr.val == curr.next.val:            curr.next = curr.next.next        else:            curr = curr.next    return head```**Complexity:** Time O(n), Space O(1)  **Trick:** Only advance `curr` when values differ. When skipping, don't advance — check the new next too.  **Edge Cases:** Empty list, all duplicates, no duplicates..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Only advance `curr` when values differ.
 
 **Well-Commented Code:**
 ```python
@@ -400,56 +399,26 @@ def delete_duplicates(head):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(n), Space O(1)  **Trick:** Only advance `curr` when values differ. When skipping, don't advance — check the new next too.  **Edge Cases:** Empty list, all duplicates, no duplicates.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 5: Remove Duplicates from Sorted List (Easy)
-
-**Problem Statement:** Given a sorted linked list, delete all duplicates such that each element appears only once.
-
-**Example:**
-```
-Input: 1 -> 1 -> 2 -> 3 -> 3
-Output: 1 -> 2 -> 3
-```
-
-**Approach:** Traverse with a pointer. If current.val equals next.val, skip next. Otherwise, advance current.
-
-**Python Code:**
-```python
-def delete_duplicates(head):
-    curr = head
-    while curr and curr.next:
-        if curr.val == curr.next.val:
-            curr.next = curr.next.next
-        else:
-            curr = curr.next
-    return head
-```
-
-**Complexity:** Time O(n), Space O(1)  
-**Trick:** Only advance `curr` when values differ. When skipping, don't advance — check the new next too.  
-**Edge Cases:** Empty list, all duplicates, no duplicates.
+- Empty input -> handle gracefully
+## Problem 5: Remove Duplicates from Sorted List (Easy)**Problem Statement:** Given a sorted linked list, delete all duplicates such that each element appears only once.**Example:**```Input: 1 -> 1 -> 2 -> 3 -> 3Output: 1 -> 2 -> 3```**Approach:** Traverse with a pointer. If current.val equals next.val, skip next. Otherwise, advance current.**Python Code:**```pythondef delete_duplicates(head):    curr = head    while curr and curr.next:        if curr.val == curr.next.val:            curr.next = curr.next.next        else:            curr = curr.next    return head```**Complexity:** Time O(n), Space O(1)  **Trick:** Only advance `curr` when values differ. When skipping, don't advance — check the new next too.  **Edge Cases:** Empty list, all duplicates, no duplicates.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Two numbers represented as reversed linked lists. Return their sum as a linked list.**Example:**```Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)Output: 7 -> 0 -> 8 (342 + 465 = 807)```**Approach:** Traverse both lists simultaneously, add corresponding digits plus carry. Create new nodes for each digit. Handle remaining carry at end.**Python Code:**```pythondef add_two_numbers(l1, l2):    dummy = ListNode(0)    curr = dummy    carry = 0    while l1 or l2 or carry:        val = carry        if l1:            val += l1.val            l1 = l1.next        if l2:            val += l2.val            l2 = l2.next        carry, digit = divmod(val, 10)        curr.next = ListNode(digit)        curr = curr.next    return dummy.next```**Complexity:** Time O(max(m,n)), Space O(max(m,n))
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Add Two Numbers (Easy)**Problem Statement:** Two numbers represented as reversed linked lists. Return their sum as a linked list.**Example:**```Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)Output: 7 -> 0 -> 8 (342 + 465 = 807)```**Approach:** Traverse both lists simultaneously, add corresponding digits plus carry. Create new nodes for each digit. Handle remaining carry at end.**Python Code:**```pythondef add_two_numbers(l1, l2):    dummy = ListNode(0)    curr = dummy    carry = 0    while l1 or l2 or carry:        val = carry        if l1:            val += l1.val            l1 = l1.next        if l2:            val += l2.val            l2 = l2.next        carry, digit = divmod(val, 10)        curr.next = ListNode(digit)        curr = curr.next    return dummy.next```**Complexity:** Time O(max(m,n)), Space O(max(m,n))  **Trick:** Using `divmod` makes carry and digit extraction clean. Don't forget the final carry.  **Edge Cases:** Different length lists, carry at the most significant digit..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Using `divmod` makes carry and digit extraction clean.
 
 **Well-Commented Code:**
 ```python
@@ -473,64 +442,27 @@ def add_two_numbers(l1, l2):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(max(m,n)), Space O(max(m,n))
-- **Space:** O(max(m,n))
+- Time: Time O(max(m,n)), Space O(max(m,n))  **Trick:** Using `divmod` makes carry and digit extraction clean. Don't forget the final carry.  **Edge Cases:** Different length lists, carry at the most significant digit.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 6: Add Two Numbers (Easy)
-
-**Problem Statement:** Two numbers represented as reversed linked lists. Return their sum as a linked list.
-
-**Example:**
-```
-Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
-Output: 7 -> 0 -> 8 (342 + 465 = 807)
-```
-
-**Approach:** Traverse both lists simultaneously, add corresponding digits plus carry. Create new nodes for each digit. Handle remaining carry at end.
-
-**Python Code:**
-```python
-def add_two_numbers(l1, l2):
-    dummy = ListNode(0)
-    curr = dummy
-    carry = 0
-    while l1 or l2 or carry:
-        val = carry
-        if l1:
-            val += l1.val
-            l1 = l1.next
-        if l2:
-            val += l2.val
-            l2 = l2.next
-        carry, digit = divmod(val, 10)
-        curr.next = ListNode(digit)
-        curr = curr.next
-    return dummy.next
-```
-
-**Complexity:** Time O(max(m,n)), Space O(max(m,n))  
-**Trick:** Using `divmod` makes carry and digit extraction clean. Don't forget the final carry.  
-**Edge Cases:** Different length lists, carry at the most significant digit.
+- Single element unchanged
+- Even/odd length both work
+## Problem 6: Add Two Numbers (Easy)**Problem Statement:** Two numbers represented as reversed linked lists. Return their sum as a linked list.**Example:**```Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)Output: 7 -> 0 -> 8 (342 + 465 = 807)```**Approach:** Traverse both lists simultaneously, add corresponding digits plus carry. Create new nodes for each digit. Handle remaining carry at end.**Python Code:**```pythondef add_two_numbers(l1, l2):    dummy = ListNode(0)    curr = dummy    carry = 0    while l1 or l2 or carry:        val = carry        if l1:            val += l1.val            l1 = l1.next        if l2:            val += l2.val            l2 = l2.next        carry, digit = divmod(val, 10)        curr.next = ListNode(digit)        curr = curr.next    return dummy.next```**Complexity:** Time O(max(m,n)), Space O(max(m,n))  **Trick:** Using `divmod` makes carry and digit extraction clean. Don't forget the final carry.  **Edge Cases:** Different length lists, carry at the most significant digit.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given two singly linked lists, find the node where they intersect (by reference, not value). Return null if no intersection.**Example:**```A:     a1 -> a2              \               c1 -> c2              /B: b1 -> b2 -> b3Output: Node c1```**Approach:** Use two pointers. When a pointer reaches the end, redirect it to the other list's head. They will meet at the intersection or both become null.**Python Code:**```pythondef get_intersection_node(headA, headB):    if not headA or not headB:        return None    pA, pB = headA, headB    while pA is not pB:        pA = pA.next if pA else headB        pB = pB.next if pB else headA    return pA```**Complexity:** Time O(m+n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Intersection of Two Linked Lists (Easy)**Problem Statement:** Given two singly linked lists, find the node where they intersect (by reference, not value). Return null if no intersection.**Example:**```A:     a1 -> a2              \               c1 -> c2              /B: b1 -> b2 -> b3Output: Node c1```**Approach:** Use two pointers. When a pointer reaches the end, redirect it to the other list's head. They will meet at the intersection or both become null.**Python Code:**```pythondef get_intersection_node(headA, headB):    if not headA or not headB:        return None    pA, pB = headA, headB    while pA is not pB:        pA = pA.next if pA else headB        pB = pB.next if pB else headA    return pA```**Complexity:** Time O(m+n), Space O(1)  **Trick:** Two pointers travel equal total distances (a+b+c), so they align at intersection.  **Edge Cases:** No intersection (both become null), lists of different lengths..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Two pointers travel equal total distances (a+b+c), so they align at intersection.
 
 **Well-Commented Code:**
 ```python
@@ -546,45 +478,14 @@ def get_intersection_node(headA, headB):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(m+n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(m+n), Space O(1)  **Trick:** Two pointers travel equal total distances (a+b+c), so they align at intersection.  **Edge Cases:** No intersection (both become null), lists of different lengths.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 7: Intersection of Two Linked Lists (Easy)
-
-**Problem Statement:** Given two singly linked lists, find the node where they intersect (by reference, not value). Return null if no intersection.
-
-**Example:**
-```
-A:     a1 -> a2
-              \
-               c1 -> c2
-              /
-B: b1 -> b2 -> b3
-Output: Node c1
-```
-
-**Approach:** Use two pointers. When a pointer reaches the end, redirect it to the other list's head. They will meet at the intersection or both become null.
-
-**Python Code:**
-```python
-def get_intersection_node(headA, headB):
-    if not headA or not headB:
-        return None
-    pA, pB = headA, headB
-    while pA is not pB:
-        pA = pA.next if pA else headB
-        pB = pB.next if pB else headA
-    return pA
-```
-
-**Complexity:** Time O(m+n), Space O(1)  
-**Trick:** Two pointers travel equal total distances (a+b+c), so they align at intersection.  
-**Edge Cases:** No intersection (both become null), lists of different lengths.
+- Empty list
+- Single node
+- Head/tail operations
+## Problem 7: Intersection of Two Linked Lists (Easy)**Problem Statement:** Given two singly linked lists, find the node where they intersect (by reference, not value). Return null if no intersection.**Example:**```A:     a1 -> a2              \               c1 -> c2              /B: b1 -> b2 -> b3Output: Node c1```**Approach:** Use two pointers. When a pointer reaches the end, redirect it to the other list's head. They will meet at the intersection or both become null.**Python Code:**```pythondef get_intersection_node(headA, headB):    if not headA or not headB:        return None    pA, pB = headA, headB    while pA is not pB:        pA = pA.next if pA else headB        pB = pB.next if pB else headA    return pA```**Complexity:** Time O(m+n), Space O(1)  **Trick:** Two pointers travel equal total distances (a+b+c), so they align at intersection.  **Edge Cases:** No intersection (both become null), lists of different lengths.
+---
 
 ---
 
@@ -597,7 +498,7 @@ def get_intersection_node(headA, headB):
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Linked List Cycle II (Easy).
 ```
 
 **Key Insight:** Floyd's Tortoise and Hare: if there's a cycle, the fast pointer will lap the slow one.
@@ -662,18 +563,17 @@ def detect_cycle(head):
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given head of a linked list, remove the nth node from the end and return the head.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5, n = 2Output: 1 -> 2 -> 3 -> 5```**Approach:** Use two pointers with n gap. Move fast n steps ahead, then move both until fast reaches end. Slow's next is the node to delete.**Python Code:**```pythondef remove_nth_from_end(head, n):    dummy = ListNode(0, head)    fast = slow = dummy    for _ in range(n + 1):        fast = fast.next    while fast:        fast = fast.next        slow = slow.next    slow.next = slow.next.next    return dummy.next```**Complexity:** Time O(L), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Remove Nth Node From End of List (Medium)**Problem Statement:** Given head of a linked list, remove the nth node from the end and return the head.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5, n = 2Output: 1 -> 2 -> 3 -> 5```**Approach:** Use two pointers with n gap. Move fast n steps ahead, then move both until fast reaches end. Slow's next is the node to delete.**Python Code:**```pythondef remove_nth_from_end(head, n):    dummy = ListNode(0, head)    fast = slow = dummy    for _ in range(n + 1):        fast = fast.next    while fast:        fast = fast.next        slow = slow.next    slow.next = slow.next.next    return dummy.next```**Complexity:** Time O(L), Space O(1)  **Trick:** Dummy node handles the edge case of removing the head (first node). One pass with two pointers.  **Edge Cases:** Removing the only node, removing the head..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Dummy node handles the edge case of removing the head (first node).
 
 **Well-Commented Code:**
 ```python
@@ -691,58 +591,28 @@ def remove_nth_from_end(head, n):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(L), Space O(1)
-- **Space:** O(1)
+- Time: Time O(L), Space O(1)  **Trick:** Dummy node handles the edge case of removing the head (first node). One pass with two pointers.  **Edge Cases:** Removing the only node, removing the head.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 9: Remove Nth Node From End of List (Medium)
-
-**Problem Statement:** Given head of a linked list, remove the nth node from the end and return the head.
-
-**Example:**
-```
-Input: 1 -> 2 -> 3 -> 4 -> 5, n = 2
-Output: 1 -> 2 -> 3 -> 5
-```
-
-**Approach:** Use two pointers with n gap. Move fast n steps ahead, then move both until fast reaches end. Slow's next is the node to delete.
-
-**Python Code:**
-```python
-def remove_nth_from_end(head, n):
-    dummy = ListNode(0, head)
-    fast = slow = dummy
-    for _ in range(n + 1):
-        fast = fast.next
-    while fast:
-        fast = fast.next
-        slow = slow.next
-    slow.next = slow.next.next
-    return dummy.next
-```
-
-**Complexity:** Time O(L), Space O(1)  
-**Trick:** Dummy node handles the edge case of removing the head (first node). One pass with two pointers.  
-**Edge Cases:** Removing the only node, removing the head.
+- Empty list
+- Single node
+- Head/tail operations
+## Problem 9: Remove Nth Node From End of List (Medium)**Problem Statement:** Given head of a linked list, remove the nth node from the end and return the head.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5, n = 2Output: 1 -> 2 -> 3 -> 5```**Approach:** Use two pointers with n gap. Move fast n steps ahead, then move both until fast reaches end. Slow's next is the node to delete.**Python Code:**```pythondef remove_nth_from_end(head, n):    dummy = ListNode(0, head)    fast = slow = dummy    for _ in range(n + 1):        fast = fast.next    while fast:        fast = fast.next        slow = slow.next    slow.next = slow.next.next    return dummy.next```**Complexity:** Time O(L), Space O(1)  **Trick:** Dummy node handles the edge case of removing the head (first node). One pass with two pointers.  **Edge Cases:** Removing the only node, removing the head.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2...**Example:**```Input: 1 -> 2 -> 3 -> 4Output: 1 -> 4 -> 2 -> 3Input: 1 -> 2 -> 3 -> 4 -> 5Output: 1 -> 5 -> 2 -> 4 -> 3```**Approach:** Three steps: (1) Find middle with slow/fast, (2) Reverse second half, (3) Merge alternating nodes from both halves.**Python Code:**```pythondef reorder_list(head):    if not head or not head.next:        return    # Find middle    slow, fast = head, head    while fast.next and fast.next.next:        slow = slow.next        fast = fast.next.next    # Reverse second half    prev, curr = None, slow.next    slow.next = None    while curr:        nxt = curr.next        curr.next = prev        prev = curr        curr = nxt    # Merge two halves    first, second = head, prev    while second:        tmp1, tmp2 = first.next, second.next        first.next = second        second.next = tmp1        first = tmp1        second = tmp2```**Complexity:** Time O(n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Reorder List (Medium)**Problem Statement:** Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2...**Example:**```Input: 1 -> 2 -> 3 -> 4Output: 1 -> 4 -> 2 -> 3Input: 1 -> 2 -> 3 -> 4 -> 5Output: 1 -> 5 -> 2 -> 4 -> 3```**Approach:** Three steps: (1) Find middle with slow/fast, (2) Reverse second half, (3) Merge alternating nodes from both halves.**Python Code:**```pythondef reorder_list(head):    if not head or not head.next:        return    # Find middle    slow, fast = head, head    while fast.next and fast.next.next:        slow = slow.next        fast = fast.next.next    # Reverse second half    prev, curr = None, slow.next    slow.next = None    while curr:        nxt = curr.next        curr.next = prev        prev = curr        curr = nxt    # Merge two halves    first, second = head, prev    while second:        tmp1, tmp2 = first.next, second.next        first.next = second        second.next = tmp1        first = tmp1        second = tmp2```**Complexity:** Time O(n), Space O(1)  **Trick:** Breaking the list at middle's `next` (not middle) is crucial. `slow.next = None` splits the list.  **Edge Cases:** Empty list, single node, two nodes..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Breaking the list at middle's `next` (not middle) is crucial.
 
 **Well-Commented Code:**
 ```python
@@ -774,75 +644,26 @@ def reorder_list(head):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(n), Space O(1)  **Trick:** Breaking the list at middle's `next` (not middle) is crucial. `slow.next = None` splits the list.  **Edge Cases:** Empty list, single node, two nodes.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 10: Reorder List (Medium)
-
-**Problem Statement:** Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2...
-
-**Example:**
-```
-Input: 1 -> 2 -> 3 -> 4
-Output: 1 -> 4 -> 2 -> 3
-
-Input: 1 -> 2 -> 3 -> 4 -> 5
-Output: 1 -> 5 -> 2 -> 4 -> 3
-```
-
-**Approach:** Three steps: (1) Find middle with slow/fast, (2) Reverse second half, (3) Merge alternating nodes from both halves.
-
-**Python Code:**
-```python
-def reorder_list(head):
-    if not head or not head.next:
-        return
-    # Find middle
-    slow, fast = head, head
-    while fast.next and fast.next.next:
-        slow = slow.next
-        fast = fast.next.next
-    # Reverse second half
-    prev, curr = None, slow.next
-    slow.next = None
-    while curr:
-        nxt = curr.next
-        curr.next = prev
-        prev = curr
-        curr = nxt
-    # Merge two halves
-    first, second = head, prev
-    while second:
-        tmp1, tmp2 = first.next, second.next
-        first.next = second
-        second.next = tmp1
-        first = tmp1
-        second = tmp2
-```
-
-**Complexity:** Time O(n), Space O(1)  
-**Trick:** Breaking the list at middle's `next` (not middle) is crucial. `slow.next = None` splits the list.  
-**Edge Cases:** Empty list, single node, two nodes.
+- Empty input -> handle gracefully
+## Problem 10: Reorder List (Medium)**Problem Statement:** Reorder list as L0→Ln→L1→Ln-1→L2→Ln-2...**Example:**```Input: 1 -> 2 -> 3 -> 4Output: 1 -> 4 -> 2 -> 3Input: 1 -> 2 -> 3 -> 4 -> 5Output: 1 -> 5 -> 2 -> 4 -> 3```**Approach:** Three steps: (1) Find middle with slow/fast, (2) Reverse second half, (3) Merge alternating nodes from both halves.**Python Code:**```pythondef reorder_list(head):    if not head or not head.next:        return    # Find middle    slow, fast = head, head    while fast.next and fast.next.next:        slow = slow.next        fast = fast.next.next    # Reverse second half    prev, curr = None, slow.next    slow.next = None    while curr:        nxt = curr.next        curr.next = prev        prev = curr        curr = nxt    # Merge two halves    first, second = head, prev    while second:        tmp1, tmp2 = first.next, second.next        first.next = second        second.next = tmp1        first = tmp1        second = tmp2```**Complexity:** Time O(n), Space O(1)  **Trick:** Breaking the list at middle's `next` (not middle) is crucial. `slow.next = None` splits the list.  **Edge Cases:** Empty list, single node, two nodes.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Swap every two adjacent nodes and return the reordered list. Do not change values — swap nodes themselves.**Example:**```Input: 1 -> 2 -> 3 -> 4Output: 2 -> 1 -> 4 -> 3```**Approach:** Use a dummy node and three pointers. For each pair, reverse the connection between them while maintaining links to the rest.**Python Code:**```pythondef swap_pairs(head):    dummy = ListNode(0, head)    prev = dummy    while prev.next and prev.next.next:        first = prev.next        second = first.next        first.next = second.next        second.next = first        prev.next = second        prev = first    return dummy.next```**Complexity:** Time O(n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Swap Nodes in Pairs (Medium)**Problem Statement:** Swap every two adjacent nodes and return the reordered list. Do not change values — swap nodes themselves.**Example:**```Input: 1 -> 2 -> 3 -> 4Output: 2 -> 1 -> 4 -> 3```**Approach:** Use a dummy node and three pointers. For each pair, reverse the connection between them while maintaining links to the rest.**Python Code:**```pythondef swap_pairs(head):    dummy = ListNode(0, head)    prev = dummy    while prev.next and prev.next.next:        first = prev.next        second = first.next        first.next = second.next        second.next = first        prev.next = second        prev = first    return dummy.next```**Complexity:** Time O(n), Space O(1)  **Trick:** Think of it as pointer rewiring: `prev→second→first→rest`. Move `prev` to `first` after each swap.  **Edge Cases:** Odd number of nodes (last node stays), empty list..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Think of it as pointer rewiring: `prev→second→first→rest`.
 
 **Well-Commented Code:**
 ```python
@@ -861,59 +682,26 @@ def swap_pairs(head):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(n), Space O(1)  **Trick:** Think of it as pointer rewiring: `prev→second→first→rest`. Move `prev` to `first` after each swap.  **Edge Cases:** Odd number of nodes (last node stays), empty list.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 11: Swap Nodes in Pairs (Medium)
-
-**Problem Statement:** Swap every two adjacent nodes and return the reordered list. Do not change values — swap nodes themselves.
-
-**Example:**
-```
-Input: 1 -> 2 -> 3 -> 4
-Output: 2 -> 1 -> 4 -> 3
-```
-
-**Approach:** Use a dummy node and three pointers. For each pair, reverse the connection between them while maintaining links to the rest.
-
-**Python Code:**
-```python
-def swap_pairs(head):
-    dummy = ListNode(0, head)
-    prev = dummy
-    while prev.next and prev.next.next:
-        first = prev.next
-        second = first.next
-        first.next = second.next
-        second.next = first
-        prev.next = second
-        prev = first
-    return dummy.next
-```
-
-**Complexity:** Time O(n), Space O(1)  
-**Trick:** Think of it as pointer rewiring: `prev→second→first→rest`. Move `prev` to `first` after each swap.  
-**Edge Cases:** Odd number of nodes (last node stays), empty list.
+- Empty input -> handle gracefully
+## Problem 11: Swap Nodes in Pairs (Medium)**Problem Statement:** Swap every two adjacent nodes and return the reordered list. Do not change values — swap nodes themselves.**Example:**```Input: 1 -> 2 -> 3 -> 4Output: 2 -> 1 -> 4 -> 3```**Approach:** Use a dummy node and three pointers. For each pair, reverse the connection between them while maintaining links to the rest.**Python Code:**```pythondef swap_pairs(head):    dummy = ListNode(0, head)    prev = dummy    while prev.next and prev.next.next:        first = prev.next        second = first.next        first.next = second.next        second.next = first        prev.next = second        prev = first    return dummy.next```**Complexity:** Time O(n), Space O(1)  **Trick:** Think of it as pointer rewiring: `prev→second→first→rest`. Move `prev` to `first` after each swap.  **Edge Cases:** Odd number of nodes (last node stays), empty list.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given head, rotate the list to the right by k places.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5, k = 2Output: 4 -> 5 -> 1 -> 2 -> 3```**Approach:** Make the list circular (connect tail to head). Find the new tail at position `len - k % len` from start. Break the circle there.**Python Code:**```pythondef rotate_right(head, k):    if not head or not head.next or k == 0:        return head    # Find length and tail    length = 1    tail = head    while tail.next:        tail = tail.next        length += 1    k %= length    if k == 0:        return head    # Make circular and find new break point    tail.next = head    steps_to_new_tail = length - k    new_tail = head    for _ in range(steps_to_new_tail - 1):        new_tail = new_tail.next    new_head = new_tail.next    new_tail.next = None    return new_head```**Complexity:** Time O(n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Rotate List (Medium)**Problem Statement:** Given head, rotate the list to the right by k places.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5, k = 2Output: 4 -> 5 -> 1 -> 2 -> 3```**Approach:** Make the list circular (connect tail to head). Find the new tail at position `len - k % len` from start. Break the circle there.**Python Code:**```pythondef rotate_right(head, k):    if not head or not head.next or k == 0:        return head    # Find length and tail    length = 1    tail = head    while tail.next:        tail = tail.next        length += 1    k %= length    if k == 0:        return head    # Make circular and find new break point    tail.next = head    steps_to_new_tail = length - k    new_tail = head    for _ in range(steps_to_new_tail - 1):        new_tail = new_tail.next    new_head = new_tail.next    new_tail.next = None    return new_head```**Complexity:** Time O(n), Space O(1)  **Trick:** `k % length` avoids unnecessary rotations. Finding new tail at `length - k` steps from head.  **Edge Cases:** k=0, k=length (no change), single node..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** `k % length` avoids unnecessary rotations.
 
 **Well-Commented Code:**
 ```python
@@ -942,69 +730,26 @@ def rotate_right(head, k):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(n), Space O(1)  **Trick:** `k % length` avoids unnecessary rotations. Finding new tail at `length - k` steps from head.  **Edge Cases:** k=0, k=length (no change), single node.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 12: Rotate List (Medium)
-
-**Problem Statement:** Given head, rotate the list to the right by k places.
-
-**Example:**
-```
-Input: 1 -> 2 -> 3 -> 4 -> 5, k = 2
-Output: 4 -> 5 -> 1 -> 2 -> 3
-```
-
-**Approach:** Make the list circular (connect tail to head). Find the new tail at position `len - k % len` from start. Break the circle there.
-
-**Python Code:**
-```python
-def rotate_right(head, k):
-    if not head or not head.next or k == 0:
-        return head
-    # Find length and tail
-    length = 1
-    tail = head
-    while tail.next:
-        tail = tail.next
-        length += 1
-    k %= length
-    if k == 0:
-        return head
-    # Make circular and find new break point
-    tail.next = head
-    steps_to_new_tail = length - k
-    new_tail = head
-    for _ in range(steps_to_new_tail - 1):
-        new_tail = new_tail.next
-    new_head = new_tail.next
-    new_tail.next = None
-    return new_head
-```
-
-**Complexity:** Time O(n), Space O(1)  
-**Trick:** `k % length` avoids unnecessary rotations. Finding new tail at `length - k` steps from head.  
-**Edge Cases:** k=0, k=length (no change), single node.
+- Single element input
+## Problem 12: Rotate List (Medium)**Problem Statement:** Given head, rotate the list to the right by k places.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5, k = 2Output: 4 -> 5 -> 1 -> 2 -> 3```**Approach:** Make the list circular (connect tail to head). Find the new tail at position `len - k % len` from start. Break the circle there.**Python Code:**```pythondef rotate_right(head, k):    if not head or not head.next or k == 0:        return head    # Find length and tail    length = 1    tail = head    while tail.next:        tail = tail.next        length += 1    k %= length    if k == 0:        return head    # Make circular and find new break point    tail.next = head    steps_to_new_tail = length - k    new_tail = head    for _ in range(steps_to_new_tail - 1):        new_tail = new_tail.next    new_head = new_tail.next    new_tail.next = None    return new_head```**Complexity:** Time O(n), Space O(1)  **Trick:** `k % length` avoids unnecessary rotations. Finding new tail at `length - k` steps from head.  **Edge Cases:** k=0, k=length (no change), single node.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** A linked list where each node has a next and random pointer. Create a deep copy.**Example:**```Node1: val=7, next=Node2, random=Node1Node2: val=13, next=Node3, random=Node1Output: Exact copy with same structure but independent nodes```**Approach:** Three passes: (1) Interleave new nodes between originals, (2) Set random pointers for new nodes, (3) Separate the two lists.**Python Code:**```pythondef copy_random_list(head):    if not head:        return None    # Step 1: Interleave copies    curr = head    while curr:        copy = Node(curr.val, curr.next, None)        curr.next = copy        curr = copy.next    # Step 2: Set random pointers    curr = head    while curr:        if curr.random:            curr.next.random = curr.random.next        curr = curr.next.next    # Step 3: Separate lists    copy_head = head.next    curr = head    while curr:        copy = curr.next        curr.next = copy.next        copy.next = copy.next.next if copy.next else None        curr = curr.next    return copy_head```**Complexity:** Time O(n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Copy List with Random Pointer (Medium)**Problem Statement:** A linked list where each node has a next and random pointer. Create a deep copy.**Example:**```Node1: val=7, next=Node2, random=Node1Node2: val=13, next=Node3, random=Node1Output: Exact copy with same structure but independent nodes```**Approach:** Three passes: (1) Interleave new nodes between originals, (2) Set random pointers for new nodes, (3) Separate the two lists.**Python Code:**```pythondef copy_random_list(head):    if not head:        return None    # Step 1: Interleave copies    curr = head    while curr:        copy = Node(curr.val, curr.next, None)        curr.next = copy        curr = copy.next    # Step 2: Set random pointers    curr = head    while curr:        if curr.random:            curr.next.random = curr.random.next        curr = curr.next.next    # Step 3: Separate lists    copy_head = head.next    curr = head    while curr:        copy = curr.next        curr.next = copy.next        copy.next = copy.next.next if copy.next else None        curr = curr.next    return copy_head```**Complexity:** Time O(n), Space O(1)  **Trick:** Interleaving technique avoids using a hash map. `curr.random.next` accesses the copy of the random node.  **Edge Cases:** Empty list, nodes with random=None..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Interleaving technique avoids using a hash map.
 
 **Well-Commented Code:**
 ```python
@@ -1036,73 +781,26 @@ def copy_random_list(head):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(n), Space O(1)  **Trick:** Interleaving technique avoids using a hash map. `curr.random.next` accesses the copy of the random node.  **Edge Cases:** Empty list, nodes with random=None.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 13: Copy List with Random Pointer (Medium)
-
-**Problem Statement:** A linked list where each node has a next and random pointer. Create a deep copy.
-
-**Example:**
-```
-Node1: val=7, next=Node2, random=Node1
-Node2: val=13, next=Node3, random=Node1
-Output: Exact copy with same structure but independent nodes
-```
-
-**Approach:** Three passes: (1) Interleave new nodes between originals, (2) Set random pointers for new nodes, (3) Separate the two lists.
-
-**Python Code:**
-```python
-def copy_random_list(head):
-    if not head:
-        return None
-    # Step 1: Interleave copies
-    curr = head
-    while curr:
-        copy = Node(curr.val, curr.next, None)
-        curr.next = copy
-        curr = copy.next
-    # Step 2: Set random pointers
-    curr = head
-    while curr:
-        if curr.random:
-            curr.next.random = curr.random.next
-        curr = curr.next.next
-    # Step 3: Separate lists
-    copy_head = head.next
-    curr = head
-    while curr:
-        copy = curr.next
-        curr.next = copy.next
-        copy.next = copy.next.next if copy.next else None
-        curr = curr.next
-    return copy_head
-```
-
-**Complexity:** Time O(n), Space O(1)  
-**Trick:** Interleaving technique avoids using a hash map. `curr.random.next` accesses the copy of the random node.  
-**Edge Cases:** Empty list, nodes with random=None.
+- Empty input -> handle gracefully
+## Problem 13: Copy List with Random Pointer (Medium)**Problem Statement:** A linked list where each node has a next and random pointer. Create a deep copy.**Example:**```Node1: val=7, next=Node2, random=Node1Node2: val=13, next=Node3, random=Node1Output: Exact copy with same structure but independent nodes```**Approach:** Three passes: (1) Interleave new nodes between originals, (2) Set random pointers for new nodes, (3) Separate the two lists.**Python Code:**```pythondef copy_random_list(head):    if not head:        return None    # Step 1: Interleave copies    curr = head    while curr:        copy = Node(curr.val, curr.next, None)        curr.next = copy        curr = copy.next    # Step 2: Set random pointers    curr = head    while curr:        if curr.random:            curr.next.random = curr.random.next        curr = curr.next.next    # Step 3: Separate lists    copy_head = head.next    curr = head    while curr:        copy = curr.next        curr.next = copy.next        copy.next = copy.next.next if copy.next else None        curr = curr.next    return copy_head```**Complexity:** Time O(n), Space O(1)  **Trick:** Interleaving technique avoids using a hash map. `curr.random.next` accesses the copy of the random node.  **Edge Cases:** Empty list, nodes with random=None.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Sort a linked list in O(n log n) time using constant space.**Example:**```Input: 4 -> 2 -> 1 -> 3Output: 1 -> 2 -> 3 -> 4```**Approach:** Use merge sort on linked list. Find middle, recursively sort halves, merge sorted halves.**Python Code:**```pythondef sort_list(head):    if not head or not head.next:        return head    # Find middle    slow, fast = head, head.next    while fast and fast.next:        slow = slow.next        fast = fast.next.next    mid = slow.next    slow.next = None    # Sort halves    left = sort_list(head)    right = sort_list(mid)    # Merge    dummy = ListNode(0)    curr = dummy    while left and right:        if left.val <= right.val:            curr.next = left            left = left.next        else:            curr.next = right            right = right.next        curr = curr.next    curr.next = left or right    return dummy.next```**Complexity:** Time O(n log n), Space O(log n) for recursion stack
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Sort List (Medium)**Problem Statement:** Sort a linked list in O(n log n) time using constant space.**Example:**```Input: 4 -> 2 -> 1 -> 3Output: 1 -> 2 -> 3 -> 4```**Approach:** Use merge sort on linked list. Find middle, recursively sort halves, merge sorted halves.**Python Code:**```pythondef sort_list(head):    if not head or not head.next:        return head    # Find middle    slow, fast = head, head.next    while fast and fast.next:        slow = slow.next        fast = fast.next.next    mid = slow.next    slow.next = None    # Sort halves    left = sort_list(head)    right = sort_list(mid)    # Merge    dummy = ListNode(0)    curr = dummy    while left and right:        if left.val <= right.val:            curr.next = left            left = left.next        else:            curr.next = right            right = right.next        curr = curr.next    curr.next = left or right    return dummy.next```**Complexity:** Time O(n log n), Space O(log n) for recursion stack  **Trick:** For linked list, merge sort is preferred over quicksort (no random access needed, stable).  **Edge Cases:** Already sorted, reverse sorted, single element..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** For linked list, merge sort is preferred over quicksort (no random access needed, stable).
 
 **Well-Commented Code:**
 ```python
@@ -1136,74 +834,26 @@ def sort_list(head):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n log n), Space O(log n) for recursion stack
-- **Space:** O(log n) for recursion stack
+- Time: Time O(n log n), Space O(log n) for recursion stack  **Trick:** For linked list, merge sort is preferred over quicksort (no random access needed, stable).  **Edge Cases:** Already sorted, reverse sorted, single element.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 14: Sort List (Medium)
-
-**Problem Statement:** Sort a linked list in O(n log n) time using constant space.
-
-**Example:**
-```
-Input: 4 -> 2 -> 1 -> 3
-Output: 1 -> 2 -> 3 -> 4
-```
-
-**Approach:** Use merge sort on linked list. Find middle, recursively sort halves, merge sorted halves.
-
-**Python Code:**
-```python
-def sort_list(head):
-    if not head or not head.next:
-        return head
-    # Find middle
-    slow, fast = head, head.next
-    while fast and fast.next:
-        slow = slow.next
-        fast = fast.next.next
-    mid = slow.next
-    slow.next = None
-    # Sort halves
-    left = sort_list(head)
-    right = sort_list(mid)
-    # Merge
-    dummy = ListNode(0)
-    curr = dummy
-    while left and right:
-        if left.val <= right.val:
-            curr.next = left
-            left = left.next
-        else:
-            curr.next = right
-            right = right.next
-        curr = curr.next
-    curr.next = left or right
-    return dummy.next
-```
-
-**Complexity:** Time O(n log n), Space O(log n) for recursion stack  
-**Trick:** For linked list, merge sort is preferred over quicksort (no random access needed, stable).  
-**Edge Cases:** Already sorted, reverse sorted, single element.
+- Single element input
+## Problem 14: Sort List (Medium)**Problem Statement:** Sort a linked list in O(n log n) time using constant space.**Example:**```Input: 4 -> 2 -> 1 -> 3Output: 1 -> 2 -> 3 -> 4```**Approach:** Use merge sort on linked list. Find middle, recursively sort halves, merge sorted halves.**Python Code:**```pythondef sort_list(head):    if not head or not head.next:        return head    # Find middle    slow, fast = head, head.next    while fast and fast.next:        slow = slow.next        fast = fast.next.next    mid = slow.next    slow.next = None    # Sort halves    left = sort_list(head)    right = sort_list(mid)    # Merge    dummy = ListNode(0)    curr = dummy    while left and right:        if left.val <= right.val:            curr.next = left            left = left.next        else:            curr.next = right            right = right.next        curr = curr.next    curr.next = left or right    return dummy.next```**Complexity:** Time O(n log n), Space O(log n) for recursion stack  **Trick:** For linked list, merge sort is preferred over quicksort (no random access needed, stable).  **Edge Cases:** Already sorted, reverse sorted, single element.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Numbers stored in forward order. Return sum as a linked list (also forward order).**Example:**```Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)Output: 7 -> 8 -> 0 -> 7 (3424 + 465 = 3889)```**Approach:** Use stacks to reverse the digit order, perform addition like Problem 6, then reverse the result.**Python Code:**```pythondef add_two_numbers_ii(l1, l2):    s1, s2 = [], []    while l1:        s1.append(l1.val)        l1 = l1.next    while l2:        s2.append(l2.val)        l2 = l2.next    carry = 0    head = None    while s1 or s2 or carry:        val = carry        if s1:            val += s1.pop()        if s2:            val += s2.pop()        carry, digit = divmod(val, 10)        node = ListNode(digit)        node.next = head        head = node    return head```**Complexity:** Time O(m+n), Space O(m+n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Add Two Numbers II (Medium)**Problem Statement:** Numbers stored in forward order. Return sum as a linked list (also forward order).**Example:**```Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)Output: 7 -> 8 -> 0 -> 7 (3424 + 465 = 3889)```**Approach:** Use stacks to reverse the digit order, perform addition like Problem 6, then reverse the result.**Python Code:**```pythondef add_two_numbers_ii(l1, l2):    s1, s2 = [], []    while l1:        s1.append(l1.val)        l1 = l1.next    while l2:        s2.append(l2.val)        l2 = l2.next    carry = 0    head = None    while s1 or s2 or carry:        val = carry        if s1:            val += s1.pop()        if s2:            val += s2.pop()        carry, digit = divmod(val, 10)        node = ListNode(digit)        node.next = head        head = node    return head```**Complexity:** Time O(m+n), Space O(m+n)  **Trick:** Stacks naturally reverse the order. Building result by prepending gives correct forward order.  **Edge Cases:** Different length numbers, final carry overflow..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Stacks naturally reverse the order.
 
 **Well-Commented Code:**
 ```python
@@ -1232,69 +882,27 @@ def add_two_numbers_ii(l1, l2):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(m+n), Space O(m+n)
-- **Space:** O(m+n)
+- Time: Time O(m+n), Space O(m+n)  **Trick:** Stacks naturally reverse the order. Building result by prepending gives correct forward order.  **Edge Cases:** Different length numbers, final carry overflow.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 15: Add Two Numbers II (Medium)
-
-**Problem Statement:** Numbers stored in forward order. Return sum as a linked list (also forward order).
-
-**Example:**
-```
-Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)
-Output: 7 -> 8 -> 0 -> 7 (3424 + 465 = 3889)
-```
-
-**Approach:** Use stacks to reverse the digit order, perform addition like Problem 6, then reverse the result.
-
-**Python Code:**
-```python
-def add_two_numbers_ii(l1, l2):
-    s1, s2 = [], []
-    while l1:
-        s1.append(l1.val)
-        l1 = l1.next
-    while l2:
-        s2.append(l2.val)
-        l2 = l2.next
-    carry = 0
-    head = None
-    while s1 or s2 or carry:
-        val = carry
-        if s1:
-            val += s1.pop()
-        if s2:
-            val += s2.pop()
-        carry, digit = divmod(val, 10)
-        node = ListNode(digit)
-        node.next = head
-        head = node
-    return head
-```
-
-**Complexity:** Time O(m+n), Space O(m+n)  
-**Trick:** Stacks naturally reverse the order. Building result by prepending gives correct forward order.  
-**Edge Cases:** Different length numbers, final carry overflow.
+- Single element unchanged
+- Even/odd length both work
+## Problem 15: Add Two Numbers II (Medium)**Problem Statement:** Numbers stored in forward order. Return sum as a linked list (also forward order).**Example:**```Input: (7 -> 2 -> 4 -> 3) + (5 -> 6 -> 4)Output: 7 -> 8 -> 0 -> 7 (3424 + 465 = 3889)```**Approach:** Use stacks to reverse the digit order, perform addition like Problem 6, then reverse the result.**Python Code:**```pythondef add_two_numbers_ii(l1, l2):    s1, s2 = [], []    while l1:        s1.append(l1.val)        l1 = l1.next    while l2:        s2.append(l2.val)        l2 = l2.next    carry = 0    head = None    while s1 or s2 or carry:        val = carry        if s1:            val += s1.pop()        if s2:            val += s2.pop()        carry, digit = divmod(val, 10)        node = ListNode(digit)        node.next = head        head = node    return head```**Complexity:** Time O(m+n), Space O(m+n)  **Trick:** Stacks naturally reverse the order. Building result by prepending gives correct forward order.  **Edge Cases:** Different length numbers, final carry overflow.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Group all odd-indexed nodes together followed by even-indexed nodes. First node is odd.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5Output: 1 -> 3 -> 5 -> 2 -> 4```**Approach:** Maintain two separate chains (odd and even). Connect odd tail to even head at the end.**Python Code:**```pythondef odd_even_list(head):    if not head:        return None    odd = head    even = head.next    even_head = even    while even and even.next:        odd.next = even.next        odd = odd.next        even.next = odd.next        even = even.next    odd.next = even_head    return head```**Complexity:** Time O(n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Odd Even Linked List (Medium)**Problem Statement:** Group all odd-indexed nodes together followed by even-indexed nodes. First node is odd.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5Output: 1 -> 3 -> 5 -> 2 -> 4```**Approach:** Maintain two separate chains (odd and even). Connect odd tail to even head at the end.**Python Code:**```pythondef odd_even_list(head):    if not head:        return None    odd = head    even = head.next    even_head = even    while even and even.next:        odd.next = even.next        odd = odd.next        even.next = odd.next        even = even.next    odd.next = even_head    return head```**Complexity:** Time O(n), Space O(1)  **Trick:** Two separate pointers grow the odd and even chains simultaneously. Always check `even` and `even.next` before advancing.  **Edge Cases:** Single node, two nodes, all same values..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Two separate pointers grow the odd and even chains simultaneously.
 
 **Well-Commented Code:**
 ```python
@@ -1315,61 +923,26 @@ def odd_even_list(head):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(n), Space O(1)  **Trick:** Two separate pointers grow the odd and even chains simultaneously. Always check `even` and `even.next` before advancing.  **Edge Cases:** Single node, two nodes, all same values.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 16: Odd Even Linked List (Medium)
-
-**Problem Statement:** Group all odd-indexed nodes together followed by even-indexed nodes. First node is odd.
-
-**Example:**
-```
-Input: 1 -> 2 -> 3 -> 4 -> 5
-Output: 1 -> 3 -> 5 -> 2 -> 4
-```
-
-**Approach:** Maintain two separate chains (odd and even). Connect odd tail to even head at the end.
-
-**Python Code:**
-```python
-def odd_even_list(head):
-    if not head:
-        return None
-    odd = head
-    even = head.next
-    even_head = even
-    while even and even.next:
-        odd.next = even.next
-        odd = odd.next
-        even.next = odd.next
-        even = even.next
-    odd.next = even_head
-    return head
-```
-
-**Complexity:** Time O(n), Space O(1)  
-**Trick:** Two separate pointers grow the odd and even chains simultaneously. Always check `even` and `even.next` before advancing.  
-**Edge Cases:** Single node, two nodes, all same values.
+- Single element input
+## Problem 16: Odd Even Linked List (Medium)**Problem Statement:** Group all odd-indexed nodes together followed by even-indexed nodes. First node is odd.**Example:**```Input: 1 -> 2 -> 3 -> 4 -> 5Output: 1 -> 3 -> 5 -> 2 -> 4```**Approach:** Maintain two separate chains (odd and even). Connect odd tail to even head at the end.**Python Code:**```pythondef odd_even_list(head):    if not head:        return None    odd = head    even = head.next    even_head = even    while even and even.next:        odd.next = even.next        odd = odd.next        even.next = odd.next        even = even.next    odd.next = even_head    return head```**Complexity:** Time O(n), Space O(1)  **Trick:** Two separate pointers grow the odd and even chains simultaneously. Always check `even` and `even.next` before advancing.  **Edge Cases:** Single node, two nodes, all same values.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Merge k sorted linked lists into one sorted list.**Example:**```Input: lists = [1->4->5, 1->3->4, 2->6]Output: 1->1->2->3->4->4->5->6```**Approach:** Use a min-heap. Push the head of each list. Pop the smallest, add to result, push its next if exists. Repeat until heap is empty.**Python Code:**```pythonimport heapqdef merge_k_lists(lists):    dummy = ListNode(0)    curr = dummy    heap = []    for i, l in enumerate(lists):        if l:            heapq.heappush(heap, (l.val, i, l))    while heap:        val, idx, node = heapq.heappop(heap)        curr.next = node        curr = curr.next        if node.next:            heapq.heappush(heap, (node.next.val, idx, node.next))    return dummy.next```**Complexity:** Time O(N log k) where N = total nodes, Space O(k)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Merge k Sorted Lists (Hard)**Problem Statement:** Merge k sorted linked lists into one sorted list.**Example:**```Input: lists = [1->4->5, 1->3->4, 2->6]Output: 1->1->2->3->4->4->5->6```**Approach:** Use a min-heap. Push the head of each list. Pop the smallest, add to result, push its next if exists. Repeat until heap is empty.**Python Code:**```pythonimport heapqdef merge_k_lists(lists):    dummy = ListNode(0)    curr = dummy    heap = []    for i, l in enumerate(lists):        if l:            heapq.heappush(heap, (l.val, i, l))    while heap:        val, idx, node = heapq.heappop(heap)        curr.next = node        curr = curr.next        if node.next:            heapq.heappush(heap, (node.next.val, idx, node.next))    return dummy.next```**Complexity:** Time O(N log k) where N = total nodes, Space O(k)  **Trick:** Tuple comparison uses `val` as primary key, `idx` as tiebreaker to avoid comparing ListNode objects.  **Edge Cases:** Empty input, some empty lists, single list..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Tuple comparison uses `val` as primary key, `idx` as tiebreaker to avoid comparing ListNode objects.
 
 **Well-Commented Code:**
 ```python
@@ -1393,64 +966,26 @@ def merge_k_lists(lists):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(N log k) where N = total nodes, Space O(k)
-- **Space:** O(k)
+- Time: Time O(N log k) where N = total nodes, Space O(k)  **Trick:** Tuple comparison uses `val` as primary key, `idx` as tiebreaker to avoid comparing ListNode objects.  **Edge Cases:** Empty input, some empty lists, single list.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 17: Merge k Sorted Lists (Hard)
-
-**Problem Statement:** Merge k sorted linked lists into one sorted list.
-
-**Example:**
-```
-Input: lists = [1->4->5, 1->3->4, 2->6]
-Output: 1->1->2->3->4->4->5->6
-```
-
-**Approach:** Use a min-heap. Push the head of each list. Pop the smallest, add to result, push its next if exists. Repeat until heap is empty.
-
-**Python Code:**
-```python
-import heapq
-
-def merge_k_lists(lists):
-    dummy = ListNode(0)
-    curr = dummy
-    heap = []
-    for i, l in enumerate(lists):
-        if l:
-            heapq.heappush(heap, (l.val, i, l))
-    while heap:
-        val, idx, node = heapq.heappop(heap)
-        curr.next = node
-        curr = curr.next
-        if node.next:
-            heapq.heappush(heap, (node.next.val, idx, node.next))
-    return dummy.next
-```
-
-**Complexity:** Time O(N log k) where N = total nodes, Space O(k)  
-**Trick:** Tuple comparison uses `val` as primary key, `idx` as tiebreaker to avoid comparing ListNode objects.  
-**Edge Cases:** Empty input, some empty lists, single list.
+- Empty input -> handle gracefully
+## Problem 17: Merge k Sorted Lists (Hard)**Problem Statement:** Merge k sorted linked lists into one sorted list.**Example:**```Input: lists = [1->4->5, 1->3->4, 2->6]Output: 1->1->2->3->4->4->5->6```**Approach:** Use a min-heap. Push the head of each list. Pop the smallest, add to result, push its next if exists. Repeat until heap is empty.**Python Code:**```pythonimport heapqdef merge_k_lists(lists):    dummy = ListNode(0)    curr = dummy    heap = []    for i, l in enumerate(lists):        if l:            heapq.heappush(heap, (l.val, i, l))    while heap:        val, idx, node = heapq.heappop(heap)        curr.next = node        curr = curr.next        if node.next:            heapq.heappush(heap, (node.next.val, idx, node.next))    return dummy.next```**Complexity:** Time O(N log k) where N = total nodes, Space O(k)  **Trick:** Tuple comparison uses `val` as primary key, `idx` as tiebreaker to avoid comparing ListNode objects.  **Edge Cases:** Empty input, some empty lists, single list.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Reverse every k consecutive nodes. If remaining nodes < k, leave as is.**Example:**```Input: 1->2->3->4->5, k = 2Output: 2->1->4->3->5Input: 1->2->3->4->5, k = 3Output: 3->2->1->4->5```**Approach:** Check if k nodes exist. If yes, reverse k nodes. Recurse or iterate for the next group. Connect groups together.**Python Code:**```pythondef reverse_k_group(head, k):    def reverse(start, end):        prev, curr = None, start        while curr is not end:            nxt = curr.next            curr.next = prev            prev = curr            curr = nxt        return prev    count = 0    node = head    while node and count < k:        node = node.next        count += 1    if count < k:        return head    new_head = reverse(head, node)    head.next = reverse_k_group(node, k)    return new_head```**Complexity:** Time O(n), Space O(1) iterative / O(n/k) recursive
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Reverse Nodes in k-Group (Hard)**Problem Statement:** Reverse every k consecutive nodes. If remaining nodes < k, leave as is.**Example:**```Input: 1->2->3->4->5, k = 2Output: 2->1->4->3->5Input: 1->2->3->4->5, k = 3Output: 3->2->1->4->5```**Approach:** Check if k nodes exist. If yes, reverse k nodes. Recurse or iterate for the next group. Connect groups together.**Python Code:**```pythondef reverse_k_group(head, k):    def reverse(start, end):        prev, curr = None, start        while curr is not end:            nxt = curr.next            curr.next = prev            prev = curr            curr = nxt        return prev    count = 0    node = head    while node and count < k:        node = node.next        count += 1    if count < k:        return head    new_head = reverse(head, node)    head.next = reverse_k_group(node, k)    return new_head```**Complexity:** Time O(n), Space O(1) iterative / O(n/k) recursive  **Trick:** First count k nodes to ensure a full group exists. `reverse(head, node)` reverses up to but not including `node`.  **Edge Cases:** k=1 (no change), k=length, k>length..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** First count k nodes to ensure a full group exists.
 
 **Well-Commented Code:**
 ```python
@@ -1477,70 +1012,27 @@ def reverse_k_group(head, k):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1) iterative / O(n/k) recursive
-- **Space:** O(1) iterative / O(n/k) recursive
+- Time: Time O(n), Space O(1) iterative / O(n/k) recursive  **Trick:** First count k nodes to ensure a full group exists. `reverse(head, node)` reverses up to but not including `node`.  **Edge Cases:** k=1 (no change), k=length, k>length.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 18: Reverse Nodes in k-Group (Hard)
-
-**Problem Statement:** Reverse every k consecutive nodes. If remaining nodes < k, leave as is.
-
-**Example:**
-```
-Input: 1->2->3->4->5, k = 2
-Output: 2->1->4->3->5
-
-Input: 1->2->3->4->5, k = 3
-Output: 3->2->1->4->5
-```
-
-**Approach:** Check if k nodes exist. If yes, reverse k nodes. Recurse or iterate for the next group. Connect groups together.
-
-**Python Code:**
-```python
-def reverse_k_group(head, k):
-    def reverse(start, end):
-        prev, curr = None, start
-        while curr is not end:
-            nxt = curr.next
-            curr.next = prev
-            prev = curr
-            curr = nxt
-        return prev
-    count = 0
-    node = head
-    while node and count < k:
-        node = node.next
-        count += 1
-    if count < k:
-        return head
-    new_head = reverse(head, node)
-    head.next = reverse_k_group(node, k)
-    return new_head
-```
-
-**Complexity:** Time O(n), Space O(1) iterative / O(n/k) recursive  
-**Trick:** First count k nodes to ensure a full group exists. `reverse(head, node)` reverses up to but not including `node`.  
-**Edge Cases:** k=1 (no change), k=length, k>length.
+- Single element unchanged
+- Even/odd length both work
+## Problem 18: Reverse Nodes in k-Group (Hard)**Problem Statement:** Reverse every k consecutive nodes. If remaining nodes < k, leave as is.**Example:**```Input: 1->2->3->4->5, k = 2Output: 2->1->4->3->5Input: 1->2->3->4->5, k = 3Output: 3->2->1->4->5```**Approach:** Check if k nodes exist. If yes, reverse k nodes. Recurse or iterate for the next group. Connect groups together.**Python Code:**```pythondef reverse_k_group(head, k):    def reverse(start, end):        prev, curr = None, start        while curr is not end:            nxt = curr.next            curr.next = prev            prev = curr            curr = nxt        return prev    count = 0    node = head    while node and count < k:        node = node.next        count += 1    if count < k:        return head    new_head = reverse(head, node)    head.next = reverse_k_group(node, k)    return new_head```**Complexity:** Time O(n), Space O(1) iterative / O(n/k) recursive  **Trick:** First count k nodes to ensure a full group exists. `reverse(head, node)` reverses up to but not including `node`.  **Edge Cases:** k=1 (no change), k=length, k>length.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Implement an LRU (Least Recently Used) cache with O(1) get and put operations.**Example:**```cache = LRUCache(2)cache.put(1, 1)cache.put(2, 2)cache.get(1)      # returns 1cache.put(3, 3)   # evicts key 2cache.get(2)      # returns -1 (not found)```**Approach:** Use a HashMap mapping keys to DLL nodes, plus a doubly linked list for order. Most recent at head, least at tail. On access, move to head. On capacity exceeded, remove from tail.**Python Code:**```pythonclass DLLNode:    def __init__(self, key=0, val=0):        self.key = key        self.val = val        self.prev = None        self.next = Noneclass LRUCache:    def __init__(self, capacity):        self.cap = capacity        self.cache = {}        self.head = DLLNode()        self.tail = DLLNode()        self.head.next = self.tail        self.tail.prev = self.head    def _remove(self, node):        node.prev.next = node.next        node.next.prev = node.prev    def _add_to_head(self, node):        node.next = self.head.next        node.prev = self.head        self.head.next.prev = node        self.head.next = node    def get(self, key):        if key in self.cache:            node = self.cache[key]            self._remove(node)            self._add_to_head(node)            return node.val        return -1    def put(self, key, value):        if key in self.cache:            self._remove(self.cache[key])        node = DLLNode(key, value)        self._add_to_head(node)        self.cache[key] = node        if len(self.cache) > self.cap:            lru = self.tail.prev            self._remove(lru)            del self.cache[lru.key]```**Complexity:** Time O(1) for get/put, Space O(capacity)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of LRU Cache (Hard)**Problem Statement:** Implement an LRU (Least Recently Used) cache with O(1) get and put operations.**Example:**```cache = LRUCache(2)cache.put(1, 1)cache.put(2, 2)cache.get(1)      # returns 1cache.put(3, 3)   # evicts key 2cache.get(2)      # returns -1 (not found)```**Approach:** Use a HashMap mapping keys to DLL nodes, plus a doubly linked list for order. Most recent at head, least at tail. On access, move to head. On capacity exceeded, remove from tail.**Python Code:**```pythonclass DLLNode:    def __init__(self, key=0, val=0):        self.key = key        self.val = val        self.prev = None        self.next = Noneclass LRUCache:    def __init__(self, capacity):        self.cap = capacity        self.cache = {}        self.head = DLLNode()        self.tail = DLLNode()        self.head.next = self.tail        self.tail.prev = self.head    def _remove(self, node):        node.prev.next = node.next        node.next.prev = node.prev    def _add_to_head(self, node):        node.next = self.head.next        node.prev = self.head        self.head.next.prev = node        self.head.next = node    def get(self, key):        if key in self.cache:            node = self.cache[key]            self._remove(node)            self._add_to_head(node)            return node.val        return -1    def put(self, key, value):        if key in self.cache:            self._remove(self.cache[key])        node = DLLNode(key, value)        self._add_to_head(node)        self.cache[key] = node        if len(self.cache) > self.cap:            lru = self.tail.prev            self._remove(lru)            del self.cache[lru.key]```**Complexity:** Time O(1) for get/put, Space O(capacity)  **Trick:** Store key in DLLNode so we can delete from hashmap when evicting from tail. Dummy head/tail simplify edge cases.  **Edge Cases:** Capacity 1, get on empty cache, put existing key..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Store key in DLLNode so we can delete from hashmap when evicting from tail.
 
 **Well-Commented Code:**
 ```python
@@ -1592,96 +1084,26 @@ class LRUCache:
 ```
 
 **Complexity Analysis:**
-- **Time:** O(1) for get/put, Space O(capacity)
-- **Space:** O(capacity)
+- Time: Time O(1) for get/put, Space O(capacity)  **Trick:** Store key in DLLNode so we can delete from hashmap when evicting from tail. Dummy head/tail simplify edge cases.  **Edge Cases:** Capacity 1, get on empty cache, put existing key.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 19: LRU Cache (Hard)
-
-**Problem Statement:** Implement an LRU (Least Recently Used) cache with O(1) get and put operations.
-
-**Example:**
-```
-cache = LRUCache(2)
-cache.put(1, 1)
-cache.put(2, 2)
-cache.get(1)      # returns 1
-cache.put(3, 3)   # evicts key 2
-cache.get(2)      # returns -1 (not found)
-```
-
-**Approach:** Use a HashMap mapping keys to DLL nodes, plus a doubly linked list for order. Most recent at head, least at tail. On access, move to head. On capacity exceeded, remove from tail.
-
-**Python Code:**
-```python
-class DLLNode:
-    def __init__(self, key=0, val=0):
-        self.key = key
-        self.val = val
-        self.prev = None
-        self.next = None
-
-class LRUCache:
-    def __init__(self, capacity):
-        self.cap = capacity
-        self.cache = {}
-        self.head = DLLNode()
-        self.tail = DLLNode()
-        self.head.next = self.tail
-        self.tail.prev = self.head
-
-    def _remove(self, node):
-        node.prev.next = node.next
-        node.next.prev = node.prev
-
-    def _add_to_head(self, node):
-        node.next = self.head.next
-        node.prev = self.head
-        self.head.next.prev = node
-        self.head.next = node
-
-    def get(self, key):
-        if key in self.cache:
-            node = self.cache[key]
-            self._remove(node)
-            self._add_to_head(node)
-            return node.val
-        return -1
-
-    def put(self, key, value):
-        if key in self.cache:
-            self._remove(self.cache[key])
-        node = DLLNode(key, value)
-        self._add_to_head(node)
-        self.cache[key] = node
-        if len(self.cache) > self.cap:
-            lru = self.tail.prev
-            self._remove(lru)
-            del self.cache[lru.key]
-```
-
-**Complexity:** Time O(1) for get/put, Space O(capacity)  
-**Trick:** Store key in DLLNode so we can delete from hashmap when evicting from tail. Dummy head/tail simplify edge cases.  
-**Edge Cases:** Capacity 1, get on empty cache, put existing key.
+- Empty input -> handle gracefully
+## Problem 19: LRU Cache (Hard)**Problem Statement:** Implement an LRU (Least Recently Used) cache with O(1) get and put operations.**Example:**```cache = LRUCache(2)cache.put(1, 1)cache.put(2, 2)cache.get(1)      # returns 1cache.put(3, 3)   # evicts key 2cache.get(2)      # returns -1 (not found)```**Approach:** Use a HashMap mapping keys to DLL nodes, plus a doubly linked list for order. Most recent at head, least at tail. On access, move to head. On capacity exceeded, remove from tail.**Python Code:**```pythonclass DLLNode:    def __init__(self, key=0, val=0):        self.key = key        self.val = val        self.prev = None        self.next = Noneclass LRUCache:    def __init__(self, capacity):        self.cap = capacity        self.cache = {}        self.head = DLLNode()        self.tail = DLLNode()        self.head.next = self.tail        self.tail.prev = self.head    def _remove(self, node):        node.prev.next = node.next        node.next.prev = node.prev    def _add_to_head(self, node):        node.next = self.head.next        node.prev = self.head        self.head.next.prev = node        self.head.next = node    def get(self, key):        if key in self.cache:            node = self.cache[key]            self._remove(node)            self._add_to_head(node)            return node.val        return -1    def put(self, key, value):        if key in self.cache:            self._remove(self.cache[key])        node = DLLNode(key, value)        self._add_to_head(node)        self.cache[key] = node        if len(self.cache) > self.cap:            lru = self.tail.prev            self._remove(lru)            del self.cache[lru.key]```**Complexity:** Time O(1) for get/put, Space O(capacity)  **Trick:** Store key in DLLNode so we can delete from hashmap when evicting from tail. Dummy head/tail simplify edge cases.  **Edge Cases:** Capacity 1, get on empty cache, put existing key.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** A doubly linked list where some nodes have a child pointer to a separate doubly linked list. Flatten all levels into a single list.**Example:**```1 - 2 - 3 - 4 - 5 - 6 - NULL        |        7 - 8 - 9 - 10 - NULL            |            11 - 12 - NULLOutput: 1-2-3-7-8-11-12-9-10-4-5-6-NULL```**Approach:** Iterate through the list. When a node has a child, recurse to flatten the child list. Splice it between current and next. Connect child list's tail to the remaining list.**Python Code:**```pythondef flatten(head):    if not head:        return head    curr = head    while curr:        if curr.child:            child_head = flatten(curr.child)            nxt = curr.next            curr.next = child_head            child_head.prev = curr            # Find tail of child list            tail = child_head            while tail.next:                tail = tail.next            tail.next = nxt            if nxt:                nxt.prev = tail            curr.child = None        curr = curr.next    return head```**Complexity:** Time O(n), Space O(d) where d = max depth
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Flatten a Multilevel Doubly Linked List (Hard)**Problem Statement:** A doubly linked list where some nodes have a child pointer to a separate doubly linked list. Flatten all levels into a single list.**Example:**```1 - 2 - 3 - 4 - 5 - 6 - NULL        |        7 - 8 - 9 - 10 - NULL            |            11 - 12 - NULLOutput: 1-2-3-7-8-11-12-9-10-4-5-6-NULL```**Approach:** Iterate through the list. When a node has a child, recurse to flatten the child list. Splice it between current and next. Connect child list's tail to the remaining list.**Python Code:**```pythondef flatten(head):    if not head:        return head    curr = head    while curr:        if curr.child:            child_head = flatten(curr.child)            nxt = curr.next            curr.next = child_head            child_head.prev = curr            # Find tail of child list            tail = child_head            while tail.next:                tail = tail.next            tail.next = nxt            if nxt:                nxt.prev = tail            curr.child = None        curr = curr.next    return head```**Complexity:** Time O(n), Space O(d) where d = max depth  **Trick:** Flatten child first, then splice. Always nullify the child pointer after flattening.  **Edge Cases:** No children, multiple levels, child at the end..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Flatten child first, then splice.
 
 **Well-Commented Code:**
 ```python
@@ -1709,57 +1131,12 @@ def flatten(head):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(d) where d = max depth
-- **Space:** O(d) where d = max depth
+- Time: Time O(n), Space O(d) where d = max depth  **Trick:** Flatten child first, then splice. Always nullify the child pointer after flattening.  **Edge Cases:** No children, multiple levels, child at the end.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 20: Flatten a Multilevel Doubly Linked List (Hard)
-
-**Problem Statement:** A doubly linked list where some nodes have a child pointer to a separate doubly linked list. Flatten all levels into a single list.
-
-**Example:**
-```
-1 - 2 - 3 - 4 - 5 - 6 - NULL
-        |
-        7 - 8 - 9 - 10 - NULL
-            |
-            11 - 12 - NULL
-Output: 1-2-3-7-8-11-12-9-10-4-5-6-NULL
-```
-
-**Approach:** Iterate through the list. When a node has a child, recurse to flatten the child list. Splice it between current and next. Connect child list's tail to the remaining list.
-
-**Python Code:**
-```python
-def flatten(head):
-    if not head:
-        return head
-    curr = head
-    while curr:
-        if curr.child:
-            child_head = flatten(curr.child)
-            nxt = curr.next
-            curr.next = child_head
-            child_head.prev = curr
-            # Find tail of child list
-            tail = child_head
-            while tail.next:
-                tail = tail.next
-            tail.next = nxt
-            if nxt:
-                nxt.prev = tail
-            curr.child = None
-        curr = curr.next
-    return head
-```
-
-**Complexity:** Time O(n), Space O(d) where d = max depth  
-**Trick:** Flatten child first, then splice. Always nullify the child pointer after flattening.  
-**Edge Cases:** No children, multiple levels, child at the end.
+- Single element input
+## Problem 20: Flatten a Multilevel Doubly Linked List (Hard)**Problem Statement:** A doubly linked list where some nodes have a child pointer to a separate doubly linked list. Flatten all levels into a single list.**Example:**```1 - 2 - 3 - 4 - 5 - 6 - NULL        |        7 - 8 - 9 - 10 - NULL            |            11 - 12 - NULLOutput: 1-2-3-7-8-11-12-9-10-4-5-6-NULL```**Approach:** Iterate through the list. When a node has a child, recurse to flatten the child list. Splice it between current and next. Connect child list's tail to the remaining list.**Python Code:**```pythondef flatten(head):    if not head:        return head    curr = head    while curr:        if curr.child:            child_head = flatten(curr.child)            nxt = curr.next            curr.next = child_head            child_head.prev = curr            # Find tail of child list            tail = child_head            while tail.next:                tail = tail.next            tail.next = nxt            if nxt:                nxt.prev = tail            curr.child = None        curr = curr.next    return head```**Complexity:** Time O(n), Space O(d) where d = max depth  **Trick:** Flatten child first, then splice. Always nullify the child pointer after flattening.  **Edge Cases:** No children, multiple levels, child at the end.
+---
 
 ---
 
@@ -1778,7 +1155,7 @@ def flatten(head):
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Valid Parentheses (Easy).
 ```
 
 **Key Insight:** Stack is the natural data structure for nested matching problems.
@@ -1844,18 +1221,17 @@ def is_valid(s):
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Implement a FIFO queue using only two stacks.**Example:**```MyQueue q = new MyQueue();q.push(1);q.push(2);q.peek();    // returns 1q.pop();     // returns 1q.empty();   // returns false```**Approach:** Use input and output stacks. On dequeue, if output is empty, transfer all from input to output (reversing order). Amortized O(1) per operation.**Python Code:**```pythonclass MyQueue:    def __init__(self):        self.input = []        self.output = []    def push(self, x):        self.input.append(x)    def pop(self):        self.peek()        return self.output.pop()    def peek(self):        if not self.output:            while self.input:                self.output.append(self.input.pop())        return self.output[-1]    def empty(self):        return not self.input and not self.output```**Complexity:** Push O(1), Pop/Peek amortized O(1), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Implement Queue using Stacks (Easy)**Problem Statement:** Implement a FIFO queue using only two stacks.**Example:**```MyQueue q = new MyQueue();q.push(1);q.push(2);q.peek();    // returns 1q.pop();     // returns 1q.empty();   // returns false```**Approach:** Use input and output stacks. On dequeue, if output is empty, transfer all from input to output (reversing order). Amortized O(1) per operation.**Python Code:**```pythonclass MyQueue:    def __init__(self):        self.input = []        self.output = []    def push(self, x):        self.input.append(x)    def pop(self):        self.peek()        return self.output.pop()    def peek(self):        if not self.output:            while self.input:                self.output.append(self.input.pop())        return self.output[-1]    def empty(self):        return not self.input and not self.output```**Complexity:** Push O(1), Pop/Peek amortized O(1), Space O(n)  **Trick:** Each element is moved from input to output at most once, giving amortized O(1).  **Edge Cases:** Pop from empty queue, peek before any push..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Each element is moved from input to output at most once, giving amortized O(1).
 
 **Well-Commented Code:**
 ```python
@@ -1883,71 +1259,26 @@ class MyQueue:
 ```
 
 **Complexity Analysis:**
-- **Space:** O(n)
+- Time: Push O(1), Pop/Peek amortized O(1), Space O(n)  **Trick:** Each element is moved from input to output at most once, giving amortized O(1).  **Edge Cases:** Pop from empty queue, peek before any push.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 22: Implement Queue using Stacks (Easy)
-
-**Problem Statement:** Implement a FIFO queue using only two stacks.
-
-**Example:**
-```
-MyQueue q = new MyQueue();
-q.push(1);
-q.push(2);
-q.peek();    // returns 1
-q.pop();     // returns 1
-q.empty();   // returns false
-```
-
-**Approach:** Use input and output stacks. On dequeue, if output is empty, transfer all from input to output (reversing order). Amortized O(1) per operation.
-
-**Python Code:**
-```python
-class MyQueue:
-    def __init__(self):
-        self.input = []
-        self.output = []
-
-    def push(self, x):
-        self.input.append(x)
-
-    def pop(self):
-        self.peek()
-        return self.output.pop()
-
-    def peek(self):
-        if not self.output:
-            while self.input:
-                self.output.append(self.input.pop())
-        return self.output[-1]
-
-    def empty(self):
-        return not self.input and not self.output
-```
-
-**Complexity:** Push O(1), Pop/Peek amortized O(1), Space O(n)  
-**Trick:** Each element is moved from input to output at most once, giving amortized O(1).  
-**Edge Cases:** Pop from empty queue, peek before any push.
+- Empty input -> handle gracefully
+## Problem 22: Implement Queue using Stacks (Easy)**Problem Statement:** Implement a FIFO queue using only two stacks.**Example:**```MyQueue q = new MyQueue();q.push(1);q.push(2);q.peek();    // returns 1q.pop();     // returns 1q.empty();   // returns false```**Approach:** Use input and output stacks. On dequeue, if output is empty, transfer all from input to output (reversing order). Amortized O(1) per operation.**Python Code:**```pythonclass MyQueue:    def __init__(self):        self.input = []        self.output = []    def push(self, x):        self.input.append(x)    def pop(self):        self.peek()        return self.output.pop()    def peek(self):        if not self.output:            while self.input:                self.output.append(self.input.pop())        return self.output[-1]    def empty(self):        return not self.input and not self.output```**Complexity:** Push O(1), Pop/Peek amortized O(1), Space O(n)  **Trick:** Each element is moved from input to output at most once, giving amortized O(1).  **Edge Cases:** Pop from empty queue, peek before any push.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Implement a LIFO stack using only one queue.**Example:**```MyStack stack = new MyStack();stack.push(1);stack.push(2);stack.top();   // returns 2stack.pop();   // returns 2stack.empty(); // returns false```**Approach:** On push, enqueue the element, then rotate the queue (dequeue and re-enqueue) size-1 times to bring the new element to front.**Python Code:**```pythonfrom collections import dequeclass MyStack:    def __init__(self):        self.q = deque()    def push(self, x):        self.q.append(x)        for _ in range(len(self.q) - 1):            self.q.append(self.q.popleft())    def pop(self):        return self.q.popleft()    def top(self):        return self.q[0]    def empty(self):        return len(self.q) == 0```**Complexity:** Push O(n), Pop O(1), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Implement Stack using Queues (Easy)**Problem Statement:** Implement a LIFO stack using only one queue.**Example:**```MyStack stack = new MyStack();stack.push(1);stack.push(2);stack.top();   // returns 2stack.pop();   // returns 2stack.empty(); // returns false```**Approach:** On push, enqueue the element, then rotate the queue (dequeue and re-enqueue) size-1 times to bring the new element to front.**Python Code:**```pythonfrom collections import dequeclass MyStack:    def __init__(self):        self.q = deque()    def push(self, x):        self.q.append(x)        for _ in range(len(self.q) - 1):            self.q.append(self.q.popleft())    def pop(self):        return self.q.popleft()    def top(self):        return self.q[0]    def empty(self):        return len(self.q) == 0```**Complexity:** Push O(n), Pop O(1), Space O(n)  **Trick:** Rotation makes the last pushed element the first in queue, simulating LIFO.  **Edge Cases:** Pop from empty stack, single element stack..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Rotation makes the last pushed element the first in queue, simulating LIFO.
 
 **Well-Commented Code:**
 ```python
@@ -1974,70 +1305,26 @@ class MyStack:
 ```
 
 **Complexity Analysis:**
-- **Space:** O(n)
+- Time: Push O(n), Pop O(1), Space O(n)  **Trick:** Rotation makes the last pushed element the first in queue, simulating LIFO.  **Edge Cases:** Pop from empty stack, single element stack.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 23: Implement Stack using Queues (Easy)
-
-**Problem Statement:** Implement a LIFO stack using only one queue.
-
-**Example:**
-```
-MyStack stack = new MyStack();
-stack.push(1);
-stack.push(2);
-stack.top();   // returns 2
-stack.pop();   // returns 2
-stack.empty(); // returns false
-```
-
-**Approach:** On push, enqueue the element, then rotate the queue (dequeue and re-enqueue) size-1 times to bring the new element to front.
-
-**Python Code:**
-```python
-from collections import deque
-
-class MyStack:
-    def __init__(self):
-        self.q = deque()
-
-    def push(self, x):
-        self.q.append(x)
-        for _ in range(len(self.q) - 1):
-            self.q.append(self.q.popleft())
-
-    def pop(self):
-        return self.q.popleft()
-
-    def top(self):
-        return self.q[0]
-
-    def empty(self):
-        return len(self.q) == 0
-```
-
-**Complexity:** Push O(n), Pop O(1), Space O(n)  
-**Trick:** Rotation makes the last pushed element the first in queue, simulating LIFO.  
-**Edge Cases:** Pop from empty stack, single element stack.
+- Empty input -> handle gracefully
+## Problem 23: Implement Stack using Queues (Easy)**Problem Statement:** Implement a LIFO stack using only one queue.**Example:**```MyStack stack = new MyStack();stack.push(1);stack.push(2);stack.top();   // returns 2stack.pop();   // returns 2stack.empty(); // returns false```**Approach:** On push, enqueue the element, then rotate the queue (dequeue and re-enqueue) size-1 times to bring the new element to front.**Python Code:**```pythonfrom collections import dequeclass MyStack:    def __init__(self):        self.q = deque()    def push(self, x):        self.q.append(x)        for _ in range(len(self.q) - 1):            self.q.append(self.q.popleft())    def pop(self):        return self.q.popleft()    def top(self):        return self.q[0]    def empty(self):        return len(self.q) == 0```**Complexity:** Push O(n), Pop O(1), Space O(n)  **Trick:** Rotation makes the last pushed element the first in queue, simulating LIFO.  **Edge Cases:** Pop from empty stack, single element stack.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Design a stack that supports push, pop, top, and retrieving the minimum element in O(1).**Example:**```MinStack ms = new MinStack();ms.push(-2);ms.push(0);ms.push(-3);ms.getMin(); // returns -3ms.pop();ms.top();    // returns 0ms.getMin(); // returns -2```**Approach:** Maintain a helper stack that tracks minimums. When pushing, also push the current min. When popping, pop from both stacks.**Python Code:**```pythonclass MinStack:    def __init__(self):        self.stack = []        self.min_stack = []    def push(self, val):        self.stack.append(val)        min_val = min(val, self.min_stack[-1] if self.min_stack else val)        self.min_stack.append(min_val)    def pop(self):        self.stack.pop()        self.min_stack.pop()    def top(self):        return self.stack[-1]    def get_min(self):        return self.min_stack[-1]```**Complexity:** Time O(1) for all ops, Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Min Stack (Easy)**Problem Statement:** Design a stack that supports push, pop, top, and retrieving the minimum element in O(1).**Example:**```MinStack ms = new MinStack();ms.push(-2);ms.push(0);ms.push(-3);ms.getMin(); // returns -3ms.pop();ms.top();    // returns 0ms.getMin(); // returns -2```**Approach:** Maintain a helper stack that tracks minimums. When pushing, also push the current min. When popping, pop from both stacks.**Python Code:**```pythonclass MinStack:    def __init__(self):        self.stack = []        self.min_stack = []    def push(self, val):        self.stack.append(val)        min_val = min(val, self.min_stack[-1] if self.min_stack else val)        self.min_stack.append(min_val)    def pop(self):        self.stack.pop()        self.min_stack.pop()    def top(self):        return self.stack[-1]    def get_min(self):        return self.min_stack[-1]```**Complexity:** Time O(1) for all ops, Space O(n)  **Trick:** `min_stack[-1]` always holds the current minimum. Push `min(val, current_min)` every time.  **Edge Cases:** Pop when stack has one element, getMin on empty stack..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** `min_stack[-1]` always holds the current minimum.
 
 **Well-Commented Code:**
 ```python
@@ -2064,73 +1351,26 @@ class MinStack:
 ```
 
 **Complexity Analysis:**
-- **Time:** O(1) for all ops, Space O(n)
-- **Space:** O(n)
+- Time: Time O(1) for all ops, Space O(n)  **Trick:** `min_stack[-1]` always holds the current minimum. Push `min(val, current_min)` every time.  **Edge Cases:** Pop when stack has one element, getMin on empty stack.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 24: Min Stack (Easy)
-
-**Problem Statement:** Design a stack that supports push, pop, top, and retrieving the minimum element in O(1).
-
-**Example:**
-```
-MinStack ms = new MinStack();
-ms.push(-2);
-ms.push(0);
-ms.push(-3);
-ms.getMin(); // returns -3
-ms.pop();
-ms.top();    // returns 0
-ms.getMin(); // returns -2
-```
-
-**Approach:** Maintain a helper stack that tracks minimums. When pushing, also push the current min. When popping, pop from both stacks.
-
-**Python Code:**
-```python
-class MinStack:
-    def __init__(self):
-        self.stack = []
-        self.min_stack = []
-
-    def push(self, val):
-        self.stack.append(val)
-        min_val = min(val, self.min_stack[-1] if self.min_stack else val)
-        self.min_stack.append(min_val)
-
-    def pop(self):
-        self.stack.pop()
-        self.min_stack.pop()
-
-    def top(self):
-        return self.stack[-1]
-
-    def get_min(self):
-        return self.min_stack[-1]
-```
-
-**Complexity:** Time O(1) for all ops, Space O(n)  
-**Trick:** `min_stack[-1]` always holds the current minimum. Push `min(val, current_min)` every time.  
-**Edge Cases:** Pop when stack has one element, getMin on empty stack.
+- Empty input -> handle gracefully
+## Problem 24: Min Stack (Easy)**Problem Statement:** Design a stack that supports push, pop, top, and retrieving the minimum element in O(1).**Example:**```MinStack ms = new MinStack();ms.push(-2);ms.push(0);ms.push(-3);ms.getMin(); // returns -3ms.pop();ms.top();    // returns 0ms.getMin(); // returns -2```**Approach:** Maintain a helper stack that tracks minimums. When pushing, also push the current min. When popping, pop from both stacks.**Python Code:**```pythonclass MinStack:    def __init__(self):        self.stack = []        self.min_stack = []    def push(self, val):        self.stack.append(val)        min_val = min(val, self.min_stack[-1] if self.min_stack else val)        self.min_stack.append(min_val)    def pop(self):        self.stack.pop()        self.min_stack.pop()    def top(self):        return self.stack[-1]    def get_min(self):        return self.min_stack[-1]```**Complexity:** Time O(1) for all ops, Space O(n)  **Trick:** `min_stack[-1]` always holds the current minimum. Push `min(val, current_min)` every time.  **Edge Cases:** Pop when stack has one element, getMin on empty stack.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Calculate score from operations: integer = add, "+" = sum of last two, "D" = double of last, "C" = remove last.**Example:**```Input: ["5","2","C","D","+"]Output: 30Explanation: 5 + 2*2 + (5+2*2) = 5 + 4 + 21 = 30```**Approach:** Use a stack. Push integer values. On "+", push sum of top two. On "D", push 2*top. On "C", pop. Sum stack at end.**Python Code:**```pythondef cal_points(operations):    stack = []    for op in operations:        if op == '+':            stack.append(stack[-1] + stack[-2])        elif op == 'D':            stack.append(2 * stack[-1])        elif op == 'C':            stack.pop()        else:            stack.append(int(op))    return sum(stack)```**Complexity:** Time O(n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Baseball Game (Easy)**Problem Statement:** Calculate score from operations: integer = add, "+" = sum of last two, "D" = double of last, "C" = remove last.**Example:**```Input: ["5","2","C","D","+"]Output: 30Explanation: 5 + 2*2 + (5+2*2) = 5 + 4 + 21 = 30```**Approach:** Use a stack. Push integer values. On "+", push sum of top two. On "D", push 2*top. On "C", pop. Sum stack at end.**Python Code:**```pythondef cal_points(operations):    stack = []    for op in operations:        if op == '+':            stack.append(stack[-1] + stack[-2])        elif op == 'D':            stack.append(2 * stack[-1])        elif op == 'C':            stack.pop()        else:            stack.append(int(op))    return sum(stack)```**Complexity:** Time O(n), Space O(n)  **Trick:** Stack naturally handles the "remove last" and "access previous" operations.  **Edge Cases:** "C" on empty stack, multiple consecutive "C" operations..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Stack naturally handles the "remove last" and "access previous" operations.
 
 **Well-Commented Code:**
 ```python
@@ -2150,61 +1390,26 @@ def cal_points(operations):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(n), Space O(n)  **Trick:** Stack naturally handles the "remove last" and "access previous" operations.  **Edge Cases:** "C" on empty stack, multiple consecutive "C" operations.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 25: Baseball Game (Easy)
-
-**Problem Statement:** Calculate score from operations: integer = add, "+" = sum of last two, "D" = double of last, "C" = remove last.
-
-**Example:**
-```
-Input: ["5","2","C","D","+"]
-Output: 30
-Explanation: 5 + 2*2 + (5+2*2) = 5 + 4 + 21 = 30
-```
-
-**Approach:** Use a stack. Push integer values. On "+", push sum of top two. On "D", push 2*top. On "C", pop. Sum stack at end.
-
-**Python Code:**
-```python
-def cal_points(operations):
-    stack = []
-    for op in operations:
-        if op == '+':
-            stack.append(stack[-1] + stack[-2])
-        elif op == 'D':
-            stack.append(2 * stack[-1])
-        elif op == 'C':
-            stack.pop()
-        else:
-            stack.append(int(op))
-    return sum(stack)
-```
-
-**Complexity:** Time O(n), Space O(n)  
-**Trick:** Stack naturally handles the "remove last" and "access previous" operations.  
-**Edge Cases:** "C" on empty stack, multiple consecutive "C" operations.
+- Empty input -> handle gracefully
+## Problem 25: Baseball Game (Easy)**Problem Statement:** Calculate score from operations: integer = add, "+" = sum of last two, "D" = double of last, "C" = remove last.**Example:**```Input: ["5","2","C","D","+"]Output: 30Explanation: 5 + 2*2 + (5+2*2) = 5 + 4 + 21 = 30```**Approach:** Use a stack. Push integer values. On "+", push sum of top two. On "D", push 2*top. On "C", pop. Sum stack at end.**Python Code:**```pythondef cal_points(operations):    stack = []    for op in operations:        if op == '+':            stack.append(stack[-1] + stack[-2])        elif op == 'D':            stack.append(2 * stack[-1])        elif op == 'C':            stack.pop()        else:            stack.append(int(op))    return sum(stack)```**Complexity:** Time O(n), Space O(n)  **Trick:** Stack naturally handles the "remove last" and "access previous" operations.  **Edge Cases:** "C" on empty stack, multiple consecutive "C" operations.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a list of folder operations ("../" go up, "./" stay, "x/" go into folder x), find final depth from root.**Example:**```Input: logs = ["d1/","d2/","../","d21/","./"]Output: 2Explanation: root -> d1 -> d2 -> (up) d2 -> d21 -> (stay) d21```**Approach:** Use a counter (or stack). "../" decrements (min 0), "./" does nothing, anything else increments.**Python Code:**```pythondef min_operations(logs):    depth = 0    for log in logs:        if log == '../':            depth = max(0, depth - 1)        elif log == './':            continue        else:            depth += 1    return depth```**Complexity:** Time O(n), Space O(1)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Crawler Log Folder (Easy)**Problem Statement:** Given a list of folder operations ("../" go up, "./" stay, "x/" go into folder x), find final depth from root.**Example:**```Input: logs = ["d1/","d2/","../","d21/","./"]Output: 2Explanation: root -> d1 -> d2 -> (up) d2 -> d21 -> (stay) d21```**Approach:** Use a counter (or stack). "../" decrements (min 0), "./" does nothing, anything else increments.**Python Code:**```pythondef min_operations(logs):    depth = 0    for log in logs:        if log == '../':            depth = max(0, depth - 1)        elif log == './':            continue        else:            depth += 1    return depth```**Complexity:** Time O(n), Space O(1)  **Trick:** A simple counter suffices — no need for a full stack. `max(0, depth-1)` prevents going below root.  **Edge Cases:** All "../" operations, empty logs array..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** A simple counter suffices — no need for a full stack.
 
 **Well-Commented Code:**
 ```python
@@ -2222,59 +1427,26 @@ def min_operations(logs):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(1)
-- **Space:** O(1)
+- Time: Time O(n), Space O(1)  **Trick:** A simple counter suffices — no need for a full stack. `max(0, depth-1)` prevents going below root.  **Edge Cases:** All "../" operations, empty logs array.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 26: Crawler Log Folder (Easy)
-
-**Problem Statement:** Given a list of folder operations ("../" go up, "./" stay, "x/" go into folder x), find final depth from root.
-
-**Example:**
-```
-Input: logs = ["d1/","d2/","../","d21/","./"]
-Output: 2
-Explanation: root -> d1 -> d2 -> (up) d2 -> d21 -> (stay) d21
-```
-
-**Approach:** Use a counter (or stack). "../" decrements (min 0), "./" does nothing, anything else increments.
-
-**Python Code:**
-```python
-def min_operations(logs):
-    depth = 0
-    for log in logs:
-        if log == '../':
-            depth = max(0, depth - 1)
-        elif log == './':
-            continue
-        else:
-            depth += 1
-    return depth
-```
-
-**Complexity:** Time O(n), Space O(1)  
-**Trick:** A simple counter suffices — no need for a full stack. `max(0, depth-1)` prevents going below root.  
-**Edge Cases:** All "../" operations, empty logs array.
+- Empty input -> handle gracefully
+## Problem 26: Crawler Log Folder (Easy)**Problem Statement:** Given a list of folder operations ("../" go up, "./" stay, "x/" go into folder x), find final depth from root.**Example:**```Input: logs = ["d1/","d2/","../","d21/","./"]Output: 2Explanation: root -> d1 -> d2 -> (up) d2 -> d21 -> (stay) d21```**Approach:** Use a counter (or stack). "../" decrements (min 0), "./" does nothing, anything else increments.**Python Code:**```pythondef min_operations(logs):    depth = 0    for log in logs:        if log == '../':            depth = max(0, depth - 1)        elif log == './':            continue        else:            depth += 1    return depth```**Complexity:** Time O(n), Space O(1)  **Trick:** A simple counter suffices — no need for a full stack. `max(0, depth-1)` prevents going below root.  **Edge Cases:** All "../" operations, empty logs array.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given daily temperatures, find how many days you must wait for a warmer temperature. If none, use 0.**Example:**```Input: [73,74,75,71,69,72,76,73]Output: [1,1,4,2,1,1,0,0]```**Approach:** Monotonic decreasing stack storing indices. When a warmer temperature is found, pop from stack and calculate the difference in indices.**Python Code:**```pythondef daily_temperatures(temperatures):    n = len(temperatures)    result = [0] * n    stack = []  # indices of temperatures awaiting warmer day    for i in range(n):        while stack and temperatures[i] > temperatures[stack[-1]]:            prev = stack.pop()            result[prev] = i - prev        stack.append(i)    return result```**Complexity:** Time O(n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Daily Temperatures (Medium)**Problem Statement:** Given daily temperatures, find how many days you must wait for a warmer temperature. If none, use 0.**Example:**```Input: [73,74,75,71,69,72,76,73]Output: [1,1,4,2,1,1,0,0]```**Approach:** Monotonic decreasing stack storing indices. When a warmer temperature is found, pop from stack and calculate the difference in indices.**Python Code:**```pythondef daily_temperatures(temperatures):    n = len(temperatures)    result = [0] * n    stack = []  # indices of temperatures awaiting warmer day    for i in range(n):        while stack and temperatures[i] > temperatures[stack[-1]]:            prev = stack.pop()            result[prev] = i - prev        stack.append(i)    return result```**Complexity:** Time O(n), Space O(n)  **Trick:** Each index is pushed and popped at most once, giving O(n). Stack stores indices waiting for warmer temps.  **Edge Cases:** All same temperatures, strictly increasing, strictly decreasing..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Each index is pushed and popped at most once, giving O(n).
 
 **Well-Commented Code:**
 ```python
@@ -2292,58 +1464,27 @@ def daily_temperatures(temperatures):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(n), Space O(n)  **Trick:** Each index is pushed and popped at most once, giving O(n). Stack stores indices waiting for warmer temps.  **Edge Cases:** All same temperatures, strictly increasing, strictly decreasing.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 27: Daily Temperatures (Medium)
-
-**Problem Statement:** Given daily temperatures, find how many days you must wait for a warmer temperature. If none, use 0.
-
-**Example:**
-```
-Input: [73,74,75,71,69,72,76,73]
-Output: [1,1,4,2,1,1,0,0]
-```
-
-**Approach:** Monotonic decreasing stack storing indices. When a warmer temperature is found, pop from stack and calculate the difference in indices.
-
-**Python Code:**
-```python
-def daily_temperatures(temperatures):
-    n = len(temperatures)
-    result = [0] * n
-    stack = []  # indices of temperatures awaiting warmer day
-    for i in range(n):
-        while stack and temperatures[i] > temperatures[stack[-1]]:
-            prev = stack.pop()
-            result[prev] = i - prev
-        stack.append(i)
-    return result
-```
-
-**Complexity:** Time O(n), Space O(n)  
-**Trick:** Each index is pushed and popped at most once, giving O(n). Stack stores indices waiting for warmer temps.  
-**Edge Cases:** All same temperatures, strictly increasing, strictly decreasing.
+- Empty stack operations
+- Push/pop interleaved
+## Problem 27: Daily Temperatures (Medium)**Problem Statement:** Given daily temperatures, find how many days you must wait for a warmer temperature. If none, use 0.**Example:**```Input: [73,74,75,71,69,72,76,73]Output: [1,1,4,2,1,1,0,0]```**Approach:** Monotonic decreasing stack storing indices. When a warmer temperature is found, pop from stack and calculate the difference in indices.**Python Code:**```pythondef daily_temperatures(temperatures):    n = len(temperatures)    result = [0] * n    stack = []  # indices of temperatures awaiting warmer day    for i in range(n):        while stack and temperatures[i] > temperatures[stack[-1]]:            prev = stack.pop()            result[prev] = i - prev        stack.append(i)    return result```**Complexity:** Time O(n), Space O(n)  **Trick:** Each index is pushed and popped at most once, giving O(n). Stack stores indices waiting for warmer temps.  **Edge Cases:** All same temperatures, strictly increasing, strictly decreasing.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** For each day's stock price, find the number of consecutive days (including today) with price <= today's price.**Example:**```Input: [100,80,60,70,60,75,85]Output: [1,1,1,2,1,4,6]```**Approach:** Monotonic decreasing stack of (price, span) pairs. For each price, accumulate spans from previous smaller/equal prices.**Python Code:**```pythonclass StockSpanner:    def __init__(self):        self.stack = []  # (price, span)    def next(self, price):        span = 1        while self.stack and self.stack[-1][0] <= price:            s_price, s_span = self.stack.pop()            span += s_span        self.stack.append((price, span))        return span```**Complexity:** Amortized O(1) per call, Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Stock Span Problem (Medium)**Problem Statement:** For each day's stock price, find the number of consecutive days (including today) with price <= today's price.**Example:**```Input: [100,80,60,70,60,75,85]Output: [1,1,1,2,1,4,6]```**Approach:** Monotonic decreasing stack of (price, span) pairs. For each price, accumulate spans from previous smaller/equal prices.**Python Code:**```pythonclass StockSpanner:    def __init__(self):        self.stack = []  # (price, span)    def next(self, price):        span = 1        while self.stack and self.stack[-1][0] <= price:            s_price, s_span = self.stack.pop()            span += s_span        self.stack.append((price, span))        return span```**Complexity:** Amortized O(1) per call, Space O(n)  **Trick:** Store (price, span) pairs instead of just indices — collapses consecutive smaller prices into one entry.  **Edge Cases:** First call, prices in strictly decreasing order..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Store (price, span) pairs instead of just indices — collapses consecutive smaller prices into one entry.
 
 **Well-Commented Code:**
 ```python
@@ -2362,58 +1503,27 @@ class StockSpanner:
 ```
 
 **Complexity Analysis:**
-- **Space:** O(n)
+- Time: Amortized O(1) per call, Space O(n)  **Trick:** Store (price, span) pairs instead of just indices — collapses consecutive smaller prices into one entry.  **Edge Cases:** First call, prices in strictly decreasing order.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 28: Stock Span Problem (Medium)
-
-**Problem Statement:** For each day's stock price, find the number of consecutive days (including today) with price <= today's price.
-
-**Example:**
-```
-Input: [100,80,60,70,60,75,85]
-Output: [1,1,1,2,1,4,6]
-```
-
-**Approach:** Monotonic decreasing stack of (price, span) pairs. For each price, accumulate spans from previous smaller/equal prices.
-
-**Python Code:**
-```python
-class StockSpanner:
-    def __init__(self):
-        self.stack = []  # (price, span)
-
-    def next(self, price):
-        span = 1
-        while self.stack and self.stack[-1][0] <= price:
-            s_price, s_span = self.stack.pop()
-            span += s_span
-        self.stack.append((price, span))
-        return span
-```
-
-**Complexity:** Amortized O(1) per call, Space O(n)  
-**Trick:** Store (price, span) pairs instead of just indices — collapses consecutive smaller prices into one entry.  
-**Edge Cases:** First call, prices in strictly decreasing order.
+- Empty stack operations
+- Push/pop interleaved
+## Problem 28: Stock Span Problem (Medium)**Problem Statement:** For each day's stock price, find the number of consecutive days (including today) with price <= today's price.**Example:**```Input: [100,80,60,70,60,75,85]Output: [1,1,1,2,1,4,6]```**Approach:** Monotonic decreasing stack of (price, span) pairs. For each price, accumulate spans from previous smaller/equal prices.**Python Code:**```pythonclass StockSpanner:    def __init__(self):        self.stack = []  # (price, span)    def next(self, price):        span = 1        while self.stack and self.stack[-1][0] <= price:            s_price, s_span = self.stack.pop()            span += s_span        self.stack.append((price, span))        return span```**Complexity:** Amortized O(1) per call, Space O(n)  **Trick:** Store (price, span) pairs instead of just indices — collapses consecutive smaller prices into one entry.  **Edge Cases:** First call, prices in strictly decreasing order.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Evaluate arithmetic expression in reverse Polish notation (postfix). Operators: +, -, *, /.**Example:**```Input: ["2","1","+","3","*"]Output: 9Explanation: ((2 + 1) * 3) = 9```**Approach:** Use a stack. Push numbers. When operator encountered, pop two operands, apply operator, push result.**Python Code:**```pythondef eval_rpn(tokens):    stack = []    for token in tokens:        if token in '+-*/':            b, a = stack.pop(), stack.pop()            if token == '+':                stack.append(a + b)            elif token == '-':                stack.append(a - b)            elif token == '*':                stack.append(a * b)            else:                stack.append(int(a / b))        else:            stack.append(int(token))    return stack[0]```**Complexity:** Time O(n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Evaluate Reverse Polish Notation (Medium)**Problem Statement:** Evaluate arithmetic expression in reverse Polish notation (postfix). Operators: +, -, *, /.**Example:**```Input: ["2","1","+","3","*"]Output: 9Explanation: ((2 + 1) * 3) = 9```**Approach:** Use a stack. Push numbers. When operator encountered, pop two operands, apply operator, push result.**Python Code:**```pythondef eval_rpn(tokens):    stack = []    for token in tokens:        if token in '+-*/':            b, a = stack.pop(), stack.pop()            if token == '+':                stack.append(a + b)            elif token == '-':                stack.append(a - b)            elif token == '*':                stack.append(a * b)            else:                stack.append(int(a / b))        else:            stack.append(int(token))    return stack[0]```**Complexity:** Time O(n), Space O(n)  **Trick:** Order matters for `-` and `/`: `a` is the second popped (left operand), `b` is first popped (right operand). Use `int(a/b)` for truncation toward zero.  **Edge Cases:** Division by zero (not in input), single number input..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Order matters for `-` and `/`: `a` is the second popped (left operand), `b` is first popped (right operand).
 
 **Well-Commented Code:**
 ```python
@@ -2437,65 +1547,28 @@ def eval_rpn(tokens):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(n), Space O(n)  **Trick:** Order matters for `-` and `/`: `a` is the second popped (left operand), `b` is first popped (right operand). Use `int(a/b)` for truncation toward zero.  **Edge Cases:** Division by zero (not in input), single number input.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 29: Evaluate Reverse Polish Notation (Medium)
-
-**Problem Statement:** Evaluate arithmetic expression in reverse Polish notation (postfix). Operators: +, -, *, /.
-
-**Example:**
-```
-Input: ["2","1","+","3","*"]
-Output: 9
-Explanation: ((2 + 1) * 3) = 9
-```
-
-**Approach:** Use a stack. Push numbers. When operator encountered, pop two operands, apply operator, push result.
-
-**Python Code:**
-```python
-def eval_rpn(tokens):
-    stack = []
-    for token in tokens:
-        if token in '+-*/':
-            b, a = stack.pop(), stack.pop()
-            if token == '+':
-                stack.append(a + b)
-            elif token == '-':
-                stack.append(a - b)
-            elif token == '*':
-                stack.append(a * b)
-            else:
-                stack.append(int(a / b))
-        else:
-            stack.append(int(token))
-    return stack[0]
-```
-
-**Complexity:** Time O(n), Space O(n)  
-**Trick:** Order matters for `-` and `/`: `a` is the second popped (left operand), `b` is first popped (right operand). Use `int(a/b)` for truncation toward zero.  
-**Edge Cases:** Division by zero (not in input), single number input.
+- Single element input
+## Problem 29: Evaluate Reverse Polish Notation (Medium)**Problem Statement:** Evaluate arithmetic expression in reverse Polish notation (postfix). Operators: +, -, *, /.**Example:**```Input: ["2","1","+","3","*"]Output: 9Explanation: ((2 + 1) * 3) = 9```**Approach:** Use a stack. Push numbers. When operator encountered, pop two operands, apply operator, push result.**Python Code:**```pythondef eval_rpn(tokens):    stack = []    for token in tokens:        if token in '+-*/':            b, a = stack.pop(), stack.pop()            if token == '+':                stack.append(a + b)            elif token == '-':                stack.append(a - b)            elif token == '*':                stack.append(a * b)            else:                stack.append(int(a / b))        else:            stack.append(int(token))    return stack[0]```**Complexity:** Time O(n), Space O(n)  **Trick:** Order matters for `-` and `/`: `a` is the second popped (left operand), `b` is first popped (right operand). Use `int(a/b)` for truncation toward zero.  **Edge Cases:** Division by zero (not in input), single number input.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Simplify an absolute Unix path to its canonical form.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Split path by '/'.
+2. Use a stack: push directory names, pop on '..', ignore '.' and empty strings.
+3. Join stack with '/' and prepend '/'.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Simplify Path (Medium)**Problem Statement:** Given an absolute Unix path, simplify it (resolve `.`, `..`, and consecutive slashes).**Example:**```Input: "/home/user/../Documents"Output: "/home/Documents"Input: "/a//b/../c/"Output: "/a/c"```**Approach:** Split path by `/`. Use a stack: push valid names, pop on `..`, skip `.` and empty strings. Join with `/`.**Python Code:**```pythondef simplify_path(path):    stack = []    parts = path.split('/')    for part in parts:        if part == '..':            if stack:                stack.pop()        elif part and part != '.':            stack.append(part)    return '/' + '/'.join(stack)```**Complexity:** Time O(n), Space O(n)  **Trick:** Splitting by `/` naturally handles consecutive slashes (produces empty strings which are skipped).  **Edge Cases:** Root path only "/a", path with only ".."..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Stack mirrors directory hierarchy; split by '/' naturally handles edge cases.
 
 **Well-Commented Code:**
 ```python
@@ -2513,61 +1586,33 @@ def simplify_path(path):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n)
-- **Space:** O(n)
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 30: Simplify Path (Medium)
-
-**Problem Statement:** Given an absolute Unix path, simplify it (resolve `.`, `..`, and consecutive slashes).
-
-**Example:**
-```
-Input: "/home/user/../Documents"
-Output: "/home/Documents"
-
-Input: "/a//b/../c/"
-Output: "/a/c"
-```
-
-**Approach:** Split path by `/`. Use a stack: push valid names, pop on `..`, skip `.` and empty strings. Join with `/`.
-
-**Python Code:**
-```python
-def simplify_path(path):
-    stack = []
-    parts = path.split('/')
-    for part in parts:
-        if part == '..':
-            if stack:
-                stack.pop()
-        elif part and part != '.':
-            stack.append(part)
-    return '/' + '/'.join(stack)
-```
-
-**Complexity:** Time O(n), Space O(n)  
-**Trick:** Splitting by `/` naturally handles consecutive slashes (produces empty strings which are skipped).  
-**Edge Cases:** Root path only "/a", path with only "..".
+- Root path '/'
+- Multiple consecutive slashes
+- Trailing slash
+- Path with only '..'
+## Problem 30: Simplify Path (Medium)**Problem Statement:** Given an absolute Unix path, simplify it (resolve `.`, `..`, and consecutive slashes).**Example:**```Input: "/home/user/../Documents"Output: "/home/Documents"Input: "/a//b/../c/"Output: "/a/c"```**Approach:** Split path by `/`. Use a stack: push valid names, pop on `..`, skip `.` and empty strings. Join with `/`.**Python Code:**```pythondef simplify_path(path):    stack = []    parts = path.split('/')    for part in parts:        if part == '..':            if stack:                stack.pop()        elif part and part != '.':            stack.append(part)    return '/' + '/'.join(stack)```**Complexity:** Time O(n), Space O(n)  **Trick:** Splitting by `/` naturally handles consecutive slashes (produces empty strings which are skipped).  **Edge Cases:** Root path only "/a", path with only "..".
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Decode an encoded string following the pattern k[encoded_string].
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use a stack to store previous strings and repeat counts.
+2. Build current_num from consecutive digits.
+3. On '[', push (current_string, current_num) to stack and reset.
+4. On ']', pop and append repeated string to previous string.
+5. Append regular characters directly to current_string.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Decode String (Medium)**Problem Statement:** Decode a string like `"3[a2[c]]"` into `"accaccacc"`.**Example:**```Input: "3[a2[c]]"Output: "accaccacc"Input: "2[abc]3[cd]ef"Output: "abcabccdcdcdef"```**Approach:** Use two stacks: one for counts, one for strings. On `[`, push current state. On `]`, pop and repeat. On digits, build number. On letters, build current string.**Python Code:**```pythondef decode_string(s):    stack = []    curr_str = ''    curr_num = 0    for char in s:        if char.isdigit():            curr_num = curr_num * 10 + int(char)        elif char == '[':            stack.append((curr_str, curr_num))            curr_str = ''            curr_num = 0        elif char == ']':            prev_str, num = stack.pop()            curr_str = prev_str + curr_str * num        else:            curr_str += char    return curr_str```**Complexity:** Time O(n), Space O(n) (output length can be exponential, so space is technically O(output))  **Trick:** Push both the string and number on `[` so you can restore context when `]` is found.  **Edge Cases:** Nested brackets, single character strings..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Stack naturally handles nested bracket structures via LIFO ordering.
 
 **Well-Commented Code:**
 ```python
@@ -2592,68 +1637,29 @@ def decode_string(s):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n) (output length can be exponential, so space is technically O(output))
-- **Space:** O(n) (output length can be exponential, so space is technically O(output))
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 31: Decode String (Medium)
-
-**Problem Statement:** Decode a string like `"3[a2[c]]"` into `"accaccacc"`.
-
-**Example:**
-```
-Input: "3[a2[c]]"
-Output: "accaccacc"
-
-Input: "2[abc]3[cd]ef"
-Output: "abcabccdcdcdef"
-```
-
-**Approach:** Use two stacks: one for counts, one for strings. On `[`, push current state. On `]`, pop and repeat. On digits, build number. On letters, build current string.
-
-**Python Code:**
-```python
-def decode_string(s):
-    stack = []
-    curr_str = ''
-    curr_num = 0
-    for char in s:
-        if char.isdigit():
-            curr_num = curr_num * 10 + int(char)
-        elif char == '[':
-            stack.append((curr_str, curr_num))
-            curr_str = ''
-            curr_num = 0
-        elif char == ']':
-            prev_str, num = stack.pop()
-            curr_str = prev_str + curr_str * num
-        else:
-            curr_str += char
-    return curr_str
-```
-
-**Complexity:** Time O(n), Space O(n) (output length can be exponential, so space is technically O(output))  
-**Trick:** Push both the string and number on `[` so you can restore context when `]` is found.  
-**Edge Cases:** Nested brackets, single character strings.
+- Nested brackets like '3[a2[c]]'
+- No brackets -> return as-is
+- Empty brackets -> ''
+- Multiple digit numbers like '12[ab]'
+## Problem 31: Decode String (Medium)**Problem Statement:** Decode a string like `"3[a2[c]]"` into `"accaccacc"`.**Example:**```Input: "3[a2[c]]"Output: "accaccacc"Input: "2[abc]3[cd]ef"Output: "abcabccdcdcdef"```**Approach:** Use two stacks: one for counts, one for strings. On `[`, push current state. On `]`, pop and repeat. On digits, build number. On letters, build current string.**Python Code:**```pythondef decode_string(s):    stack = []    curr_str = ''    curr_num = 0    for char in s:        if char.isdigit():            curr_num = curr_num * 10 + int(char)        elif char == '[':            stack.append((curr_str, curr_num))            curr_str = ''            curr_num = 0        elif char == ']':            prev_str, num = stack.pop()            curr_str = prev_str + curr_str * num        else:            curr_str += char    return curr_str```**Complexity:** Time O(n), Space O(n) (output length can be exponential, so space is technically O(output))  **Trick:** Push both the string and number on `[` so you can restore context when `]` is found.  **Edge Cases:** Nested brackets, single character strings.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given two arrays (nums1 is subset of nums2), for each element in nums1, find the next greater element in nums2.**Example:**```Input: nums1 = [4,1,2], nums2 = [1,3,4,2]Output: [-1,3,-1]Explanation: 4 has no next greater, 1's next greater is 3, 2 has no next greater.```**Approach:** Build a next greater map for nums2 using monotonic decreasing stack. Then look up each nums1 element in the map.**Python Code:**```pythondef next_greater_element(nums1, nums2):    stack = []    next_greater = {}    for num in nums2:        while stack and stack[-1] < num:            next_greater[stack.pop()] = num        stack.append(num)    return [next_greater.get(num, -1) for num in nums1]```**Complexity:** Time O(m+n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Next Greater Element I (Medium)**Problem Statement:** Given two arrays (nums1 is subset of nums2), for each element in nums1, find the next greater element in nums2.**Example:**```Input: nums1 = [4,1,2], nums2 = [1,3,4,2]Output: [-1,3,-1]Explanation: 4 has no next greater, 1's next greater is 3, 2 has no next greater.```**Approach:** Build a next greater map for nums2 using monotonic decreasing stack. Then look up each nums1 element in the map.**Python Code:**```pythondef next_greater_element(nums1, nums2):    stack = []    next_greater = {}    for num in nums2:        while stack and stack[-1] < num:            next_greater[stack.pop()] = num        stack.append(num)    return [next_greater.get(num, -1) for num in nums1]```**Complexity:** Time O(m+n), Space O(n)  **Trick:** Monotonic stack processes each element once. Hash map gives O(1) lookup for nums1 queries.  **Edge Cases:** nums1 empty, all elements in nums2 have no greater..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Monotonic stack processes each element once.
 
 **Well-Commented Code:**
 ```python
@@ -2669,57 +1675,26 @@ def next_greater_element(nums1, nums2):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(m+n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(m+n), Space O(n)  **Trick:** Monotonic stack processes each element once. Hash map gives O(1) lookup for nums1 queries.  **Edge Cases:** nums1 empty, all elements in nums2 have no greater.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 32: Next Greater Element I (Medium)
-
-**Problem Statement:** Given two arrays (nums1 is subset of nums2), for each element in nums1, find the next greater element in nums2.
-
-**Example:**
-```
-Input: nums1 = [4,1,2], nums2 = [1,3,4,2]
-Output: [-1,3,-1]
-Explanation: 4 has no next greater, 1's next greater is 3, 2 has no next greater.
-```
-
-**Approach:** Build a next greater map for nums2 using monotonic decreasing stack. Then look up each nums1 element in the map.
-
-**Python Code:**
-```python
-def next_greater_element(nums1, nums2):
-    stack = []
-    next_greater = {}
-    for num in nums2:
-        while stack and stack[-1] < num:
-            next_greater[stack.pop()] = num
-        stack.append(num)
-    return [next_greater.get(num, -1) for num in nums1]
-```
-
-**Complexity:** Time O(m+n), Space O(n)  
-**Trick:** Monotonic stack processes each element once. Hash map gives O(1) lookup for nums1 queries.  
-**Edge Cases:** nums1 empty, all elements in nums2 have no greater.
+- Empty input -> handle gracefully
+## Problem 32: Next Greater Element I (Medium)**Problem Statement:** Given two arrays (nums1 is subset of nums2), for each element in nums1, find the next greater element in nums2.**Example:**```Input: nums1 = [4,1,2], nums2 = [1,3,4,2]Output: [-1,3,-1]Explanation: 4 has no next greater, 1's next greater is 3, 2 has no next greater.```**Approach:** Build a next greater map for nums2 using monotonic decreasing stack. Then look up each nums1 element in the map.**Python Code:**```pythondef next_greater_element(nums1, nums2):    stack = []    next_greater = {}    for num in nums2:        while stack and stack[-1] < num:            next_greater[stack.pop()] = num        stack.append(num)    return [next_greater.get(num, -1) for num in nums1]```**Complexity:** Time O(m+n), Space O(n)  **Trick:** Monotonic stack processes each element once. Hash map gives O(1) lookup for nums1 queries.  **Edge Cases:** nums1 empty, all elements in nums2 have no greater.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Find the next greater element for each element in a circular array.**Example:**```Input: [1,2,1]Output: [2,-1,2]Explanation: Next greater for 1 (index 0) is 2, for 2 is -1, for 1 (index 2) is 2 (wraps around).```**Approach:** Iterate through the array twice (modular indexing) with a monotonic stack. Second pass handles wrap-around cases.**Python Code:**```pythondef next_greater_elements(nums):    n = len(nums)    result = [-1] * n    stack = []  # indices    for i in range(2 * n):        while stack and nums[stack[-1]] < nums[i % n]:            result[stack.pop()] = nums[i % n]        if i < n:            stack.append(i)    return result```**Complexity:** Time O(2n) = O(n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Next Greater Element II (Medium)**Problem Statement:** Find the next greater element for each element in a circular array.**Example:**```Input: [1,2,1]Output: [2,-1,2]Explanation: Next greater for 1 (index 0) is 2, for 2 is -1, for 1 (index 2) is 2 (wraps around).```**Approach:** Iterate through the array twice (modular indexing) with a monotonic stack. Second pass handles wrap-around cases.**Python Code:**```pythondef next_greater_elements(nums):    n = len(nums)    result = [-1] * n    stack = []  # indices    for i in range(2 * n):        while stack and nums[stack[-1]] < nums[i % n]:            result[stack.pop()] = nums[i % n]        if i < n:            stack.append(i)    return result```**Complexity:** Time O(2n) = O(n), Space O(n)  **Trick:** Only push indices from first pass (i < n). Second pass only pops — never pushes.  **Edge Cases:** All same elements, single element array..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Only push indices from first pass (i < n).
 
 **Well-Commented Code:**
 ```python
@@ -2737,59 +1712,26 @@ def next_greater_elements(nums):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(2n) = O(n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(2n) = O(n), Space O(n)  **Trick:** Only push indices from first pass (i < n). Second pass only pops — never pushes.  **Edge Cases:** All same elements, single element array.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 33: Next Greater Element II (Medium)
-
-**Problem Statement:** Find the next greater element for each element in a circular array.
-
-**Example:**
-```
-Input: [1,2,1]
-Output: [2,-1,2]
-Explanation: Next greater for 1 (index 0) is 2, for 2 is -1, for 1 (index 2) is 2 (wraps around).
-```
-
-**Approach:** Iterate through the array twice (modular indexing) with a monotonic stack. Second pass handles wrap-around cases.
-
-**Python Code:**
-```python
-def next_greater_elements(nums):
-    n = len(nums)
-    result = [-1] * n
-    stack = []  # indices
-    for i in range(2 * n):
-        while stack and nums[stack[-1]] < nums[i % n]:
-            result[stack.pop()] = nums[i % n]
-        if i < n:
-            stack.append(i)
-    return result
-```
-
-**Complexity:** Time O(2n) = O(n), Space O(n)  
-**Trick:** Only push indices from first pass (i < n). Second pass only pops — never pushes.  
-**Edge Cases:** All same elements, single element array.
+- Single element input
+## Problem 33: Next Greater Element II (Medium)**Problem Statement:** Find the next greater element for each element in a circular array.**Example:**```Input: [1,2,1]Output: [2,-1,2]Explanation: Next greater for 1 (index 0) is 2, for 2 is -1, for 1 (index 2) is 2 (wraps around).```**Approach:** Iterate through the array twice (modular indexing) with a monotonic stack. Second pass handles wrap-around cases.**Python Code:**```pythondef next_greater_elements(nums):    n = len(nums)    result = [-1] * n    stack = []  # indices    for i in range(2 * n):        while stack and nums[stack[-1]] < nums[i % n]:            result[stack.pop()] = nums[i % n]        if i < n:            stack.append(i)    return result```**Complexity:** Time O(2n) = O(n), Space O(n)  **Trick:** Only push indices from first pass (i < n). Second pass only pops — never pushes.  **Edge Cases:** All same elements, single element array.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Cars at different positions travel toward a target at different speeds. A faster car behind a slower one becomes a fleet. Count total fleets.**Example:**```Input: target = 12, position = [10,8,0,5,3], speed = [2,4,1,1,3]Output: 3Explanation: Cars at positions 10 and 8 form fleet 1, car at 0 forms fleet 2, cars at 5 and 3 form fleet 3.```**Approach:** Sort cars by position descending. Calculate time to reach target. If current car's time > top of stack, it's a new fleet (push). Otherwise, it catches up (don't push).**Python Code:**```pythondef car_fleet(target, position, speed):    cars = sorted(zip(position, speed), reverse=True)    stack = []    for pos, spd in cars:        time = (target - pos) / spd        if not stack or time > stack[-1]:            stack.append(time)    return len(stack)```**Complexity:** Time O(n log n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Car Fleet (Medium)**Problem Statement:** Cars at different positions travel toward a target at different speeds. A faster car behind a slower one becomes a fleet. Count total fleets.**Example:**```Input: target = 12, position = [10,8,0,5,3], speed = [2,4,1,1,3]Output: 3Explanation: Cars at positions 10 and 8 form fleet 1, car at 0 forms fleet 2, cars at 5 and 3 form fleet 3.```**Approach:** Sort cars by position descending. Calculate time to reach target. If current car's time > top of stack, it's a new fleet (push). Otherwise, it catches up (don't push).**Python Code:**```pythondef car_fleet(target, position, speed):    cars = sorted(zip(position, speed), reverse=True)    stack = []    for pos, spd in cars:        time = (target - pos) / spd        if not stack or time > stack[-1]:            stack.append(time)    return len(stack)```**Complexity:** Time O(n log n), Space O(n)  **Trick:** Process from closest to target. If a car's time is <= top of stack, it merges into that fleet.  **Edge Cases:** All cars at same position, single car..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Process from closest to target.
 
 **Well-Commented Code:**
 ```python
@@ -2805,57 +1747,26 @@ def car_fleet(target, position, speed):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n log n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(n log n), Space O(n)  **Trick:** Process from closest to target. If a car's time is <= top of stack, it merges into that fleet.  **Edge Cases:** All cars at same position, single car.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 34: Car Fleet (Medium)
-
-**Problem Statement:** Cars at different positions travel toward a target at different speeds. A faster car behind a slower one becomes a fleet. Count total fleets.
-
-**Example:**
-```
-Input: target = 12, position = [10,8,0,5,3], speed = [2,4,1,1,3]
-Output: 3
-Explanation: Cars at positions 10 and 8 form fleet 1, car at 0 forms fleet 2, cars at 5 and 3 form fleet 3.
-```
-
-**Approach:** Sort cars by position descending. Calculate time to reach target. If current car's time > top of stack, it's a new fleet (push). Otherwise, it catches up (don't push).
-
-**Python Code:**
-```python
-def car_fleet(target, position, speed):
-    cars = sorted(zip(position, speed), reverse=True)
-    stack = []
-    for pos, spd in cars:
-        time = (target - pos) / spd
-        if not stack or time > stack[-1]:
-            stack.append(time)
-    return len(stack)
-```
-
-**Complexity:** Time O(n log n), Space O(n)  
-**Trick:** Process from closest to target. If a car's time is <= top of stack, it merges into that fleet.  
-**Edge Cases:** All cars at same position, single car.
+- Single element input
+## Problem 34: Car Fleet (Medium)**Problem Statement:** Cars at different positions travel toward a target at different speeds. A faster car behind a slower one becomes a fleet. Count total fleets.**Example:**```Input: target = 12, position = [10,8,0,5,3], speed = [2,4,1,1,3]Output: 3Explanation: Cars at positions 10 and 8 form fleet 1, car at 0 forms fleet 2, cars at 5 and 3 form fleet 3.```**Approach:** Sort cars by position descending. Calculate time to reach target. If current car's time > top of stack, it's a new fleet (push). Otherwise, it catches up (don't push).**Python Code:**```pythondef car_fleet(target, position, speed):    cars = sorted(zip(position, speed), reverse=True)    stack = []    for pos, spd in cars:        time = (target - pos) / spd        if not stack or time > stack[-1]:            stack.append(time)    return len(stack)```**Complexity:** Time O(n log n), Space O(n)  **Trick:** Process from closest to target. If a car's time is <= top of stack, it merges into that fleet.  **Edge Cases:** All cars at same position, single car.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Find the area of the largest rectangle in a histogram with bars of given heights.**Example:**```Input: [2,1,5,6,2,3]Output: 10Explanation: Rectangle with height 5 and width 2 (indices 2-3) has area 10.```**Approach:** Monotonic increasing stack of indices. When a shorter bar is found, pop and calculate area using popped bar's height with width extending to current position.**Python Code:**```pythondef largest_rectangle_area(heights):    stack = [-1]    max_area = 0    for i in range(len(heights)):        while stack[-1] != -1 and heights[i] < heights[stack[-1]]:            height = heights[stack.pop()]            width = i - stack[-1] - 1            max_area = max(max_area, height * width)        stack.append(i)    while stack[-1] != -1:        height = heights[stack.pop()]        width = len(heights) - stack[-1] - 1        max_area = max(max_area, height * width)    return max_area```**Complexity:** Time O(n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Largest Rectangle in Histogram (Hard)**Problem Statement:** Find the area of the largest rectangle in a histogram with bars of given heights.**Example:**```Input: [2,1,5,6,2,3]Output: 10Explanation: Rectangle with height 5 and width 2 (indices 2-3) has area 10.```**Approach:** Monotonic increasing stack of indices. When a shorter bar is found, pop and calculate area using popped bar's height with width extending to current position.**Python Code:**```pythondef largest_rectangle_area(heights):    stack = [-1]    max_area = 0    for i in range(len(heights)):        while stack[-1] != -1 and heights[i] < heights[stack[-1]]:            height = heights[stack.pop()]            width = i - stack[-1] - 1            max_area = max(max_area, height * width)        stack.append(i)    while stack[-1] != -1:        height = heights[stack.pop()]        width = len(heights) - stack[-1] - 1        max_area = max(max_area, height * width)    return max_area```**Complexity:** Time O(n), Space O(n)  **Trick:** Stack stores indices in increasing height order. `-1` as sentinel handles the left boundary.  **Edge Cases:** Empty array, all same heights, strictly increasing heights..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Stack stores indices in increasing height order.
 
 **Well-Commented Code:**
 ```python
@@ -2877,63 +1788,26 @@ def largest_rectangle_area(heights):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(n), Space O(n)  **Trick:** Stack stores indices in increasing height order. `-1` as sentinel handles the left boundary.  **Edge Cases:** Empty array, all same heights, strictly increasing heights.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 35: Largest Rectangle in Histogram (Hard)
-
-**Problem Statement:** Find the area of the largest rectangle in a histogram with bars of given heights.
-
-**Example:**
-```
-Input: [2,1,5,6,2,3]
-Output: 10
-Explanation: Rectangle with height 5 and width 2 (indices 2-3) has area 10.
-```
-
-**Approach:** Monotonic increasing stack of indices. When a shorter bar is found, pop and calculate area using popped bar's height with width extending to current position.
-
-**Python Code:**
-```python
-def largest_rectangle_area(heights):
-    stack = [-1]
-    max_area = 0
-    for i in range(len(heights)):
-        while stack[-1] != -1 and heights[i] < heights[stack[-1]]:
-            height = heights[stack.pop()]
-            width = i - stack[-1] - 1
-            max_area = max(max_area, height * width)
-        stack.append(i)
-    while stack[-1] != -1:
-        height = heights[stack.pop()]
-        width = len(heights) - stack[-1] - 1
-        max_area = max(max_area, height * width)
-    return max_area
-```
-
-**Complexity:** Time O(n), Space O(n)  
-**Trick:** Stack stores indices in increasing height order. `-1` as sentinel handles the left boundary.  
-**Edge Cases:** Empty array, all same heights, strictly increasing heights.
+- Empty input -> handle gracefully
+## Problem 35: Largest Rectangle in Histogram (Hard)**Problem Statement:** Find the area of the largest rectangle in a histogram with bars of given heights.**Example:**```Input: [2,1,5,6,2,3]Output: 10Explanation: Rectangle with height 5 and width 2 (indices 2-3) has area 10.```**Approach:** Monotonic increasing stack of indices. When a shorter bar is found, pop and calculate area using popped bar's height with width extending to current position.**Python Code:**```pythondef largest_rectangle_area(heights):    stack = [-1]    max_area = 0    for i in range(len(heights)):        while stack[-1] != -1 and heights[i] < heights[stack[-1]]:            height = heights[stack.pop()]            width = i - stack[-1] - 1            max_area = max(max_area, height * width)        stack.append(i)    while stack[-1] != -1:        height = heights[stack.pop()]        width = len(heights) - stack[-1] - 1        max_area = max(max_area, height * width)    return max_area```**Complexity:** Time O(n), Space O(n)  **Trick:** Stack stores indices in increasing height order. `-1` as sentinel handles the left boundary.  **Edge Cases:** Empty array, all same heights, strictly increasing heights.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Find the largest rectangle containing only 1s in a binary matrix.**Example:**```Input: [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]Output: 6```**Approach:** Build a histogram of heights per row. For each row, apply Largest Rectangle in Histogram (Problem 35).**Python Code:**```pythondef maximal_rectangle(matrix):    if not matrix:        return 0    rows, cols = len(matrix), len(matrix[0])    heights = [0] * cols    max_area = 0    def largest_area(h):        stack = [-1]        area = 0        for i in range(len(h)):            while stack[-1] != -1 and h[i] < h[stack[-1]]:                height = h[stack.pop()]                width = i - stack[-1] - 1                area = max(area, height * width)            stack.append(i)        while stack[-1] != -1:            height = h[stack.pop()]            width = len(h) - stack[-1] - 1            area = max(area, height * width)        return area    for r in range(rows):        for c in range(cols):            heights[c] = heights[c] + 1 if matrix[r][c] == '1' else 0        max_area = max(max_area, largest_area(heights))    return max_area```**Complexity:** Time O(rows × cols), Space O(cols)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Maximal Rectangle (Hard)**Problem Statement:** Find the largest rectangle containing only 1s in a binary matrix.**Example:**```Input: [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]Output: 6```**Approach:** Build a histogram of heights per row. For each row, apply Largest Rectangle in Histogram (Problem 35).**Python Code:**```pythondef maximal_rectangle(matrix):    if not matrix:        return 0    rows, cols = len(matrix), len(matrix[0])    heights = [0] * cols    max_area = 0    def largest_area(h):        stack = [-1]        area = 0        for i in range(len(h)):            while stack[-1] != -1 and h[i] < h[stack[-1]]:                height = h[stack.pop()]                width = i - stack[-1] - 1                area = max(area, height * width)            stack.append(i)        while stack[-1] != -1:            height = h[stack.pop()]            width = len(h) - stack[-1] - 1            area = max(area, height * width)        return area    for r in range(rows):        for c in range(cols):            heights[c] = heights[c] + 1 if matrix[r][c] == '1' else 0        max_area = max(max_area, largest_area(heights))    return max_area```**Complexity:** Time O(rows × cols), Space O(cols)  **Trick:** Treat each row as a histogram base. Heights accumulate downward — reset to 0 on seeing '0'.  **Edge Cases:** Empty matrix, single row, single column..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Treat each row as a histogram base.
 
 **Well-Commented Code:**
 ```python
@@ -2968,75 +1842,26 @@ def maximal_rectangle(matrix):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(rows × cols), Space O(cols)
-- **Space:** O(cols)
+- Time: Time O(rows × cols), Space O(cols)  **Trick:** Treat each row as a histogram base. Heights accumulate downward — reset to 0 on seeing '0'.  **Edge Cases:** Empty matrix, single row, single column.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 36: Maximal Rectangle (Hard)
-
-**Problem Statement:** Find the largest rectangle containing only 1s in a binary matrix.
-
-**Example:**
-```
-Input: [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]
-Output: 6
-```
-
-**Approach:** Build a histogram of heights per row. For each row, apply Largest Rectangle in Histogram (Problem 35).
-
-**Python Code:**
-```python
-def maximal_rectangle(matrix):
-    if not matrix:
-        return 0
-    rows, cols = len(matrix), len(matrix[0])
-    heights = [0] * cols
-    max_area = 0
-
-    def largest_area(h):
-        stack = [-1]
-        area = 0
-        for i in range(len(h)):
-            while stack[-1] != -1 and h[i] < h[stack[-1]]:
-                height = h[stack.pop()]
-                width = i - stack[-1] - 1
-                area = max(area, height * width)
-            stack.append(i)
-        while stack[-1] != -1:
-            height = h[stack.pop()]
-            width = len(h) - stack[-1] - 1
-            area = max(area, height * width)
-        return area
-
-    for r in range(rows):
-        for c in range(cols):
-            heights[c] = heights[c] + 1 if matrix[r][c] == '1' else 0
-        max_area = max(max_area, largest_area(heights))
-    return max_area
-```
-
-**Complexity:** Time O(rows × cols), Space O(cols)  
-**Trick:** Treat each row as a histogram base. Heights accumulate downward — reset to 0 on seeing '0'.  
-**Edge Cases:** Empty matrix, single row, single column.
+- Empty input -> handle gracefully
+## Problem 36: Maximal Rectangle (Hard)**Problem Statement:** Find the largest rectangle containing only 1s in a binary matrix.**Example:**```Input: [["1","0","1","0","0"],["1","0","1","1","1"],["1","1","1","1","1"],["1","0","0","1","0"]]Output: 6```**Approach:** Build a histogram of heights per row. For each row, apply Largest Rectangle in Histogram (Problem 35).**Python Code:**```pythondef maximal_rectangle(matrix):    if not matrix:        return 0    rows, cols = len(matrix), len(matrix[0])    heights = [0] * cols    max_area = 0    def largest_area(h):        stack = [-1]        area = 0        for i in range(len(h)):            while stack[-1] != -1 and h[i] < h[stack[-1]]:                height = h[stack.pop()]                width = i - stack[-1] - 1                area = max(area, height * width)            stack.append(i)        while stack[-1] != -1:            height = h[stack.pop()]            width = len(h) - stack[-1] - 1            area = max(area, height * width)        return area    for r in range(rows):        for c in range(cols):            heights[c] = heights[c] + 1 if matrix[r][c] == '1' else 0        max_area = max(max_area, largest_area(heights))    return max_area```**Complexity:** Time O(rows × cols), Space O(cols)  **Trick:** Treat each row as a histogram base. Heights accumulate downward — reset to 0 on seeing '0'.  **Edge Cases:** Empty matrix, single row, single column.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given n non-negative integers representing elevation, compute how much water it can trap after rain.**Example:**```Input: [0,1,0,2,1,0,1,3,2,1,2,1]Output: 6```**Approach:** Monotonic decreasing stack. When a taller bar is found, pop and calculate trapped water between current and popped bars.**Python Code:**```pythondef trap(height):    stack = []    water = 0    for i in range(len(height)):        while stack and height[i] > height[stack[-1]]:            bottom = stack.pop()            if stack:                width = i - stack[-1] - 1                h = min(height[i], height[stack[-1]]) - height[bottom]                water += width * h        stack.append(i)    return water```**Complexity:** Time O(n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Trapping Rain Water (Hard)**Problem Statement:** Given n non-negative integers representing elevation, compute how much water it can trap after rain.**Example:**```Input: [0,1,0,2,1,0,1,3,2,1,2,1]Output: 6```**Approach:** Monotonic decreasing stack. When a taller bar is found, pop and calculate trapped water between current and popped bars.**Python Code:**```pythondef trap(height):    stack = []    water = 0    for i in range(len(height)):        while stack and height[i] > height[stack[-1]]:            bottom = stack.pop()            if stack:                width = i - stack[-1] - 1                h = min(height[i], height[stack[-1]]) - height[bottom]                water += width * h        stack.append(i)    return water```**Complexity:** Time O(n), Space O(n)  **Trick:** Water above each popped bar = `(width) × (min(left_bound, right_bound) - bar_height)`. Stack gives us the left bound.  **Edge Cases:** Empty array, no water trapped, all same heights..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Water above each popped bar = `(width) × (min(left_bound, right_bound) - bar_height)`.
 
 **Well-Commented Code:**
 ```python
@@ -3056,60 +1881,26 @@ def trap(height):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(n), Space O(n)  **Trick:** Water above each popped bar = `(width) × (min(left_bound, right_bound) - bar_height)`. Stack gives us the left bound.  **Edge Cases:** Empty array, no water trapped, all same heights.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 37: Trapping Rain Water (Hard)
-
-**Problem Statement:** Given n non-negative integers representing elevation, compute how much water it can trap after rain.
-
-**Example:**
-```
-Input: [0,1,0,2,1,0,1,3,2,1,2,1]
-Output: 6
-```
-
-**Approach:** Monotonic decreasing stack. When a taller bar is found, pop and calculate trapped water between current and popped bars.
-
-**Python Code:**
-```python
-def trap(height):
-    stack = []
-    water = 0
-    for i in range(len(height)):
-        while stack and height[i] > height[stack[-1]]:
-            bottom = stack.pop()
-            if stack:
-                width = i - stack[-1] - 1
-                h = min(height[i], height[stack[-1]]) - height[bottom]
-                water += width * h
-        stack.append(i)
-    return water
-```
-
-**Complexity:** Time O(n), Space O(n)  
-**Trick:** Water above each popped bar = `(width) × (min(left_bound, right_bound) - bar_height)`. Stack gives us the left bound.  
-**Edge Cases:** Empty array, no water trapped, all same heights.
+- Empty input -> handle gracefully
+## Problem 37: Trapping Rain Water (Hard)**Problem Statement:** Given n non-negative integers representing elevation, compute how much water it can trap after rain.**Example:**```Input: [0,1,0,2,1,0,1,3,2,1,2,1]Output: 6```**Approach:** Monotonic decreasing stack. When a taller bar is found, pop and calculate trapped water between current and popped bars.**Python Code:**```pythondef trap(height):    stack = []    water = 0    for i in range(len(height)):        while stack and height[i] > height[stack[-1]]:            bottom = stack.pop()            if stack:                width = i - stack[-1] - 1                h = min(height[i], height[stack[-1]]) - height[bottom]                water += width * h        stack.append(i)    return water```**Complexity:** Time O(n), Space O(n)  **Trick:** Water above each popped bar = `(width) × (min(left_bound, right_bound) - bar_height)`. Stack gives us the left bound.  **Edge Cases:** Empty array, no water trapped, all same heights.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given an array and window size k, find the maximum in each sliding window.**Example:**```Input: nums = [1,3,-1,-3,5,3,6,7], k = 3Output: [3,3,5,5,6,7]```**Approach:** Monotonic decreasing deque storing indices. Remove indices outside window from front. Remove smaller elements from back. Front always holds max.**Python Code:**```pythonfrom collections import dequedef max_sliding_window(nums, k):    dq = deque()    result = []    for i in range(len(nums)):        while dq and dq[0] < i - k + 1:            dq.popleft()        while dq and nums[dq[-1]] < nums[i]:            dq.pop()        dq.append(i)        if i >= k - 1:            result.append(nums[dq[0]])    return result```**Complexity:** Time O(n), Space O(k)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Sliding Window Maximum (Hard)**Problem Statement:** Given an array and window size k, find the maximum in each sliding window.**Example:**```Input: nums = [1,3,-1,-3,5,3,6,7], k = 3Output: [3,3,5,5,6,7]```**Approach:** Monotonic decreasing deque storing indices. Remove indices outside window from front. Remove smaller elements from back. Front always holds max.**Python Code:**```pythonfrom collections import dequedef max_sliding_window(nums, k):    dq = deque()    result = []    for i in range(len(nums)):        while dq and dq[0] < i - k + 1:            dq.popleft()        while dq and nums[dq[-1]] < nums[i]:            dq.pop()        dq.append(i)        if i >= k - 1:            result.append(nums[dq[0]])    return result```**Complexity:** Time O(n), Space O(k)  **Trick:** Deque stores indices in decreasing order of values. Each element is pushed/popped at most once.  **Edge Cases:** k=1 (return array), k=length (return single max), all same values..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Deque stores indices in decreasing order of values.
 
 **Well-Commented Code:**
 ```python
@@ -3131,62 +1922,26 @@ def max_sliding_window(nums, k):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(k)
-- **Space:** O(k)
+- Time: Time O(n), Space O(k)  **Trick:** Deque stores indices in decreasing order of values. Each element is pushed/popped at most once.  **Edge Cases:** k=1 (return array), k=length (return single max), all same values.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 38: Sliding Window Maximum (Hard)
-
-**Problem Statement:** Given an array and window size k, find the maximum in each sliding window.
-
-**Example:**
-```
-Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
-Output: [3,3,5,5,6,7]
-```
-
-**Approach:** Monotonic decreasing deque storing indices. Remove indices outside window from front. Remove smaller elements from back. Front always holds max.
-
-**Python Code:**
-```python
-from collections import deque
-
-def max_sliding_window(nums, k):
-    dq = deque()
-    result = []
-    for i in range(len(nums)):
-        while dq and dq[0] < i - k + 1:
-            dq.popleft()
-        while dq and nums[dq[-1]] < nums[i]:
-            dq.pop()
-        dq.append(i)
-        if i >= k - 1:
-            result.append(nums[dq[0]])
-    return result
-```
-
-**Complexity:** Time O(n), Space O(k)  
-**Trick:** Deque stores indices in decreasing order of values. Each element is pushed/popped at most once.  
-**Edge Cases:** k=1 (return array), k=length (return single max), all same values.
+- Single element input
+## Problem 38: Sliding Window Maximum (Hard)**Problem Statement:** Given an array and window size k, find the maximum in each sliding window.**Example:**```Input: nums = [1,3,-1,-3,5,3,6,7], k = 3Output: [3,3,5,5,6,7]```**Approach:** Monotonic decreasing deque storing indices. Remove indices outside window from front. Remove smaller elements from back. Front always holds max.**Python Code:**```pythonfrom collections import dequedef max_sliding_window(nums, k):    dq = deque()    result = []    for i in range(len(nums)):        while dq and dq[0] < i - k + 1:            dq.popleft()        while dq and nums[dq[-1]] < nums[i]:            dq.pop()        dq.append(i)        if i >= k - 1:            result.append(nums[dq[0]])    return result```**Complexity:** Time O(n), Space O(k)  **Trick:** Deque stores indices in decreasing order of values. Each element is pushed/popped at most once.  **Edge Cases:** k=1 (return array), k=length (return single max), all same values.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Find the median of each sliding window of size k in an array.**Example:**```Input: nums = [1,3,-1,-3,5,3,6,7], k = 3Output: [1.0,-1.0,-1.0,3.0,5.0,6.0]```**Approach:** Use two heaps (max-heap for lower half, min-heap for upper half) with lazy deletion. Balance heaps and compute median from top elements.**Python Code:**```pythonimport heapqdef median_sliding_window(nums, k):    from sortedcontainers import SortedList    window = SortedList()    result = []    for i, num in enumerate(nums):        window.add(num)        if len(window) > k:            window.remove(nums[i - k])        if len(window) == k:            if k % 2 == 1:                result.append(window[k // 2])            else:                result.append((window[k // 2 - 1] + window[k // 2]) / 2)    return resultdef median_sliding_window_heap(nums, k):    import heapq    lo, hi = [], []    delayed = {}    lo_size = 0    hi_size = 0    result = []    def make_balance():        nonlocal lo_size, hi_size        while lo_size > (k + 1) // 2:            val = -heapq.heappop(lo)            lo_size -= 1            heapq.heappush(hi, val)            hi_size += 1        while lo_size < (k + 1) // 2 and hi:            val = heapq.heappop(hi)            hi_size -= 1            heapq.heappush(lo, -val)            lo_size += 1    def prune(heap, is_max):        while heap:            val = heap[0] if not is_max else -heap[0]            if delayed.get(val, 0) > 0:                delayed[val] -= 1                heapq.heappop(heap)            else:                break    for i, num in enumerate(nums):        if not lo or num <= -lo[0]:            heapq.heappush(lo, -num)            lo_size += 1        else:            heapq.heappush(hi, num)            hi_size += 1        if i >= k:            out = nums[i - k]            delayed[out] = delayed.get(out, 0) + 1            if out <= -lo[0] if lo else False:                lo_size -= 1            else:                hi_size -= 1            prune(lo, True)            prune(hi, False)        make_balance()        if i >= k - 1:            result.append(float(-lo[0]))    return result```**Complexity:** Time O(n log k), Space O(k)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Sliding Window Median (Hard)**Problem Statement:** Find the median of each sliding window of size k in an array.**Example:**```Input: nums = [1,3,-1,-3,5,3,6,7], k = 3Output: [1.0,-1.0,-1.0,3.0,5.0,6.0]```**Approach:** Use two heaps (max-heap for lower half, min-heap for upper half) with lazy deletion. Balance heaps and compute median from top elements.**Python Code:**```pythonimport heapqdef median_sliding_window(nums, k):    from sortedcontainers import SortedList    window = SortedList()    result = []    for i, num in enumerate(nums):        window.add(num)        if len(window) > k:            window.remove(nums[i - k])        if len(window) == k:            if k % 2 == 1:                result.append(window[k // 2])            else:                result.append((window[k // 2 - 1] + window[k // 2]) / 2)    return resultdef median_sliding_window_heap(nums, k):    import heapq    lo, hi = [], []    delayed = {}    lo_size = 0    hi_size = 0    result = []    def make_balance():        nonlocal lo_size, hi_size        while lo_size > (k + 1) // 2:            val = -heapq.heappop(lo)            lo_size -= 1            heapq.heappush(hi, val)            hi_size += 1        while lo_size < (k + 1) // 2 and hi:            val = heapq.heappop(hi)            hi_size -= 1            heapq.heappush(lo, -val)            lo_size += 1    def prune(heap, is_max):        while heap:            val = heap[0] if not is_max else -heap[0]            if delayed.get(val, 0) > 0:                delayed[val] -= 1                heapq.heappop(heap)            else:                break    for i, num in enumerate(nums):        if not lo or num <= -lo[0]:            heapq.heappush(lo, -num)            lo_size += 1        else:            heapq.heappush(hi, num)            hi_size += 1        if i >= k:            out = nums[i - k]            delayed[out] = delayed.get(out, 0) + 1            if out <= -lo[0] if lo else False:                lo_size -= 1            else:                hi_size -= 1            prune(lo, True)            prune(hi, False)        make_balance()        if i >= k - 1:            result.append(float(-lo[0]))    return result```**Complexity:** Time O(n log k), Space O(k)  **Trick:** `SortedList` from sortedcontainers gives O(log k) insert/delete. Pure heap approach needs lazy deletion for O(1) window sliding.  **Edge Cases:** k=1, k=length, all same values..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** `SortedList` from sortedcontainers gives O(log k) insert/delete.
 
 **Well-Commented Code:**
 ```python
@@ -3264,118 +2019,27 @@ def median_sliding_window_heap(nums, k):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n log k), Space O(k)
-- **Space:** O(k)
+- Time: Time O(n log k), Space O(k)  **Trick:** `SortedList` from sortedcontainers gives O(log k) insert/delete. Pure heap approach needs lazy deletion for O(1) window sliding.  **Edge Cases:** k=1, k=length, all same values.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 39: Sliding Window Median (Hard)
-
-**Problem Statement:** Find the median of each sliding window of size k in an array.
-
-**Example:**
-```
-Input: nums = [1,3,-1,-3,5,3,6,7], k = 3
-Output: [1.0,-1.0,-1.0,3.0,5.0,6.0]
-```
-
-**Approach:** Use two heaps (max-heap for lower half, min-heap for upper half) with lazy deletion. Balance heaps and compute median from top elements.
-
-**Python Code:**
-```python
-import heapq
-
-def median_sliding_window(nums, k):
-    from sortedcontainers import SortedList
-    window = SortedList()
-    result = []
-
-    for i, num in enumerate(nums):
-        window.add(num)
-        if len(window) > k:
-            window.remove(nums[i - k])
-        if len(window) == k:
-            if k % 2 == 1:
-                result.append(window[k // 2])
-            else:
-                result.append((window[k // 2 - 1] + window[k // 2]) / 2)
-    return result
-
-def median_sliding_window_heap(nums, k):
-    import heapq
-    lo, hi = [], []
-    delayed = {}
-    lo_size = 0
-    hi_size = 0
-    result = []
-
-    def make_balance():
-        nonlocal lo_size, hi_size
-        while lo_size > (k + 1) // 2:
-            val = -heapq.heappop(lo)
-            lo_size -= 1
-            heapq.heappush(hi, val)
-            hi_size += 1
-        while lo_size < (k + 1) // 2 and hi:
-            val = heapq.heappop(hi)
-            hi_size -= 1
-            heapq.heappush(lo, -val)
-            lo_size += 1
-
-    def prune(heap, is_max):
-        while heap:
-            val = heap[0] if not is_max else -heap[0]
-            if delayed.get(val, 0) > 0:
-                delayed[val] -= 1
-                heapq.heappop(heap)
-            else:
-                break
-
-    for i, num in enumerate(nums):
-        if not lo or num <= -lo[0]:
-            heapq.heappush(lo, -num)
-            lo_size += 1
-        else:
-            heapq.heappush(hi, num)
-            hi_size += 1
-
-        if i >= k:
-            out = nums[i - k]
-            delayed[out] = delayed.get(out, 0) + 1
-            if out <= -lo[0] if lo else False:
-                lo_size -= 1
-            else:
-                hi_size -= 1
-            prune(lo, True)
-            prune(hi, False)
-
-        make_balance()
-        if i >= k - 1:
-            result.append(float(-lo[0]))
-    return result
-```
-
-**Complexity:** Time O(n log k), Space O(k)  
-**Trick:** `SortedList` from sortedcontainers gives O(log k) insert/delete. Pure heap approach needs lazy deletion for O(1) window sliding.  
-**Edge Cases:** k=1, k=length, all same values.
+- Already sorted
+- Reverse sorted
+## Problem 39: Sliding Window Median (Hard)**Problem Statement:** Find the median of each sliding window of size k in an array.**Example:**```Input: nums = [1,3,-1,-3,5,3,6,7], k = 3Output: [1.0,-1.0,-1.0,3.0,5.0,6.0]```**Approach:** Use two heaps (max-heap for lower half, min-heap for upper half) with lazy deletion. Balance heaps and compute median from top elements.**Python Code:**```pythonimport heapqdef median_sliding_window(nums, k):    from sortedcontainers import SortedList    window = SortedList()    result = []    for i, num in enumerate(nums):        window.add(num)        if len(window) > k:            window.remove(nums[i - k])        if len(window) == k:            if k % 2 == 1:                result.append(window[k // 2])            else:                result.append((window[k // 2 - 1] + window[k // 2]) / 2)    return resultdef median_sliding_window_heap(nums, k):    import heapq    lo, hi = [], []    delayed = {}    lo_size = 0    hi_size = 0    result = []    def make_balance():        nonlocal lo_size, hi_size        while lo_size > (k + 1) // 2:            val = -heapq.heappop(lo)            lo_size -= 1            heapq.heappush(hi, val)            hi_size += 1        while lo_size < (k + 1) // 2 and hi:            val = heapq.heappop(hi)            hi_size -= 1            heapq.heappush(lo, -val)            lo_size += 1    def prune(heap, is_max):        while heap:            val = heap[0] if not is_max else -heap[0]            if delayed.get(val, 0) > 0:                delayed[val] -= 1                heapq.heappop(heap)            else:                break    for i, num in enumerate(nums):        if not lo or num <= -lo[0]:            heapq.heappush(lo, -num)            lo_size += 1        else:            heapq.heappush(hi, num)            hi_size += 1        if i >= k:            out = nums[i - k]            delayed[out] = delayed.get(out, 0) + 1            if out <= -lo[0] if lo else False:                lo_size -= 1            else:                hi_size -= 1            prune(lo, True)            prune(hi, False)        make_balance()        if i >= k - 1:            result.append(float(-lo[0]))    return result```**Complexity:** Time O(n log k), Space O(k)  **Trick:** `SortedList` from sortedcontainers gives O(log k) insert/delete. Pure heap approach needs lazy deletion for O(1) window sliding.  **Edge Cases:** k=1, k=length, all same values.
+---
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given cars at positions with speeds heading right, find the time at which each car catches up to the car in front of it. If none, return -1.**Example:**```Input: position = [3,5,2], speed = [3,2,4]Output: [2.0, -1.0, -1.0]Explanation: Car 0 catches car 1 at time 2.0.```**Approach:** Process cars from right to left using a stack. For each pair, compute collision time. Use stack to skip cars that are already part of a faster fleet.**Python Code:**```pythondef get_collision_times(positions, speeds):    n = len(positions)    result = [-1.0] * n    stack = []  # indices of cars to the right    for i in range(n - 1, -1, -1):        while stack:            j = stack[-1]            # Cannot catch up if same speed or slower            if speeds[i] <= speeds[j]:                stack.pop()                continue            # Time to catch car j            time = (positions[j] - positions[i]) / (speeds[i] - speeds[j])            # If j catches k before we catch j, skip j            if result[j] != -1 and time >= result[j]:                stack.pop()                continue            result[i] = time            break        stack.append(i)    return result```**Complexity:** Time O(n), Space O(n)
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Implement an efficient solution.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Car Fleet II (Hard)**Problem Statement:** Given cars at positions with speeds heading right, find the time at which each car catches up to the car in front of it. If none, return -1.**Example:**```Input: position = [3,5,2], speed = [3,2,4]Output: [2.0, -1.0, -1.0]Explanation: Car 0 catches car 1 at time 2.0.```**Approach:** Process cars from right to left using a stack. For each pair, compute collision time. Use stack to skip cars that are already part of a faster fleet.**Python Code:**```pythondef get_collision_times(positions, speeds):    n = len(positions)    result = [-1.0] * n    stack = []  # indices of cars to the right    for i in range(n - 1, -1, -1):        while stack:            j = stack[-1]            # Cannot catch up if same speed or slower            if speeds[i] <= speeds[j]:                stack.pop()                continue            # Time to catch car j            time = (positions[j] - positions[i]) / (speeds[i] - speeds[j])            # If j catches k before we catch j, skip j            if result[j] != -1 and time >= result[j]:                stack.pop()                continue            result[i] = time            break        stack.append(i)    return result```**Complexity:** Time O(n), Space O(n)  **Trick:** Each car is pushed/popped at most once. If car j catches car k before car i catches j, then i never catches j directly (it catches the fleet).  **Edge Cases:** All cars same speed, single car, cars already sorted by position..
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Each car is pushed/popped at most once.
 
 **Well-Commented Code:**
 ```python
@@ -3405,56 +2069,12 @@ def get_collision_times(positions, speeds):
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n), Space O(n)
-- **Space:** O(n)
+- Time: Time O(n), Space O(n)  **Trick:** Each car is pushed/popped at most once. If car j catches car k before car i catches j, then i never catches j directly (it catches the fleet).  **Edge Cases:** All cars same speed, single car, cars already sorted by position.
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
-## Problem 40: Car Fleet II (Hard)
-
-**Problem Statement:** Given cars at positions with speeds heading right, find the time at which each car catches up to the car in front of it. If none, return -1.
-
-**Example:**
-```
-Input: position = [3,5,2], speed = [3,2,4]
-Output: [2.0, -1.0, -1.0]
-Explanation: Car 0 catches car 1 at time 2.0.
-```
-
-**Approach:** Process cars from right to left using a stack. For each pair, compute collision time. Use stack to skip cars that are already part of a faster fleet.
-
-**Python Code:**
-```python
-def get_collision_times(positions, speeds):
-    n = len(positions)
-    result = [-1.0] * n
-    stack = []  # indices of cars to the right
-
-    for i in range(n - 1, -1, -1):
-        while stack:
-            j = stack[-1]
-            # Cannot catch up if same speed or slower
-            if speeds[i] <= speeds[j]:
-                stack.pop()
-                continue
-            # Time to catch car j
-            time = (positions[j] - positions[i]) / (speeds[i] - speeds[j])
-            # If j catches k before we catch j, skip j
-            if result[j] != -1 and time >= result[j]:
-                stack.pop()
-                continue
-            result[i] = time
-            break
-        stack.append(i)
-    return result
-```
-
-**Complexity:** Time O(n), Space O(n)  
-**Trick:** Each car is pushed/popped at most once. If car j catches car k before car i catches j, then i never catches j directly (it catches the fleet).  
-**Edge Cases:** All cars same speed, single car, cars already sorted by position.
+- Single element input
+## Problem 40: Car Fleet II (Hard)**Problem Statement:** Given cars at positions with speeds heading right, find the time at which each car catches up to the car in front of it. If none, return -1.**Example:**```Input: position = [3,5,2], speed = [3,2,4]Output: [2.0, -1.0, -1.0]Explanation: Car 0 catches car 1 at time 2.0.```**Approach:** Process cars from right to left using a stack. For each pair, compute collision time. Use stack to skip cars that are already part of a faster fleet.**Python Code:**```pythondef get_collision_times(positions, speeds):    n = len(positions)    result = [-1.0] * n    stack = []  # indices of cars to the right    for i in range(n - 1, -1, -1):        while stack:            j = stack[-1]            # Cannot catch up if same speed or slower            if speeds[i] <= speeds[j]:                stack.pop()                continue            # Time to catch car j            time = (positions[j] - positions[i]) / (speeds[i] - speeds[j])            # If j catches k before we catch j, skip j            if result[j] != -1 and time >= result[j]:                stack.pop()                continue            result[i] = time            break        stack.append(i)    return result```**Complexity:** Time O(n), Space O(n)  **Trick:** Each car is pushed/popped at most once. If car j catches car k before car i catches j, then i never catches j directly (it catches the fleet).  **Edge Cases:** All cars same speed, single car, cars already sorted by position.
+---
 
 ---
 

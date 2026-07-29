@@ -19,7 +19,7 @@
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Count of Smaller Numbers After Self.
 ```
 
 **Key Insight:** Fenwick Tree enables O(log n) prefix sum; right-to-left traversal handles 'after self'.
@@ -111,18 +111,20 @@ print(count_smaller([5, 2, 6, 1]))  # [2, 1, 1, 0]
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Design a data structure that supports two operations on an integer array: `update(index, val)` to update the value at index, and `sumRange(left, right)` to return the sum between indices `left` and `right` inclusive.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use a Fenwick Tree.
+2. The BIT stores prefix sums implicitly.
+3. To get the range sum, compute `query(right) - query(left - 1)`.
+4. For updates, propagate the difference using `update(index, delta)`.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Range Sum Query - Mutable (Fenwick Tree).
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use a Fenwick Tree. The BIT stores prefix sums implicitly. To get the range sum, compute `query(righ.
 
 **Well-Commented Code:**
 ```python
@@ -161,14 +163,12 @@ print(ft.sum_range(0, 2))   # 8
 ```
 
 **Complexity Analysis:**
-- **Time:** O(log n) for both update and query operations.
-- **Space:** O(n) — for the BIT tree and nums copy.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty tree
+- Single node
+- Skewed tree
 ### Problem 2: Range Sum Query - Mutable (Fenwick Tree)
 
 **Statement:** Design a data structure that supports two operations on an integer array: `update(index, val)` to update the value at index, and `sumRange(left, right)` to return the sum between indices `left` and `right` inclusive.
@@ -223,7 +223,7 @@ print(ft.sum_range(0, 2))   # 8
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Range Minimum Query (Segment Tree).
 ```
 
 **Key Insight:** Segment tree divides array into a binary tree, supporting range queries in O(log n).
@@ -349,18 +349,19 @@ print(st.query(1, 3))   # 0
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Count the number of inversions in an array. An inversion is a pair `(i, j)` where `i < j` and `nums[i] > nums[j]`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Modify merge sort.
+2. During the merge step, whenever an element from the right half is placed before elements from the left half, all remaining left-half elements form inversions with it.
+3. Count these during the merge process.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Merge Sort with Inversion Count.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Modify merge sort. During the merge step, whenever an element from the right half is placed before e.
 
 **Well-Commented Code:**
 ```python
@@ -407,14 +408,13 @@ print(count_inversions([2, 4, 1, 3, 5]))  # 3
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n log n) — standard merge sort complexity.
-- **Space:** O(n) — auxiliary array for merging.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 4: Merge Sort with Inversion Count
 
 **Statement:** Count the number of inversions in an array. An inversion is a pair `(i, j)` where `i < j` and `nums[i] > nums[j]`.
@@ -468,18 +468,20 @@ print(count_inversions([2, 4, 1, 3, 5]))  # 3
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Count the number of inversions in an array using a Binary Indexed Tree instead of merge sort.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Coordinate-compress values.
+2. Traverse from left to right.
+3. For each element, query BIT for count of elements greater than current (already inserted), which is `total_inserted - query(rank)`.
+4. Then update BIT at current rank.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Count Inversions using BIT.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Coordinate-compress values. Traverse from left to right. For each element, query BIT for count of el.
 
 **Well-Commented Code:**
 ```python
@@ -516,14 +518,13 @@ print(count_inversions_bit([2, 4, 1, 3, 5]))  # 3
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n log n) — each element triggers one BIT query and update.
-- **Space:** O(n) — for BIT and rank map.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 5: Count Inversions using BIT
 
 **Statement:** Count the number of inversions in an array using a Binary Indexed Tree instead of merge sort.
@@ -567,18 +568,20 @@ print(count_inversions_bit([2, 4, 1, 3, 5]))  # 3
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given an array, count reverse pairs `(i, j)` where `i < j` and `nums[i] > 2 * nums[j]`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use coordinate compression on all values and their doubled values.
+2. Iterate left to right.
+3. For each element `nums[i]`, query the segment tree for how many previously inserted elements are greater than `2 * nums[i]` (range sum from `2*nums[i]+1` to max).
+4. Then insert current element.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Reverse Pairs using Segment Tree.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use coordinate compression on all values and their doubled values. Iterate left to right. For each e.
 
 **Well-Commented Code:**
 ```python
@@ -625,14 +628,11 @@ print(reverse_pairs([1, 3, 2, 3, 1]))  # 2
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n log n) — compression and BIT operations dominate.
-- **Space:** O(n) — for coordinate map and BIT.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Single element unchanged
+- Even/odd length both work
 ### Problem 6: Reverse Pairs using Segment Tree
 
 **Statement:** Given an array, count reverse pairs `(i, j)` where `i < j` and `nums[i] > 2 * nums[j]`.
@@ -686,18 +686,20 @@ print(reverse_pairs([1, 3, 2, 3, 1]))  # 2
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Design a 2D data structure that supports `update(row, col, val)` and `sumRegion(row1, col1, row2, col2)` for a 2D matrix.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use a 2D Binary Indexed Tree.
+2. Each cell `(r, c)` is stored in the BIT using 2D prefix sums.
+3. For updates, propagate delta to all relevant BIT cells using nested loops with `i += i & (-i)`.
+4. For queries, use inclusion-exclusion on the 2D prefix.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Range Sum Query 2D - Mutable.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use a 2D Binary Indexed Tree. Each cell `(r, c)` is stored in the BIT using 2D prefix sums. For upda.
 
 **Well-Commented Code:**
 ```python
@@ -749,14 +751,11 @@ print(b.sum_region(1, 1, 2, 2))  # 25
 ```
 
 **Complexity Analysis:**
-- **Time:** O(log m * log n) for update and sum_region.
-- **Space:** O(m * n) — for BIT and original matrix.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Different length strings
+- Extra carry bit at end
 ### Problem 7: Range Sum Query 2D - Mutable
 
 **Statement:** Design a 2D data structure that supports `update(row, col, val)` and `sumRegion(row1, col1, row2, col2)` for a 2D matrix.
@@ -815,18 +814,19 @@ print(b.sum_region(1, 1, 2, 2))  # 25
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given an array, support `update(index, val)` and `query(l, r)` returning the maximum value in range `[l, r]`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Build a segment tree where each node stores the maximum of its segment.
+2. Query traverses the tree combining left and right max values.
+3. Update propagates changes from leaf upward comparing children to set parent maximum.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Maximum in Range using Segment Tree.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Build a segment tree where each node stores the maximum of its segment. Query traverses the tree com.
 
 **Well-Commented Code:**
 ```python
@@ -882,14 +882,12 @@ print(st.query(0, 4))   # 10
 ```
 
 **Complexity Analysis:**
-- **Time:** O(log n) for update and query; O(n) for build.
-- **Space:** O(n) — segment tree array ~4n.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty tree
+- Single node
+- Skewed tree
 ### Problem 8: Maximum in Range using Segment Tree
 
 **Statement:** Given an array, support `update(index, val)` and `query(l, r)` returning the maximum value in range `[l, r]`.
@@ -952,18 +950,19 @@ print(st.query(0, 4))   # 10
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given an integer array `nums` and two integers `lower` and `upper`, return the number of range sums that lie in `[lower, upper]` inclusive. Range sum `S(i, j)` is defined as the sum of elements from index `i` to `j`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Compute prefix sums.
+2. Use merge sort to count pairs `(i, j)` where `i < j` and `lower <= prefix[j] - prefix[i] <= upper`.
+3. During merge, count elements from right half satisfying the condition using binary search on the sorted left half.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Count of Range Sum.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Compute prefix sums. Use merge sort to count pairs `(i, j)` where `i < j` and `lower <= prefix[j] - .
 
 **Well-Commented Code:**
 ```python
@@ -1017,14 +1016,11 @@ print(count_range_sum([-2, 5, -1], -2, 2))  # 3
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n log n) — merge sort with two-pointer counting.
-- **Space:** O(n) — for prefix array and temp array.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Different length strings
+- Extra carry bit at end
 ### Problem 9: Count of Range Sum
 
 **Statement:** Given an integer array `nums` and two integers `lower` and `upper`, return the number of range sums that lie in `[lower, upper]` inclusive. Range sum `S(i, j)` is defined as the sum of elements from index `i` to `j`.
@@ -1094,7 +1090,7 @@ print(count_range_sum([-2, 5, -1], -2, 2))  # 3
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Number of Provinces with Range Queries.
 ```
 
 **Key Insight:** Number of provinces = number of connected components in the graph.
@@ -1218,7 +1214,7 @@ print(count_provinces_queries(4, edges, [1, 2, 3, 5]))  # [4, 2, 2, 1]
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Implement Trie (Prefix Tree).
 ```
 
 **Key Insight:** Trie provides O(L) prefix matching where L is string length, ideal for dictionary/autocomplete.
@@ -1328,18 +1324,20 @@ print(t.starts_with("app"))   # True
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a 2D board of characters and a list of words, find all words from the list that exist on the board. A word can be formed by tracing adjacent cells (up/down/left/right) without revisiting a cell.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Insert all words into a Trie.
+2. For each cell on the board, run DFS/backtracking.
+3. At each step, check if current prefix exists in Trie (prune if not).
+4. When a node is marked `is_end`, add the word to result and unmark to avoid duplicates.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Word Search II (Trie + Backtracking).
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Insert all words into a Trie. For each cell on the board, run DFS/backtracking. At each step, check .
 
 **Well-Commented Code:**
 ```python
@@ -1390,14 +1388,10 @@ print(find_words(board, ["oath","pea","eat","rain"]))  # ['oath', 'eat']
 ```
 
 **Complexity Analysis:**
-- **Time:** O(M * N * 4^L) worst case where M*N is board size, L is max word length. Trie pruning makes it much faster in practice.
-- **Space:** O(K) where K is total characters in all words for Trie.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Duplicate values -> skip or deduplicate
 ### Problem 12: Word Search II (Trie + Backtracking)
 
 **Statement:** Given a 2D board of characters and a list of words, find all words from the list that exist on the board. A word can be formed by tracing adjacent cells (up/down/left/right) without revisiting a cell.
@@ -1455,18 +1449,19 @@ print(find_words(board, ["oath","pea","eat","rain"]))  # ['oath', 'eat']
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given an array of integers, find the maximum value of `nums[i] XOR nums[j]` where `0 ≤ i, j < n`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Build a Trie of the binary representations (32 bits).
+2. For each number, traverse the Trie preferring the opposite bit at each level to maximize XOR.
+3. Track the maximum XOR found across all numbers.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Maximum XOR of Two Numbers in Array.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Build a Trie of the binary representations (32 bits). For each number, traverse the Trie preferring .
 
 **Well-Commented Code:**
 ```python
@@ -1512,14 +1507,11 @@ print(find_max_xor([3, 10, 5, 25, 2, 8]))  # 28
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n * 32) = O(n) — insert and query each number in 32-bit Trie.
-- **Space:** O(n * 32) — Trie nodes for n numbers.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Different length strings
+- Extra carry bit at end
 ### Problem 13: Maximum XOR of Two Numbers in Array
 
 **Statement:** Given an array of integers, find the maximum value of `nums[i] XOR nums[j]` where `0 ≤ i, j < n`.
@@ -1572,18 +1564,19 @@ print(find_max_xor([3, 10, 5, 25, 2, 8]))  # 28
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a list of words, find the longest word that can be built one character at a time from other words in the list. If there are multiple, return the lexicographically smallest.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Insert all words into a Trie.
+2. Then DFS from root, only traversing children that are marked as `is_end` (meaning the prefix itself is a valid word).
+3. Track the longest path; on ties, prefer lexicographically smaller character.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Longest Word in Dictionary.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Insert all words into a Trie. Then DFS from root, only traversing children that are marked as `is_en.
 
 **Well-Commented Code:**
 ```python
@@ -1623,14 +1616,13 @@ print(longest_word(["w", "wo", "wor", "worl", "world"]))  # "world"
 ```
 
 **Complexity Analysis:**
-- **Time:** O(N * L + 26^L) in worst case — building Trie + DFS. In practice much less due to pruning.
-- **Space:** O(N * L) — Trie storage.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 14: Longest Word in Dictionary
 
 **Statement:** Given a list of words, find the longest word that can be built one character at a time from other words in the list. If there are multiple, return the lexicographically smallest.
@@ -1677,18 +1669,20 @@ print(longest_word(["w", "wo", "wor", "worl", "world"]))  # "world"
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a list of product names and a search word, for each prefix of the search word, return up to 3 product names that start with that prefix, sorted lexicographically.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Sort the products.
+2. Build a Trie of all products.
+3. For each prefix of the search word, traverse the Trie to the prefix node, then DFS to collect up to 3 words.
+4. Sorting once allows ordered traversal.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Search Suggestions System.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Sort the products. Build a Trie of all products. For each prefix of the search word, traverse the Tr.
 
 **Well-Commented Code:**
 ```python
@@ -1732,14 +1726,12 @@ print(suggested_products(
 ```
 
 **Complexity Analysis:**
-- **Time:** O(N * L * log N) for sorting + O(L) per query. Trie construction is O(N * L).
-- **Space:** O(N * L) — Trie nodes storing references.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Not found at all
+- At beginning/end
+- Multiple occurrences
 ### Problem 15: Search Suggestions System
 
 **Statement:** Given a list of product names and a search word, for each prefix of the search word, return up to 3 product names that start with that prefix, sorted lexicographically.
@@ -1790,18 +1782,20 @@ print(suggested_products(
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a list of roots (dictionary) and a sentence, replace each word in the sentence with its shortest root prefix from the dictionary. If no root matches, keep the original word.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Insert all roots into a Trie.
+2. For each word in the sentence, traverse the Trie character by character.
+3. If a node is marked `is_end`, that root is the shortest prefix match.
+4. If traversal fails before finding a match, keep the original word.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Replace Words (Shortest Prefix).
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Insert all roots into a Trie. For each word in the sentence, traverse the Trie character by characte.
 
 **Well-Commented Code:**
 ```python
@@ -1842,14 +1836,13 @@ print(replace_words(
 ```
 
 **Complexity Analysis:**
-- **Time:** O(D * L + S) where D = dict size, L = avg root length, S = sentence length.
-- **Space:** O(D * L) — Trie for dictionary roots.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 16: Replace Words (Shortest Prefix)
 
 **Statement:** Given a list of roots (dictionary) and a sentence, replace each word in the sentence with its shortest root prefix from the dictionary. If no root matches, keep the original word.
@@ -1897,18 +1890,20 @@ print(replace_words(
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Design a class that receives a stream of characters one at a time and returns `True` if the suffix of characters received so far matches any word in a given dictionary.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Insert all dictionary words into a Trie, but insert them reversed.
+2. Maintain a buffer of recent characters (up to max word length).
+3. On each new character, check the Trie with the buffer in reverse order.
+4. If any prefix matches (meaning a reversed word matches a suffix), return `True`.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Stream of Characters (Suffix Matching).
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Insert all dictionary words into a Trie, but insert them reversed. Maintain a buffer of recent chara.
 
 **Well-Commented Code:**
 ```python
@@ -1951,14 +1946,11 @@ print(sc.query('f'))  # True  (suffix "f")
 ```
 
 **Complexity Analysis:**
-- **Time:** O(L) per query where L = max word length (buffer bounded).
-- **Space:** O(total characters in words + L) — Trie + buffer.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Single element unchanged
+- Even/odd length both work
 ### Problem 17: Stream of Characters (Suffix Matching)
 
 **Statement:** Design a class that receives a stream of characters one at a time and returns `True` if the suffix of characters received so far matches any word in a given dictionary.
@@ -2008,18 +2000,21 @@ print(sc.query('f'))  # True  (suffix "f")
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a list of words, find all pairs `(i, j)` where `i ≠ j` and `words[i] + words[j]` forms a palindrome.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. For each word, insert its reversed form into a Trie with the word's index.
+2. For each word, try all possible splits.
+3. If the prefix part is a palindrome, check if the remaining suffix exists in the Trie.
+4. If the suffix part is a palindrome, check if the reversed prefix exists.
+5. Also handle the case where a word's reverse is another word.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Palindrome Pairs using Trie.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** For each word, insert its reversed form into a Trie with the word's index. For each word, try all po.
 
 **Well-Commented Code:**
 ```python
@@ -2076,14 +2071,11 @@ print(palindrome_pairs(["abcd", "dcba", "lls", "s", "sssll"]))
 ```
 
 **Complexity Analysis:**
-- **Time:** O(N * K²) where N = number of words, K = max word length.
-- **Space:** O(N * K) — Trie storage for all reversed words.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Single element unchanged
+- Even/odd length both work
 ### Problem 18: Palindrome Pairs using Trie
 
 **Statement:** Given a list of words, find all pairs `(i, j)` where `i ≠ j` and `words[i] + words[j]` forms a palindrome.
@@ -2160,7 +2152,7 @@ print(palindrome_pairs(["abcd", "dcba", "lls", "s", "sssll"]))
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Redundant Connection.
 ```
 
 **Key Insight:** DSU detects the edge that closes a cycle in near-constant time per operation.
@@ -2254,18 +2246,20 @@ print(find_redundant([[1,2],[1,3],[2,3]]))  # [2, 3]
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Start with an empty `m x n` grid. Process a list of operations: each operation adds land at position `(row, col)`. After each operation, return the current number of islands.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use Union-Find.
+2. Each added land cell is a new island.
+3. For each added cell, check its 4 neighbors; if a neighbor is land, union them (decreasing island count by 1 per successful union).
+4. Track total islands.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Number of Islands II (Dynamic).
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use Union-Find. Each added land cell is a new island. For each added cell, check its 4 neighbors; if.
 
 **Well-Commented Code:**
 ```python
@@ -2317,14 +2311,13 @@ print(num_islands2(3, 3, [(0,0),(0,1),(1,2),(2,1)]))
 ```
 
 **Complexity Analysis:**
-- **Time:** O(K * α(m*n)) where K = number of operations.
-- **Space:** O(m * n) — for DSU and grid.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 20: Number of Islands II (Dynamic)
 
 **Statement:** Start with an empty `m x n` grid. Process a list of operations: each operation adds land at position `(row, col)`. After each operation, return the current number of islands.
@@ -2383,18 +2376,20 @@ print(num_islands2(3, 3, [(0,0),(0,1),(1,2),(2,1)]))
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a list of accounts where each account has a name and a list of emails, merge accounts that share at least one email. Return the merged accounts with unique sorted emails.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use Union-Find to group account indices that share emails.
+2. For each email, track which account index first saw it.
+3. If an account sees an email already seen by another account, union the two indices.
+4. After processing all emails, group by root parent and build result.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Accounts Merge.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use Union-Find to group account indices that share emails. For each email, track which account index.
 
 **Well-Commented Code:**
 ```python
@@ -2446,14 +2441,13 @@ print(accounts_merge(accounts))
 ```
 
 **Complexity Analysis:**
-- **Time:** O(N * K * α(N)) where N = accounts, K = avg emails per account.
-- **Space:** O(N * K) — for email-to-account map and DSU.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 21: Accounts Merge
 
 **Statement:** Given a list of accounts where each account has a name and a list of emails, merge accounts that share at least one email. Return the merged accounts with unique sorted emails.
@@ -2512,18 +2506,18 @@ print(accounts_merge(accounts))
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a string and a list of pairs `(i, j)` where characters at indices `i` and `j` can be swapped any number of times, find the lexicographically smallest string achievable.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use Union-Find to group indices that are connected (directly or transitively) via swap pairs.
+2. Within each connected component, sort the characters and place them back at the sorted indices to get the lexicographically smallest arrangement.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Smallest String With Swaps.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use Union-Find to group indices that are connected (directly or transitively) via swap pairs. Within.
 
 **Well-Commented Code:**
 ```python
@@ -2571,14 +2565,11 @@ print(smallest_string("dcab", [[0,3],[1,2],[0,2]]))  # "abcd"
 ```
 
 **Complexity Analysis:**
-- **Time:** O(N log N + P * α(N)) where P = number of pairs, N = string length.
-- **Space:** O(N) — for DSU and group maps.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Already sorted
+- Reverse sorted
 ### Problem 22: Smallest String With Swaps
 
 **Statement:** Given a string and a list of pairs `(i, j)` where characters at indices `i` and `j` can be swapped any number of times, find the lexicographically smallest string achievable.
@@ -2633,18 +2624,21 @@ print(smallest_string("dcab", [[0,3],[1,2],[0,2]]))  # "abcd"
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given an array and queries of the form `(start, k)`, for each query find the k-th smallest missing positive integer starting from `start`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Process offline.
+2. Sort queries by start descending.
+3. Use a Union-Find where each positive integer points to the next available integer.
+4. Start from the highest value and add numbers to the DSU.
+5. For each query, find the k-th available number using the DSU structure.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Find Smallest Missing Elements.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Process offline. Sort queries by start descending. Use a Union-Find where each positive integer poin.
 
 **Well-Commented Code:**
 ```python
@@ -2714,14 +2708,13 @@ print(smallest_missing_simple([1, 3, 5], [(2, 1), (2, 2), (1, 3)]))
 ```
 
 **Complexity Analysis:**
-- **Time:** O(N + Q * sqrt(N)) for the simple version. DSU version O((max_val + Q) * α(N)).
-- **Space:** O(N + max_val) — for set and DSU.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 23: Find Smallest Missing Elements
 
 **Statement:** Given an array and queries of the form `(start, k)`, for each query find the k-th smallest missing positive integer starting from `start`.
@@ -2810,7 +2803,7 @@ print(smallest_missing_simple([1, 3, 5], [(2, 1), (2, 2), (1, 3)]))
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Single Number II.
 ```
 
 **Key Insight:** Bit counting modulo k isolates the element appearing exactly once when others appear k times.
@@ -2864,18 +2857,20 @@ print(single_number([0, 1, 0, 1, 0, 1, 99]))  # 99
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Find the maximum XOR of a contiguous subarray.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use a Trie of prefix XOR values.
+2. Compute prefix XOR as you traverse.
+3. For each prefix, query the Trie to find the previously stored prefix that gives maximum XOR with current prefix.
+4. The XOR of two prefixes gives a subarray XOR.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Maximum XOR Subarray.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use a Trie of prefix XOR values. Compute prefix XOR as you traverse. For each prefix, query the Trie.
 
 **Well-Commented Code:**
 ```python
@@ -2926,14 +2921,13 @@ print(max_xor_subarray([8, 1, 2, 12]))  # 15
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n * 32) = O(n) — for each element, Trie operations are O(32).
-- **Space:** O(n * 32) — Trie nodes.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 25: Maximum XOR Subarray
 
 **Statement:** Find the maximum XOR of a contiguous subarray.
@@ -2991,18 +2985,19 @@ print(max_xor_subarray([8, 1, 2, 12]))  # 15
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given two integers `left` and `right`, return the bitwise AND of all numbers in the range `[left, right]`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Find the common prefix of `left` and `right` in binary.
+2. The result is the common prefix followed by zeros.
+3. Shift both numbers right until they're equal (counting shifts), then shift back left.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Bitwise AND of Range.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Find the common prefix of `left` and `right` in binary. The result is the common prefix followed by .
 
 **Well-Commented Code:**
 ```python
@@ -3027,14 +3022,10 @@ print(range_bitwise_and(1, 2147483647))  # 0
 ```
 
 **Complexity Analysis:**
-- **Time:** O(log n) — shifting right until common prefix, or removing lowest bits.
-- **Space:** O(1) — only integer variables.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Zero value case
 ### Problem 26: Bitwise AND of Range
 
 **Statement:** Given two integers `left` and `right`, return the bitwise AND of all numbers in the range `[left, right]`.
@@ -3066,18 +3057,20 @@ print(range_bitwise_and(1, 2147483647))  # 0
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given three integers `a`, `b`, and `c`, find the minimum number of bit flips required so that `a OR b` equals `c`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Process each bit position from 0 to 31.
+2. For each bit, check the bits of `a`, `b`, and `c`.
+3. If `c`'s bit is 1, we need at least one of `a` or `b`'s bits to be 1 (flip one if both are 0).
+4. If `c`'s bit is 0, both `a` and `b`'s bits must be 0 (flip each that is 1).
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Minimum Flips to Make a OR b Equal to c.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Process each bit position from 0 to 31. For each bit, check the bits of `a`, `b`, and `c`. If `c`'s .
 
 **Well-Commented Code:**
 ```python
@@ -3102,14 +3095,13 @@ print(min_flips(2, 6, 5))  # 3
 ```
 
 **Complexity Analysis:**
-- **Time:** O(32) = O(1) — fixed number of bit positions.
-- **Space:** O(1) — constant extra space.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty input handling
+- Single element input
+- Edge case boundary
+- Large input performance
 ### Problem 27: Minimum Flips to Make a OR b Equal to c
 
 **Statement:** Given three integers `a`, `b`, and `c`, find the minimum number of bit flips required so that `a OR b` equals `c`.
@@ -3141,18 +3133,18 @@ print(min_flips(2, 6, 5))  # 3
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a binary string `s` and an integer `n`, return `True` if for every integer `x` from 1 to `n`, its binary representation is a substring of `s`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Convert each number from 1 to n to binary and check if it exists in `s`.
+2. To optimize, we can check only numbers whose binary length is ≤ len(s), and for large n, iterate through numbers whose binary representations are within the substring length.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Binary String With Substrings Representing 1 to N.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Convert each number from 1 to n to binary and check if it exists in `s`. To optimize, we can check o.
 
 **Well-Commented Code:**
 ```python
@@ -3180,14 +3172,11 @@ print(query_string("0110", 4))  # False ("100" not in "0110")
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n * L * S) where L = avg binary length, S = len(s). With optimization, only checks numbers with binary length ≤ len(s).
-- **Space:** O(L) — for binary string conversion.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Different length strings
+- Extra carry bit at end
 ### Problem 28: Binary String With Substrings Representing 1 to N
 
 **Statement:** Given a binary string `s` and an integer `n`, return `True` if for every integer `x` from 1 to `n`, its binary representation is a substring of `s`.
@@ -3222,18 +3211,19 @@ print(query_string("0110", 4))  # False ("100" not in "0110")
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given an integer `n`, return the decimal value of the binary string formed by concatenating the binary representations of 1 to n, modulo `10^9 + 7`.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. For each number `i` from 1 to `n`, find its bit length.
+2. Shift the current result left by that many bits (modulo) and add `i`.
+3. Track the number of bits to shift using `bit_length()`.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Concatenation of Consecutive Binary Numbers.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** For each number `i` from 1 to `n`, find its bit length. Shift the current result left by that many b.
 
 **Well-Commented Code:**
 ```python
@@ -3254,14 +3244,11 @@ print(concatenated_binary(12))  # 50537971
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n) — single pass from 1 to n, each step is O(1).
-- **Space:** O(1) — only integer variables.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Different length strings
+- Extra carry bit at end
 ### Problem 29: Concatenation of Consecutive Binary Numbers
 
 **Statement:** Given an integer `n`, return the decimal value of the binary string formed by concatenating the binary representations of 1 to n, modulo `10^9 + 7`.
@@ -3289,18 +3276,20 @@ print(concatenated_binary(12))  # 50537971
 
 ---
 
-**Problem Explanation:** Find the missing number in an array containing n distinct numbers from 0 to n.
+**Problem Explanation:** Given a string, find the length of the longest substring without repeating characters.
 
 **Algorithm Steps:**
-1. Compute expected sum = n*(n+1)/2.
-2. Subtract actual sum to find the missing number.
+1. Use sliding window with a hash map storing the last seen index of each character.
+2. Maintain a window `[left, right]`.
+3. When a character repeats, move `left` to `max(left, last_seen[char] + 1)`.
+4. Track the maximum window size.
 
 **Visual Walkthrough:**
 ```
-Refer to the Algorithm Steps and Approach sections below for a detailed breakdown.
+Refer to the algorithm steps above for a step-by-step walkthrough of Find the Longest Substring With All Unique Characters.
 ```
 
-**Key Insight:** Mathematical formula avoids extra data structures, O(1) space.
+**Key Insight:** Use sliding window with a hash map storing the last seen index of each character. Maintain a window .
 
 **Well-Commented Code:**
 ```python
@@ -3338,14 +3327,12 @@ print(longest_unique_bitmask("abcabcbb"))     # 3
 ```
 
 **Complexity Analysis:**
-- **Time:** O(n) — each character visited at most twice (once by `right`, once by `left`).
-- **Space:** O(min(n, 26)) — for hash map with lowercase letters only.
+- Time: O(n) time, O(n) space
 
 **Edge Cases / Common Mistakes / Pattern Recognition:**
-- Missing 0
-- Missing n
-- n = 1
-
+- Empty needle/haystack
+- Needle longer than haystack
+- Multiple occurrences
 ### Problem 30: Find the Longest Substring With All Unique Characters
 
 **Statement:** Given a string, find the length of the longest substring without repeating characters.
@@ -3428,3 +3415,4 @@ print(longest_unique_bitmask("abcabcbb"))     # 3
 ---
 
 > **Total: 30 problems** covering Segment Trees, Fenwick Trees, Tries, Disjoint Set Union, and Bit Manipulation — all with complete Python solutions.
+
