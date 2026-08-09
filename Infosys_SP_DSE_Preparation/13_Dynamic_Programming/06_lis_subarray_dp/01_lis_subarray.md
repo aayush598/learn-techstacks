@@ -29,6 +29,8 @@ This file covers advanced LIS variants and subarray/substring DP problems that g
 
 ## 1. LIS — Reconstruct Actual Subsequence
 
+**🔗 Practice Link:** [1. LIS — Reconstruct Actual Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
+
 ### Problem Explanation
 Given an array, find the longest strictly increasing subsequence and return the actual subsequence (not just its length). The O(n²) LIS DP computes lengths; to reconstruct, we store a `parent` pointer at each index pointing to the previous element in the best chain. Then we trace back from the index with the maximum length.
 
@@ -111,6 +113,8 @@ class Solution:
 
 ## 2. Longest Non-Decreasing Subsequence
 
+**🔗 Practice Link:** [2. Longest Non-Decreasing Subsequence](https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3)
+
 ### Problem Explanation
 Find the length of the longest subsequence where each element is **less than or equal to** the next (non-decreasing, allowing equal adjacent values). This is the same as LIS but with `<=` instead of `<`. For example, `[1, 2, 2, 3]` → length 4 (the entire array is non-decreasing).
 
@@ -176,6 +180,8 @@ class Solution:
 
 ## 3. Longest Decreasing Subsequence
 
+**🔗 Practice Link:** [3. Longest Decreasing Subsequence](https://www.geeksforgeeks.org/longest-decreasing-subsequence)
+
 ### Problem Explanation
 Find the length of the longest subsequence where each element is strictly greater than the next (decreasing). Simply negate all values and compute LIS on the negated array, or reverse the comparison.
 
@@ -238,6 +244,8 @@ class Solution:
 ---
 
 ## 4. Russian Doll Envelopes (LC #354) — Hard
+
+**🔗 Practice Link:** [4. Russian Doll Envelopes](https://leetcode.com/problems/russian-doll-envelopes/)
 
 ### Problem Explanation
 You are given envelopes as pairs `[width, height]`. One envelope can fit into another if its width AND height are both strictly smaller. This reduces to: sort by width, then find LIS on heights (with width-tie handling). For example, `[[5,4],[6,4],[6,7],[2,3]]` → answer 3 ([2,3] → [5,4] → [6,7]).
@@ -315,6 +323,8 @@ class Solution:
 
 ## 5. Maximum Sum Increasing Subsequence
 
+**🔗 Practice Link:** [5. Maximum Sum Increasing Subsequence](https://www.geeksforgeeks.org/maximum-sum-increasing-subsequence-dp-14)
+
 ### Problem Explanation
 Given an array, find the maximum sum achievable from any increasing subsequence. Unlike standard LIS (which maximizes length), we maximize the sum. For example, `[1, 101, 2, 3, 100, 4, 5]` → the LIS is [1,2,3,100] with sum 106, but [1,101] has sum 102, and [1,2,3,4,5] has sum 15. Actually the best is [1,101] = 102... wait, [1,2,3,100] = 106 is better. Let me verify: [1, 101] sum=102; [1, 2, 3, 100] sum=106; [1, 2, 3, 4, 5] sum=15. Answer: 106.
 
@@ -384,6 +394,8 @@ class Solution:
 ---
 
 ## 6. Longest Increasing Subsequence II (LC #2407) — Hard
+
+**🔗 Practice Link:** [6. Longest Increasing Subsequence II](https://leetcode.com/problems/longest-increasing-subsequence-ii/)
 
 ### Problem Explanation
 Given an array `nums` and an integer `k`, find the length of the longest subsequence where every adjacent pair in the subsequence has a difference of **at most k** and is strictly increasing. Return the length. This is a constrained LIS where you can only extend if `nums[i] - nums[j] <= k` in addition to `nums[j] < nums[i]`.
@@ -455,6 +467,8 @@ class Solution:
 ---
 
 ## 7. Find the Longest Valid Obstacle Course (LC #1964) — Hard
+
+**🔗 Practice Link:** [7. Find the Longest Valid Obstacle Course](https://leetcode.com/problems/find-the-longest-valid-obstacle-course-at-each-position/)
 
 ### Problem Explanation
 Given an array `obstacles`, find the longest subsequence that is **non-decreasing** AND **non-decreasing in position** (which is always true for a subsequence). Additionally, at each position i, the chosen obstacle's height must be ≥ the previous one AND the index must be increasing. This is equivalent to the longest non-decreasing subsequence, but with a twist: equal values are allowed and for equal heights, the answer counts positions where a new height ≤ previous max is encountered. Effectively, this is the longest non-decreasing subsequence.
@@ -528,6 +542,8 @@ class Solution:
 
 ## 8. Minimum Operations to Make Array Increasing
 
+**🔗 Practice Link:** [8. Minimum Operations to Make Array Increasing](https://leetcode.com/problems/minimum-operations-to-make-the-array-increasing/)
+
 ### Problem Explanation
 Given an array `nums`, find the minimum number of operations to make the array **strictly increasing**, where each operation increments any element by 1. Return the minimum total increments needed. For example, `[1, 1, 1]` → operations: make it [1, 2, 3] → 0+1+2=3 operations.
 
@@ -597,6 +613,8 @@ class Solution:
 ---
 
 ## 9. Longest Mountain in Array (LC #845) — Medium
+
+**🔗 Practice Link:** [9. Longest Mountain in Array](https://leetcode.com/problems/longest-mountain-in-array/)
 
 ### Problem Explanation
 An array arr is a mountain if it has a peak: there exists an index `i` such that `arr[0] < arr[1] < ... < arr[i-1] < arr[i] > arr[i+1] > ... > arr[n-1]`. Find the length of the longest mountain subarray. For example, `[2, 1, 4, 7, 3, 2, 5]` → the longest mountain is [1, 4, 7, 3, 2] with length 5.
@@ -697,6 +715,8 @@ class Solution:
 
 ## 10. Longest Valid Parentheses (LC #32) — Hard
 
+**🔗 Practice Link:** [10. Longest Valid Parentheses](https://leetcode.com/problems/longest-valid-parentheses/)
+
 ### Problem Explanation
 Given a string containing only `(` and `)`, find the length of the longest **contiguous** valid (well-formed) parentheses substring. For example, `"(()"` → 2, `")()())"` → 4.
 
@@ -780,6 +800,8 @@ class Solution:
 ---
 
 ## 11. Maximum Sum Rectangle (Maximum Sum Submatrix)
+
+**🔗 Practice Link:** [11. Maximum Sum Rectangle](https://www.geeksforgeeks.org/maximum-sum-rectangle-in-a-2d-matrix)
 
 ### Problem Explanation
 Given an m×n matrix of integers, find the rectangle (contiguous submatrix) with the largest sum and return that sum. This extends Kadane's algorithm to 2D: fix two columns and reduce to 1D Kadane on the compressed rows.
@@ -869,6 +891,8 @@ class Solution:
 
 ## 12. Maximum Subarray with At Most K Distinct Elements
 
+**🔗 Practice Link:** [12. Maximum Subarray with At Most K Distinct Elements](https://www.geeksforgeeks.org/longest-subarray-with-at-most-k-distinct-elements)
+
 ### Problem Explanation
 Given an array and integer k, find the length of the longest contiguous subarray containing at most k distinct elements. Use a sliding window with a hashmap to track element frequencies.
 
@@ -943,6 +967,8 @@ class Solution:
 
 ## 13. Longest Substring with At Most K Repeating Characters (LC #395) — Medium
 
+**🔗 Practice Link:** [13. Longest Substring with At Most K Repeating Characters](https://leetcode.com/problems/longest-substring-with-at-most-k-repeating-characters/)
+
 ### Problem Explanation
 Given a string s and integer k, find the length of the longest substring where each character appears at least k times. If no such substring exists, return 0. For example, `s = "aaabb", k = 3` → answer 3 ("aaa").
 
@@ -998,6 +1024,8 @@ class Solution:
 ---
 
 ## 14. Longest Substring with At Most K Distinct Characters
+
+**🔗 Practice Link:** [14. Longest Substring with At Most K Distinct Characters](https://www.geeksforgeeks.org/find-the-longest-substring-with-k-unique-characters-in-a-given-string)
 
 ### Problem Explanation
 Given a string s and integer k, find the length of the longest substring containing at most k distinct characters. This is the character-version of "Maximum Subarray with At Most K Distinct Elements."
@@ -1070,6 +1098,8 @@ class Solution:
 ---
 
 ## 15. Minimum Window Substring (LC #76) — Hard
+
+**🔗 Practice Link:** [15. Minimum Window Substring](https://leetcode.com/problems/minimum-window-substring/)
 
 ### Problem Explanation
 Given strings `s` and `t`, find the minimum window in `s` that contains all characters of `t` (including duplicates). Return the window substring, or "" if none exists. For example, `s = "ADOBECODEBANC", t = "ABC"` → "BANC".
@@ -1157,6 +1187,8 @@ class Solution:
 
 ## 16. Longest Substring Without Repeating Characters (LC #3) — Medium
 
+**🔗 Practice Link:** [16. Longest Substring Without Repeating Characters](https://leetcode.com/problems/longest-substring-without-repeating-characters/)
+
 ### Problem Explanation
 Given a string s, find the length of the longest substring without repeating characters. For example, `"abcabcbb"` → 3 ("abc").
 
@@ -1223,6 +1255,8 @@ class Solution:
 ---
 
 ## 17. Longest Repeating Character Replacement (LC #424) — Medium
+
+**🔗 Practice Link:** [17. Longest Repeating Character Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
 
 ### Problem Explanation
 Given a string s of uppercase letters and integer k, find the length of the longest substring where you can replace at most k characters to make all characters the same. For example, `s = "AABABBA", k = 1` → 4 ("AABA" → "AAAA").
@@ -1299,6 +1333,8 @@ class Solution:
 
 ## 18. Subarray Product Less Than K (LC #713) — Medium
 
+**🔗 Practice Link:** [18. Subarray Product Less Than K](https://leetcode.com/problems/subarray-product-less-than-k/)
+
 ### Problem Explanation
 Given an array of positive integers `nums` and integer `k`, count the number of contiguous subarrays where the product of all elements is strictly less than k. For example, `nums = [10, 5, 2, 6], k = 100` → 8 subarrays.
 
@@ -1365,6 +1401,8 @@ class Solution:
 ---
 
 ## 19. Count Subarrays with Given XOR
+
+**🔗 Practice Link:** [19. Count Subarrays with Given XOR](https://www.geeksforgeeks.org/count-number-subarrays-given-xor)
 
 ### Problem Explanation
 Given an array and an integer `m`, count the number of subarrays whose XOR of all elements equals `m`. Use prefix XOR: if `prefix[j] XOR prefix[i-1] = m`, then the subarray from i to j has XOR equal to m. This translates to counting pairs where `prefix[i-1] = prefix[j] XOR m`.
@@ -1436,6 +1474,8 @@ class Solution:
 
 ## 20. Count Subarrays with Equal Number of 0s and 1s
 
+**🔗 Practice Link:** [20. Count Subarrays with Equal Number of 0s and 1s](https://www.geeksforgeeks.org/largest-subarray-with-equal-number-of-0s-and-1s)
+
 ### Problem Explanation
 Given a binary array, count the number of contiguous subarrays with an equal number of 0s and 1s. Convert 0s to -1s and use the prefix XOR technique (prefix sum = 0 means equal counts).
 
@@ -1506,6 +1546,8 @@ class Solution:
 ---
 
 ## 21. Continuous Subarray Sum (LC #523) — Medium
+
+**🔗 Practice Link:** [21. Continuous Subarray Sum](https://leetcode.com/problems/continuous-subarray-sum/)
 
 ### Problem Explanation
 Given an integer array `nums` and integer `k`, return True if `nums` has a continuous subarray of length ≥ 2 whose sum is a multiple of k. For example, `nums = [23, 2, 4, 6, 7], k = 6` → True (subarray [2, 4] has sum 6 = 1×6).

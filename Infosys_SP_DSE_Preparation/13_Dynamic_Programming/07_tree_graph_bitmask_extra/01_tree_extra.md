@@ -10,6 +10,8 @@ Subtree Sum, Binary Tree Cameras) are skipped here.
 
 ## 1. Diameter of N-ary Tree (LC #1522) — Medium
 
+**🔗 Practice Link:** [1. Diameter of N-ary Tree](https://www.geeksforgeeks.org/diameter-n-ary-tree)
+
 ### Problem Explanation
 Given an n-ary tree (each node can have any number of children), find the
 diameter: the longest path between any two nodes in edges. Unlike a binary
@@ -100,6 +102,8 @@ class Solution:
 
 ## 2. Maximum Path Sum Between Two Leaf Nodes — Medium
 
+**🔗 Practice Link:** [2. Maximum Path Sum Between Two Leaf Nodes — Medium](https://www.geeksforgeeks.org/find-maximum-path-sum-two-leaves-binary-tree)
+
 ### Problem Explanation
 Given a binary tree with possibly negative values, find the maximum sum
 path that MUST start and end at leaf nodes. If no leaf-to-leaf path exists
@@ -181,6 +185,8 @@ class Solution:
 
 ## 3. House Robber IV (LC #2002) — Medium
 
+**🔗 Practice Link:** [3. House Robber IV](https://leetcode.com/problems/house-robber-iv/)
+
 ### Problem Explanation
 Houses in a CIRCLE. Cannot rob two adjacent houses. Since house 0 and
 house n-1 are adjacent, we cannot rob both. Split into two linear
@@ -253,6 +259,8 @@ class Solution:
 ---
 
 ## 4. Minimum Vertex Cover — Weighted (LC #1155 variant) — Hard
+
+**🔗 Practice Link:** [4. Minimum Vertex Cover — Weighted](https://www.geeksforgeeks.org/vertex-cover-problem-set-2-dynamic-programming-solution-tree)
 
 ### Problem Explanation
 Binary tree where each node has a cost. Find minimum total cost set of
@@ -331,6 +339,8 @@ class Solution:
 
 ## 5. Maximum Weight Independent Set in Tree — Hard
 
+**🔗 Practice Link:** [5. Maximum Weight Independent Set in Tree — Hard](https://www.geeksforgeeks.org/maximum-sum-nodes-binary-tree-no-two-adjacent)
+
 ### Problem Explanation
 Binary tree with weighted nodes. Find max weight set of non-adjacent
 nodes (no parent-child pair both selected). Weighted version of counting
@@ -406,6 +416,8 @@ class Solution:
 ---
 
 ## 6. Tree Coloring (LC #1443) — Medium
+
+**🔗 Practice Link:** [6. Tree Coloring](https://www.geeksforgeeks.org/m-coloring-problem-backtracking-5)
 
 ### Problem Explanation
 Given a binary tree with `n` nodes and `m` colors, color every node such
@@ -486,6 +498,8 @@ class Solution:
 ---
 
 ## 7. Maximum Sum BST in Binary Tree (LC #1373) — Hard
+
+**🔗 Practice Link:** [7. Maximum Sum BST in Binary Tree](https://leetcode.com/problems/maximum-sum-bst-in-binary-tree/)
 
 ### Problem Explanation
 Given a binary tree, find the maximum sum of all nodes in a subtree that
@@ -578,6 +592,8 @@ class Solution:
 
 ## 8. Count Good Nodes in Binary Tree (LC #1448) — Medium
 
+**🔗 Practice Link:** [8. Count Good Nodes in Binary Tree](https://leetcode.com/problems/count-good-nodes-in-binary-tree/)
+
 ### Problem Explanation
 A node is "good" if no node on the path from the root to it has a value
 greater than or equal to it. Count the number of good nodes.
@@ -654,6 +670,8 @@ class Solution:
 ---
 
 ## 9. Lowest Common Ancestor of a Binary Tree (LC #236) — Medium
+
+**🔗 Practice Link:** [9. Lowest Common Ancestor of a Binary Tree](https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/)
 
 ### Problem Explanation
 Given a binary tree and two nodes `p` and `q`, find their lowest common
@@ -741,6 +759,8 @@ class Solution:
 ---
 
 ## 10. Flatten Binary Tree to Linked List (LC #114) — Medium
+
+**🔗 Practice Link:** [10. Flatten Binary Tree to Linked List](https://leetcode.com/problems/flatten-binary-tree-to-linked-list/)
 
 ### Problem Explanation
 Given a binary tree, flatten it to a right-skewed linked list in-place.

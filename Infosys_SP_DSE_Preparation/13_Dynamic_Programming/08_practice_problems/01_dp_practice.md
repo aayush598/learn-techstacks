@@ -31,6 +31,8 @@ Before solving: ask yourself
 
 ### 1. Climbing Stairs
 
+**🔗 Practice Link:** [1. Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+
 **Problem Explanation:**
 You are climbing a staircase with `n` steps to reach the top. At each step you
 may climb either 1 step or 2 steps at a time. You need to return the total
@@ -130,6 +132,8 @@ def climb_stairs_memo(n, memo=None):
 
 ### 2. House Robber
 
+**🔗 Practice Link:** [2. House Robber](https://leetcode.com/problems/house-robber/)
+
 **Problem Explanation:**
 You are a robber along a street of houses. Each house `i` holds `nums[i]`
 dollars. You cannot rob two adjacent houses (the security system alerts the
@@ -216,6 +220,8 @@ def rob(nums):
 ---
 
 ### 3. Min Cost Climbing Stairs
+
+**🔗 Practice Link:** [3. Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/)
 
 **Problem Explanation:**
 You stand on the floor below a staircase. There is an integer array `cost`
@@ -317,6 +323,8 @@ def min_cost_climbing(cost):
 ## MEDIUM
 
 ### 4. Longest Increasing Subsequence
+
+**🔗 Practice Link:** [4. Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
 
 **Problem Explanation:**
 Given an array of integers `nums`, find the length of the longest strictly
@@ -464,6 +472,8 @@ def length_of_lis(nums):
 
 ### 5. Coin Change
 
+**🔗 Practice Link:** [5. Coin Change](https://leetcode.com/problems/coin-change/)
+
 **Problem Explanation:**
 Given an array `coins` of coin denominations (unlimited supply of each) and an
 integer `amount`, return the minimum number of coins needed to make up exactly
@@ -548,6 +558,8 @@ def coin_change(coins, amount):
 ---
 
 ### 6. Word Break
+
+**🔗 Practice Link:** [6. Word Break](https://leetcode.com/problems/word-break/)
 
 **Problem Explanation:**
 Given a string `s` and a dictionary `word_dict` of words, determine whether `s`
@@ -644,6 +656,8 @@ def word_break(s, word_dict):
 
 ### 7. Unique Paths
 
+**🔗 Practice Link:** [7. Unique Paths](https://leetcode.com/problems/unique-paths/)
+
 **Problem Explanation:**
 A robot sits at the top-left cell of an `m x n` grid. It can only move right or
 down, one cell at a time. Return the number of distinct paths from the top-left
@@ -723,6 +737,8 @@ def unique_paths(m, n):
 ---
 
 ### 8. Longest Common Subsequence
+
+**🔗 Practice Link:** [8. Longest Common Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
 
 **Problem Explanation:**
 Given two strings `text1` and `text2`, return the length of their longest
@@ -819,6 +835,8 @@ def longest_common_subsequence(text1, text2):
 ## HARD
 
 ### 9. Burst Balloons
+
+**🔗 Practice Link:** [9. Burst Balloons](https://leetcode.com/problems/burst-balloons/)
 
 **Problem Explanation:**
 You are given `nums`, an array of balloons, each with a number on it. If you
@@ -921,6 +939,8 @@ def max_coins(nums):
 ---
 
 ### 10. Edit Distance
+
+**🔗 Practice Link:** [10. Edit Distance](https://leetcode.com/problems/edit-distance/)
 
 **Problem Explanation:**
 Given two strings `word1` and `word2`, return the minimum number of operations
@@ -1027,6 +1047,8 @@ def min_distance(word1, word2):
 ---
 
 ### 11. Regular Expression Matching
+
+**🔗 Practice Link:** [11. Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
 
 **Problem Explanation:**
 Given a string `s` and a pattern `p`, return `True` if the pattern matches the
@@ -1145,6 +1167,8 @@ def is_match(s, p):
 
 ### 12. Longest Palindromic Subsequence
 
+**🔗 Practice Link:** [12. Longest Palindromic Subsequence](https://leetcode.com/problems/longest-palindromic-subsequence/)
+
 **Problem Explanation:**
 Given a string `s`, return the length of the longest palindromic subsequence
 (a subsequence that reads the same forwards and backwards; characters need not
@@ -1248,6 +1272,8 @@ def longest_palindrome_subseq(s):
 ---
 
 ### 13. Maximal Rectangle
+
+**🔗 Practice Link:** [13. Maximal Rectangle](https://leetcode.com/problems/maximal-rectangle/)
 
 **Problem Explanation:**
 Given a binary matrix of `"0"` and `"1"` characters, find the largest rectangle
@@ -1372,6 +1398,8 @@ def maximal_rectangle(matrix):
 
 ### 14. Dungeon Game
 
+**🔗 Practice Link:** [14. Dungeon Game](https://leetcode.com/problems/dungeon-game/)
+
 **Problem Explanation:**
 A knight starts at the top-left cell of a dungeon grid and must reach the
 princess at the bottom-right. Each cell holds a number: negative = damage
@@ -1485,6 +1513,8 @@ def calculate_minimum_hp(dungeon):
 
 ### 15. Stone Game III
 
+**🔗 Practice Link:** [15. Stone Game III](https://leetcode.com/problems/stone-game-iii/)
+
 **Problem Explanation:**
 Alice and Bob play with a row of stones `values`. On each turn, a player takes
 1, 2, or 3 stones from the front. Each stone's value is its score, and both
@@ -1585,6 +1615,8 @@ def stone_game_iii(values):
 ## SP L3 LEVEL
 
 ### 16. TSP (Bitmask DP)
+
+**🔗 Practice Link:** [16. TSP](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
 
 **Problem Explanation:**
 Given a `cost` matrix where `cost[i][j]` is the travel cost from city `i` to
@@ -1715,6 +1747,8 @@ def tsp(cost):
 
 ### 17. Tree DP - Max Independent Set
 
+**🔗 Practice Link:** [17. Tree DP - Max Independent Set](https://www.geeksforgeeks.org/maximum-sum-nodes-binary-tree-no-two-adjacent)
+
 **Problem Explanation:**
 You are given a binary tree where every node has a value. An "independent set"
 is a set of nodes with no two adjacent in the tree (no node and its parent or
@@ -1828,6 +1862,8 @@ def max_independent_set_tree(root):
 
 ### 18. Interval DP - Matrix Chain
 
+**🔗 Practice Link:** [18. Interval DP - Matrix Chain](https://www.geeksforgeeks.org/matrix-chain-multiplication-dp-8)
+
 **Problem Explanation:**
 Given a list `p` where matrix `A_i` has dimensions `p[i] x p[i+1]`, find the
 minimum number of scalar multiplications needed to multiply the whole chain
@@ -1921,6 +1957,8 @@ def matrix_chain(p):
 ---
 
 ### 19. Palindrome Partitioning II
+
+**🔗 Practice Link:** [19. Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/)
 
 **Problem Explanation:**
 Given a string `s`, you want to split it into as few pieces as possible such
@@ -2025,6 +2063,8 @@ def min_cut(s):
 
 ### 20. Minimum Cost to Cut Stick
 
+**🔗 Practice Link:** [20. Minimum Cost to Cut Stick](https://leetcode.com/problems/minimum-cost-to-cut-a-stick/)
+
 **Problem Explanation:**
 You have a wooden stick of length `n`. You must cut it at the integer positions
 listed in `cuts`. Each cut costs the current length of the stick being cut
@@ -2127,6 +2167,8 @@ def min_cost_cut(n, cuts):
 
 ### 21. Longest Valid Parentheses
 
+**🔗 Practice Link:** [21. Longest Valid Parentheses](https://leetcode.com/problems/longest-valid-parentheses/)
+
 **Problem Explanation:**
 Given a string `s` containing only `"("` and `")"`, return the length of the
 longest (contiguous) substring that is a well-formed parentheses string. For
@@ -2227,6 +2269,8 @@ def longest_valid_parentheses(s):
 ---
 
 ### 22. Count Different Palindromic Subsequences
+
+**🔗 Practice Link:** [22. Count Different Palindromic Subsequences](https://leetcode.com/problems/count-different-palindromic-subsequences/)
 
 **Problem Explanation:**
 Given a string `s`, count the number of DISTINCT non-empty palindromic
@@ -2359,6 +2403,8 @@ def count_palindromic_subsequences(s):
 
 ### 23. Maximum Sum of 3 Non-Overlapping Subarrays
 
+**🔗 Practice Link:** [23. Maximum Sum of 3 Non-Overlapping Subarrays](https://leetcode.com/problems/maximum-sum-of-3-non-overlapping-subarrays/)
+
 **Problem Explanation:**
 Given an integer array `nums` and an integer `k`, find three non-overlapping
 subarrays each of length exactly `k`, maximizing the sum of the three. Return
@@ -2486,6 +2532,8 @@ def max_sum_of_three_subarrays(nums, k):
 
 ### 24. Egg Dropping (SP L3 Version)
 
+**🔗 Practice Link:** [24. Egg Dropping](https://leetcode.com/problems/super-egg-drop/)
+
 **Problem Explanation:**
 You have `k` identical eggs and a building with `n` floors (numbered 1 to `n`).
 There is a critical floor `f` such that eggs break when dropped from any floor
@@ -2603,6 +2651,8 @@ def super_egg_drop(k, n):
 ---
 
 ### 25. Count Vowels Permutation
+
+**🔗 Practice Link:** [25. Count Vowels Permutation](https://leetcode.com/problems/count-vowels-permutation/)
 
 **Problem Explanation:**
 Count how many strings of length `n` can be built using only the vowels `a`,

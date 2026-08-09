@@ -6,6 +6,8 @@ This file covers probability/expected-value DP and optimization/scheduling probl
 
 ## 1. Dice Sum Probability — Medium
 
+**🔗 Practice Link:** [1. Dice Sum Probability — Medium](https://www.geeksforgeeks.org/dice-throw-dp-30)
+
 ### Problem Explanation
 Throw `n` dice each with faces `1..k`. Compute the **probability** that the sum equals exactly `target`. Probability = (number of ways) / (k^n). This extends the counting version from `07_dp_misc` by normalizing by the total outcome count. For example, with 2 six-sided dice, P(sum = 7) = 6/36 = 1/6.
 
@@ -75,6 +77,8 @@ class Solution:
 
 ## 2. New 21 Game (LC #837) — Hard
 
+**🔗 Practice Link:** [2. New 21 Game](https://leetcode.com/problems/new-21-game/)
+
 ### Problem Explanation
 Alice plays a game: she starts with 0 points and draws cards with equal probability of drawing any integer from 1 to `maxPts`. She stops when she has `K` or more points. Her score is at most `N` (if it exceeds `N`, she gets 0). Compute the probability her final score is at most `N`. For example, `N = 10, K = 1, maxPts = 10` → probability = 1.0 (she must draw exactly 1–10 and K=1 means she stops immediately).
 
@@ -141,6 +145,8 @@ class Solution:
 ---
 
 ## 3. Probability of a Target Sum with Dice — Medium
+
+**🔗 Practice Link:** [3. Probability of a Target Sum with Dice — Medium](https://www.geeksforgeeks.org/dice-throw-dp-30)
 
 ### Problem Explanation
 Given `n` dice each with `k` faces (1 to k), and a `target` sum, compute the probability of achieving exactly that sum. This is the full probability version combining counting with normalization. Unlike problem 1 which focuses on the formula, this version emphasizes memoization and pruning. Input: n, k, target. Output: float probability.
@@ -211,6 +217,8 @@ class Solution:
 
 ## 4. Random Pick with Weight (LC #528) — Medium
 
+**🔗 Practice Link:** [4. Random Pick with Weight](https://leetcode.com/problems/random-pick-with-weight/)
+
 ### Problem Explanation
 Given an array of positive weights, index `i` is chosen with probability `weight[i] / sum(weights)`. Implement a class that picks an index randomly proportional to its weight. For example, `weights = [1, 3]` → index 0 with prob 1/4, index 1 with prob 3/4.
 
@@ -271,6 +279,8 @@ class Solution:
 ---
 
 ## 5. Random Pick Index (LC #398) — Medium
+
+**🔗 Practice Link:** [5. Random Pick Index](https://leetcode.com/problems/random-pick-index/)
 
 ### Problem Explanation
 Given an array of integers, randomly pick an index such that each index containing the target value is returned with equal probability. For example, `nums = [1, 2, 3, 3, 3]`, `target = 3` → each of indices 2, 3, 4 should be returned with probability 1/3.
@@ -345,6 +355,8 @@ class Solution:
 
 ## 6. Expected Number of Dice Rolls to Reach Target — Medium
 
+**🔗 Practice Link:** [6. Expected Number of Dice Rolls to Reach Target — Medium](https://www.geeksforgeeks.org/expected-number-of-trials-before-success)
+
 ### Problem Explanation
 You roll a fair k-sided die repeatedly. What is the expected number of rolls to reach or exceed a target sum `target`? This is an expected-value DP problem. For example, with a 6-sided die and target = 6, the expected rolls ≈ 2.15 (you could get lucky with a 6 on roll 1, or take multiple rolls).
 
@@ -406,6 +418,8 @@ class Solution:
 ---
 
 ## 7. Non-overlapping Intervals (LC #435) — Medium
+
+**🔗 Practice Link:** [7. Non-overlapping Intervals](https://leetcode.com/problems/non-overlapping-intervals/)
 
 ### Problem Explanation
 Given a collection of intervals, find the minimum number of intervals you need to remove to make the rest non-overlapping. Equivalently, this is the size of the maximum non-overlapping subset subtracted from total. For example, `intervals = [[1,2],[2,3],[3,4],[1,3]]` → remove 1 interval ([1,3]) to make the rest non-overlapping.
@@ -473,6 +487,8 @@ class Solution:
 ---
 
 ## 8. Line Break / Word Wrap (Knuth-Plass) — Hard
+
+**🔗 Practice Link:** [8. Line Break / Word Wrap](https://www.geeksforgeeks.org/word-wrap-problem-dp-19)
 
 ### Problem Explanation
 Given a text as a sequence of word lengths and a maximum line width `width`, break the text into lines to minimize the total "raggedness" (sum of squared extra spaces). This is the optimal line-breaking problem solvable with DP. For example, words `[3, 2, 2, 5]` with width 6: lines `[3, 2, 2]` and `[5]` have costs based on remaining space.
@@ -548,6 +564,8 @@ class Solution:
 
 ## 9. Activity Selection with DP — Medium
 
+**🔗 Practice Link:** [9. Activity Selection with DP — Medium](https://www.geeksforgeeks.org/activity-selection-problem-greedy-algo-1)
+
 ### Problem Explanation
 Given `n` activities with start and finish times, each activity has a weight (profit). Select a maximum-weight subset of non-overlapping activities. This is the **weighted activity selection** problem (unlike the unweighted greedy version). For example, activities `[(1,3,5), (2,5,6), (4,6,5), (6,7,4)]` with weights `[5, 6, 5, 4]`.
 
@@ -616,6 +634,8 @@ class Solution:
 ---
 
 ## 10. Job Sequencing Problem — Medium
+
+**🔗 Practice Link:** [10. Job Sequencing Problem — Medium](https://www.geeksforgeeks.org/job-sequencing-problem)
 
 ### Problem Explanation
 Given `n` jobs with deadlines and profits, schedule at most one job per time unit to maximize total profit. Each job takes exactly 1 unit of time. For example, `jobs = [(1,4,20), (2,1,10), (3,1,40), (4,1,30)]` → best is jobs 3, 1, 4 for profit 90.
@@ -688,6 +708,8 @@ class Solution:
 ---
 
 ## 11. Minimum Number of Platforms Required — Medium
+
+**🔗 Practice Link:** [11. Minimum Number of Platforms Required — Medium](https://www.geeksforgeeks.org/minimum-number-platforms-required-railwaybus-station)
 
 ### Problem Explanation
 Given arrival and departure times of trains at a station, find the minimum number of platforms needed so that no train waits. This is a classic interval overlap / sweep-line problem. For example, `arrivals = [9:00, 9:40, 9:50]`, `departures = [9:30, 12:00, 11:20]` → need 2 platforms.
@@ -763,6 +785,8 @@ class Solution:
 
 ## 12. Maximum Overlapping Intervals — Medium
 
+**🔗 Practice Link:** [12. Maximum Overlapping Intervals — Medium](https://www.geeksforgeeks.org/find-the-point-where-maximum-intervals-overlap)
+
 ### Problem Explanation
 Given a set of intervals, find the maximum number of intervals that overlap at any single point. This is the sweep-line approach similar to the platform problem but stated as a standalone. For example, `intervals = [[1,5],[2,6],[8,10],[3,7]]` → maximum overlap is 3 (at point 5, intervals [1,5], [2,6], [3,7] all overlap).
 
@@ -835,6 +859,8 @@ class Solution:
 ---
 
 ## 13. Partition Array into Three Parts with Equal Sum (LC #1013) — Easy
+
+**🔗 Practice Link:** [13. Partition Array into Three Parts with Equal Sum](https://leetcode.com/problems/partition-array-into-three-parts-with-equal-sum/)
 
 ### Problem Explanation
 Given an array, determine if it can be partitioned into three non-empty contiguous parts with equal sum. For example, `nums = [0,2,1,-6,6,-7,9,1,2,-1]` → the total is 3, and we can split into three parts each summing to 1.

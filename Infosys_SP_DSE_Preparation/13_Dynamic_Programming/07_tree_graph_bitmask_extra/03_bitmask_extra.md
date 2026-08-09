@@ -9,6 +9,8 @@ Independent Set, and Meet-in-the-Middle Knapsack are in the main guide.
 
 ## 1. Shortest Hamiltonian Path — Hard
 
+**🔗 Practice Link:** [1. Shortest Hamiltonian Path — Hard](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
+
 ### Problem Explanation
 Given a complete weighted graph on `n` vertices (adjacency matrix), find
 the minimum cost path starting at vertex 0 that visits every vertex
@@ -86,6 +88,8 @@ def shortest_hamiltonian_path(graph):
 
 ## 2. Shortest Hamiltonian Cycle — Hard
 
+**🔗 Practice Link:** [2. Shortest Hamiltonian Cycle — Hard](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
+
 ### Problem Explanation
 Given a complete weighted graph, find the minimum cost tour that starts
 at vertex 0, visits every vertex exactly once, and returns to vertex 0.
@@ -155,6 +159,8 @@ def tsp(graph):
 ---
 
 ## 3. Hamiltonian Path — Count All — Medium
+
+**🔗 Practice Link:** [3. Hamiltonian Path — Count All — Medium](https://www.geeksforgeeks.org/hamiltonian-cycle)
 
 ### Problem Explanation
 Given `n` vertices and an undirected edge list, count ALL Hamiltonian
@@ -227,6 +233,8 @@ def count_hamiltonian_paths(n, edges):
 ---
 
 ## 4. Scheduling with Deadlines (Bitmask) — Hard
+
+**🔗 Practice Link:** [4. Scheduling with Deadlines](https://www.geeksforgeeks.org/job-sequencing-problem)
 
 ### Problem Explanation
 Given `n` jobs with deadlines `d[i]` and profits `p[i]`, schedule jobs on
@@ -306,6 +314,8 @@ def schedule_deadlines(deadlines, profits):
 
 ## 5. Minimum Cost to Hire Workers (Bitmask) — Hard
 
+**🔗 Practice Link:** [5. Minimum Cost to Hire Workers](https://www.geeksforgeeks.org/job-assignment-problem-using-branch-and-bound)
+
 ### Problem Explanation
 Given `n` workers and `n` tasks, `cost[i][j]` = cost for worker `i` to
 do task `j`. Each worker does exactly one task, each task needs one worker.
@@ -381,6 +391,8 @@ def min_cost_workers(cost):
 ---
 
 ## 6. Partition to K Equal Sum Subsets (LC #698) — Hard
+
+**🔗 Practice Link:** [6. Partition to K Equal Sum Subsets](https://leetcode.com/problems/partition-to-k-equal-sum-subsets/)
 
 ### Problem Explanation
 Given `nums` and integer `k`, partition `nums` into `k` subsets of equal
@@ -463,6 +475,8 @@ class Solution:
 ---
 
 ## 7. Number of Ways to Wear Different Hats (LC #1434) — Hard
+
+**🔗 Practice Link:** [7. Number of Ways to Wear Different Hats](https://leetcode.com/problems/number-of-ways-to-wear-different-hats-to-each-other/)
 
 ### Problem Explanation
 There are `n` people and `m` hats (numbered 1..m). Each person likes
@@ -560,6 +574,8 @@ class Solution:
 
 ## 8. Minimum Number of Visited Cells in a Matrix (LC #2617) — Hard
 
+**🔗 Practice Link:** [8. Minimum Number of Visited Cells in a Matrix](https://leetcode.com/problems/minimum-number-of-visited-cells-in-a-grid/)
+
 ### Problem Explanation
 Given an `m x n` matrix where `mat[i][j]` is the maximum number of cells
 you can jump right (same row) or down (same column) from cell `(i,j)`,
@@ -647,6 +663,8 @@ class Solution:
 
 ## 9. Maximum Score from Performing Multiplication Operations (LC #1770) — Hard
 
+**🔗 Practice Link:** [9. Maximum Score from Performing Multiplication Operations](https://leetcode.com/problems/maximum-score-from-performing-multiplication-operations/)
+
 ### Problem Explanation
 Given arrays `nums` (length n) and `multipliers` (length m, m <= n),
 perform `m` operations. At operation `i`, choose either the first or last
@@ -729,6 +747,8 @@ class Solution:
 
 ## 10. Fair Candy Swap (LC #888) — Medium
 
+**🔗 Practice Link:** [10. Fair Candy Swap](https://leetcode.com/problems/fair-candy-swap/)
+
 ### Problem Explanation
 Alice and Bob have candy bars of different sizes. Alice has `aliceSizes`
 and Bob has `bobSizes`. They want to exchange one candy each so that
@@ -798,6 +818,8 @@ class Solution:
 ---
 
 ## 11. Maximum AND of Two Subsets — Medium
+
+**🔗 Practice Link:** [11. Maximum AND of Two Subsets — Medium](https://www.geeksforgeeks.org/partition-a-set-into-two-subsets-such-that-the-difference-of-subset-sums-is-minimum)
 
 ### Problem Explanation
 Given an array `nums` and integer `k`, choose `k` elements to form a

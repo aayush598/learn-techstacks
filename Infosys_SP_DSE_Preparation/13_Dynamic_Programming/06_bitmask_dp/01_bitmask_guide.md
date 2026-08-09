@@ -32,6 +32,8 @@ mask & -mask            -> lowest set bit only (isolates the least-significant 1
 
 ### Shortest Hamiltonian Path (Generic Bitmask DP Template)
 
+**🔗 Practice Link:** [Shortest Hamiltonian Path](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
+
 **Problem Explanation:**
 Given `n` nodes and a cost function `cost(a, b)` = the cost to travel from node `a` to node `b`, find the minimum total cost of a path that starts at any node, visits every node **exactly once**, and may end at any node. This is the shortest Hamiltonian path. The input is `n` and a cost function; the output is the minimum path cost. Note this is NOT the TSP: there is no requirement to return to the start.
 
@@ -140,6 +142,8 @@ def bitmask_template(n, cost_fn):
 ---
 
 ### Traveling Salesman Problem (TSP)
+
+**🔗 Practice Link:** [Traveling Salesman Problem](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
 
 **Problem Explanation:**
 Find the shortest tour that starts at city 0, visits every other city **exactly once**, and returns to city 0. Input is an `n x n` matrix `cost` where `cost[i][j]` is the travel cost from city `i` to city `j`. Output is the minimum total tour cost. This is exactly the Hamiltonian path above plus one extra edge: the return trip from the last city back to city 0.
@@ -275,6 +279,8 @@ def tsp_memo(cost):
 
 ### Assignment Problem
 
+**🔗 Practice Link:** [Assignment Problem](https://www.geeksforgeeks.org/hungarian-algorithm-assignment-problem-set-1-introduction)
+
 **Problem Explanation:**
 There are `n` workers and `n` tasks, and `cost[i][j]` is the cost of assigning worker `i` to task `j`. Every worker must be assigned exactly one task and every task must be done by exactly one worker (a one-to-one matching). Find the minimum total cost assignment. Input: an `n x n` cost matrix. Output: the minimum total cost, or `-1` if no complete assignment is possible.
 
@@ -367,6 +373,8 @@ def assignment_problem(cost):
 
 ### Maximum Weight Independent Set (Graph)
 
+**🔗 Practice Link:** [Maximum Weight Independent Set](https://www.geeksforgeeks.org/maximum-sum-nodes-binary-tree-no-two-adjacent)
+
 **Problem Explanation:**
 Given an undirected graph with `n <= 20` vertices and vertex weights `weights[i]`, find the maximum total weight of a set of vertices with **no edge** between any two chosen vertices (an independent set). Input: `n`, a list of `(u, v)` edges, and `weights`. Output: the maximum possible total weight.
 
@@ -456,6 +464,8 @@ def max_weight_independent_set(n, edges, weights):
 
 ### Hamiltonian Path Count
 
+**🔗 Practice Link:** [Hamiltonian Path Count](https://www.geeksforgeeks.org/hamiltonian-cycle)
+
 **Problem Explanation:**
 Given `n` vertices and an undirected edge list, count the number of distinct Hamiltonian paths — paths that visit every vertex exactly once. Input: `n` and a list of edges. Output: the number of such paths. A path and its reverse are counted as two different paths (order matters), and a path may start at any vertex.
 
@@ -538,6 +548,8 @@ def count_hamiltonian_paths(n, edges):
 ---
 
 ### Meet-in-the-Middle Knapsack (n <= 40)
+
+**🔗 Practice Link:** [Meet-in-the-Middle Knapsack](https://www.geeksforgeeks.org/dsa/meet-in-the-middle)
 
 **Problem Explanation:**
 Given up to `n = 40` items, each with `(weight, value)`, and a knapsack `capacity`, find the maximum total value of a subset whose total weight is at most `capacity`. Output: the maximum value. Plain `O(2^n)` enumeration is impossible for `n = 40` (`2^40 ~ 10^12`), so we split the items into two halves and enumerate each half separately.

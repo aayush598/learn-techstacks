@@ -31,6 +31,8 @@ Use this table to recognize which advanced pattern a new problem is really askin
 
 ### Bounded Knapsack (Binary Splitting)
 
+**🔗 Practice Link:** [Bounded Knapsack](https://www.geeksforgeeks.org/unbounded-knapsack-repetition-items-allowed)
+
 **Problem Explanation:**
 Like 0/1 knapsack (weights `wt`, values `val`, capacity `W`) but each item `i` has a **limited
 quantity** `count[i]`: you may take between 0 and `count[i]` copies of it. Maximize total value
@@ -135,6 +137,8 @@ def bounded_knapsack_direct(W: int, wt: list, val: list, count: list) -> int:
 
 ### Multiple Knapsacks (Two Knapsacks)
 
+**🔗 Practice Link:** [Multiple Knapsacks](https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10)
+
 **Problem Explanation:**
 You have **two** knapsacks with capacities `W1` and `W2`. Each item (weight `wt[i]`, value
 `val[i]`) may go into the first bag, into the second bag, or into neither — never both, and
@@ -233,6 +237,8 @@ def two_knapsack(W1: int, W2: int, wt: list, val: list) -> int:
 ## Target Sum
 
 ### Target Sum
+
+**🔗 Practice Link:** [Target Sum](https://leetcode.com/problems/target-sum/)
 
 **Problem Explanation:**
 Given an array of non-negative integers `nums` and an integer `target`, assign each number a
@@ -336,6 +342,8 @@ def find_target_sum_tab(nums: list, target: int) -> int:
 
 ### Last Stone Weight II
 
+**🔗 Practice Link:** [Last Stone Weight II](https://leetcode.com/problems/last-stone-weight-ii/)
+
 **Problem Explanation:**
 You have stones with weights `stones`. Repeatedly pick any two stones and smash them together:
 the heavier stone loses the lighter one's weight and survives (i.e., a stone of weight `a`
@@ -431,6 +439,8 @@ def last_stone_weight_ii(stones: list) -> int:
 ## Ones and Zeros (Binary Knapsack)
 
 ### Ones and Zeros (2D Capacity Knapsack)
+
+**🔗 Practice Link:** [Ones and Zeros](https://leetcode.com/problems/ones-and-zeroes/)
 
 **Problem Explanation:**
 You are given `strs`, a list of binary strings (only '0' and '1' characters), and two integers
@@ -537,6 +547,8 @@ def find_max_form(strs: list, m: int, n: int) -> int:
 ## Palindrome Partitioning (Palindrome Cut)
 
 ### Palindrome Cut
+
+**🔗 Practice Link:** [Palindrome Cut](https://leetcode.com/problems/palindrome-partitioning-ii/)
 
 **Problem Explanation:**
 Given a string `s`, you may cut it into pieces such that every piece is a **palindrome** (reads

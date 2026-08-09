@@ -6,6 +6,8 @@ Continuation of miscellaneous DP problems. Skipped: #304 (Minimum Falling Path S
 
 ## 1. Frog Jump (LC #403) — Hard
 
+**🔗 Practice Link:** [1. Frog Jump](https://leetcode.com/problems/frog-jump/)
+
 ### Problem Description
 A frog attempts to cross a river represented as the x-axis. There are stones at given positions. The frog starts on stone 0 and must reach the last stone. From stone at position `x`, it can jump to `x + k - 1`, `x + k`, or `x + k + 1` where `k` is the size of the previous jump. Determine if the frog can cross. For example, `stones = [0,1,3,5,6,7,8,12]` → True (path: 0→1→3→5→7→8→12).
 
@@ -82,6 +84,8 @@ class Solution:
 
 ## 2. Minimum Cost to Make Array Equal (LC #2448) — Hard
 
+**🔗 Practice Link:** [2. Minimum Cost to Make Array Equal](https://leetcode.com/problems/minimum-cost-to-make-array-equal/)
+
 ### Problem Description
 Given arrays `nums` and `cost`, make all elements of `nums` equal. In one operation, you can increment or decrement any element by 1 at a cost equal to `cost[i]`. Find the minimum total cost. For example, `nums = [1,3,5]`, `cost = [1,1,1]` → target 3, cost = |1-3| + |3-3| + |5-3| = 4.
 
@@ -142,6 +146,8 @@ class Solution:
 ---
 
 ## 3. Maximum Earnings from Taxi (LC #2002) — Medium
+
+**🔗 Practice Link:** [3. Maximum Earnings from Taxi](https://leetcode.com/problems/maximum-earnings-from-taxi/)
 
 ### Problem Description
 A taxi driver picks up passengers. There are `n` stops (1 to n). Each ride `(start, end, tip)` means picking up at `start`, dropping at `end`, earning `end - start + tip`. Rides don't overlap. Maximize total earnings. For example, `rides = [[2,5,4],[1,5,1]]` → ride [2,5,4] earns 7, ride [1,5,1] earns 5; pick the first (better).
@@ -212,6 +218,8 @@ class Solution:
 
 ## 4. Minimum Number of Operations to Make Array Continuous (LC #2009) — Hard
 
+**🔗 Practice Link:** [4. Minimum Number of Operations to Make Array Continuous](https://leetcode.com/problems/minimum-number-of-operations-to-make-array-continuous/)
+
 ### Problem Description
 You are given an integer array `nums`. In one operation, you can replace any element with any integer. An array is **continuous** if all elements are distinct and `max(nums) - min(nums) == len(nums) - 1`. Find the minimum operations to make `nums` continuous. For example, `nums = [4,2,5,3]` → already continuous (2,3,4,5 → max-min=3=n-1), answer = 0.
 
@@ -280,6 +288,8 @@ class Solution:
 
 ## 5. Number of Increasing Subsequences in an Array — Medium
 
+**🔗 Practice Link:** [5. Number of Increasing Subsequences in an Array — Medium](https://www.geeksforgeeks.org/count-all-increasing-subsequences)
+
 ### Problem Description
 Count the number of strictly increasing subsequences in an array. For example, `nums = [2, 1, 3]` → subsequences: [2], [1], [3], [2,3], [1,3] → answer = 5 (excluding empty).
 
@@ -339,6 +349,8 @@ class Solution:
 ---
 
 ## 6. Minimum Moves to Make Array Complementary (LC #1674) — Medium
+
+**🔗 Practice Link:** [6. Minimum Moves to Make Array Complementary](https://leetcode.com/problems/minimum-moves-to-make-array-complementary/)
 
 ### Problem Description
 Given an array `nums` of even length `n` and a limit. A move increments or decrements any element by 1. An array is complementary if for every pair `(nums[i], nums[n-1-i])`, their sum equals `limit`. Find the minimum moves. For example, `nums = [1,2,4,3]`, `limit = 5` → pairs (1,4) sum 5, (2,3) sum 5 → 0 moves.
@@ -480,6 +492,8 @@ class Solution:
 
 ## 7. Maximum Profit from Selling Candies — Medium
 
+**🔗 Practice Link:** [7. Maximum Profit from Selling Candies — Medium](https://www.geeksforgeeks.org/maximize-the-profit-by-selling-at-most-m-products)
+
 ### Problem Description
 You have `n` candies and `m` customers. Customer `i` buys `buy[i]` candies at `price[i]` per candy, but only if they get exactly `buy[i]` candies. You can sell at most once to each customer. Maximize revenue. For example, `buy = [3,2]`, `price = [5,4]` → sell 2 to customer 2 (revenue 8) or 3 to customer 1 (revenue 15). Answer = 15.
 
@@ -542,6 +556,8 @@ class Solution:
 ---
 
 ## 8. Count Arrays with Bounded Difference — Medium
+
+**🔗 Practice Link:** [8. Count Arrays with Bounded Difference — Medium](https://www.geeksforgeeks.org/count-of-arrays-of-size-n-having-absolute-difference-between-adjacent-elements-at-most-1)
 
 ### Problem Description
 Given `n`, `lower`, `upper`, and `diff`, count arrays of length `n` where each element is in `[lower, upper]` and for all adjacent elements, `|arr[i] - arr[i+1]| <= diff`. For example, `n = 3, lower = 1, upper = 3, diff = 1` → arrays like [1,1,1], [1,2,1], etc.
@@ -622,6 +638,8 @@ class Solution:
 
 ## 9. Minimum Cost to Connect Sticks (LC #1167) — Medium
 
+**🔗 Practice Link:** [9. Minimum Cost to Connect Sticks](https://www.geeksforgeeks.org/connect-n-ropes-minimum-cost)
+
 ### Problem Description
 You have `sticks` where `sticks[i]` is the length of the `i`-th stick. Connect all sticks into one. The cost of connecting two sticks equals their combined length. Find the minimum total cost. For example, `sticks = [2,4,3]` → connect 2+3=5 (cost 5), then 5+4=9 (cost 9), total = 14.
 
@@ -691,6 +709,8 @@ class Solution:
 ---
 
 ## 10. Ways to Split Array into Three Subarrays (LC #1712) — Medium
+
+**🔗 Practice Link:** [10. Ways to Split Array into Three Subarrays](https://leetcode.com/problems/ways-to-split-array-into-three-subarrays/)
 
 ### Problem Description
 Count the number of ways to split `nums` into three non-empty contiguous subarrays `left`, `middle`, `right` such that `sum(left) <= sum(middle) <= sum(right)`. Return the count modulo 10^9+7. For example, `nums = [1,1,1]` → 1 way: [1], [1], [1].
@@ -776,6 +796,8 @@ class Solution:
 
 ## 11. Minimum Cost to Reduce Array to Single Element — Medium
 
+**🔗 Practice Link:** [11. Minimum Cost to Reduce Array to Single Element — Medium](https://www.geeksforgeeks.org/minimum-cost-to-merge-stones)
+
 ### Problem Description
 Given an array, in one operation you can merge two adjacent elements at a cost equal to their sum. Find the minimum total cost to reduce the array to a single element. For example, `arr = [1, 2, 3]` → merge 1+2=3 (cost 3), then 3+3=6 (cost 6), total = 9. Or merge 2+3=5 (cost 5), then 1+5=6 (cost 6), total = 11. Answer = 9.
 
@@ -849,6 +871,8 @@ class Solution:
 
 ## 12. Longest Arithmetic Subsequence (LC #1027) — Medium
 
+**🔗 Practice Link:** [12. Longest Arithmetic Subsequence](https://leetcode.com/problems/longest-arithmetic-subsequence/)
+
 ### Problem Description
 Given an array, find the length of the longest arithmetic subsequence. A subsequence is arithmetic if the difference between consecutive elements is constant. For example, `nums = [3,6,9,12]` → answer = 4 (the whole array). `nums = [9,4,7,2,10]` → answer = 3 (subsequence [4,7,10]).
 
@@ -919,6 +943,8 @@ class Solution:
 
 ## 13. Longest Arithmetic Subsequence of Given Difference (LC #1218) — Medium
 
+**🔗 Practice Link:** [13. Longest Arithmetic Subsequence of Given Difference](https://leetcode.com/problems/longest-arithmetic-subsequence-of-given-difference/)
+
 ### Problem Description
 Given an array `arr` and an integer `difference`, find the length of the longest subsequence where consecutive elements differ by exactly `difference`. For example, `arr = [1,2,3,4]`, `difference = 1` → answer = 4.
 
@@ -986,6 +1012,8 @@ class Solution:
 ---
 
 ## 14. Maximum Length of Subarray With Positive Product (LC #1567) — Medium
+
+**🔗 Practice Link:** [14. Maximum Length of Subarray With Positive Product](https://leetcode.com/problems/maximum-length-of-subarray-with-positive-product/)
 
 ### Problem Description
 Given an integer array, find the length of the longest contiguous subarray where the product of all elements is positive. For example, `nums = [1,-2,-3,4]` → subarray `[1,-2,-3,4]` has product 24 > 0, length 4.
@@ -1071,6 +1099,8 @@ class Solution:
 
 ## 15. Count Subarrays with Bounded Maximum (LC #795) — Medium
 
+**🔗 Practice Link:** [15. Count Subarrays with Bounded Maximum](https://leetcode.com/problems/count-subarrays-with-bounded-maximum/)
+
 ### Problem Description
 Given an integer array `nums` and two integers `left` and `right`, count the number of contiguous subarrays where the maximum element is in the range `[left, right]`. For example, `nums = [2,1,4,3]`, `left = 2`, `right = 3` → subarrays: [2], [2,1], [1], [3] → 4.
 
@@ -1143,6 +1173,8 @@ class Solution:
 ---
 
 ## 16. Minimum Number of Increments on Subarrays to Form Target Array (LC #1536) — Hard
+
+**🔗 Practice Link:** [16. Minimum Number of Increments on Subarrays to Form Target Array](https://leetcode.com/problems/minimum-number-of-increments-on-subarrays-to-form-a-target-array/)
 
 ### Problem Description
 Given an array `target`, start with all zeros. In one operation, you can increment all elements of a contiguous subarray by 1. Find the minimum operations to form `target`. For example, `target = [3,1,5,4,2]` → answer = 7.
@@ -1217,6 +1249,8 @@ class Solution:
 
 ## 17. Maximum Number of Non-overlapping Subarrays with Sum Zero (LC #1546) — Medium
 
+**🔗 Practice Link:** [17. Maximum Number of Non-overlapping Subarrays with Sum Zero](https://leetcode.com/problems/maximum-number-of-non-overlapping-subarrays-with-sum-equals-target/)
+
 ### Problem Description
 Given an array, find the maximum number of non-overlapping subarrays whose sum is zero. For example, `nums = [1,-1,1,-1]` → subarrays [0,1] and [2,3] each sum to 0 → answer = 2.
 
@@ -1288,6 +1322,8 @@ class Solution:
 
 ## 18. Minimum Cost to Split Array (LC #2547) — Hard
 
+**🔗 Practice Link:** [18. Minimum Cost to Split Array](https://leetcode.com/problems/minimum-cost-to-split-an-array/)
+
 ### Problem Description
 Given an array `nums` and an integer `k`, split `nums` into consecutive subarrays. The cost of a subarray is `(length of subarray - 1) * k + (sum of subarray)`. Minimize the total cost of the split.
 
@@ -1356,6 +1392,8 @@ class Solution:
 ---
 
 ## 19. Longest Substring with At Most 2 Distinct Characters — Medium
+
+**🔗 Practice Link:** [19. Longest Substring with At Most 2 Distinct Characters — Medium](https://www.geeksforgeeks.org/longest-substring-with-at-most-two-distinct-characters)
 
 ### Problem Description
 Find the length of the longest substring with at most 2 distinct characters. For example, `s = "eceba"` → "ece" has length 3.
@@ -1431,6 +1469,8 @@ class Solution:
 ---
 
 ## 20. Paint House IV — Hard
+
+**🔗 Practice Link:** [20. Paint House IV — Hard](https://www.geeksforgeeks.org/minimize-cost-of-painting-n-houses-such-that-adjacent-houses-have-different-colors)
 
 ### Problem Description
 There are `n` houses in a circle, each to be painted one of `k` colors. Painting house `i` with color `j` costs `cost[i][j]`. Adjacent houses (including first and last, since it's a circle) cannot share the same color. Minimize total cost. This is a circular constraint extension of the classic Paint House problem.
@@ -1512,6 +1552,8 @@ class Solution:
 
 ## 21. Maximum Weighted Job Scheduling — Hard
 
+**🔗 Practice Link:** [21. Maximum Weighted Job Scheduling — Hard](https://leetcode.com/problems/maximum-profit-in-job-scheduling/)
+
 ### Problem Description
 Given `n` jobs with start time, finish time, and weight (profit), select a subset of non-overlapping jobs to maximize total weight. This is the weighted interval scheduling problem. For example, `jobs = [(1,3,5),(2,5,6),(4,6,5),(6,7,4)]` → best selection: jobs 0 and 2 (weight 5+5=10).
 
@@ -1580,6 +1622,8 @@ class Solution:
 ---
 
 ## 22. Longest Path in Matrix with Hops — Medium
+
+**🔗 Practice Link:** [22. Longest Path in Matrix with Hops — Medium](https://www.geeksforgeeks.org/longest-path-in-a-directed-acyclic-graph-dynamic-programming)
 
 ### Problem Description
 Given an `m x n` matrix where each cell has a value, find the longest path where each step moves to an adjacent cell (up, down, left, right) with a strictly greater value. You may optionally make `k` "hops" — jumps to any cell in the matrix (not just adjacent). Maximize the path length.
@@ -1668,6 +1712,8 @@ class Solution:
 ---
 
 ## 23. Maximum Product of Three Numbers (LC #1464) — Easy
+
+**🔗 Practice Link:** [23. Maximum Product of Three Numbers](https://leetcode.com/problems/maximum-product-of-three-numbers/)
 
 ### Problem Description
 Given an integer array, find the maximum product of three numbers. For example, `nums = [1,2,3]` → 6. `nums = [-10,-10,1,3,2]` → (-10)(-10)(3) = 300.

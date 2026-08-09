@@ -39,6 +39,8 @@ vertices* as the DP layer.
 
 ### Bellman-Ford (Single-Source Shortest Paths with Negative Weights)
 
+**🔗 Practice Link:** [Bellman-Ford](https://www.geeksforgeeks.org/bellman-ford-algorithm-dp-23)
+
 **Problem Explanation:**
 Given a directed weighted graph with V vertices (numbered `0..V-1`), an edge
 list `edges = [(u, v, w), ...]` (edge from `u` to `v` with weight `w`, weights
@@ -177,6 +179,8 @@ def bellman_ford(edges: list, V: int, src: int) -> list:
 
 ### Floyd-Warshall (All-Pairs Shortest Paths)
 
+**🔗 Practice Link:** [Floyd-Warshall](https://www.geeksforgeeks.org/floyd-warshall-algorithm-dp-16)
+
 **Problem Explanation:**
 Given a directed weighted graph as an adjacency matrix `graph[i][j]` = weight of
 the edge `i→j` (with `graph[i][i] = 0` and `INF` where no edge exists), compute
@@ -310,6 +314,8 @@ general graph" becomes polynomial on a DAG.
 
 ### Longest Path in a DAG
 
+**🔗 Practice Link:** [Longest Path in a DAG](https://www.geeksforgeeks.org/longest-path-in-a-directed-acyclic-graph-dynamic-programming)
+
 **Problem Explanation:**
 Given a DAG with V vertices and weighted directed edges `edges = [(u, v, w)]`,
 find the length of the longest path (maximum sum of edge weights along a path).
@@ -440,6 +446,8 @@ def longest_path_dag(V: int, edges: list) -> int:
 ---
 
 ### Critical Path (Project Scheduling) in a DAG
+
+**🔗 Practice Link:** [Critical Path](https://www.geeksforgeeks.org/find-longest-path-directed-acyclic-graph)
 
 **Problem Explanation:**
 Given a set of tasks (vertices) with durations (edge weights representing
@@ -601,6 +609,8 @@ vertex the path currently ends at.
 
 ### Shortest Hamiltonian Path
 
+**🔗 Practice Link:** [Shortest Hamiltonian Path](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
+
 **Problem Explanation:**
 Given a complete directed weighted graph on `n` vertices, represented as an
 adjacency matrix `graph[i][j]` = cost of moving from `i` to `j`, find the
@@ -729,6 +739,8 @@ def shortest_hamiltonian_path(graph: list) -> int:
 ---
 
 ### Traveling Salesman Problem (TSP)
+
+**🔗 Practice Link:** [Traveling Salesman Problem](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
 
 **Problem Explanation:**
 Given a complete weighted graph where `graph[i][j]` is the cost of traveling from
@@ -867,6 +879,8 @@ def tsp_tab(graph: list) -> int:
 
 ### Shortest Hamiltonian Path Without Returning to Start
 
+**🔗 Practice Link:** [Shortest Hamiltonian Path Without Returning to Start](https://www.geeksforgeeks.org/travelling-salesman-problem-using-dynamic-programming)
+
 **Problem Explanation:**
 Same problem as the shortest Hamiltonian path — visit all vertices exactly once,
 starting at vertex 0, with no return trip — but with the slightly different
@@ -958,6 +972,8 @@ def shortest_hamiltonian_path(graph: list) -> int:
 ---
 
 ### Counting Hamiltonian Paths
+
+**🔗 Practice Link:** [Counting Hamiltonian Paths](https://www.geeksforgeeks.org/hamiltonian-cycle)
 
 **Problem Explanation:**
 Given an undirected simple graph (n vertices and a list of edges `(u, v)`), count

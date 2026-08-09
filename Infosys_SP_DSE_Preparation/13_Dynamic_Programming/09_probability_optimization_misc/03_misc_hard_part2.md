@@ -6,6 +6,8 @@ Final batch of miscellaneous DP problems for the preparation repository.
 
 ## 1. Split Array Largest Sum (LC #410) — Hard
 
+**🔗 Practice Link:** [1. Split Array Largest Sum](https://leetcode.com/problems/split-array-largest-sum/)
+
 ### Problem Description
 Split an array into `m` non-empty contiguous subarrays to minimize the largest sum among these subarrays. For example, `nums = [7,2,5,10,8]`, `m = 2` → split [7,2,5] and [10,8], largest sum = 15.
 
@@ -76,6 +78,8 @@ class Solution:
 ---
 
 ## 2. Minimum Speed to Arrive on Time (LC #1870) — Medium
+
+**🔗 Practice Link:** [2. Minimum Speed to Arrive on Time](https://leetcode.com/problems/minimum-speed-to-arrive-on-time/)
 
 ### Problem Description
 Given an array of distances `dist` and a time limit `hour`, find the minimum integer speed `speed` such that traveling each distance at that speed (except the last which can be fractional) takes at most `hour` time. You can only board a train at integer hours (except the last trip).
@@ -154,6 +158,8 @@ class Solution:
 ---
 
 ## 3. Smallest Sufficient Team (LC #1125) — Hard
+
+**🔗 Practice Link:** [3. Smallest Sufficient Team](https://leetcode.com/problems/smallest-sufficient-team/)
 
 ### Problem Description
 Given a list of skills (as skill sets per person) and a list of required skills, find the smallest team (subset of people) that covers all required skills. For example, `req_skills = ["java","reactjs"]`, `people_skills = [["java"],["reactjs"],["java","reactjs"]]` → team of size 1: person 2.
@@ -242,6 +248,8 @@ class Solution:
 
 ## 4. Maximum Students Taking Exam (LC #1235) — Hard
 
+**🔗 Practice Link:** [4. Maximum Students Taking Exam](https://leetcode.com/problems/maximum-students-taking-exam/)
+
 ### Problem Description
 Given a classroom represented as a grid (`'.'` = seat, `'#'` = broken), students can sit in valid seats. No two students can be in adjacent seats (horizontally, diagonally, or vertically — only left/right diagonal matters for cheating). Find the maximum number of students that can take the exam. This is a bitmask DP on rows.
 
@@ -328,6 +336,8 @@ class Solution:
 
 ## 5. Maximum Profit in a Balanced Binary Tree — Hard
 
+**🔗 Practice Link:** [5. Maximum Profit in a Balanced Binary Tree — Hard](https://leetcode.com/problems/house-robber-iii/)
+
 ### Problem Description
 Given a binary tree where each node has a price, find the maximum profit from selecting nodes such that no two selected nodes are directly connected (parent-child). This is the Tree Independent Set / House Robber on Trees problem.
 
@@ -392,6 +402,8 @@ class Solution:
 
 ## 6. Minimum Cost to Buy Tickets at Minimum Cost — Medium
 
+**🔗 Practice Link:** [6. Minimum Cost to Buy Tickets at Minimum Cost — Medium](https://leetcode.com/problems/minimum-cost-for-tickets/)
+
 ### Problem Description
 There are `n` days and a ticket system where you can buy a 1-day pass for `cost[0]`, 7-day pass for `cost[1]`, or 30-day pass for `cost[2]`. Find the minimum cost to cover all `n` days. For example, `n = 6`, `cost = [1,4,5]` → buy six 1-day passes for 6, or one 7-day for 4. Answer = 4.
 
@@ -450,6 +462,8 @@ class Solution:
 ---
 
 ## 7. Count of Subarrays with Median Greater Than K — Hard
+
+**🔗 Practice Link:** [7. Count of Subarrays with Median Greater Than K — Hard](https://leetcode.com/problems/count-subarrays-with-median-k/)
 
 ### Problem Description
 Given an array `nums` and integer `k`, count subarrays whose median is strictly greater than `k`. The median of an odd-length subarray is the middle element when sorted; for even length, it's the left-middle element (lower median).
@@ -529,6 +543,8 @@ class Solution:
 ---
 
 ## 8. Maximum Number of Points from Grid Queries (LC #2503) — Hard
+
+**🔗 Practice Link:** [8. Maximum Number of Points from Grid Queries](https://leetcode.com/problems/maximum-number-of-points-from-grid-queries/)
 
 ### Problem Description
 Given an `m x n` grid of positive integers and a list of queries, for each query `q`, start from `(0,0)` and move to adjacent cells with values `< q`. Count the reachable cells. Return the answer for each query.
@@ -633,6 +649,8 @@ class Solution:
 
 ## 9. Number of Pairs of Strings With Concatenation Equal to Target (LC #1758) — Medium
 
+**🔗 Practice Link:** [9. Number of Pairs of Strings With Concatenation Equal to Target](https://leetcode.com/problems/number-of-pairs-of-strings-with-concatenation-equal-to-target/)
+
 ### Problem Description
 Given a list of strings and a target string, count pairs `(i, j)` where `words[i] + words[j] == target` and `i != j`. For example, `words = ["777","7","77","7777"]`, `target = "7777"` → pairs: (0,3),(3,0),(1,3),(3,1),(2,1),(1,2) — wait, "777"+"7"="7777" ✓, "7"+"777"="7777" ✓, "77"+"77"="7777"... no, "7777" ≠ "7777"? Actually "77"+"77" = "7777" ✓.
 
@@ -711,6 +729,8 @@ class Solution:
 
 ## 10. Maximum Sum of Non-overlapping Intervals — Medium
 
+**🔗 Practice Link:** [10. Maximum Sum of Non-overlapping Intervals — Medium](https://leetcode.com/problems/maximum-profit-in-job-scheduling/)
+
 ### Problem Description
 Given a set of weighted intervals, select a subset of non-overlapping intervals to maximize total weight. For example, `intervals = [[1,3,5],[2,4,6],[3,5,7]]` → best: [1,3,5] and [3,5,7] (weight 12, they touch at 3).
 
@@ -775,6 +795,8 @@ class Solution:
 ---
 
 ## 11. Longest Square Streak in an Array (LC #2501) — Medium
+
+**🔗 Practice Link:** [11. Longest Square Streak in an Array](https://leetcode.com/problems/longest-square-streak-in-an-array/)
 
 ### Problem Description
 Given an array, find the longest subsequence where each element is the square of the previous one (e.g., 2, 4, 16, 256). Return the length, or -1 if no streak of length ≥ 2 exists.
@@ -847,6 +869,8 @@ class Solution:
 ---
 
 ## 12. Minimum Number of Operations to Make String Sorted (LC #1830) — Hard
+
+**🔗 Practice Link:** [12. Minimum Number of Operations to Make String Sorted](https://leetcode.com/problems/minimum-number-of-operations-to-make-string-sorted/)
 
 ### Problem Description
 Given a string `s`, find the number of steps to make it sorted in ascending order by repeatedly replacing any substring with its sorted version. Return modulo 10^9+7. This is essentially counting the lexicographic rank of the string.
@@ -933,6 +957,8 @@ class Solution:
 
 ## 13. Count of Bad Pairs (LC #2364) — Medium
 
+**🔗 Practice Link:** [13. Count of Bad Pairs](https://leetcode.com/problems/count-number-of-bad-pairs/)
+
 ### Problem Description
 A pair `(i, j)` is bad if `i < j` and `j - i != nums[j] - nums[i]`. Equivalently, `nums[i] - i != nums[j] - j`. Count all bad pairs. For example, `nums = [4,1,3,3]` → total pairs = 6, bad pairs = 5.
 
@@ -997,6 +1023,8 @@ class Solution:
 ---
 
 ## 14. Maximum Sum of Subsequence Without Adjacent (Weighted) — Medium
+
+**🔗 Practice Link:** [14. Maximum Sum of Subsequence Without Adjacent](https://www.geeksforgeeks.org/maximum-sum-such-that-no-two-elements-are-adjacent)
 
 ### Problem Description
 Given an array, find the maximum sum of a subsequence where no two selected elements are adjacent. For example, `nums = [3,2,7,10]` → select 3 and 10, sum = 13.
@@ -1064,6 +1092,8 @@ class Solution:
 
 ## 15. Minimum Operations to Make String Alternating (LC #1896) — Medium
 
+**🔗 Practice Link:** [15. Minimum Operations to Make String Alternating](https://leetcode.com/problems/minimum-number-of-flips-to-make-the-binary-string-alternating/)
+
 ### Problem Description
 A string is alternating if no two adjacent characters are the same. Given a binary string, find the minimum operations (flipping a character) to make it alternating. For example, `s = "0100"` → flip index 2: "0101" → 1 operation.
 
@@ -1130,6 +1160,8 @@ class Solution:
 ---
 
 ## 16. Minimum Number of Operations to Sort a Binary Tree by Level (LC #2583) — Hard
+
+**🔗 Practice Link:** [16. Minimum Number of Operations to Sort a Binary Tree by Level](https://leetcode.com/problems/minimum-number-of-operations-to-sort-a-binary-tree-by-level/)
 
 ### Problem Description
 Given a binary tree, sort nodes at each level by value in ascending order using the minimum number of swap operations on the nodes' values. Return the total swaps across all levels.
@@ -1214,6 +1246,8 @@ class Solution:
 
 ## 17. Minimum Absolute Sum Difference (LC #1200) — Medium
 
+**🔗 Practice Link:** [17. Minimum Absolute Sum Difference](https://leetcode.com/problems/minimum-absolute-sum-difference/)
+
 ### Problem Description
 Given two arrays `nums1` and `nums2`, you may replace exactly one element in `nums1` with any element from `nums2`. Find the minimum possible sum of absolute differences `|nums1[i] - nums2[i]|` after the replacement.
 
@@ -1285,6 +1319,8 @@ class Solution:
 
 ## 18. Count Good Triplets (LC #1534) — Easy
 
+**🔗 Practice Link:** [18. Count Good Triplets](https://leetcode.com/problems/count-good-triplets/)
+
 ### Problem Description
 A triplet `(i, j, k)` is good if `i < j < k`, `|arr[i] - arr[j]| <= a`, `|arr[j] - arr[k]| <= b`, and `|arr[i] - arr[k]| <= c`. Count all good triplets.
 
@@ -1349,6 +1385,8 @@ class Solution:
 ---
 
 ## 19. Maximum Number of Events That Can Be Attended (LC #1353) — Medium
+
+**🔗 Practice Link:** [19. Maximum Number of Events That Can Be Attended](https://leetcode.com/problems/maximum-number-of-events-that-can-be-attended/)
 
 ### Problem Description
 Given `events` where `events[i] = [startDay, endDay]`, attend at most one event per day. Maximize the number of events attended.
@@ -1425,6 +1463,8 @@ class Solution:
 
 ## 20. Number of Dice Rolls with Target Sum (LC #1155) — Medium
 
+**🔗 Practice Link:** [20. Number of Dice Rolls with Target Sum](https://leetcode.com/problems/number-of-dice-rolls-with-target-sum/)
+
 ### Problem Description
 Given `d` dice each with `f` faces (1 to f), find the number of ways to get a sum of `target`. Return modulo 10^9+7. For example, `d=2, f=6, target=7` → 6 ways.
 
@@ -1489,6 +1529,8 @@ class Solution:
 ---
 
 ## 21. Maximum Performance of a Team (LC #1383) — Hard
+
+**🔗 Practice Link:** [21. Maximum Performance of a Team](https://leetcode.com/problems/maximum-performance-of-a-team/)
 
 ### Problem Description
 Given `n` engineers with `speed[i]` and `efficiency[i]`, form a team of at most `k` engineers to maximize `sum(speed) * min(efficiency)`.
@@ -1568,6 +1610,8 @@ class Solution:
 
 ## 22. Minimum Number of Work Sessions to Finish Tasks (LC #1681) — Hard
 
+**🔗 Practice Link:** [22. Minimum Number of Work Sessions to Finish Tasks](https://leetcode.com/problems/minimum-number-of-work-sessions-to-finish-the-tasks/)
+
 ### Problem Description
 Given `tasks` (each with a duration) and `sessionTime`, find the minimum number of sessions needed to complete all tasks. Each task must be done entirely in one session, and the sum of tasks in each session ≤ `sessionTime`.
 
@@ -1646,6 +1690,8 @@ class Solution:
 
 ## 23. Minimum Distance to Type a Word Using Two Fingers (LC #1132) — Hard
 
+**🔗 Practice Link:** [23. Minimum Distance to Type a Word Using Two Fingers](https://leetcode.com/problems/minimum-distance-to-type-a-word-using-two-fingers/)
+
 ### Problem Description
 Given a word to type on a keyboard, you have two fingers. Each finger starts at a special position (not on any key). Moving a finger to a key costs the Manhattan distance from its current position. Typing a character moves the finger there. Minimize total movement cost.
 
@@ -1723,6 +1769,8 @@ class Solution:
 
 ## 24. Maximum Alternating Subsequence (Weighted) — Medium
 
+**🔗 Practice Link:** [24. Maximum Alternating Subsequence](https://www.geeksforgeeks.org/longest-alternating-subsequence)
+
 ### Problem Description
 Given an array, find the maximum sum of an alternating subsequence where elements at even positions in the subsequence are added and elements at odd positions are subtracted. For example, `nums = [3,1,5,8]` → subsequence [3,1,5,8] → 3-1+5-8=-1. Or [3,5] → 3-5=-2. Or [3,1,5] → 3-1+5=7.
 
@@ -1798,6 +1846,8 @@ class Solution:
 
 ## 25. Minimum Operations to Make the Array Alternating (LC #2170) — Medium
 
+**🔗 Practice Link:** [25. Minimum Operations to Make the Array Alternating](https://leetcode.com/problems/minimum-operations-to-make-the-array-alternating/)
+
 ### Problem Description
 Given an array, make it alternating (even-indexed elements are one value, odd-indexed elements are another, and they differ) using minimum operations. Each operation sets an element to any value.
 
@@ -1868,6 +1918,8 @@ class Solution:
 ---
 
 ## 26. Minimum Total Cost to Make Arrays Unequal (LC #2499) — Hard
+
+**🔗 Practice Link:** [26. Minimum Total Cost to Make Arrays Unequal](https://leetcode.com/problems/minimum-total-cost-to-make-arrays-unequal/)
 
 ### Problem Description
 Given two arrays `nums1` and `nums2` of length `n`, make all pairs `(nums1[i], nums2[i])` unequal (i.e., `nums1[i] != nums2[i]` for all `i`). You can swap `nums1[i]` and `nums2[i]` at cost `|nums1[i] - nums2[i]|`. Find the minimum total cost, or -1 if impossible.
@@ -2076,6 +2128,8 @@ The correct answer for the standard version: total cost = sum of |diff| at all p
 ---
 
 ## 27. Longest Substring with Same Letters After K Replacement (LC #424) — Medium
+
+**🔗 Practice Link:** [27. Longest Substring with Same Letters After K Replacement](https://leetcode.com/problems/longest-repeating-character-replacement/)
 
 ### Problem Description
 Given a string `s` and integer `k`, find the length of the longest substring where you can replace at most `k` characters to make all characters the same. For example, `s = "AABABBA"`, `k = 1` → "AABAA" (replace B at index 3) → length 5... actually the answer is 4 ("ABBA" → replace one B: "AABA" → "AAAA" with k=2... let me just use the standard example).

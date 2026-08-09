@@ -9,6 +9,8 @@ Hamiltonian/TSP problems are in the main guide.
 
 ## 1. DAG Shortest Paths — Medium
 
+**🔗 Practice Link:** [1. DAG Shortest Paths — Medium](https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs)
+
 ### Problem Explanation
 Given a DAG with V vertices, weighted directed edges, and a source vertex,
 find the shortest distance from source to every other vertex. Since there
@@ -99,6 +101,8 @@ def dag_shortest_paths(V, edges, src):
 
 ## 2. Minimum Cost Path in DAG — Medium
 
+**🔗 Practice Link:** [2. Minimum Cost Path in DAG — Medium](https://www.geeksforgeeks.org/shortest-path-for-directed-acyclic-graphs)
+
 ### Problem Explanation
 Given a DAG with weighted edges and source/destination vertices, find the
 minimum-cost path from source to destination. Same as DAG shortest paths
@@ -187,6 +191,8 @@ def min_cost_path_dag(V, edges, src, dest):
 ---
 
 ## 3. Word Ladder (LC #127) — Hard
+
+**🔗 Practice Link:** [3. Word Ladder](https://leetcode.com/problems/word-ladder/)
 
 ### Problem Explanation
 Given two words `beginWord` and `endWord` and a dictionary `wordList`,
@@ -278,6 +284,8 @@ class Solution:
 ---
 
 ## 4. Alien Dictionary (LC #269) — Hard
+
+**🔗 Practice Link:** [4. Alien Dictionary](https://www.geeksforgeeks.org/given-sorted-dictionary-find-precedence-characters)
 
 ### Problem Explanation
 Given a sorted list of words in an alien language, derive the character
@@ -374,6 +382,8 @@ class Solution:
 
 ## 5. Course Schedule (LC #207) — Medium
 
+**🔗 Practice Link:** [5. Course Schedule](https://leetcode.com/problems/course-schedule/)
+
 ### Problem Explanation
 There are `numCourses` courses with prerequisites. Each prerequisite is
 a pair `[a, b]` meaning course `b` must be taken before course `a`. Determine
@@ -457,6 +467,8 @@ class Solution:
 
 ## 6. Course Schedule II (LC #210) — Medium
 
+**🔗 Practice Link:** [6. Course Schedule II](https://leetcode.com/problems/course-schedule-ii/)
+
 ### Problem Explanation
 Like Course Schedule I, but instead of just returning whether all courses
 can be finished, return the actual ordering (one valid topological sort).
@@ -531,6 +543,8 @@ class Solution:
 ---
 
 ## 7. Number of Ways to Arrive at Destination (LC #1976) — Hard
+
+**🔗 Practice Link:** [7. Number of Ways to Arrive at Destination](https://leetcode.com/problems/number-of-ways-to-arrive-at-destination/)
 
 ### Problem Explanation
 Given `n` cities and weighted bidirectional roads, count the number of
@@ -633,6 +647,8 @@ class Solution:
 
 ## 8. Path with Maximum Probability (LC #1514) — Medium
 
+**🔗 Practice Link:** [8. Path with Maximum Probability](https://leetcode.com/problems/path-with-maximum-probability/)
+
 ### Problem Explanation
 Given `n` cities with edges having success probabilities (0 to 1), find
 the path from `start` to `end` that maximizes the product of edge
@@ -714,6 +730,8 @@ class Solution:
 
 ## 9. Network Delay Time (LC #743) — Medium
 
+**🔗 Practice Link:** [9. Network Delay Time](https://leetcode.com/problems/network-delay-time/)
+
 ### Problem Explanation
 Given `n` nodes and directed weighted edges `times[i] = (u, v, w)`,
 send a signal from node `k`. The signal takes `w` time to travel edge
@@ -792,6 +810,8 @@ class Solution:
 ---
 
 ## 10. Shortest Path in Binary Matrix (LC #1091) — Medium
+
+**🔗 Practice Link:** [10. Shortest Path in Binary Matrix](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
 
 ### Problem Explanation
 Given an `n x n` binary grid where `0` is open and `1` is blocked, find
@@ -885,6 +905,8 @@ class Solution:
 ---
 
 ## 11. Cheapest Flights Within K Stops (LC #787) — Medium
+
+**🔗 Practice Link:** [11. Cheapest Flights Within K Stops](https://leetcode.com/problems/cheapest-flights-within-k-stops/)
 
 ### Problem Explanation
 Given `n` cities and flights `[from, to, price]`, find the cheapest price

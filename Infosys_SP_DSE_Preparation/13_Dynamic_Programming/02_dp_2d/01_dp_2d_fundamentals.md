@@ -24,6 +24,8 @@
 
 ### Unique Paths
 
+**🔗 Practice Link:** [Unique Paths](https://leetcode.com/problems/unique-paths/)
+
 **Problem Explanation:**
 A robot starts at the top-left corner of an `m×n` grid and can only move **right** or **down** one cell at a time. It must reach the bottom-right corner. Count how many distinct paths exist. The input is two integers `m` and `n`; the output is the total number of unique paths. This is a **counting** problem (not a "best of" problem), so we sum values — never take a min or max.
 
@@ -114,6 +116,8 @@ def unique_paths_optimized(m: int, n: int) -> int:
 ---
 
 ### Unique Paths with Obstacles
+
+**🔗 Practice Link:** [Unique Paths with Obstacles](https://leetcode.com/problems/unique-paths-ii/)
 
 **Problem Explanation:**
 Same grid as above (move right/down, count paths from top-left to bottom-right) but now some cells are blocked. A blocked cell (value `1`) cannot be entered. The input is an `m×n` grid of `0`s and `1`s; return the number of valid paths that never step on a `1`. If the start or finish cell is itself blocked, no path exists and the answer is 0.
@@ -613,6 +617,8 @@ def lcs_tab_optimized(a: str, b: str) -> int:
 - For reconstruction, if `dp[i-1][j]` and `dp[i][j-1]` are equal, moving left (or up) is still correct — the result may just be a different valid LCS.
 
 ### LCS: Reconstruct the Subsequence
+
+**🔗 Practice Link:** [LCS: Reconstruct the Subsequence](https://leetcode.com/problems/longest-common-subsequence/)
 
 **Problem Explanation:**
 Beyond just the length, produce one actual longest common subsequence string. After filling the LCS table, we **trace back** from the bottom-right corner: matched characters are collected, and mismatches make us move toward the larger adjacent value. Input: two strings; output: a string that is a longest common subsequence (any one if several exist).

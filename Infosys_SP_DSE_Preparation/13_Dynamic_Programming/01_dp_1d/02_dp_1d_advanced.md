@@ -26,6 +26,8 @@
 
 ### Maximum Subarray (Kadane's Algorithm)
 
+**🔗 Practice Link:** [Maximum Subarray](https://leetcode.com/problems/maximum-subarray/)
+
 **Problem Explanation:**
 Given an integer array `nums`, find the contiguous subarray (a consecutive slice containing at least one element) with the largest sum, and return that sum. "Contiguous subarray" means elements must be adjacent in the array, unlike a subsequence where you may skip elements. For example, in `nums = [-2, 1, -3, 4, -1, 2, 1, -5, 4]` the maximum-sum subarray is `[4, -1, 2, 1]`, whose sum is 6.
 
@@ -126,6 +128,8 @@ def max_subarray_with_indices(nums: list) -> tuple:
 
 ### Maximum Circular Subarray Sum
 
+**🔗 Practice Link:** [Maximum Circular Subarray Sum](https://leetcode.com/problems/maximum-sum-circular-subarray/)
+
 **Problem Explanation:**
 Same goal as Maximum Subarray, but the array is treated as a **circle**: the subarray may wrap around the end and continue at the beginning (but it still cannot use the same element twice). Given `nums`, return the maximum sum of a contiguous circular subarray. For example, `nums = [5, -3, 5]` → the best is 10, from the wrapping subarray [5, 5] that skips the middle -3.
 
@@ -212,6 +216,8 @@ def max_circular_subarray(nums: list) -> int:
 
 ### Maximum Product Subarray
 
+**🔗 Practice Link:** [Maximum Product Subarray](https://leetcode.com/problems/maximum-product-subarray/)
+
 **Problem Explanation:**
 Given an integer array `nums`, find the contiguous subarray with the **largest product** (rather than sum) and return that product. Since products are involved, signs matter: a very negative running product can become a very positive one after multiplying by another negative number. For example, `nums = [2, 3, -2, 4]` → the answer is 6, from the subarray [2, 3] (6 beats 2·3·(-2)·4 = -48 and 3·(-2)·4 = -24).
 
@@ -297,6 +303,8 @@ def max_product_subarray(nums: list) -> int:
 
 ### Longest Alternating Subsequence
 
+**🔗 Practice Link:** [Longest Alternating Subsequence](https://www.geeksforgeeks.org/longest-alternating-subsequence)
+
 **Problem Explanation:**
 Given an array, find the length of the **longest alternating (wiggle) subsequence**: a subsequence in which consecutive elements strictly alternate between increasing and decreasing. A subsequence preserves order but may skip elements. For example, in `[1, 7, 4, 9, 2, 5]` the whole array alternates (1 < 7 > 4 < 9 > 2 < 5) → length 6. The same problem is known as the **Wiggle Subsequence** on LeetCode.
 
@@ -381,6 +389,8 @@ def wiggly_max_length(nums: list) -> int:
 
 ### Maximum Length of Pair Chain
 
+**🔗 Practice Link:** [Maximum Length of Pair Chain](https://leetcode.com/problems/maximum-length-of-pair-chain/)
+
 **Problem Explanation:**
 Given a list of pairs `(a, b)` (think of them as time intervals), you want the longest **chain** of pairs `p1, p2, ...` where pair `(c, d)` may follow pair `(a, b)` only if `b < c` (strictly, the first ends before the second begins). Each pair may be used at most once, and the output is the length of the longest such chain. For example, `pairs = [[1, 2], [2, 3], [3, 4]]` → the longest chain is [1,2] → [3,4], length 2 (note [2,3] cannot follow [1,2] because 2 < 2 is false).
 
@@ -446,6 +456,8 @@ def find_longest_chain(pairs: list) -> int:
 - This greedy solves the *chain length*; if the actual chain pairs are required, collect them during the scan.
 
 ### Longest Bitonic Subsequence
+
+**🔗 Practice Link:** [Longest Bitonic Subsequence](https://www.geeksforgeeks.org/longest-bitonic-subsequence-dp-15)
 
 **Problem Explanation:**
 Given an array, find the length of the longest **bitonic subsequence**: a subsequence that first strictly increases and then strictly decreases (it may be purely increasing or purely decreasing, in which case the "other half" is empty). Elements keep their relative order but need not be contiguous. For example, in `[1, 11, 2, 10, 4, 5, 2, 1]` the longest bitonic subsequence is `[1, 2, 4, 5, 2, 1]` (or `[1, 11, 10, 5, 2, 1]`), length 6.
@@ -537,6 +549,8 @@ def longest_bitonic_subseq(nums: list) -> int:
 ## Minimax & String DP
 
 ### Egg Dropping Problem
+
+**🔗 Practice Link:** [Egg Dropping Problem](https://leetcode.com/problems/super-egg-drop/)
 
 **Problem Explanation:**
 You have `k` identical eggs and a building with `n` floors. There is a threshold floor `f`: eggs do not break when dropped from any floor below `f`, and break when dropped from floor `f` or above. An egg that survives a drop can be reused; a broken egg is gone. Find the **minimum number of drops** (in the worst case) needed to determine `f`. This is a *minimax* problem: you must guarantee a strategy whose worst-case drop count is as small as possible. For example, with 2 eggs and 6 floors, the answer is 3.
@@ -653,6 +667,8 @@ def egg_drop_tab(k: int, n: int) -> int:
 
 ### Word Break
 
+**🔗 Practice Link:** [Word Break](https://leetcode.com/problems/word-break/)
+
 **Problem Explanation:**
 Given a string `s` and a list of dictionary words `word_dict`, determine whether `s` can be segmented into a sequence of dictionary words. Every word in the segmentation must be in the dictionary, words may be reused, and the entire string must be consumed. For example, `s = "leetcode"`, `word_dict = ["leet", "code"]` → True ("leet" + "code"). Return a boolean.
 
@@ -739,6 +755,8 @@ def word_break_tab(s: str, word_dict: list) -> bool:
 ## Jump Game DP
 
 ### Minimum Jumps to Reach End
+
+**🔗 Practice Link:** [Minimum Jumps to Reach End](https://leetcode.com/problems/jump-game-ii/)
 
 **Problem Explanation:**
 Given an array `arr` where `arr[i]` is the maximum jump length you can take from index i (you may jump anywhere from 1 to `arr[i]` steps forward), find the **minimum number of jumps** needed to reach the last index (n-1). If the end is unreachable, return -1. For example, `arr = [2, 3, 1, 1, 4]` → the minimum is 2 (jump from 0 to 1, then 1 to 4). The same idea appears as LeetCode 45 "Jump Game II".
@@ -860,6 +878,8 @@ def jump_game_ii(nums: list) -> int:
 
 ### Stone Game I
 
+**🔗 Practice Link:** [Stone Game I](https://leetcode.com/problems/stone-game/)
+
 **Problem Explanation:**
 A row of `piles` (each entry is a positive number of stones) lies in front of two players, Alice and Bob. They alternate turns; on each turn a player takes the **entire pile** from either the left end or the right end of the remaining row. Alice moves first. Both play optimally, and the goal is to maximize the total stones collected. Return True if Alice can win (her total strictly greater than Bob's total) assuming optimal play. (LeetCode 877 guarantees an even-length array, which makes Alice always able to win.)
 
@@ -938,6 +958,8 @@ def stone_game_i(piles: list) -> bool:
 - Interpreting the boolean: return `dp[0][n-1] >= 0`, i.e., Alice's difference is non-negative (with the guarantee of even length it will always be > 0).
 
 ### Stone Game II (pick 1 to 2x previous)
+
+**🔗 Practice Link:** [Stone Game II](https://leetcode.com/problems/stone-game-ii/)
 
 **Problem Explanation:**
 Alice and Bob again take stones from the left end of a row of `piles`. The twist: there is a parameter `M` that starts at 1. On each turn, the player may take the first **1 to 2·M** piles; if they take `x` piles, then `M` is updated to `max(M, x)` for the opponent. Both play optimally. Return the maximum number of stones Alice can collect. For example, `piles = [2, 7, 9, 4, 4]` → Alice can guarantee 10.

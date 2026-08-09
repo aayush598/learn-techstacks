@@ -6,6 +6,8 @@ This file covers problems NOT present in the fundamentals or advanced files: Sto
 
 ## 1. Stone Game III (LC #1406) — Hard
 
+**🔗 Practice Link:** [1. Stone Game III](https://leetcode.com/problems/stone-game-iii/)
+
 ### Problem Explanation
 Alice and Bob take turns picking stones from the **front** of an array. On each turn a player may take **1, 2, or 3** stones from the front. Both play optimally. Return `"Alice"`, `"Bob"`, or `"Tie"` based on who wins by having the larger total (or if they tie).
 
@@ -77,6 +79,8 @@ class Solution:
 ---
 
 ## 2. Stone Game IV (LC #1510) — Hard
+
+**🔗 Practice Link:** [2. Stone Game IV](https://leetcode.com/problems/stone-game-iv/)
 
 ### Problem Explanation
 There are `n` stones in a row. Players alternate turns; on each turn a player removes a **perfect square** number of stones (1, 4, 9, 16, ...). The player who **cannot** move **loses**. Return `True` if the first player wins with optimal play, `False` otherwise.
@@ -152,6 +156,8 @@ class Solution:
 
 ## 3. Predict the Winner (LC #486) — Medium
 
+**🔗 Practice Link:** [3. Predict the Winner](https://leetcode.com/problems/predict-the-winner/)
+
 ### Problem Explanation
 Two players sit on opposite ends of an integer array `nums`. Players alternate turns picking one number from either end. The player with the larger total score wins. Return `True` if Player 1 can win or tie (score1 >= score2) with optimal play.
 
@@ -221,6 +227,8 @@ class Solution:
 ---
 
 ## 4. Optimal Strategy for a Game (GFG) — Medium
+
+**🔗 Practice Link:** [4. Optimal Strategy for a Game](https://www.geeksforgeeks.org/optimal-strategy-for-a-game-dp-31)
 
 ### Problem Explanation
 Given an array of even length, two players pick from either end alternately. Compute the **maximum total** Player 1 can guarantee. This is the "score version" of Predict the Winner — instead of returning a boolean, return the actual maximum score.
@@ -300,6 +308,8 @@ def optimalStrategy(arr: list) -> int:
 
 ## 5. Arithmetic Slices I (LC #413) — Medium
 
+**🔗 Practice Link:** [5. Arithmetic Slices I](https://leetcode.com/problems/arithmetic-slices/)
+
 ### Problem Explanation
 An arithmetic slice is a contiguous subarray of length **at least 3** where the difference between consecutive elements is constant. Count the total number of arithmetic slices in an integer array. For example, `[1, 2, 3, 4]` has 3: `[1,2,3]`, `[2,3,4]`, `[1,2,3,4]`.
 
@@ -366,6 +376,8 @@ class Solution:
 ---
 
 ## 6. Arithmetic Slices II (LC #446) — Hard
+
+**🔗 Practice Link:** [6. Arithmetic Slices II](https://leetcode.com/problems/arithmetic-slices-ii-subsequence/)
 
 ### Problem Explanation
 Count the number of **arithmetic subsequences** (not necessarily contiguous) of length **at least 3**. A subsequence maintains relative order but can skip elements. For example, `[2, 4, 6, 8, 10]` has many: every 3+ element subset with constant difference qualifies.
@@ -438,6 +450,8 @@ class Solution:
 ---
 
 ## 7. Maximum Height by Stacking Cuboids (LC #1691) — Hard
+
+**🔗 Practice Link:** [7. Maximum Height by Stacking Cuboids](https://leetcode.com/problems/maximum-height-by-stacking-cuboids/)
 
 ### Problem Explanation
 Given `n` cuboids where `cuboids[i] = [w_i, h_i, l_i]`, find the maximum total height achievable by stacking them. Cuboid `a` can be placed on top of cuboid `b` if all dimensions of `a` are <= the corresponding dimensions of `b`. Each cuboid may be rotated (all 6 orientations are valid). Return the maximum possible total height.
@@ -512,6 +526,8 @@ class Solution:
 ---
 
 ## 8. Longest Subarray of 1s After Deleting One Element (LC #1493) — Medium
+
+**🔗 Practice Link:** [8. Longest Subarray of 1s After Deleting One Element](https://leetcode.com/problems/longest-subarray-of-1s-after-deleting-one-element/)
 
 ### Problem Explanation
 Given a binary array `nums`, return the length of the longest contiguous subarray containing only 1s **after deleting exactly one element**. You must delete one element (you cannot choose to delete nothing). For example, `[1,1,0,1,1,1]` → delete the 0 → answer is 5.
@@ -599,6 +615,8 @@ class Solution:
 
 ## 9. Maximum Subarray Sum with One Deletion (LC #1186) — Medium
 
+**🔗 Practice Link:** [9. Maximum Subarray Sum with One Deletion](https://leetcode.com/problems/maximum-subarray-sum-with-one-deletion/)
+
 ### Problem Explanation
 Given an array of integers, find the maximum sum of a non-empty contiguous subarray, with the option to delete **at most one** element from it. For example, `[1, -2, 0, 3]` → delete -2 → subarray `[1, 0, 3]` = 4.
 
@@ -662,6 +680,8 @@ class Solution:
 ---
 
 ## 10. Longest Subarray with Sum K (Prefix Sum + Map)
+
+**🔗 Practice Link:** [10. Longest Subarray with Sum K](https://www.geeksforgeeks.org/longest-sub-array-sum-k)
 
 ### Problem Explanation
 Given an array of integers and an integer `k`, find the length of the longest contiguous subarray whose elements sum to exactly `k`. The array may contain negative numbers. For example, `nums = [1, -1, 5, -2, 3]`, `k = 3` → answer is 4 (subarray `[1, -1, 5, -2]`).
@@ -730,6 +750,8 @@ def longest_subarray_sum_k(nums: list, k: int) -> int:
 
 ## 11. Count Subarrays with Sum K (Prefix Sum + Map)
 
+**🔗 Practice Link:** [11. Count Subarrays with Sum K](https://www.geeksforgeeks.org/number-subarrays-sum-exactly-equal-k)
+
 ### Problem Explanation
 Given an array of integers and an integer `k`, count the **number** of contiguous subarrays whose elements sum to exactly `k`. For example, `nums = [1, 1, 1]`, `k = 2` → answer is 2 (subarrays [1,1] at indices 0-1 and 1-2).
 
@@ -790,6 +812,8 @@ def count_subarrays_sum_k(nums: list, k: int) -> int:
 ---
 
 ## 12. Maximum Sum of Three Non-Overlapping Subarrays (LC #689) — Hard
+
+**🔗 Practice Link:** [12. Maximum Sum of Three Non-Overlapping Subarrays](https://leetcode.com/problems/maximum-sum-of-3-non-overlapping-subarrays/)
 
 ### Problem Explanation
 Given an array `nums` and an integer `k`, find three non-overlapping contiguous subarrays of length `k` that maximize their total sum. Return the starting indices of the three subarrays. If multiple answers exist, return the lexicographically smallest one.
@@ -885,6 +909,8 @@ class Solution:
 
 ## 13. Maximum Sum of Two Non-Overlapping Subarrays (LC #1031) — Medium
 
+**🔗 Practice Link:** [13. Maximum Sum of Two Non-Overlapping Subarrays](https://leetcode.com/problems/maximum-sum-of-two-non-overlapping-subarrays/)
+
 ### Problem Explanation
 Given an array `nums` and two integers `firstLen` and `secondLen`, find the maximum sum of two non-overlapping contiguous subarrays where one has length `firstLen` and the other has length `secondLen`. The order does not matter (either subarray can come first).
 
@@ -976,6 +1002,8 @@ class Solution:
 ---
 
 ## 14. Maximum Subarray Length with Sum K (Sliding Window for Positive Arrays)
+
+**🔗 Practice Link:** [14. Maximum Subarray Length with Sum K](https://www.geeksforgeeks.org/longest-sub-array-sum-k)
 
 ### Problem Explanation
 Given an array of **positive** integers and an integer `k`, find the maximum length of a contiguous subarray that sums to exactly `k`. This is a variant of the prefix-sum approach that exploits positivity for a sliding-window O(1) space solution.

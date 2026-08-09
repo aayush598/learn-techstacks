@@ -103,6 +103,8 @@ so each node only needs to report its best single downward branch.
 
 ### Diameter of a Tree
 
+**🔗 Practice Link:** [Diameter of a Tree](https://leetcode.com/problems/diameter-of-binary-tree/)
+
 **Problem Explanation:**
 Given a tree (a connected, acyclic, undirected graph) with n nodes, find the
 diameter: the length of the longest path between any two nodes, measured in
@@ -227,6 +229,8 @@ def tree_diameter(graph: list) -> int:
 
 ### Maximum Path Sum in a Binary Tree
 
+**🔗 Practice Link:** [Maximum Path Sum in a Binary Tree](https://leetcode.com/problems/binary-tree-maximum-path-sum/)
+
 **Problem Explanation:**
 Given a binary tree where every node holds an integer value (possibly negative),
 find the maximum sum of any path. Here a "path" is any sequence of nodes joined
@@ -344,6 +348,8 @@ def max_path_sum(root) -> int:
 ---
 
 ### Maximum Path Sum Between Leaves
+
+**🔗 Practice Link:** [Maximum Path Sum Between Leaves](https://www.geeksforgeeks.org/find-maximum-path-sum-two-leaves-binary-tree)
 
 **Problem Explanation:**
 This is the previous problem with a strict rule: the path MUST start at one leaf
@@ -473,6 +479,8 @@ in. The DFS returns a `(stateA, stateB)` tuple and the parent combines both.
 
 ### House Robber III
 
+**🔗 Practice Link:** [House Robber III](https://leetcode.com/problems/house-robber-iii/)
+
 **Problem Explanation:**
 The houses of a neighborhood form a binary tree, and each house holds a fixed
 amount of money in `node.val`. You may not rob two directly linked houses (a
@@ -585,6 +593,8 @@ def rob_tree(root) -> int:
 ---
 
 ### Minimum Vertex Cover
+
+**🔗 Practice Link:** [Minimum Vertex Cover](https://www.geeksforgeeks.org/vertex-cover-problem-set-2-dynamic-programming-solution-tree)
 
 **Problem Explanation:**
 Given a binary tree, select a set of vertices such that every edge has at least
@@ -701,6 +711,8 @@ def vertex_cover(root) -> int:
 
 ### Maximum Independent Set in a Tree
 
+**🔗 Practice Link:** [Maximum Independent Set in a Tree](https://www.geeksforgeeks.org/maximum-sum-nodes-binary-tree-no-two-adjacent)
+
 **Problem Explanation:**
 Given a binary tree, find the largest set of nodes such that no two nodes in the
 set are adjacent (directly connected by an edge). Such a set is an *independent
@@ -812,6 +824,8 @@ These problems keep extra bookkeeping during a single traversal: a running sum
 with a hashmap, a three-state label, or a forest root flag.
 
 ### Count Paths with Sum K
+
+**🔗 Practice Link:** [Count Paths with Sum K](https://leetcode.com/problems/path-sum-iii/)
 
 **Problem Explanation:**
 Given a binary tree and an integer `target_sum`, count how many downward paths
@@ -946,6 +960,8 @@ def path_sum_count(root, target_sum: int) -> int:
 ---
 
 ### Binary Tree Cameras
+
+**🔗 Practice Link:** [Binary Tree Cameras](https://leetcode.com/problems/binary-tree-cameras/)
 
 **Problem Explanation:**
 You have a binary tree and you may install a camera on any node. One camera
@@ -1085,6 +1101,8 @@ def min_camera_cover(root) -> int:
 
 ### Delete Nodes and Return Forest
 
+**🔗 Practice Link:** [Delete Nodes and Return Forest](https://leetcode.com/problems/delete-nodes-and-return-forest/)
+
 **Problem Explanation:**
 Given a binary tree and a list of node values to delete, deleting those nodes
 splits the tree into several disconnected subtrees. Return a list containing the
@@ -1199,6 +1217,8 @@ def del_nodes(root: TreeNode, to_delete: list) -> list:
 ---
 
 ### Most Frequent Subtree Sum
+
+**🔗 Practice Link:** [Most Frequent Subtree Sum](https://leetcode.com/problems/most-frequent-subtree-sum/)
 
 **Problem Explanation:**
 For each node of a binary tree, its *subtree sum* is the sum of the node's value

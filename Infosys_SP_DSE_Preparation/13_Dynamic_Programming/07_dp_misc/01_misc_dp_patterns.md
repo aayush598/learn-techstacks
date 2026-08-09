@@ -61,6 +61,8 @@ Example sketch: count numbers in `[0, 999]` with digit sum 15. `digits of 999 = 
 
 ### Count Numbers with Digit Sum = Target
 
+**🔗 Practice Link:** [Count Numbers with Digit Sum = Target](https://www.geeksforgeeks.org/count-of-n-digit-numbers-whose-sum-of-digits-equals-to-given-sum)
+
 **Problem Explanation:**
 Count how many integers in the range `[0, high]` have a digit sum exactly equal to `target`. The input is the upper bound `high` (inclusive) and the target sum; the output is the count. For example, among `0..25`, the numbers 3, 12, and 21 each have digit sum 3. The count includes 0 (digit sum 0) when `target == 0`.
 
@@ -147,6 +149,8 @@ def count_digit_sum(high, target):
 
 ### Count Binary Strings with No Consecutive 1s
 
+**🔗 Practice Link:** [Count Binary Strings with No Consecutive 1s](https://www.geeksforgeeks.org/count-number-binary-strings-without-consecutive-1s)
+
 **Problem Explanation:**
 Count the number of binary strings (only characters '0' and '1') of length `n` that contain no two consecutive '1's. Input: length `n`. Output: the count. For example, for `n = 4` there are 8 valid strings: 0000, 0001, 0010, 0100, 0101, 1000, 1001, 1010.
 
@@ -224,6 +228,8 @@ def count_non_consecutive_ones(n):
 Interval DP solves problems where the state is a contiguous interval `[i, j]` of the input, and larger intervals are built from smaller sub-intervals. The standard fill order is by increasing interval length.
 
 ### Matrix Chain Multiplication
+
+**🔗 Practice Link:** [Matrix Chain Multiplication](https://www.geeksforgeeks.org/matrix-chain-multiplication-dp-8)
 
 **Problem Explanation:**
 Given `n` matrices whose dimensions are stored in the array `p` (matrix `i` has dimensions `p[i-1] x p[i]`), find the minimum number of scalar multiplications needed to multiply all of them together. Matrix multiplication is associative but not commutative, so we may choose any parenthesization. Input: dimension array `p` of length `n + 1`. Output: the minimum scalar-multiplication cost.
@@ -310,6 +316,8 @@ def matrix_chain(p):
 
 ### Minimum Cost to Cut a Stick
 
+**🔗 Practice Link:** [Minimum Cost to Cut a Stick](https://leetcode.com/problems/minimum-cost-to-cut-a-stick/)
+
 **Problem Explanation:**
 You have a wooden stick of length `n` (the segment from 0 to `n`) and a list of positions `cuts` where you must cut it. Each cut costs the length of the stick piece being cut. You may cut in any order. Find the minimum total cost to perform all cuts. Input: stick length `n` and list `cuts`. Output: the minimum total cost. For example, a 7-unit stick with cuts at `[1, 3, 4, 5]` costs at least 16.
 
@@ -395,6 +403,8 @@ Probability DP counts the number of ways (or tracks probabilities) over stochast
 
 ### Dice Throw (n dice, k faces, target sum)
 
+**🔗 Practice Link:** [Dice Throw](https://www.geeksforgeeks.org/dice-throw-dp-30)
+
 **Problem Explanation:**
 Throw `n` dice, each with faces numbered `1..k`. Count the number of ways the faces can sum to exactly `target`. Input: `n` dice, `k` faces, `target` sum. Output: the number of ways. For example, with 2 six-sided dice, the sum 7 can be rolled in 6 ways (1+6, 2+5, 3+4, 4+3, 5+2, 6+1). The faces are ordered: die 1 rolling 1 and die 2 rolling 6 is a different outcome from the reverse.
 
@@ -475,6 +485,8 @@ def dice_sum_prob(n, k, target):
 String DP builds a 2D table `dp[i][j]` where `i` indexes a prefix of one string and `j` indexes a prefix of the other. The cell `dp[i][j]` answers a question about `s[:i]` and `p[:j]`, and transitions copy or OR together cells that represent one fewer character.
 
 ### Regular Expression Matching
+
+**🔗 Practice Link:** [Regular Expression Matching](https://leetcode.com/problems/regular-expression-matching/)
 
 **Problem Explanation:**
 Given a string `s` and a pattern `p`, decide whether the entire string `s` matches `p`. In this version of regex: `'.'` matches any single character, and `'*'` means "zero or more of the preceding character" (e.g., `a*` matches `""`, `"a"`, `"aa"`, ...). Input: strings `s` and `p`. Output: `True` or `False`. Unlike wildcard matching, `'*'` here is always attached to a preceding character.
@@ -563,6 +575,8 @@ def regex_match_tab(s, p):
 ---
 
 ### Wildcard Matching
+
+**🔗 Practice Link:** [Wildcard Matching](https://leetcode.com/problems/wildcard-matching/)
 
 **Problem Explanation:**
 Given a string `s` and a wildcard pattern `p`, decide whether the entire string matches. Here `'?'` matches any single character, and `'*'` matches any sequence of characters (including the empty sequence). Input: strings `s` and `p`. Output: `True` or `False`. The key difference from regex matching: `'*'` is a standalone wildcard, not tied to a preceding character.

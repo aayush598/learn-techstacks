@@ -12,6 +12,8 @@ relevant history.
 
 ## 1. Nim Game (LC #292) — Easy
 
+**🔗 Practice Link:** [1. Nim Game](https://leetcode.com/problems/nim-game/)
+
 ### Problem Explanation
 There are `n` stones in a pile. Two players take turns removing 1, 2, or 3 stones.
 The player who takes the last stone wins. Both play optimally. Return `True` if the
@@ -87,6 +89,8 @@ class Solution:
 
 ## 2. Nim Game — Multiple Piles (Grundy Numbers) — Medium
 
+**🔗 Practice Link:** [2. Nim Game — Multiple Piles](https://leetcode.com/problems/nim-game/)
+
 ### Problem Explanation
 Multiple piles of stones. On each turn a player picks one pile and removes any
 positive number of stones from it. The player who takes the last stone wins.
@@ -159,6 +163,8 @@ class Solution:
 ---
 
 ## 3. Can I Win (LC #464) — Hard
+
+**🔗 Practice Link:** [3. Can I Win](https://leetcode.com/problems/can-i-win/)
 
 ### Problem Explanation
 Two players alternate picking a number from 1 to `maxChoosable`. Each number can
@@ -261,6 +267,8 @@ class Solution:
 
 ## 4. Divisor Game (LC #1025) — Easy
 
+**🔗 Practice Link:** [4. Divisor Game](https://leetcode.com/problems/divisor-game/)
+
 ### Problem Explanation
 Alice and Bob play a game starting with `n`. Players alternate: on each turn a
 player picks a divisor `x` of the current number where `0 < x < n`, then replaces
@@ -337,6 +345,8 @@ class Solution:
 ---
 
 ## 5. Guess Number Higher or Lower (LC #375) — Medium
+
+**🔗 Practice Link:** [5. Guess Number Higher or Lower](https://leetcode.com/problems/guess-number-higher-or-lower-ii/)
 
 ### Problem Explanation
 A number from 1 to `n` is hidden. You guess and get hints: "higher", "lower",
@@ -418,6 +428,8 @@ class Solution:
 ---
 
 ## 6. Maximize Win From Two Segments — Medium
+
+**🔗 Practice Link:** [6. Maximize Win From Two Segments — Medium](https://leetcode.com/problems/maximize-win-from-two-segments/)
 
 ### Problem Explanation
 You have a number line with `k` colored segments. Each segment `[l, r, v]`
@@ -508,6 +520,8 @@ class Solution:
 
 ## 7. Coin Game Winner — Medium
 
+**🔗 Practice Link:** [7. Coin Game Winner — Medium](https://www.geeksforgeeks.org/optimal-strategy-for-a-game-dp-31)
+
 ### Problem Explanation
 Two players take turns removing coins from a pile of `n`. On each turn a player
 may remove 1, 3, or 4 coins. The player who takes the last coin wins. Both play
@@ -581,6 +595,8 @@ class Solution:
 ---
 
 ## 8. A and B Take Turns with Coins — Medium
+
+**🔗 Practice Link:** [8. A and B Take Turns with Coins — Medium](https://www.geeksforgeeks.org/optimal-strategy-for-a-game-dp-31)
 
 ### Problem Explanation
 A and B take turns picking a coin from either end of a row of `coins`. A goes
@@ -662,6 +678,8 @@ class Solution:
 
 ## 9. Minimum Cost to Move Chips to Same Position (LC #1217) — Easy
 
+**🔗 Practice Link:** [9. Minimum Cost to Move Chips to Same Position](https://leetcode.com/problems/minimum-cost-to-move-chips-to-the-same-position/)
+
 ### Problem Explanation
 Chips are placed at various positions on a number line. Moving a chip by 2
 positions costs 0; moving by 1 position costs 1. Find the minimum cost to
@@ -718,6 +736,8 @@ class Solution:
 # Part B: State Machine / Stocks (10 Problems)
 
 ## 10. Best Time to Buy and Sell Stock I (LC #121) — Easy
+
+**🔗 Practice Link:** [10. Best Time to Buy and Sell Stock I](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
 
 ### Problem Explanation
 Given `prices[i]` = price on day `i`, find the maximum profit from at most one
@@ -783,6 +803,8 @@ class Solution:
 ---
 
 ## 11. Best Time to Buy and Sell Stock II (LC #122) — Medium
+
+**🔗 Practice Link:** [11. Best Time to Buy and Sell Stock II](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii/)
 
 ### Problem Explanation
 Same setup, but unlimited transactions are allowed (may hold at most one share
@@ -851,6 +873,8 @@ class Solution:
 ---
 
 ## 12. Best Time to Buy and Sell Stock III (LC #123) — Hard
+
+**🔗 Practice Link:** [12. Best Time to Buy and Sell Stock III](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iii/)
 
 ### Problem Explanation
 At most 2 transactions allowed. Same rules: buy-sell-buy-sell, cannot hold
@@ -926,6 +950,8 @@ class Solution:
 
 ## 13. Best Time to Buy and Sell Stock IV (LC #188) — Hard
 
+**🔗 Practice Link:** [13. Best Time to Buy and Sell Stock IV](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
+
 ### Problem Explanation
 Generalization of Stock III: at most `k` transactions. Given `prices` and
 integer `k`, return max profit. If `k >= n//2`, it becomes unlimited transactions.
@@ -996,6 +1022,8 @@ class Solution:
 ---
 
 ## 14. Best Time with Cooldown (LC #309) — Medium
+
+**🔗 Practice Link:** [14. Best Time with Cooldown](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
 
 ### Problem Explanation
 At most one share at a time. After selling, must wait one day (cooldown) before
@@ -1069,6 +1097,8 @@ class Solution:
 ---
 
 ## 15. Best Time with Transaction Fee (LC #714) — Medium
+
+**🔗 Practice Link:** [15. Best Time with Transaction Fee](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/)
 
 ### Problem Explanation
 Unlimited transactions, but each complete transaction (buy+sell) incurs a fee.
@@ -1151,6 +1181,8 @@ class Solution:
 
 ## 16. Best Time with Cooldown + Fee — Hard
 
+**🔗 Practice Link:** [16. Best Time with Cooldown + Fee — Hard](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/)
+
 ### Problem Explanation
 Combine cooldown and fee: after selling, must wait 1 day, and each transaction
 incurs a fee. State machine has 3 states: hold, sold, rest.
@@ -1224,6 +1256,8 @@ class Solution:
 
 ## 17. Best Time with at Most K Transactions and Cooldown — Hard
 
+**🔗 Practice Link:** [17. Best Time with at Most K Transactions and Cooldown — Hard](https://leetcode.com/problems/best-time-to-buy-and-sell-stock-iv/)
+
 ### Problem Explanation
 At most `k` transactions with a 1-day cooldown after each sell. Combines Stock IV
 with the cooldown constraint.
@@ -1294,6 +1328,8 @@ class Solution:
 
 ## 18. Best Time to Buy and Sell Stock — All in One — Hard
 
+**🔗 Practice Link:** [18. Best Time to Buy and Sell Stock — All in One — Hard](https://leetcode.com/problems/best-time-to-buy-and-sell-stock/)
+
 ### Problem Explanation
 Unified framework: given `k`, `fee`, `cooldown` (all as parameters), solve
 the stock problem. This covers Stock I-IV and all variants as special cases.
@@ -1360,6 +1396,8 @@ class Solution:
 ---
 
 ## 19. Maximum Profit from Stock with Borrowing — Hard
+
+**🔗 Practice Link:** [19. Maximum Profit from Stock with Borrowing — Hard](https://www.geeksforgeeks.org/stock-buy-sell)
 
 ### Problem Explanation
 You may hold at most one share. You can "borrow" a share (sell short) and buy

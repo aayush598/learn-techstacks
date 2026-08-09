@@ -9,6 +9,8 @@ unbounded = left-to-right. Read files 01 and 02 first if that rule is not yet se
 
 ## 1. Bags of Tokens (LC #948) — Medium
 
+**🔗 Practice Link:** [1. Bags of Tokens](https://leetcode.com/problems/bag-of-tokens/)
+
 ### Problem Explanation
 You have an array `tokens` where `tokens[i]` is the value of the i-th token. You start with
 `power = 0` and `score = 0`. In one move you may play a token face-up (lose `power = tokens[i]`
@@ -107,6 +109,8 @@ class Solution:
 ---
 
 ## 2. Partition Equal Subset Sum with Exactly K Subsets (LC #698) — Medium
+
+**🔗 Practice Link:** [2. Partition Equal Subset Sum with Exactly K Subsets](https://leetcode.com/problems/partition-to-k-equal-sum-subsets/)
 
 ### Problem Explanation
 Given an integer array `nums` and an integer `k`, return `True` if it is possible to divide
@@ -222,6 +226,8 @@ class Solution:
 ---
 
 ## 3. Maximum Profit in Job Scheduling (LC #1235) — Hard
+
+**🔗 Practice Link:** [3. Maximum Profit in Job Scheduling](https://leetcode.com/problems/maximum-profit-in-job-scheduling/)
 
 ### Problem Explanation
 You are given `n` jobs, each with a `startTime`, `endTime`, and `profit`. You may schedule
@@ -379,6 +385,8 @@ class Solution:
 
 ## 4. Coin Piles Minimum — Medium
 
+**🔗 Practice Link:** [4. Coin Piles Minimum — Medium](https://www.geeksforgeeks.org/remove-minimum-coins-such-that-absolute-difference-between-any-two-piles-is-less-than-k)
+
 ### Problem Explanation
 You are given `piles` of coins where `piles[i]` is the number of coins in the i-th pile.
 In one operation you may remove exactly one coin from any two adjacent piles simultaneously.
@@ -487,6 +495,8 @@ def coin_piles_minimum(piles: list) -> int:
 
 ## 5. Form Array Using Subsequence Sum — Easy/Medium
 
+**🔗 Practice Link:** [5. Form Array Using Subsequence Sum — Easy/Medium](https://www.geeksforgeeks.org/subset-sum-problem-dp-25)
+
 ### Problem Explanation
 Given an array `nums` and an integer `target`, determine whether there exists a subsequence
 of `nums` whose sum equals `target`. A subsequence preserves relative order but may skip
@@ -560,6 +570,8 @@ def form_array_subsequence_sum(nums: list, target: int) -> bool:
 ---
 
 ## 6. Partition Array into Two Arrays to Minimize Sum Difference (LC #2035) — Hard
+
+**🔗 Practice Link:** [6. Partition Array into Two Arrays to Minimize Sum Difference](https://leetcode.com/problems/partition-array-into-two-arrays-to-minimize-sum-difference/)
 
 ### Problem Description
 Given an integer array `nums`, partition it into two non-empty subsets `A` and `B` such that
@@ -640,6 +652,8 @@ class Solution:
 
 ## 7. Count of Subsets with Given Difference — Medium
 
+**🔗 Practice Link:** [7. Count of Subsets with Given Difference — Medium](https://www.geeksforgeeks.org/count-of-subsets-with-given-difference)
+
 ### Problem Description
 Given an array `nums` and an integer `diff`, count the number of ways to partition `nums`
 into two subsets such that the difference between their sums equals `diff`. Return the count.
@@ -717,6 +731,8 @@ def count_subsets_with_diff(nums: list, diff: int) -> int:
 ---
 
 ## 8. Minimum Cost to Buy N Items — Medium
+
+**🔗 Practice Link:** [8. Minimum Cost to Buy N Items — Medium](https://www.geeksforgeeks.org/unbounded-knapsack-repetition-items-allowed)
 
 ### Problem Description
 You want to buy `n` items. The cost of item `i` on day `d` is `costs[i][d]`. Each day you may

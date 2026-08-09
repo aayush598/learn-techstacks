@@ -45,6 +45,8 @@ know exactly which pattern (and which loop direction) to use.
 
 ### 0/1 Knapsack
 
+**🔗 Practice Link:** [0/1 Knapsack](https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10)
+
 **Problem Explanation:**
 You are a thief with a backpack of capacity `W`. You have `n` items; item `i` has weight
 `wt[i]` and value `val[i]`. You must pick a set of items whose total weight is **at most** `W`
@@ -245,6 +247,8 @@ def knapsack_optimized(W: int, wt: list, val: list) -> int:
 
 ### Subset Sum
 
+**🔗 Practice Link:** [Subset Sum](https://www.geeksforgeeks.org/subset-sum-problem-dp-25)
+
 **Problem Explanation:**
 Given an array of **positive** integers `nums` and a target sum `target`, decide whether there
 exists some subset of the numbers whose sum equals `target` exactly. A "subset" means each
@@ -374,6 +378,8 @@ def subset_sum_optimized(nums: list, target: int) -> bool:
 
 ### Equal Subset Sum Partition
 
+**🔗 Practice Link:** [Equal Subset Sum Partition](https://leetcode.com/problems/partition-equal-subset-sum/)
+
 **Problem Explanation:**
 Given an array `nums`, can it be split into two subsets whose sums are equal? Both subsets are
 non-empty partitions — every element goes into exactly one of the two. Return `True`/`False`.
@@ -469,6 +475,8 @@ def can_partition(nums: list) -> bool:
 ## Count Subsets with Given Sum
 
 ### Count Subsets with Given Sum
+
+**🔗 Practice Link:** [Count Subsets with Given Sum](https://www.geeksforgeeks.org/perfect-sum-problem)
 
 **Problem Explanation:**
 Given an array `nums` of positive integers and a target sum, count **how many different
@@ -603,6 +611,8 @@ def count_subsets_optimized(nums: list, target: int) -> int:
 
 ### Minimum Subset Sum Difference
 
+**🔗 Practice Link:** [Minimum Subset Sum Difference](https://www.geeksforgeeks.org/partition-a-set-into-two-subsets-such-that-the-difference-of-subset-sums-is-minimum)
+
 **Problem Explanation:**
 Given an array `nums`, partition it into **two subsets** (every element in exactly one) so that
 the absolute difference `|sum(S1) - sum(S2)|` is as small as possible. Return that minimum
@@ -699,6 +709,8 @@ def min_subset_diff(nums: list) -> int:
 ## Unbounded Knapsack
 
 ### Unbounded Knapsack
+
+**🔗 Practice Link:** [Unbounded Knapsack](https://www.geeksforgeeks.org/unbounded-knapsack-repetition-items-allowed)
 
 **Problem Explanation:**
 Same as 0/1 knapsack (weights `wt`, values `val`, capacity `W`) with ONE difference: each item
@@ -800,6 +812,8 @@ def unbounded_knapsack_optimized(W: int, wt: list, val: list) -> int:
 
 ### Coin Change (Minimum Coins)
 
+**🔗 Practice Link:** [Coin Change](https://leetcode.com/problems/coin-change/)
+
 **Problem Explanation:**
 You have an unlimited supply of coins of denominations `coins` (each usable any number of
 times). Given an `amount`, find the **minimum number of coins** needed to make exactly that
@@ -888,6 +902,8 @@ def coin_change_tab(coins: list, amount: int) -> int:
 ## Coin Change II (Number of Ways)
 
 ### Coin Change II (Number of Ways)
+
+**🔗 Practice Link:** [Coin Change II](https://leetcode.com/problems/coin-change-ii/)
 
 **Problem Explanation:**
 Given unlimited coins of denominations `coins` and a target `amount`, count the number of
@@ -979,6 +995,8 @@ def change_tab(coins: list, amount: int) -> int:
 ## Rod Cutting
 
 ### Rod Cutting
+
+**🔗 Practice Link:** [Rod Cutting](https://www.geeksforgeeks.org/cutting-a-rod-dp-13)
 
 **Problem Explanation:**
 You have a rod of length `n` and a price list `price[i]` = the price of a rod piece of length

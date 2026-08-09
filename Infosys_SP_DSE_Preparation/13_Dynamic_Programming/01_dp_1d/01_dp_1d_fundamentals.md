@@ -22,6 +22,8 @@ Two approaches:
 
 ### Fibonacci Numbers
 
+**🔗 Practice Link:** [Fibonacci Numbers](https://www.geeksforgeeks.org/program-for-nth-fibonacci-number)
+
 **Problem Explanation:**
 The Fibonacci sequence is defined as F(0) = 0, F(1) = 1, and every later number is the sum of the two before it: F(n) = F(n-1) + F(n-2). Given an integer n (n >= 0), return the n-th Fibonacci number F(n). The sequence starts 0, 1, 1, 2, 3, 5, 8, 13, ... This is the simplest possible DP and the template for every other problem in this file.
 
@@ -115,6 +117,8 @@ def fib_optimized(n: int) -> int:
 
 ### Climbing Stairs
 
+**🔗 Practice Link:** [Climbing Stairs](https://leetcode.com/problems/climbing-stairs/)
+
 **Problem Explanation:**
 You are climbing a staircase. It takes n steps to reach the top, and each move you can climb either 1 step or 2 steps. Count how many *distinct sequences* of moves reach the top. For example, with n = 3 the ways are (1,1,1), (1,2), (2,1) → 3 ways. The input is the integer n (number of steps); the output is the integer count of ways.
 
@@ -194,6 +198,8 @@ def climb_stairs_optimized(n: int) -> int:
 - n = 0 is usually valid in the recurrence; make sure the function handles it (return 1).
 
 ### Min Cost Climbing Stairs
+
+**🔗 Practice Link:** [Min Cost Climbing Stairs](https://leetcode.com/problems/min-cost-climbing-stairs/)
 
 **Problem Explanation:**
 You are on a staircase with a cost array `cost` where `cost[i]` is the price you must pay to step on stair i. You may start on either stair 0 or stair 1 (for free), and from any stair you may climb 1 or 2 steps. "The top" is the floor just beyond the last stair. Return the minimum total cost to reach the top. For example, `cost = [10, 15, 20]`: starting on stair 1 (pay 15) and taking 2 steps to the roof costs 15 total.
@@ -289,6 +295,8 @@ def min_cost_climbing_optimized(cost: list) -> int:
 
 ### House Robber I
 
+**🔗 Practice Link:** [House Robber I](https://leetcode.com/problems/house-robber/)
+
 **Problem Explanation:**
 You are a robber facing a row of houses. `nums[i]` is the money in house i. If you rob two *adjacent* houses on the same night, the police are alerted, so you may never rob consecutive houses. Return the maximum total money you can steal. For example, `nums = [1, 2, 3, 1]` → the best is 4 (rob house 0 and house 2: 1 + 3).
 
@@ -380,6 +388,8 @@ def rob_optimized(nums: list) -> int:
 
 ### House Robber II (Circular)
 
+**🔗 Practice Link:** [House Robber II](https://leetcode.com/problems/house-robber-ii/)
+
 **Problem Explanation:**
 Same rules as House Robber I — no two adjacent houses may be robbed — but now the houses are arranged in a **circle**, so the first house and the last house are adjacent to each other. Given the array `nums`, return the maximum amount you can rob. The circularity means you can never rob both house 0 and house n-1.
 
@@ -443,6 +453,8 @@ def rob_circular(nums: list) -> int:
 - Forgetting that in the circle you also can't rob houses 0 and n-1 *together* even if they're not literally adjacent in the array.
 
 ### Paint Fence
+
+**🔗 Practice Link:** [Paint Fence](https://www.geeksforgeeks.org/painting-fence-algorithm)
 
 **Problem Explanation:**
 There is a fence with n posts. Each post can be painted with one of k colors. The rule is that **no three adjacent posts may all be the same color** (equivalently, at most two consecutive posts may share a color — a run of 3 identical colors is forbidden). Count the number of ways to paint the fence. (Note: if the rule were "no two adjacent posts share a color," the answer would trivially be `k * (k-1)^(n-1)` and need no DP; the interesting problem, and what this code solves, is the no-three-in-a-row rule.)
@@ -515,6 +527,8 @@ def paint_fence_tab(n: int, k: int) -> int:
 
 ### Paint House I
 
+**🔗 Practice Link:** [Paint House I](https://www.geeksforgeeks.org/minimize-cost-of-painting-n-houses-such-that-adjacent-houses-have-different-colors)
+
 **Problem Explanation:**
 There are n houses in a row. Each house can be painted red, green, or blue. `costs[i]` is a triple `[red, green, blue]` giving the cost of painting house i in each color. No two adjacent houses may share a color. Return the minimum total cost to paint every house. For example, `costs = [[17,2,17],[16,16,5],[14,3,19]]` → the minimum is 10 (green, blue, green).
 
@@ -584,6 +598,8 @@ def paint_house_tab(costs: list) -> int:
 ## String DP
 
 ### Decode Ways
+
+**🔗 Practice Link:** [Decode Ways](https://leetcode.com/problems/decode-ways/)
 
 **Problem Explanation:**
 A message is encoded by mapping each letter A–Z to its position: 'A'→'1', 'B'→'2', ..., 'Z'→'26'. Given a string `s` of digits, count how many different ways it can be decoded into letters. A digit can be decoded alone (as long as it is not '0'), or a pair of digits can be decoded as one letter (only if the pair is between 10 and 26 inclusive). Leading zeros are not allowed — e.g., "06" has 0 decodings. Return the integer count.
@@ -691,6 +707,8 @@ def num_decodings_optimized(s: str) -> int:
 
 ### Maximum Sum of Non-Adjacent Elements
 
+**🔗 Practice Link:** [Maximum Sum of Non-Adjacent Elements](https://www.geeksforgeeks.org/maximum-sum-such-that-no-two-elements-are-adjacent)
+
 **Problem Explanation:**
 Given an array of numbers, find the maximum sum of a subsequence in which no two chosen elements are adjacent in the original array. "Subsequence" means you can pick any subset of elements, but you may never pick two elements that sit next to each other. This is exactly the same optimization problem as House Robber I, phrased differently. For example, `nums = [3, 2, 7, 10]` → 13 (pick 3 and 10, which are not adjacent).
 
@@ -754,6 +772,8 @@ def max_sum_nonadjacent(nums: list) -> int:
 - Using `nums[i-1] + dp[i-2]`-style formulas that accidentally allow picking adjacent elements — the recurrence must skip one position after a pick.
 
 ### Longest Increasing Subsequence (O(n²))
+
+**🔗 Practice Link:** [Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
 
 **Problem Explanation:**
 Given an unsorted array of integers, find the length of the **longest increasing subsequence** (LIS). A subsequence keeps elements in their original relative order (skipping allowed) but is not necessarily contiguous, and "increasing" means strictly increasing: each chosen value must be greater than the previous chosen value. For example, in `nums = [10, 9, 2, 5, 3, 7, 101, 18]` the LIS is [2, 5, 7, 101] (or [2, 3, 7, 18]) → length 4.
@@ -843,6 +863,8 @@ def lis_n2_tab(nums: list) -> int:
 
 ### Longest Increasing Subsequence (O(n log n) with Patience Sorting)
 
+**🔗 Practice Link:** [Longest Increasing Subsequence](https://leetcode.com/problems/longest-increasing-subsequence/)
+
 **Problem Explanation:**
 Same problem as above — return the length of the longest strictly increasing subsequence — but solved faster with a technique called **patience sorting** (named after the card game). Instead of storing one dp value per index, we maintain a list `piles` where `piles[k]` is the smallest possible tail value of an increasing subsequence of length `k+1`. The final length of `piles` is the LIS length.
 
@@ -916,6 +938,8 @@ def lis_nlogn(nums: list) -> int:
 - The `numos` typo (a misspelled loop variable) in older versions of this file caused a NameError — the fixed loop variable is `nums`.
 
 ### Number of Longest Increasing Subsequence
+
+**🔗 Practice Link:** [Number of Longest Increasing Subsequence](https://leetcode.com/problems/number-of-longest-increasing-subsequence/)
 
 **Problem Explanation:**
 Given an integer array, count how many distinct increasing subsequences achieve the *maximum* LIS length. For example, `nums = [1, 3, 5, 4, 7]` has LIS length 4 and there are 2 such subsequences: [1, 3, 5, 7] and [1, 3, 4, 7]. Return the count.

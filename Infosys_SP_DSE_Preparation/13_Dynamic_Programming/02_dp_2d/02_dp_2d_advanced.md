@@ -715,6 +715,8 @@ def stone_game_iii(values: list) -> str:
 
 ### Predict the Winner (Nim-style)
 
+**🔗 Practice Link:** [Predict the Winner](https://leetcode.com/problems/predict-the-winner/)
+
 **Problem Explanation:**
 Given an array of non-negative scores, two players alternate. On each turn a player may take the score from either the left or the right end of the remaining array. Player 1 (you) wins if your final total is **greater than or equal to** the opponent's total. Both play optimally. Input: the array; output: a boolean — whether player 1 can force a win or tie.
 
@@ -785,6 +787,8 @@ def predict_the_winner(nums: list) -> bool:
 
 ### Nim Game
 
+**🔗 Practice Link:** [Nim Game](https://leetcode.com/problems/nim-game/)
+
 **Problem Explanation:**
 One pile of `n` stones. Two players alternate removing 1, 2, or 3 stones. The player who takes the **last stone** wins. Given `n`, determine whether you (moving first) can force a win. Input: an integer `n`; output: a boolean. Classic insight: multiples of 4 are losing positions — whatever you take (1-3), your opponent can complete the remaining stones to the next multiple of 4.
 
@@ -832,6 +836,8 @@ def can_win_nim(n: int) -> bool:
 - Testing large multiples of 4 — the closed form is exact, no loop needed.
 
 ### Nim Game II (DP version)
+
+**🔗 Practice Link:** [Nim Game II](https://www.geeksforgeeks.org/combinatorial-game-theory-set-2-game-nim)
 
 **Problem Explanation:**
 Same game as Nim Game (take 1-3 stones per turn, last stone wins) but solved with an explicit DP table so the pattern is visible programmatically. Input: an integer `n`; output: a boolean — whether the first player wins. This is the general template you'd use if the move set were irregular.

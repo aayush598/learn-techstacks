@@ -19,6 +19,8 @@ for length in range(2, n + 1):            # subproblem size
 
 ## 1. Matrix Chain Multiplication — Hard
 
+**🔗 Practice Link:** [1. Matrix Chain Multiplication — Hard](https://www.geeksforgeeks.org/matrix-chain-multiplication-dp-8)
+
 ### Problem Explanation
 Given a chain of `n` matrices `A1, A2, ..., An` where matrix `Ai` has dimensions `p[i-1] x p[i]`,
 find the most efficient way to multiply the chain. The cost of multiplying an `(r x c)` matrix
@@ -111,6 +113,8 @@ class Solution:
 
 ## 2. Burst Balloons (LC #312) — Hard
 
+**🔗 Practice Link:** [2. Burst Balloons](https://leetcode.com/problems/burst-balloons/)
+
 ### Problem Explanation
 You have `n` balloons with numbers `nums[i]`. Bursting balloon `i` earns
 `nums[i-1] * nums[i] * nums[i+1]` coins (1 for out-of-bounds). After bursting, adjacent
@@ -185,6 +189,8 @@ class Solution:
 
 ## 3. Minimum Cost to Cut a Stick (LC #1547) — Hard
 
+**🔗 Practice Link:** [3. Minimum Cost to Cut a Stick](https://leetcode.com/problems/minimum-cost-to-cut-a-stick/)
+
 ### Problem Explanation
 You have a stick of length `n` and an array `cuts`. Each cut costs the current stick length.
 After a cut, the stick splits. Find the minimum total cost to perform all cuts.
@@ -257,6 +263,8 @@ class Solution:
 ---
 
 ## 4. Boolean Parenthesization — Hard
+
+**🔗 Practice Link:** [4. Boolean Parenthesization — Hard](https://www.geeksforgeeks.org/boolean-parenthesization-problem-dp-37)
 
 ### Problem Explanation
 Given a boolean expression `exp` like `T|F&T`, count the ways to parenthesize so it evaluates
@@ -359,6 +367,8 @@ class Solution:
 
 ## 5. Optimal Binary Search Tree — Hard
 
+**🔗 Practice Link:** [5. Optimal Binary Search Tree — Hard](https://www.geeksforgeeks.org/optimal-binary-search-tree-dp-24)
+
 ### Problem Explanation
 Given `n` keys with search probabilities `prob[i]` and dummy search probabilities `dummy[i]`
 for gaps, construct a BST minimizing expected search cost. Cost = (depth+1) * probability.
@@ -439,6 +449,8 @@ def optimal_bst(prob: list, dummy: list) -> float:
 
 ## 6. Minimum Score Triangulation (LC #1039) — Medium
 
+**🔗 Practice Link:** [6. Minimum Score Triangulation](https://leetcode.com/problems/minimum-score-triangulation-of-polygon/)
+
 ### Problem Explanation
 Given a convex polygon with vertex values `values[i]`, triangulate into `n-2` triangles.
 Score of a triangle = product of its three vertex values. Return the minimum total score.
@@ -509,6 +521,8 @@ class Solution:
 ---
 
 ## 7. Strange Printer (LC #664) — Hard
+
+**🔗 Practice Link:** [7. Strange Printer](https://leetcode.com/problems/strange-printer/)
 
 ### Problem Explanation
 A strange printer prints the same character in a row, then can overwrite any range. Given
@@ -589,6 +603,8 @@ class Solution:
 
 ## 8. Remove Boxes (LC #546) — Hard
 
+**🔗 Practice Link:** [8. Remove Boxes](https://leetcode.com/problems/remove-boxes/)
+
 ### Problem Explanation
 You are given an array `boxes`. Remove a contiguous group of same-color boxes for score
 `(count)^2`. Maximize the total score.
@@ -661,6 +677,8 @@ class Solution:
 ---
 
 ## 9. Egg Dropping (LC #887) — Hard
+
+**🔗 Practice Link:** [9. Egg Dropping](https://leetcode.com/problems/super-egg-drop/)
 
 ### Problem Explanation
 You have `k` eggs and a building with `n` floors. Find the minimum attempts (worst case)
@@ -741,6 +759,8 @@ class Solution:
 
 ## 10. Egg Drop with 2 Eggs and n Floors (LC #1884) — Medium
 
+**🔗 Practice Link:** [10. Egg Drop with 2 Eggs and n Floors](https://leetcode.com/problems/egg-drop-with-2-eggs-and-n-floors/)
+
 ### Problem Explanation
 You have exactly 2 eggs and `n` floors. Find the minimum number of attempts to determine
 the critical floor in the worst case. This is a special case of Egg Dropping with `k=2`.
@@ -812,6 +832,8 @@ class Solution:
 ---
 
 ## 11. Minimum Cost to Merge Stones (LC #1000) — Hard
+
+**🔗 Practice Link:** [11. Minimum Cost to Merge Stones](https://leetcode.com/problems/minimum-cost-to-merge-stones/)
 
 ### Problem Explanation
 You have `n` stones in a row with `stones[i]` weight. Merge exactly `k` adjacent stones into
@@ -907,6 +929,8 @@ class Solution:
 ---
 
 ## 12. Different Ways to Add Parentheses (LC #241) — Medium
+
+**🔗 Practice Link:** [12. Different Ways to Add Parentheses](https://leetcode.com/problems/different-ways-to-add-parentheses/)
 
 ### Problem Explanation
 Given a string `exp` of numbers and operators (`+`, `-`, `*`), return all possible results
@@ -1013,6 +1037,8 @@ class Solution:
 ---
 
 ## 13. Decode String (LC #394) — Medium
+
+**🔗 Practice Link:** [13. Decode String](https://leetcode.com/problems/decode-string/)
 
 ### Problem Explanation
 Given an encoded string `s` like `3[a2[c]]`, decode it. `[` marks the start of a substring

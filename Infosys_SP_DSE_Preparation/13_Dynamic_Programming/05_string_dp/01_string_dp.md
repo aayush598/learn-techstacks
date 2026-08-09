@@ -6,6 +6,8 @@ String DP problems involve computing an optimal or counting result over one or t
 
 ## 1. Edit Distance — Operations Listed (LC #72 variant) — Medium
 
+**🔗 Practice Link:** [1. Edit Distance — Operations Listed](https://leetcode.com/problems/edit-distance/)
+
 ### Problem Explanation
 Given two strings `word1` and `word2`, find the minimum number of operations to convert `word1` to `word2` AND return the actual sequence of operations (insert, delete, replace). This extends the standard Edit Distance by requiring the reconstruction of the optimal path through the DP table.
 
@@ -95,6 +97,8 @@ def edit_distance_with_ops(word1: str, word2: str) -> tuple:
 
 ## 2. Distinct Subsequences II (LC #940) — Hard
 
+**🔗 Practice Link:** [2. Distinct Subsequences II](https://leetcode.com/problems/distinct-subsequences-ii/)
+
 ### Problem Explanation
 Given a string `s`, count the number of distinct non-empty subsequences of `s`. Two subsequences are different if they differ in at least one character's selection. The answer can be very large, so return it modulo `10^9 + 7`. For example, `"abc"` has 7 distinct non-empty subsequences: `a, b, c, ab, ac, bc, abc`.
 
@@ -168,6 +172,8 @@ def distinct_subseq_ii(s: str) -> int:
 ---
 
 ## 3. Interleaving String (LC #97) — Medium
+
+**🔗 Practice Link:** [3. Interleaving String](https://leetcode.com/problems/interleaving-string/)
 
 ### Problem Explanation
 Given three strings `s1`, `s2`, and `s3`, determine if `s3` is formed by interleaving `s1` and `s2`. An interleaving uses all characters of `s1` and `s2` in their original relative order to form `s3`. For example, `s1 = "aab"`, `s2 = "axy"`, `s3 = "aaxaby"` → True.
@@ -250,6 +256,8 @@ def is_interleave(s1: str, s2: str, s3: str) -> bool:
 
 ## 4. Is Subsequence (LC #392) — Easy
 
+**🔗 Practice Link:** [4. Is Subsequence](https://leetcode.com/problems/is-subsequence/)
+
 ### Problem Explanation
 Given two strings `s` and `t`, determine if `s` is a subsequence of `t`. A subsequence maintains relative order but skips characters. Input: two strings; output: a boolean. For example, `s = "abc"`, `t = "ahbgdc"` → True.
 
@@ -318,6 +326,8 @@ def is_subsequence(s: str, t: str) -> bool:
 ---
 
 ## 5. Longest Repeating Subsequence (LC #647 variant) — Medium
+
+**🔗 Practice Link:** [5. Longest Repeating Subsequence](https://www.geeksforgeeks.org/longest-repeating-subsequence)
 
 ### Problem Explanation
 Given a string `s`, find the length of the longest subsequence that appears at least twice in `s`, where the two occurrences use different character indices (but may have the same character value). For example, `s = "aab"` → answer is 1 (the two `a`s at different indices form `"a"`, and `"aa"` uses the same index twice which is not allowed in both subsequences).
@@ -389,6 +399,8 @@ def longest_repeating_subsequence(s: str) -> int:
 ---
 
 ## 6. Longest Palindromic Substring (LC #5) — Medium
+
+**🔗 Practice Link:** [6. Longest Palindromic Substring](https://leetcode.com/problems/longest-palindromic-substring/)
 
 ### Problem Explanation
 Given a string `s`, find the longest substring that is a palindrome. Return the substring itself (or its length). Unlike Longest Palindromic *Subsequence*, this requires contiguous characters. For example, `s = "babad"` → `"bab"` or `"aba"`.
@@ -478,6 +490,8 @@ def longest_palindrome_substring(s: str) -> str:
 
 ## 7. Count of Palindromic Substrings (LC #647) — Medium
 
+**🔗 Practice Link:** [7. Count of Palindromic Substrings](https://leetcode.com/problems/palindromic-substrings/)
+
 ### Problem Explanation
 Given a string `s`, count the number of substrings that are palindromes. Every single character is a palindrome. For example, `s = "aaa"` → 6 (`"a"`, `"a"`, `"a"`, `"aa"`, `"aa"`, `"aaa"`).
 
@@ -549,6 +563,8 @@ def count_palindromic_substrings(s: str) -> int:
 ---
 
 ## 8. Palindrome Partitioning (LC #131) — Medium
+
+**🔗 Practice Link:** [8. Palindrome Partitioning](https://leetcode.com/problems/palindrome-partitioning/)
 
 ### Problem Explanation
 Given a string `s`, partition it such that every substring of each partition is a palindrome. Return all possible palindrome partitionings. For example, `s = "aab"` → `[["a","a","b"], ["aa","b"]]`.
@@ -640,6 +656,8 @@ def partition(s: str) -> list:
 
 ## 9. Palindrome Partitioning II (LC #132) — Hard
 
+**🔗 Practice Link:** [9. Palindrome Partitioning II](https://leetcode.com/problems/palindrome-partitioning-ii/)
+
 ### Problem Explanation
 Given a string `s`, find the minimum number of cuts needed to partition `s` so that every substring is a palindrome. For example, `s = "aab"` → 1 cut (split as `"aa" | "b"`).
 
@@ -716,6 +734,8 @@ def min_cut(s: str) -> int:
 
 ## 10. Palindrome Partitioning III (LC #1278) — Hard
 
+**🔗 Practice Link:** [10. Palindrome Partitioning III](https://leetcode.com/problems/palindrome-partitioning-iii/)
+
 ### Problem Explanation
 Given a string `s`, an integer `k`, you need to partition `s` into exactly `k` substrings. In one operation you can change any character to any other character. Find the minimum number of changes needed so that every substring in the partition is a palindrome.
 
@@ -791,6 +811,8 @@ def palindrome_partition(s: str, k: int) -> int:
 ---
 
 ## 11. Minimum Insertions to Make a String Palindrome (LC #1312) — Medium
+
+**🔗 Practice Link:** [11. Minimum Insertions to Make a String Palindrome](https://leetcode.com/problems/minimum-insertion-steps-to-make-a-string-palindrome/)
 
 ### Problem Explanation
 Given a string `s`, find the minimum number of insertions needed at any position to make `s` a palindrome. For example, `s = "zzazz"` → 0 (already a palindrome); `s = "mbadm"` → 2.
@@ -872,6 +894,8 @@ def min_insertions(s: str) -> int:
 
 ## 12. Minimum Deletions to Make a String Palindrome — Medium
 
+**🔗 Practice Link:** [12. Minimum Deletions to Make a String Palindrome — Medium](https://www.geeksforgeeks.org/minimum-number-deletions-make-string-palindrome)
+
 ### Problem Explanation
 Given a string `s`, find the minimum number of deletions needed to make `s` a palindrome. For example, `s = "aebcbda"` → 2 (delete `e` and `d`).
 
@@ -938,6 +962,8 @@ def min_deletions(s: str) -> int:
 ---
 
 ## 13. Minimum Deletions and Insertions to Transform One String into Another (LC #1546) — Medium
+
+**🔗 Practice Link:** [13. Minimum Deletions and Insertions to Transform One String into Another](https://www.geeksforgeeks.org/minimum-number-deletions-insertions-transform-one-string-another)
 
 ### Problem Explanation
 Given two strings `s1` and `s2`, find the minimum number of deletions from `s1` and insertions into `s2` to make them equal. This is equivalent to finding the edit distance with only delete and insert operations (no replace). For example, `s1 = "heap"`, `s2 = "pea"` → 2 deletions (remove `h` and `p`) + 1 insertion (insert `p`) = 3.
@@ -1016,6 +1042,8 @@ def min_operations(s1: str, s2: str) -> int:
 
 ## 14. One Edit Distance (LC #161) — Medium
 
+**🔗 Practice Link:** [14. One Edit Distance](https://www.geeksforgeeks.org/check-if-two-given-strings-are-at-edit-distance-one)
+
 ### Problem Explanation
 Given two strings `s` and `t`, determine if they are exactly one edit distance apart. A single edit is an insert, delete, or replace operation. Return True if exactly one edit separates them, False otherwise. For example, `s = "ab"`, `t = "acb"` → True (one insert).
 
@@ -1081,6 +1109,8 @@ def is_one_edit_distance(s: str, t: str) -> bool:
 
 ## 15. Longest Uncommon Subsequence I (LC #521) — Easy
 
+**🔗 Practice Link:** [15. Longest Uncommon Subsequence I](https://www.geeksforgeeks.org/longest-uncommon-subsequence)
+
 ### Problem Explanation
 Given two strings `a` and `b`, find the length of the longest uncommon subsequence between them. An uncommon subsequence of `a` is a subsequence of `a` that is NOT a subsequence of `b`. If no such subsequence exists, return -1.
 
@@ -1127,6 +1157,8 @@ def find_luas_length(a: str, b: str) -> int:
 ---
 
 ## 16. Longest Uncommon Subsequence II (LC #522) — Medium
+
+**🔗 Practice Link:** [16. Longest Uncommon Subsequence II](https://www.geeksforgeeks.org/longest-uncommon-subsequence)
 
 ### Problem Explanation
 Given an array of strings `strs`, find the length of the longest uncommon subsequence. An uncommon subsequence of string `a` is a subsequence of `a` that is not a subsequence of any other string in the array. Return -1 if none exists. For example, `strs = ["aba","cdc","eae"]` → 3.
@@ -1186,6 +1218,8 @@ def find_luas_length(strs: list) -> int:
 ---
 
 ## 17. Valid Parentheses String (LC #678) — Medium
+
+**🔗 Practice Link:** [17. Valid Parentheses String](https://leetcode.com/problems/valid-parenthesis-string/)
 
 ### Problem Explanation
 Given a string `s` containing only `(`, `)`, and `*`, determine if the string is valid. The `*` can represent `(`, `)`, or an empty string. A valid string has every `(` matched by a later `)` and every `)` matched by an earlier `(`. For example, `s = "(*))"` → True.
@@ -1268,6 +1302,8 @@ def check_valid_string(s: str) -> bool:
 
 ## 18. Minimum Add to Make Parentheses Valid (LC #921) — Medium
 
+**🔗 Practice Link:** [18. Minimum Add to Make Parentheses Valid](https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/)
+
 ### Problem Explanation
 Given a string `s` of only `(` and `)`, find the minimum number of additions (insertions) needed to make the string valid. For example, `s = "(()("` → 2 (add one `)` and one `)`).
 
@@ -1338,6 +1374,8 @@ def min_add_to_make_valid(s: str) -> int:
 
 ## 19. Minimum Number of Swaps to Make String Balanced (LC #1249) — Medium
 
+**🔗 Practice Link:** [19. Minimum Number of Swaps to Make String Balanced](https://leetcode.com/problems/minimum-number-of-swaps-to-make-the-string-balanced/)
+
 ### Problem Explanation
 Given a string `s` of only `(` and `)`, find the minimum number of swaps needed to make the string balanced. A swap exchanges any two characters. For example, `s = ")()()("` → 1 (swap first and last).
 
@@ -1402,6 +1440,8 @@ def min_swaps(s: str) -> int:
 ---
 
 ## 20. Generate Parentheses (LC #22) — Medium
+
+**🔗 Practice Link:** [20. Generate Parentheses](https://leetcode.com/problems/generate-parentheses/)
 
 ### Problem Explanation
 Given `n` pairs of parentheses, generate all combinations of well-formed parentheses. For example, `n = 3` → `["((()))", "(()())", "(())()", "()(())", "()()()"]`.

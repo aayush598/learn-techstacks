@@ -15,6 +15,8 @@ are omitted here to avoid duplicates.
 
 ## 1. Count Numbers with No Consecutive 1s — Medium
 
+**🔗 Practice Link:** [1. Count Numbers with No Consecutive 1s — Medium](https://www.geeksforgeeks.org/count-number-binary-strings-without-consecutive-1s)
+
 ### Problem Explanation
 Count integers in `[0, N]` whose binary representation has no two consecutive
 1s. For example, in `[0, 7]`: valid are 0(000), 1(001), 2(010), 4(100),
@@ -102,6 +104,8 @@ class Solution:
 
 ## 2. Number of Digit One (LC #233) — Hard
 
+**🔗 Practice Link:** [2. Number of Digit One](https://leetcode.com/problems/number-of-digit-one/)
+
 ### Problem Explanation
 Count how many times the digit `1` appears in all integers from `0` to `n`.
 For example, `n = 13` → 1 appears in 1, 10, 11 (twice), 12, 13 → total = 6.
@@ -177,6 +181,8 @@ class Solution:
 
 ## 3. Non-negative Integers without Consecutive Ones (LC #600) — Medium
 
+**🔗 Practice Link:** [3. Non-negative Integers without Consecutive Ones](https://leetcode.com/problems/non-negative-integers-without-consecutive-ones/)
+
 ### Problem Explanation
 Count non-negative integers <= `n` whose binary representation has no consecutive
 1s. For example, `n = 5` (101): valid = 0, 1, 2, 4, 5 → count = 5.
@@ -246,6 +252,8 @@ class Solution:
 ---
 
 ## 4. Count Integers with Digit Sum Equal to Target in Range — Medium
+
+**🔗 Practice Link:** [4. Count Integers with Digit Sum Equal to Target in Range — Medium](https://www.geeksforgeeks.org/count-of-n-digit-numbers-whose-sum-of-digits-equals-to-given-sum)
 
 ### Problem Explanation
 Count integers in `[L, R]` whose digit sum equals `target`. Solve via
@@ -319,6 +327,8 @@ class Solution:
 ---
 
 ## 5. Numbers At Most N Given Digit Set (LC #902) — Hard
+
+**🔗 Practice Link:** [5. Numbers At Most N Given Digit Set](https://leetcode.com/problems/numbers-at-most-n-given-digit-set/)
 
 ### Problem Explanation
 Given a set of allowed digits `digits` and a number `n`, count how many positive
@@ -396,6 +406,8 @@ class Solution:
 ---
 
 ## 6. Count Special Numbers (LC #2376) — Hard
+
+**🔗 Practice Link:** [6. Count Special Numbers](https://leetcode.com/problems/count-special-integers/)
 
 ### Problem Explanation
 A "special number" has all unique digits. Count special numbers in `[1, n]`.
@@ -479,6 +491,8 @@ class Solution:
 
 ## 7. At Most K Digits / At Most K Swaps — Medium
 
+**🔗 Practice Link:** [7. At Most K Digits / At Most K Swaps — Medium](https://www.geeksforgeeks.org/find-maximum-number-possible-by-doing-at-most-k-swaps)
+
 ### Problem Explanation
 Given a number as a string `num` and integer `k`, find the largest number by
 performing at most `k` swaps of adjacent digits. For example,
@@ -556,6 +570,8 @@ class Solution:
 
 ## 8. Find All Good Numbers in Range — Medium
 
+**🔗 Practice Link:** [8. Find All Good Numbers in Range — Medium](https://leetcode.com/problems/numbers-at-most-n-given-digit-set/)
+
 ### Problem Explanation
 A "good number" has no digit equal to `d` at any position. Count good numbers
 in `[L, R]`. Use digit DP to count up to R minus count up to L-1.
@@ -628,6 +644,8 @@ class Solution:
 
 ## 9. Generate All Numbers with Digit Sum S — Easy
 
+**🔗 Practice Link:** [9. Generate All Numbers with Digit Sum S — Easy](https://www.geeksforgeeks.org/digit-dp-introduction)
+
 ### Problem Explanation
 Generate all positive integers whose digits sum to exactly `S`. For example,
 `S = 5` → 5, 14, 23, 32, 41, 50, 104, 113, ... (infinitely many).
@@ -694,6 +712,8 @@ class Solution:
 
 ## 10. Catalan Numbers / Unique BSTs (LC #96) — Medium
 
+**🔗 Practice Link:** [10. Catalan Numbers / Unique BSTs](https://leetcode.com/problems/unique-binary-search-trees/)
+
 ### Problem Explanation
 Count the number of structurally unique BSTs that store values 1 to `n`. Each
 node has a unique value. For `n = 3`, there are 5 unique BSTs. This is the
@@ -759,6 +779,8 @@ class Solution:
 
 ## 11. Count Number of Balanced Binary Trees — Medium
 
+**🔗 Practice Link:** [11. Count Number of Balanced Binary Trees — Medium](https://www.geeksforgeeks.org/count-balanced-binary-trees-height-h)
+
 ### Problem Explanation
 Count balanced binary trees of height `h` (each node's left and right subtree
 heights differ by at most 1). Return count modulo 10^9+7.
@@ -822,6 +844,8 @@ class Solution:
 ---
 
 ## 12. Count of Distinct Subsequences — Hard
+
+**🔗 Practice Link:** [12. Count of Distinct Subsequences — Hard](https://leetcode.com/problems/distinct-subsequences-ii/)
 
 ### Problem Explanation
 Given a string `s`, count the number of distinct subsequences (including empty).
@@ -893,6 +917,8 @@ class Solution:
 
 ## 13. Pascal's Triangle (LC #118) — Easy
 
+**🔗 Practice Link:** [13. Pascal's Triangle](https://leetcode.com/problems/pascals-triangle/)
+
 ### Problem Explanation
 Generate the first `numRows` of Pascal's triangle. Each row's values are the
 sum of the two values directly above. Row 0: [1], Row 1: [1,1], Row 2: [1,2,1].
@@ -951,6 +977,8 @@ class Solution:
 ---
 
 ## 14. Minimum Number of Taps to Open to Water Garden (LC #1326) — Hard
+
+**🔗 Practice Link:** [14. Minimum Number of Taps to Open to Water Garden](https://leetcode.com/problems/minimum-number-of-taps-to-open-to-water-a-garden/)
 
 ### Problem Explanation
 A garden of length `n` has taps at various positions. Tap `i` waters the range
@@ -1018,6 +1046,8 @@ class Solution:
 
 ## 15. Count Ways to Build Staircase — Medium
 
+**🔗 Practice Link:** [15. Count Ways to Build Staircase — Medium](https://www.geeksforgeeks.org/count-ways-reach-nth-stair)
+
 ### Problem Explanation
 Count the number of ways to build a staircase with `n` blocks where each step
 must have at least one more block than the previous step. For `n = 7`: ways
@@ -1084,6 +1114,8 @@ class Solution:
 
 ## 16. Number of Ways to Split Array into Two Parts — Medium
 
+**🔗 Practice Link:** [16. Number of Ways to Split Array into Two Parts — Medium](https://leetcode.com/problems/number-of-ways-to-split-array/)
+
 ### Problem Explanation
 Given an array, count the number of ways to split it into two non-empty
 contiguous parts such that the sum of the left part >= sum of the right part.
@@ -1148,6 +1180,8 @@ class Solution:
 ---
 
 ## 17. Count All Valid Pickup and Delivery Options (LC #1359) — Hard
+
+**🔗 Practice Link:** [17. Count All Valid Pickup and Delivery Options](https://leetcode.com/problems/count-all-valid-pickup-and-delivery-options/)
 
 ### Problem Explanation
 There are `n` orders. Each order has a pickup (P) and delivery (D). Count the

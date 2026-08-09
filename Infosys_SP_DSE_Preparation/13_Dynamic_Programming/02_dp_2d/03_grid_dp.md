@@ -22,6 +22,8 @@ Beyond basic path counting and path sum (covered in the fundamentals file), many
 
 ## 1. Cherry Pickup (LC #741) — Hard
 
+**🔗 Practice Link:** [1. Cherry Pickup](https://leetcode.com/problems/cherry-pickup/)
+
 ### Problem Explanation
 An n×n grid holds non-negative integers (cherries). Collect cherries by moving from `(0,0)` to `(n-1,n-1)` (right or down), then return from `(n-1,n-1)` to `(0,0)` (left or up). A cell's cherry is picked up on the first visit only. Maximize the total. The key insight is that two simultaneous paths from start to end are equivalent to one round trip, so we model both paths going forward together.
 
@@ -122,6 +124,8 @@ class Solution:
 
 ## 2. Cherry Pickup II (LC #1463) — Hard
 
+**🔗 Practice Link:** [2. Cherry Pickup II](https://leetcode.com/problems/cherry-pickup-ii/)
+
 ### Problem Explanation
 An m×n grid of integers. Robot 1 starts at `(0,0)` and Robot 2 starts at `(0,n-1)`. Both collect cherries as they move down one row at a time (left, right, or staying in the same column). Both must reach the last row. Cherries from the same cell are counted once. Maximize the total. At each row, the two robots' columns fully describe the joint state.
 
@@ -220,6 +224,8 @@ class Solution:
 
 ## 3. Unique Paths III (LC #980) — Hard
 
+**🔗 Practice Link:** [3. Unique Paths III](https://leetcode.com/problems/unique-paths-iii/)
+
 ### Problem Explanation
 An m×n grid where `1` marks the start, `2` marks the end, `0` marks empty cells, and `-1` marks obstacles. Count all paths from start to end that visit **every non-obstacle cell exactly once**. You may move in 4 directions (up, down, left, right). The grid has at most 20 cells total, making bitmask DP feasible.
 
@@ -312,6 +318,8 @@ class Solution:
 ---
 
 ## 4. Paths with Maximum Gold (LC #1219) — Medium
+
+**🔗 Practice Link:** [4. Paths with Maximum Gold](https://leetcode.com/problems/path-with-maximum-gold/)
 
 ### Problem Explanation
 An m×n grid of non-negative integers. Start from any cell containing gold and move up, down, left, or right. You may visit a cell at most once. Collect gold from every visited cell and return the maximum gold you can collect. The key insight is that because you cannot revisit cells, this is a DFS/backtracking problem on a grid — DP alone does not work because the path can go in any direction, creating cycles without the visited guard.
@@ -406,6 +414,8 @@ class Solution:
 
 ## 5. Grid Minimum Falling Path Sum (LC #931) — Medium
 
+**🔗 Practice Link:** [5. Grid Minimum Falling Path Sum](https://leetcode.com/problems/minimum-falling-path-sum/)
+
 ### Problem Explanation
 An n×n grid of integers. A falling path starts at any cell in the first row and moves to a cell in the adjacent row — specifically to a cell directly below, below-left, or below-right (column `j-1`, `j`, or `j+1`). Find the minimum sum of a falling path from the first row to the last row. This is a classic row-by-row DP: the best sum reaching any cell depends only on three cells in the row above.
 
@@ -486,6 +496,8 @@ class Solution:
 ---
 
 ## 6. Minimum Falling Path Sum II (LC #1289) — Hard
+
+**🔗 Practice Link:** [6. Minimum Falling Path Sum II](https://leetcode.com/problems/minimum-falling-path-sum-ii/)
 
 ### Problem Explanation
 Same as Minimum Falling Path Sum, but with one critical restriction: you **cannot** move to a cell in the same column as the previous row's cell. From `matrix[i-1][j]` you may only go to `matrix[i][k]` where `k != j`. Find the minimum falling path sum from any cell in the first row to any cell in the last row. The key insight is to track the two smallest values per row, so we can always pick the best predecessor that is not in the same column.
@@ -583,6 +595,8 @@ class Solution:
 
 ## 7. Knight Dialer (LC #935) — Medium
 
+**🔗 Practice Link:** [7. Knight Dialer](https://leetcode.com/problems/knight-dialer/)
+
 ### Problem Explanation
 A chess knight is placed on a standard phone keypad:
 ```
@@ -677,6 +691,8 @@ class Solution:
 ---
 
 ## 8. Out of Boundary Paths (LC #576) — Medium
+
+**🔗 Practice Link:** [8. Out of Boundary Paths](https://leetcode.com/problems/out-of-boundary-paths/)
 
 ### Problem Explanation
 There is an m×n grid with a ball at position `(startRow, startCol)`. You may move the ball up, down, left, or right at most `maxMove` times. Count the number of paths that move the ball out of the grid boundary. Return the count modulo 10^9+7. The ball leaves the grid as soon as it crosses any boundary — that counts as one valid path.
@@ -777,6 +793,8 @@ class Solution:
 ---
 
 ## 9. Range Sum Query 2D — Immutable (LC #304) — Medium
+
+**🔗 Practice Link:** [9. Range Sum Query 2D — Immutable](https://leetcode.com/problems/range-sum-query-2d-immutable/)
 
 ### Problem Explanation
 Given a 2D matrix `matrix`, compute the sum of elements inside a rectangle defined by its upper-left corner `(row1, col1)` and lower-right corner `(row2, col2)`. Multiple queries may be asked. The key technique is to precompute a 2D prefix sum array so each query is answered in O(1) time.
