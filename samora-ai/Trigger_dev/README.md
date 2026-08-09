@@ -52,7 +52,13 @@
 **A:** Install via npm: `npm install @trigger.dev/sdk`. Initialize with: `npx trigger.dev init` which creates the project config, sets up the client, and configures the Trigger.dev CLI for development and deployment.
 
 ## Q18: How do you configure the Trigger.dev client?
-**A:** Create a client: `import { TriggerClient } from '@trigger.dev/sdk'; const client = new TriggerClient({ id: 'my-project', apiKey: process.env.TRIGGER_API_KEY });` The client registers jobs and connects to the Trigger.dev platform.
+**A:** Create a client: 
+`import { TriggerClient } from '@trigger.dev/sdk'; 
+const client = new TriggerClient(
+                    { id: 'my-project', 
+                      apiKey: process.env.TRIGGER_API_KEY 
+                    });` 
+The client registers jobs and connects to the Trigger.dev platform.
 
 ## Q19: What is the Trigger.dev CLI?
 **A:** The CLI (`npx trigger.dev`) provides commands: `dev` (local development with hot reload), `deploy` (deploy jobs to production), `init` (project setup), `run` (test runs), and `logs` (view run logs).
