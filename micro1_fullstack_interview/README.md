@@ -8,7 +8,7 @@ Complete answer bank for the **micro1 Fullstack Developer** role (AI Recruiter /
 ## How to use this bank
 
 - Files are numbered in the **exact priority order** of the source question bank.
-- **Status: Tiers 1–2 (Q1–420) written. Tiers 3–5 (Q421–765) pending.**
+- **Status: COMPLETE — all 765 questions written (Q1–765), Tiers 1–5.**
 - Study tiers 1 → 2 first; everything else is backup.
 - For **every** Tier-1 question, also prepare the follow-ups the AI interviewer is likely to drill:
   - **"Why?"** — internal mechanism / tradeoffs.
@@ -22,9 +22,9 @@ Complete answer bank for the **micro1 Fullstack Developer** role (AI Recruiter /
 |---|---|---|---|---|
 | 1 | Priority 1 | `01`–`07` | 1–265 | Python → FastAPI → Async → SQL → React → TypeScript → Performance |
 | 2 | Priority 2 | `08`–`15` | 266–420 | AI/LLM → Next.js → PostgreSQL → SQLAlchemy → AWS → Docker → API → Security |
-| 3 | Priority 3 | `16`–`20` | 421–528 | System design → Testing → Git → Networking → Behavioral (pending) |
-| 4 | Priority 4 | `21`–`26` | 529–635 | Advanced Python/DB/React/TS → AWS/DevOps (pending) |
-| 5 | Priority 5 | `27`–`31` | 636–765 | Deep internals → Advanced AI → Coding → Scenarios → Own projects (pending) |
+| 3 | Priority 3 | `16`–`20` | 421–528 | System design → Testing → Git → Networking → Behavioral |
+| 4 | Priority 4 | `21`–`26` | 529–635 | Advanced Python/DB/React/TS → AWS/DevOps |
+| 5 | Priority 5 | `27`–`31` | 636–765 | Deep internals → Advanced AI → Coding → Scenarios → Own projects |
 
 ## Directory map
 
