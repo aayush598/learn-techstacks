@@ -1,379 +1,119 @@
-# Functional Requirements for Recommendation Systems
+# Functional Requirements — Recommendation System
 
-## Table of Contents
+## 1. User-Facing Recommendation Features
 
-1. [Overview](#overview)
-2. [Core Recommendation Engine](#core-engine)
-3. [User-Facing Features](#user-facing-features)
-4. [Admin Features](#admin-features)
-5. [Content Management](#content-management)
-6. [Personalization Requirements](#personalization)
-7. [Feedback Mechanisms](#feedback)
-8. [Real-Time vs Batch](#real-time-vs-batch)
-9. [Multi-Device Requirements](#multi-device)
-10. [Internationalization](#internationalization)
+### 1.1 Home Page Recommendations
 
----
+- **Personalized Homepage Feed**: Each user must see a ranked list of items on their home page, personalized based on their interaction history, demographics, and real-time context.
+- **Diversity Injection**: The home page must not be dominated by a single category. A configurable diversity parameter (e.g., Maximal Marginal Relevance) ensures category spread across the top-N slots.
+- **Cold-Start Handling**: New users with zero interaction history must receive a fallback experience — either popularity-based recommendations, editorially curated lists, or an onboarding preference survey.
+- **Real-Time Update Cycle**: Home page recommendations must refresh within a configurable TTL (e.g., 15 minutes) to reflect recent interactions without requiring a full page reload.
+- **Slot-Based Composition**: The home page recommendation zone must support slot-based composition, where different algorithmic strategies compete for specific position ranges (e.g., positions 1–3 for trending, 4–10 for personalized, 11–15 for exploratory).
 
-## Overview
+### 1.2 "Similar Items" Recommendations
 
-Functional requirements define what the recommendation system must do — the behaviors, features, and capabilities that the system provides to its users (both end users and internal operators). This document specifies the complete set of functional requirements for a production-grade recommendation system.
+- **Item-to-Item Similarity**: Every item detail page must display a "Similar Items" section powered by item-to-item similarity computed from content features, collaborative signals, or hybrid embeddings.
+- **Similarity Freshness**: Similarity computations must be refreshed at least daily for high-traffic items and weekly for long-tail items.
+- **Negative Similarity Filtering**: Items the user has already purchased, consumed, or explicitly disliked must be excluded from the similar items list.
+- **Configurable Similarity Metric**: The system must support pluggable similarity metrics — cosine similarity, Euclidean distance, Jaccard index, or learned similarity via neural embeddings.
 
----
+### 1.3 "For You" Personalized Feed
 
-## Core Recommendation Engine
+- **Continuous Feed**: The "For You" feed must support infinite scrolling with lazy-loaded recommendation batches (e.g., 20 items per batch).
+- **Session Context Integration**: Recommendations in the feed must adapt within a session — if a user starts browsing a new category, subsequent feed batches must reflect this shift within 2–3 interactions.
+- **Re-Ranking Layer**: A lightweight re-ranking layer must sit on top of the base recommendations to filter duplicates, enforce freshness constraints, and apply business rules (e.g., promotional boost, content moderation).
+- **User Control**: Users must be able to provide feedback on individual recommendations (hide, not interested, like) that immediately affects subsequent feed items.
 
-### FR-001: Recommendation Generation
-The system shall generate personalized recommendations for each authenticated user based on their interaction history, preferences, and behavioral patterns.
+### 1.4 Email Recommendations
 
-**Acceptance Criteria:**
-- Recommendations are generated within 200ms of request
-- Each recommendation set contains 10-50 items (configurable)
-- Recommendations are personalized per user (not generic)
-- Recommendations respect content availability and licensing rules
-- Recommendations exclude items the user has already consumed
+- **Batch Generation**: Email recommendations are generated as a batch job, typically 6–12 hours before the scheduled send time, to accommodate low-latency email delivery pipelines.
+- **Open-Time Personalization**: Where possible, email recommendations should be rendered at open-time (not send-time) using dynamic content blocks to reflect the most recent user behavior.
+- **Frequency Capping**: The system must enforce configurable frequency caps (e.g., no more than 2 recommendation emails per week) and respect user notification preferences.
+- **Unsubscribe Compliance**: All recommendation emails must comply with CAN-SPAM / GDPR requirements, including one-click unsubscribe and data processing disclosures.
 
-### FR-002: Recommendation Serving
-The system shall serve recommendations through a RESTful API that accepts user context and returns ranked recommendation lists.
+### 1.5 Search Result Re-Ranking
 
-**Acceptance Criteria:**
-- API accepts user_id, context (device, location, time), and optional filters
-- API returns recommendations in a defined JSON schema
-- API includes metadata (model version, feature version, request ID)
-- API handles authenticated and unauthenticated requests
-- API supports pagination for large recommendation sets
-
-### FR-003: Multiple Recommendation Strategies
-The system shall support multiple recommendation strategies that can be combined or used independently.
-
-**Strategies:**
-- Collaborative filtering (user-based and item-based)
-- Content-based filtering
-- Popularity-based recommendations
-- Trending recommendations
-- Context-aware recommendations
-- Session-based recommendations
-
-### FR-004: Fallback Mechanism
-The system shall provide fallback recommendations when the primary recommendation model fails or is unavailable.
-
-**Acceptance Criteria:**
-- Fallback returns within 100ms
-- Fallback uses popularity-based recommendations
-- Fallback is served from cache
-- Fallback is logged and monitored
-- User is not aware that fallback was triggered (unless fallback quality is obviously poor)
-
-### FR-005: Cold-Start Handling
-The system shall provide reasonable recommendations for new users and new items with limited interaction history.
-
-**For new users:**
-- Use onboarding preference selections if available
-- Use demographic-based defaults if available
-- Fall back to popularity-based recommendations
-- Gradually improve as interaction data accumulates
-
-**For new items:**
-- Use content metadata (category, tags, description) for content-based recommendations
-- Include new items in exploration slots
-- Boost new item visibility temporarily
+- **Search-Recs Fusion**: When a user performs a search, the system must fuse keyword relevance scores with personalized recommendation scores using a configurable blending function (e.g., weighted linear combination, learning-to-rank).
+- **Query Rewrite for Recommendations**: The system must support query rewriting using user context — e.g., if a user who primarily shops for electronics searches "wireless," the system should bias toward wireless headphones over wireless chargers.
+- **Faceted Recommendations**: Search results must include a "Recommended for You" facet or carousel that surfaces personalized picks alongside standard search results.
 
 ---
 
-## User-Facing Features
+## 2. Admin and Operations Features
 
-### FR-010: Home Page Recommendations
-The system shall display personalized recommendations on the home page, organized by category or theme.
+### 2.1 A/B Test Management
 
-**Acceptance Criteria:**
-- Recommendations load within 2 seconds
-- Multiple recommendation rows are displayed (e.g., "Because you watched X", "Trending", "New for you")
-- Each row contains 10-20 items
-- Rows are personalized per user
-- Users can scroll horizontally within each row
+- **Experiment Configuration**: Admins must be able to create, configure, and launch A/B tests through a management console or API. Configuration includes traffic allocation percentage, target audience segments, and primary/secondary metrics.
+- **Statistical Rigor**: The system must use proper statistical methods — minimum sample size calculation, sequential testing support, and false discovery rate (FDR) correction for multi-armed experiments.
+- **Guardrail Metrics**: Every experiment must have guardrail metrics (e.g., latency P99, error rate, revenue) that, if breached, trigger automatic experiment pause.
+- **Experiment Logging**: All experiment assignments, metric exposures, and results must be logged with full provenance for audit and reproducibility.
 
-### FR-011: Search Integration
-The system shall incorporate personalized signals into search results.
+### 2.2 Model Management
 
-**Acceptance Criteria:**
-- Search results are re-ranked based on user preferences
-- Personalized results are blended with relevance-based results
-- Users can toggle personalization on/off
-- Search suggestions are personalized
+- **Model Registry**: The system must maintain a centralized model registry that tracks model versions, training data snapshots, feature pipeline versions, hyperparameters, and performance metrics.
+- **Shadow Deployment**: New models must be deployable in shadow mode — receiving production traffic and generating predictions without serving them to users — for comparison against the current production model.
+- **Canary Releases**: Model rollout must support canary deployment, where a small percentage of traffic (e.g., 1–5%) is routed to the new model before full deployment.
+- **Automated Rollback**: If a newly deployed model breaches SLO thresholds (e.g., latency increases by >20%, CTR drops by >5%), the system must automatically roll back to the previous model version.
+- **Model Lineage**: Full lineage from raw training data → feature computation → model training → evaluation → deployment must be tracked and queryable.
 
-### FR-012: Detail Page Recommendations
-The system shall display "Similar items" and "You may also like" recommendations on item detail pages.
+### 2.3 Content Management
 
-**Acceptance Criteria:**
-- Similar items are based on content features and user behavior
-- "You may also like" considers user's full history
-- Maximum 10 recommendations per section
-- Recommendations update in real-time as user interacts
-
-### FR-013: Email Recommendations
-The system shall generate personalized recommendations for email campaigns.
-
-**Acceptance Criteria:**
-- Email recommendations are generated at send time (not template time)
-- Emails contain 3-5 personalized recommendations
-- Recommendations are relevant to the user's recent activity
-- Email includes unsubscribe and preference management links
-
-### FR-014: Notification Recommendations
-The system shall push personalized recommendations through push notifications and in-app notifications.
-
-**Acceptance Criteria:**
-- Notifications are sent at optimal times for each user
-- Notifications contain high-confidence recommendations only
-- Users can control notification frequency and types
-- Notifications respect quiet hours and Do Not Disturb settings
+- **Item Metadata CRUD**: Admins must be able to create, read, update, and delete item metadata (title, description, categories, tags, images) that feeds into the recommendation pipeline.
+- **Content Moderation Integration**: Items flagged by content moderation systems must be automatically excluded from recommendation candidates.
+- **Promotional Overrides**: Admins must be able to pin specific items to recommendation slots for promotional purposes, with configurable start/end times and audience targeting.
+- **Inventory-Aware Filtering**: Items with zero inventory or those marked as discontinued must be automatically filtered from recommendation candidates in real time.
 
 ---
 
-## Admin Features
+## 3. Personalization Requirements
 
-### FR-020: A/B Test Management
-The system shall provide tools for creating, managing, and analyzing A/B tests on recommendation algorithms and features.
+### 3.1 Real-Time Adaptation
 
-**Acceptance Criteria:**
-- Admins can create experiments with control and treatment variants
-- Traffic allocation is configurable (1% to 100%)
-- Experiments can be paused, resumed, and stopped
-- Statistical significance is calculated and displayed
-- Guardrail metrics are monitored during experiments
+- **Sub-Second Feature Updates**: User interaction events (clicks, views, purchases) must be reflected in the feature store within 1–2 seconds to enable real-time personalization.
+- **Event-Driven Architecture**: The personalization pipeline must be event-driven, consuming a stream of user events (via Kafka/Pulsar) and updating user embeddings and feature vectors incrementally.
+- **Online Learning Support**: The system must support online learning or fast fine-tuning loops where model parameters can be updated with recent interaction data without full retraining.
 
-### FR-021: Model Management
-The system shall provide tools for managing recommendation model versions, deployments, and rollbacks.
+### 3.2 Session Awareness
 
-**Acceptance Criteria:**
-- Admins can view all model versions and their performance metrics
-- Admins can promote models from staging to production
-- Admins can rollback to previous model versions
-- Model deployment includes automated quality gates
-- Model performance is tracked over time
+- **Session-Level Context**: The recommendation engine must maintain session-level state that captures the user's current intent — recent queries, viewed items, added-to-cart items, and dwell times within the current session.
+- **Session Reset Logic**: Session context must be reset after configurable inactivity periods (e.g., 30 minutes) or explicit user actions (logout, clear history).
+- **Short-Term vs Long-Term Interest**: The system must distinguish between short-term session interests and long-term user preferences, with configurable blending weights.
 
-### FR-022: Recommendation Monitoring Dashboard
-The system shall provide a real-time dashboard showing recommendation system health and performance.
+### 3.3 Multi-Device Support
 
-**Acceptance Criteria:**
-- Dashboard shows real-time metrics (CTR, latency, error rate)
-- Dashboard shows historical trends (daily, weekly, monthly)
-- Dashboard shows model performance metrics
-- Dashboard includes alerts for anomalies
-- Dashboard is accessible to authorized admin users only
-
-### FR-023: Content Moderation
-The system shall provide tools for managing content that appears in recommendations.
-
-**Acceptance Criteria:**
-- Admins can exclude specific items from recommendations
-- Admins can set content safety rules
-- Admins can review and approve recommended content
-- Content policy violations are automatically detected and flagged
-
-### FR-024: Recommendation Override
-The system shall allow admins to manually override recommendations for specific items, categories, or users.
-
-**Acceptance Criteria:**
-- Admins can pin specific items to recommendation slots
-- Admins can boost or suppress specific categories
-- Overrides are logged and auditable
-- Overrides can be time-bound (e.g., boost for 7 days)
+- **Cross-Device Identity Resolution**: The system must resolve a single user identity across devices (mobile, desktop, tablet, smart TV) using authenticated session linking or probabilistic device graph matching.
+- **Device-Specific Adaptation**: Recommendations must adapt to device capabilities — e.g., video recommendations on mobile should prefer short-form content; smart TV recommendations should surface visual-heavy content.
+- **Seamless Continuity**: A user who starts browsing on mobile should see relevant continuation recommendations on desktop (e.g., "Continue where you left off").
 
 ---
 
-## Content Management
+## 4. Feedback Mechanisms
 
-### FR-030: Item Metadata Management
-The system shall ingest and manage item metadata from the content catalog.
+### 4.1 Explicit Feedback
 
-**Acceptance Criteria:**
-- Metadata includes title, description, category, tags, images, and custom attributes
-- Metadata updates are propagated within 24 hours
-- Metadata quality is validated at ingestion
-- Metadata changes are versioned and auditable
+- **Rating System**: Users must be able to rate items on a configurable scale (e.g., 1–5 stars, thumbs up/down). Ratings must be stored immediately and reflected in the user profile within one feature refresh cycle.
+- **Preference Signals**: Users must be able to set explicit preferences (favorite genres, preferred brands, size/color preferences) that serve as hard constraints or strong signals in the recommendation model.
+- **Not Interested / Hide**: Users must be able to mark specific items or categories as "not interested," which must be respected as negative signals with configurable duration (e.g., 30 days, permanent).
 
-### FR-031: Content Freshness
-The system shall prioritize fresh and new content appropriately in recommendations.
+### 4.2 Implicit Feedback
 
-**Acceptance Criteria:**
-- New items are included in recommendations within 24 hours of catalog entry
-- Freshness weighting is configurable per category
-- Items can be flagged for "freshness boost" (e.g., new releases)
-- Out-of-stock or unavailable items are excluded from recommendations
-
-### FR-032: Content Quality Scoring
-The system shall compute and maintain quality scores for all items in the catalog.
-
-**Acceptance Criteria:**
-- Quality scores are based on user engagement, ratings, and editorial input
-- Quality scores are updated daily
-- Low-quality items are suppressed in recommendations
-- Quality scores are exposed in the admin dashboard
+- **Click-Through Signals**: Clicks on recommended items must be captured as positive implicit feedback, with configurable attribution windows (e.g., click within 24 hours of impression).
+- **Dwell Time**: Time spent viewing an item must be captured and normalized by content type (e.g., a 30-second dwell on a product page is more meaningful than 30 seconds on a text article).
+- **Purchase / Completion Signals**: Purchases, add-to-cart, wishlist additions, and content completion (e.g., finishing a video) are the strongest implicit signals and must be weighted accordingly.
+- **Negative Implicit Signals**: Scroll-past without click, quick bounce (<2 seconds), and explicit back-navigation must be captured as weak negative signals.
 
 ---
 
-## Personalization Requirements
+## 5. Multi-Language and Multi-Currency Support
 
-### FR-040: User Profile Management
-The system shall maintain user profiles that capture preferences, interaction history, and personalization state.
+### 5.1 Internationalization
 
-**Acceptance Criteria:**
-- Profiles are created on first interaction
-- Profiles are updated in real-time as interactions occur
-- Profiles are merged when users log in from different devices
-- Profiles can be exported and deleted (GDPR compliance)
-- Profile data is encrypted at rest and in transit
+- **Multilingual Metadata**: The system must support item metadata in multiple languages, with language-specific tokenization, stop-word removal, and embedding generation in the text preprocessing pipeline.
+- **Language-Aware Similarity**: Text-based item similarity must be computed within language contexts to avoid cross-lingual false positives, unless explicit multilingual embeddings (e.g., LaBSE, multilingual sentence-transformers) are used.
+- **Locale-Specific Recommendations**: Recommendation ranking must account for locale-specific preferences — e.g., holiday-related items should surface based on the user's locale, not a global calendar.
 
-### FR-041: Preference Learning
-The system shall learn user preferences from both implicit and explicit signals.
+### 5.2 Multi-Currency and Regional Pricing
 
-**Implicit signals:** clicks, views, time spent, scroll depth, search queries, purchase history
-**Explicit signals:** ratings, likes/dislikes, preference selections, reviews
-
-**Acceptance Criteria:**
-- Implicit signals are weighted by engagement depth
-- Explicit signals are weighted more heavily than implicit signals
-- Preference decay is applied (recent interactions weighted more)
-- Preference learning works for both authenticated and anonymous users
-
-### FR-042: Context-Aware Personalization
-The system shall incorporate contextual signals into recommendation generation.
-
-**Contextual signals:**
-- Time of day (morning, afternoon, evening, night)
-- Day of week (weekday vs weekend)
-- Device type (mobile, desktop, tablet)
-- Location (if available and consented)
-- Session context (first visit, returning, in-session behavior)
-
-**Acceptance Criteria:**
-- Contextual signals are used to adjust recommendations in real-time
-- Contextual personalization can be enabled/disabled per signal
-- Contextual signals are logged for analysis
-
-### FR-043: Multi-Profile Support
-The system shall support multiple user profiles per account (e.g., family members).
-
-**Acceptance Criteria:**
-- Each profile maintains independent interaction history
-- Profiles can be switched without logout
-- Each profile has independent personalization
-- Profile switching is logged
-
----
-
-## Feedback Mechanisms
-
-### FR-050: Explicit Feedback Collection
-The system shall provide mechanisms for users to provide explicit feedback on recommendations.
-
-**Acceptance Criteria:**
-- Users can like/dislike individual recommendations
-- Users can provide category-level preferences
-- Users can dismiss recommendations with a reason
-- Users can report inappropriate recommendations
-- Feedback is incorporated into the recommendation model within 24 hours
-
-### FR-051: Implicit Feedback Collection
-The system shall automatically collect implicit feedback from user behavior.
-
-**Acceptance Criteria:**
-- Click-through events are captured
-- Time spent on recommended items is measured
-- Scroll depth and engagement patterns are tracked
-- Return visits and repeat engagement are recorded
-- All implicit signals are stored with timestamps
-
-### FR-052: Feedback Dashboard
-The system shall provide users with a view of their feedback history and its impact.
-
-**Acceptance Criteria:**
-- Users can see their recent feedback (likes, dislikes, dismissals)
-- Users can undo previous feedback
-- Users can see how feedback has affected their recommendations
-- Users can export their feedback data
-
----
-
-## Real-Time vs Batch Requirements
-
-### FR-060: Real-Time Recommendations
-The system shall support real-time recommendation generation that incorporates the user's current session behavior.
-
-**Acceptance Criteria:**
-- Recommendations update within a session as the user interacts
-- Session-based signals are incorporated within 1 second
-- Real-time recommendations are served from a real-time feature store
-- Fallback to batch recommendations is available if real-time is unavailable
-
-### FR-061: Batch Recommendations
-The system shall support pre-computed batch recommendations for scenarios where real-time computation is not feasible.
-
-**Acceptance Criteria:**
-- Batch recommendations are computed daily (or more frequently)
-- Batch recommendations are stored in a cache
-- Batch recommendations are served when real-time is unavailable
-- Batch recommendations are refreshed on a configurable schedule
-
-### FR-062: Hybrid Approach
-The system shall combine real-time and batch recommendations to provide the best of both approaches.
-
-**Acceptance Criteria:**
-- Batch recommendations provide the base ranking
-- Real-time signals adjust the ranking within a session
-- The combination strategy is configurable
-- Performance (latency) is maintained within SLA
-
----
-
-## Multi-Device Requirements
-
-### FR-070: Cross-Device Consistency
-The system shall provide consistent recommendations across all user devices.
-
-**Acceptance Criteria:**
-- User profile and preferences are synchronized across devices
-- Recommendations are consistent across devices (same user, same recommendations)
-- Device-specific optimizations are applied (format, density, latency)
-- Cross-device interaction history is merged
-
-### FR-071: Device-Specific Optimization
-The system shall optimize recommendation presentation for each device type.
-
-**Acceptance Criteria:**
-- Mobile: Optimized for touch interaction, smaller screen, shorter sessions
-- Desktop: Optimized for mouse interaction, larger screen, longer sessions
-- Tablet: Optimized for both touch and mouse, medium screen
-- TV: Optimized for remote control navigation, large screen, lean-back experience
-
----
-
-## Internationalization Requirements
-
-### FR-080: Multi-Language Support
-The system shall support recommendations in multiple languages.
-
-**Acceptance Criteria:**
-- Recommendations are served in the user's preferred language
-- Content metadata in multiple languages is supported
-- Language-specific models can be trained
-- Cross-language recommendations are supported (e.g., recommend English content to Spanish-speaking users if relevant)
-
-### FR-081: Regional Content Rules
-The system shall respect regional content availability and licensing rules.
-
-**Acceptance Criteria:**
-- Content not available in the user's region is excluded from recommendations
-- Regional content preferences are incorporated into the model
-- Regional holidays and events are considered for recommendations
-- Regulatory requirements per region are enforced
-
-### FR-082: Cultural Adaptation
-The system shall adapt recommendations to cultural preferences and norms.
-
-**Acceptance Criteria:**
-- Recommendation diversity norms are adapted per culture
-- Content sensitivity rules are applied per region
-- Local trends and preferences are incorporated
-- Cultural events and holidays trigger relevant recommendations
+- **Price Normalization**: For price-sensitive recommendation features (e.g., "similar items under $X"), prices must be normalized to the user's local currency using real-time exchange rates.
+- **Regional Availability**: Items not available in the user's region must be filtered from recommendations or clearly labeled with availability information.
+- **Tax and Shipping Context**: Where relevant, recommendation scoring should account for total cost of ownership, including estimated taxes and shipping for the user's location.
