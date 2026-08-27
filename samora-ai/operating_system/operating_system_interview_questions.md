@@ -1,301 +1,303 @@
-# Operating System Interview Questions (Top 100)
+# Operating System — 100 Interview Q&A
 
-## 1. What is an operating system?
-An OS is system software managing hardware resources and providing services to applications.
+---
 
-## 2. What are the main functions of an OS?
-Process management, memory management, file system, device management, and security.
+## Q1: What is an operating system?
+**A:** An OS is system software managing hardware resources and providing services to applications.
 
-## 3. What is a process?
-A process is an executing instance of a program with its own memory space and resources.
+## Q2: What are the main functions of an OS?
+**A:** Process management, memory management, file system, device management, and security.
 
-## 4. What is a thread?
-A thread is the smallest unit of execution within a process, sharing the process's memory.
+## Q3: What is a process?
+**A:** A process is an executing instance of a program with its own memory space and resources.
 
-## 5. Difference between process and thread.
-Processes are independent with separate memory; threads share memory within a process.
+## Q4: What is a thread?
+**A:** A thread is the smallest unit of execution within a process, sharing the process's memory.
 
-## 6. What is a program versus process?
-A program is static code on disk; a process is the running execution of that program.
+## Q5: Difference between process and thread.
+**A:** Processes are independent with separate memory; threads share memory within a process.
 
-## 7. What are the states of a process?
-New, Ready, Running, Waiting (Blocked), Terminated.
+## Q6: What is a program versus process?
+**A:** A program is static code on disk; a process is the running execution of that program.
 
-## 8. What is a Process Control Block (PCB)?
-A data structure holding process info: state, registers, PID, memory, scheduling data.
+## Q7: What are the states of a process?
+**A:** New, Ready, Running, Waiting (Blocked), Terminated.
 
-## 9. What is context switching?
-Saving the state of a running process and loading another's state for CPU switching.
+## Q8: What is a Process Control Block (PCB)?
+**A:** A data structure holding process info: state, registers, PID, memory, scheduling data.
 
-## 10. What is a context switch overhead?
-Time and resources consumed during switching, which does not perform useful work.
+## Q9: What is context switching?
+**A:** Saving the state of a running process and loading another's state for CPU switching.
 
-## 11. What is scheduling?
-The OS deciding which process or thread gets CPU time.
+## Q10: What is a context switch overhead?
+**A:** Time and resources consumed during switching, which does not perform useful work.
 
-## 12. What are common CPU scheduling algorithms?
-FCFS, SJF, Priority, Round Robin, Multilevel Queue.
+## Q11: What is scheduling?
+**A:** The OS deciding which process or thread gets CPU time.
 
-## 13. What is FCFS?
-First-Come First-Served: processes served in arrival order; simple but can cause convoy effect.
+## Q12: What are common CPU scheduling algorithms?
+**A:** FCFS, SJF, Priority, Round Robin, Multilevel Queue.
 
-## 14. What is SJF?
-Shortest Job First: picks the process with the smallest burst time; optimal but may starve.
+## Q13: What is FCFS?
+**A:** First-Come First-Served: processes served in arrival order; simple but can cause convoy effect.
 
-## 15. What is Round Robin scheduling?
-Each process gets a fixed time quantum cyclically; fair and responsive.
+## Q14: What is SJF?
+**A:** Shortest Job First: picks the process with the smallest burst time; optimal but may starve.
 
-## 16. What is Priority scheduling?
-Processes served by priority; can be preemptive or non-preemptive; risk of starvation.
+## Q15: What is Round Robin scheduling?
+**A:** Each process gets a fixed time quantum cyclically; fair and responsive.
 
-## 17. What is a time quantum?
-The maximum time a process runs before being preempted in Round Robin.
+## Q16: What is Priority scheduling?
+**A:** Processes served by priority; can be preemptive or non-preemptive; risk of starvation.
 
-## 18. What is throughput?
-Number of processes completed per unit time.
+## Q17: What is a time quantum?
+**A:** The maximum time a process runs before being preempted in Round Robin.
 
-## 19. What is turnaround time?
-Time from process submission to completion.
+## Q18: What is throughput?
+**A:** Number of processes completed per unit time.
 
-## 20. What is waiting time?
-Time a process spends in the ready queue (turnaround minus burst).
+## Q19: What is turnaround time?
+**A:** Time from process submission to completion.
 
-## 21. What is response time?
-Time from submission to first response (important for interactive systems).
+## Q20: What is waiting time?
+**A:** Time a process spends in the ready queue (turnaround minus burst).
 
-## 22. What is a race condition?
-When multiple processes access shared data concurrently and the outcome depends on timing.
+## Q21: What is response time?
+**A:** Time from submission to first response (important for interactive systems).
 
-## 23. What is a critical section?
-A code segment accessing shared resources that must not run concurrently.
+## Q22: What is a race condition?
+**A:** When multiple processes access shared data concurrently and the outcome depends on timing.
 
-## 24. What are the requirements for a solution to critical section?
-Mutual exclusion, progress, bounded waiting, and no assumptions about speed.
+## Q23: What is a critical section?
+**A:** A code segment accessing shared resources that must not run concurrently.
 
-## 25. What is mutual exclusion?
-Only one process can be in its critical section at a time.
+## Q24: What are the requirements for a solution to critical section?
+**A:** Mutual exclusion, progress, bounded waiting, and no assumptions about speed.
 
-## 26. What is a semaphore?
-A synchronization primitive (integer + wait or signal) controlling access to resources.
+## Q25: What is mutual exclusion?
+**A:** Only one process can be in its critical section at a time.
 
-## 27. What is a binary semaphore?
-A semaphore with values 0 or 1, acting like a mutex.
+## Q26: What is a semaphore?
+**A:** A synchronization primitive (integer + wait or signal) controlling access to resources.
 
-## 28. What is a counting semaphore?
-A semaphore with a non-negative count for managing multiple resource instances.
+## Q27: What is a binary semaphore?
+**A:** A semaphore with values 0 or 1, acting like a mutex.
 
-## 29. What is a mutex?
-A locking mechanism ensuring exclusive access; only the owner can unlock it.
+## Q28: What is a counting semaphore?
+**A:** A semaphore with a non-negative count for managing multiple resource instances.
 
-## 30. Difference between semaphore and mutex.
-Semaphore signals or counters for general sync; mutex is for mutual exclusion with ownership.
+## Q29: What is a mutex?
+**A:** A locking mechanism ensuring exclusive access; only the owner can unlock it.
 
-## 31. What is deadlock?
-A set of processes each waiting for resources held by another, with no progress.
+## Q30: Difference between semaphore and mutex.
+**A:** Semaphore signals or counters for general sync; mutex is for mutual exclusion with ownership.
 
-## 32. What are the four Coffman conditions for deadlock?
-Mutual exclusion, hold and wait, no preemption, circular wait.
+## Q31: What is deadlock?
+**A:** A set of processes each waiting for resources held by another, with no progress.
 
-## 33. How can deadlock be handled?
-Prevention, avoidance, detection and recovery, or ignoring (ostrich approach).
+## Q32: What are the four Coffman conditions for deadlock?
+**A:** Mutual exclusion, hold and wait, no preemption, circular wait.
 
-## 34. What is deadlock prevention?
-Ensuring at least one Coffman condition cannot hold (for example, eliminate hold-and-wait).
+## Q33: How can deadlock be handled?
+**A:** Prevention, avoidance, detection and recovery, or ignoring (ostrich approach).
 
-## 35. What is deadlock avoidance?
-Dynamically checking resource allocation safety (for example, Banker's algorithm).
+## Q34: What is deadlock prevention?
+**A:** Ensuring at least one Coffman condition cannot hold (for example, eliminate hold-and-wait).
 
-## 36. What is the Banker's algorithm?
-A deadlock-avoidance algorithm that allocates resources only if the system stays safe.
+## Q35: What is deadlock avoidance?
+**A:** Dynamically checking resource allocation safety (for example, Banker's algorithm).
 
-## 37. What is deadlock detection?
-The OS periodically checks for cycles in the resource graph and recovers.
+## Q36: What is the Banker's algorithm?
+**A:** A deadlock-avoidance algorithm that allocates resources only if the system stays safe.
 
-## 38. What is starvation?
-A process is indefinitely denied resources while others keep getting served.
+## Q37: What is deadlock detection?
+**A:** The OS periodically checks for cycles in the resource graph and recovers.
 
-## 39. What is aging in scheduling?
-Gradually increasing priority of waiting processes to prevent starvation.
+## Q38: What is starvation?
+**A:** A process is indefinitely denied resources while others keep getting served.
 
-## 40. What is virtual memory?
-A memory management technique giving processes an illusion of contiguous large memory.
+## Q39: What is aging in scheduling?
+**A:** Gradually increasing priority of waiting processes to prevent starvation.
 
-## 41. What is paging?
-Dividing memory and processes into fixed-size pages or frames, mapped by a page table.
+## Q40: What is virtual memory?
+**A:** A memory management technique giving processes an illusion of contiguous large memory.
 
-## 42. What is a page table?
-A structure mapping logical page numbers to physical frame numbers.
+## Q41: What is paging?
+**A:** Dividing memory and processes into fixed-size pages or frames, mapped by a page table.
 
-## 43. What is fragmentation?
-Wasted memory: external (free gaps between allocations) or internal (unused within a block).
+## Q42: What is a page table?
+**A:** A structure mapping logical page numbers to physical frame numbers.
 
-## 44. What is internal fragmentation?
-Allocated memory block larger than needed, wasting space inside the block.
+## Q43: What is fragmentation?
+**A:** Wasted memory: external (free gaps between allocations) or internal (unused within a block).
 
-## 45. What is external fragmentation?
-Free memory scattered in small pieces, unable to satisfy a contiguous request.
+## Q44: What is internal fragmentation?
+**A:** Allocated memory block larger than needed, wasting space inside the block.
 
-## 46. What is a page fault?
-An access to a page not currently in physical memory, triggering a load from disk.
+## Q45: What is external fragmentation?
+**A:** Free memory scattered in small pieces, unable to satisfy a contiguous request.
 
-## 47. What is thrashing?
-Excessive paging causing the system to spend more time swapping than executing.
+## Q46: What is a page fault?
+**A:** An access to a page not currently in physical memory, triggering a load from disk.
 
-## 48. What is demand paging?
-Pages are loaded into memory only when accessed (on demand), not all upfront.
+## Q47: What is thrashing?
+**A:** Excessive paging causing the system to spend more time swapping than executing.
 
-## 49. What is swapping?
-Moving entire processes between main memory and disk to free RAM.
+## Q48: What is demand paging?
+**A:** Pages are loaded into memory only when accessed (on demand), not all upfront.
 
-## 50. What is a cache?
-A small fast memory storing frequently accessed data to reduce access time.
+## Q49: What is swapping?
+**A:** Moving entire processes between main memory and disk to free RAM.
 
-## 51. What is the difference between RAM and ROM?
-RAM is volatile and writable; ROM is non-volatile and typically read-only.
+## Q50: What is a cache?
+**A:** A small fast memory storing frequently accessed data to reduce access time.
 
-## 52. What is a file system?
-A method for storing, organizing, and retrieving files on storage devices.
+## Q51: What is the difference between RAM and ROM?
+**A:** RAM is volatile and writable; ROM is non-volatile and typically read-only.
 
-## 53. What are common file systems?
-FAT32, NTFS, ext4, APFS, HFS+, ZFS.
+## Q52: What is a file system?
+**A:** A method for storing, organizing, and retrieving files on storage devices.
 
-## 54. What is an inode?
-A Unix data structure holding file metadata (permissions, size, pointers) excluding name.
+## Q53: What are common file systems?
+**A:** FAT32, NTFS, ext4, APFS, HFS+, ZFS.
 
-## 55. What is a directory?
-A special file containing references to other files (a folder).
+## Q54: What is an inode?
+**A:** A Unix data structure holding file metadata (permissions, size, pointers) excluding name.
 
-## 56. What is a system call?
-An interface for user programs to request OS services (for example, read, write, fork).
+## Q55: What is a directory?
+**A:** A special file containing references to other files (a folder).
 
-## 57. What are types of system calls?
-Process control, file manipulation, device, information maintenance, communication.
+## Q56: What is a system call?
+**A:** An interface for user programs to request OS services (for example, read, write, fork).
 
-## 58. What is a kernel?
-The core of the OS managing system resources and hardware interaction.
+## Q57: What are types of system calls?
+**A:** Process control, file manipulation, device, information maintenance, communication.
 
-## 59. What is a monolithic kernel?
-A kernel where all services run in kernel space (for example, Linux); fast but less modular.
+## Q58: What is a kernel?
+**A:** The core of the OS managing system resources and hardware interaction.
 
-## 60. What is a microkernel?
-A minimal kernel with most services in user space (for example, Mach); more modular and secure.
+## Q59: What is a monolithic kernel?
+**A:** A kernel where all services run in kernel space (for example, Linux); fast but less modular.
 
-## 61. What is a hybrid kernel?
-Combines monolithic and microkernel features (for example, Windows NT, macOS XNU).
+## Q60: What is a microkernel?
+**A:** A minimal kernel with most services in user space (for example, Mach); more modular and secure.
 
-## 62. What is user mode versus kernel mode?
-User mode restricts access; kernel mode has full hardware access; switch via system call.
+## Q61: What is a hybrid kernel?
+**A:** Combines monolithic and microkernel features (for example, Windows NT, macOS XNU).
 
-## 63. What is an interrupt?
-A signal to the CPU to pause current work and handle an event.
+## Q62: What is user mode versus kernel mode?
+**A:** User mode restricts access; kernel mode has full hardware access; switch via system call.
 
-## 64. What is a trap?
-A software-generated interrupt (for example, system call or error) transferring to kernel mode.
+## Q63: What is an interrupt?
+**A:** A signal to the CPU to pause current work and handle an event.
 
-## 65. What is a device driver?
-Software enabling the OS to communicate with hardware devices.
+## Q64: What is a trap?
+**A:** A software-generated interrupt (for example, system call or error) transferring to kernel mode.
 
-## 66. What is spooling?
-Queueing jobs (for example, print) to a buffer so devices process them without blocking.
+## Q65: What is a device driver?
+**A:** Software enabling the OS to communicate with hardware devices.
 
-## 67. What is a daemon?
-A background process running without user interaction (for example, cron).
+## Q66: What is spooling?
+**A:** Queueing jobs (for example, print) to a buffer so devices process them without blocking.
 
-## 68. What is IPC?
-Inter-Process Communication: mechanisms for processes to exchange data.
+## Q67: What is a daemon?
+**A:** A background process running without user interaction (for example, cron).
 
-## 69. What are IPC methods?
-Pipes, message queues, shared memory, semaphores, sockets, signals.
+## Q68: What is IPC?
+**A:** Inter-Process Communication: mechanisms for processes to exchange data.
 
-## 70. What is a pipe?
-A unidirectional channel connecting the output of one process to another.
+## Q69: What are IPC methods?
+**A:** Pipes, message queues, shared memory, semaphores, sockets, signals.
 
-## 71. What is shared memory IPC?
-Processes map the same memory region to communicate fastest without copying.
+## Q70: What is a pipe?
+**A:** A unidirectional channel connecting the output of one process to another.
 
-## 72. What is a signal?
-A limited asynchronous notification sent to a process (for example, SIGKILL, SIGTERM).
+## Q71: What is shared memory IPC?
+**A:** Processes map the same memory region to communicate fastest without copying.
 
-## 73. What is a socket?
-An endpoint for communication between processes across a network or locally.
+## Q72: What is a signal?
+**A:** A limited asynchronous notification sent to a process (for example, SIGKILL, SIGTERM).
 
-## 74. What is producer-consumer problem?
-A classic sync problem where producers add and consumers remove from a bounded buffer.
+## Q73: What is a socket?
+**A:** An endpoint for communication between processes across a network or locally.
 
-## 75. What is the readers-writers problem?
-Coordinating processes that read (many) and write (exclusive) shared data.
+## Q74: What is producer-consumer problem?
+**A:** A classic sync problem where producers add and consumers remove from a bounded buffer.
 
-## 76. What is the dining philosophers problem?
-A classic deadlock example with philosophers alternating thinking and eating with shared forks.
+## Q75: What is the readers-writers problem?
+**A:** Coordinating processes that read (many) and write (exclusive) shared data.
 
-## 77. What is a real-time operating system (RTOS)?
-An OS guaranteeing timely responses within strict deadlines (for example, embedded systems).
+## Q76: What is the dining philosophers problem?
+**A:** A classic deadlock example with philosophers alternating thinking and eating with shared forks.
 
-## 78. What is a batch operating system?
-Processes jobs in batches without user interaction (early mainframes).
+## Q77: What is a real-time operating system (RTOS)?
+**A:** An OS guaranteeing timely responses within strict deadlines (for example, embedded systems).
 
-## 79. What is a time-sharing OS?
-Multiple users share the CPU via rapid switching for interactivity.
+## Q78: What is a batch operating system?
+**A:** Processes jobs in batches without user interaction (early mainframes).
 
-## 80. What is a distributed OS?
-An OS managing a network of machines appearing as a single coherent system.
+## Q79: What is a time-sharing OS?
+**A:** Multiple users share the CPU via rapid switching for interactivity.
 
-## 81. What is multiprogramming?
-Running multiple programs concurrently by overlapping their execution on one CPU.
+## Q80: What is a distributed OS?
+**A:** An OS managing a network of machines appearing as a single coherent system.
 
-## 82. What is multitasking?
-The OS rapidly switching between tasks to give the illusion of parallelism.
+## Q81: What is multiprogramming?
+**A:** Running multiple programs concurrently by overlapping their execution on one CPU.
 
-## 83. What is multiprocessing?
-Using more than one CPU slash core to execute processes truly in parallel.
+## Q82: What is multitasking?
+**A:** The OS rapidly switching between tasks to give the illusion of parallelism.
 
-## 84. What is parallelism versus concurrency?
-Parallelism runs tasks simultaneously (multiple cores); concurrency interleaves over time.
+## Q83: What is multiprocessing?
+**A:** Using more than one CPU slash core to execute processes truly in parallel.
 
-## 85. What is a deadlock versus livelock?
-Deadlock is stuck waiting; livelock is active but making no progress (repeated reacting).
+## Q84: What is parallelism versus concurrency?
+**A:** Parallelism runs tasks simultaneously (multiple cores); concurrency interleaves over time.
 
-## 86. What is TLB?
-Translation Lookaside Buffer: a cache speeding up virtual-to-physical address translation.
+## Q85: What is a deadlock versus livelock?
+**A:** Deadlock is stuck waiting; livelock is active but making no progress (repeated reacting).
 
-## 87. What is address binding?
-Mapping program addresses to physical memory addresses (compile, load, execution time).
+## Q86: What is TLB?
+**A:** Translation Lookaside Buffer: a cache speeding up virtual-to-physical address translation.
 
-## 88. What is logical versus physical address?
-Logical (virtual) is generated by CPU; physical is the actual memory location.
+## Q87: What is address binding?
+**A:** Mapping program addresses to physical memory addresses (compile, load, execution time).
 
-## 89. What is contiguous versus non-contiguous memory allocation?
-Contiguous places a process in one block; non-contiguous (paging or segmentation) splits it.
+## Q88: What is logical versus physical address?
+**A:** Logical (virtual) is generated by CPU; physical is the actual memory location.
 
-## 90. What is segmentation?
-Dividing memory into variable-sized segments by logical units (code, stack, data).
+## Q89: What is contiguous versus non-contiguous memory allocation?
+**A:** Contiguous places a process in one block; non-contiguous (paging or segmentation) splits it.
 
-## 91. Difference between paging and segmentation.
-Paging uses fixed-size blocks (no external frag); segmentation uses logical variable blocks.
+## Q90: What is segmentation?
+**A:** Dividing memory into variable-sized segments by logical units (code, stack, data).
 
-## 92. What is a bootloader?
-Code that loads the OS kernel into memory during startup.
+## Q91: Difference between paging and segmentation.
+**A:** Paging uses fixed-size blocks (no external frag); segmentation uses logical variable blocks.
 
-## 93. What is BIOS slash UEFI?
-Firmware initializing hardware and starting the boot process.
+## Q92: What is a bootloader?
+**A:** Code that loads the OS kernel into memory during startup.
 
-## 94. What is the difference between process and program in memory?
-Program is code on disk; process has text, data, heap, and stack segments in RAM.
+## Q93: What is BIOS slash UEFI?
+**A:** Firmware initializing hardware and starting the boot process.
 
-## 95. What is a zombie process?
-A terminated process whose entry remains until the parent reads its exit status.
+## Q94: What is the difference between process and program in memory?
+**A:** Program is code on disk; process has text, data, heap, and stack segments in RAM.
 
-## 96. What is an orphan process?
-A process whose parent terminated; usually adopted by init or systemd.
+## Q95: What is a zombie process?
+**A:** A terminated process whose entry remains until the parent reads its exit status.
 
-## 97. What is fork()?
-A system call creating a child process as a copy of the parent (Unix).
+## Q96: What is an orphan process?
+**A:** A process whose parent terminated; usually adopted by init or systemd.
 
-## 98. What is a thread pool?
-A set of pre-created threads reused to handle tasks, reducing creation overhead.
+## Q97: What is fork()?
+**A:** A system call creating a child process as a copy of the parent (Unix).
 
-## 99. What is the difference between user-level and kernel-level threads?
-User threads managed by a library; kernel threads scheduled by the OS; many-to-one or one-to-one mapping.
+## Q98: What is a thread pool?
+**A:** A set of pre-created threads reused to handle tasks, reducing creation overhead.
 
-## 100. What are the benefits of multithreading?
-Responsiveness, resource sharing, economy (less overhead than processes), and parallelism on multicore.
+## Q99: What is the difference between user-level and kernel-level threads?
+**A:** User threads managed by a library; kernel threads scheduled by the OS; many-to-one or one-to-one mapping.
+
+## Q100: What are the benefits of multithreading?
+**A:** Responsiveness, resource sharing, economy (less overhead than processes), and parallelism on multicore.
