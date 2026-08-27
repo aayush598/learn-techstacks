@@ -383,113 +383,184 @@ class Solution:
 
 ---
 
-## 4. Coin Piles Minimum — Medium
+## 4. Remove Minimum Coins so Pile Differences ≤ K — Medium
 
-**🔗 Practice Link:** [4. Coin Piles Minimum — Medium](https://www.geeksforgeeks.org/remove-minimum-coins-such-that-absolute-difference-between-any-two-piles-is-less-than-k)
+**🔗 Practice Link:** [Remove Minimum Coins such that absolute difference between any two piles is less than k](https://www.geeksforgeeks.org/remove-minimum-coins-such-that-absolute-difference-between-any-two-piles-is-less-than-k)
 
 ### Problem Explanation
-You are given `piles` of coins where `piles[i]` is the number of coins in the i-th pile.
-In one operation you may remove exactly one coin from any two adjacent piles simultaneously.
-The goal is to minimize the total number of coins remaining after performing any number of
-operations. Return the minimum possible remaining coins.
+You are given `arr[]` where `arr[i]` is the number of coins in the i-th pile, and an integer
+`k`. Remove the **minimum number of coins** overall so that after removal, the absolute
+difference between the number of coins in **any two remaining piles** is at most `k`. You are
+allowed to remove all coins of a pile, which removes that pile completely. Return the minimum
+coins removed.
+
+Examples:
+- `arr = [2, 2, 2, 2], k = 0` → `0` (all piles already equal; diff = 0, remove nothing).
+- `arr = [1, 5, 1, 2, 5, 1], k = 3` → `2` (trim one coin from each of the two piles of 5:
+  they become 4, and every pair now differs by ≤ 3).
 
 ### State Definition
-`dp[i][state]` = minimum remaining coins for piles `0..i` where `state` encodes how many
-coins were carried over from pile `i` to help pair with pile `i+1`. Since we only remove one
-from adjacent pairs, `state` ∈ {0, 1} (0 or 1 coins borrowed from the left).
+After sorting `arr`, the piles we KEEP must all fit inside one window `[L, L + k]` (if the
+smallest kept pile is `L` and the largest is `R`, the condition `R - L ≤ k` means the kept
+piles form a contiguous sorted segment). So the decision is **which pile is the smallest kept
+pile**, i.e. `L = arr[start]`. For a fixed `start`:
+
+- All piles before `start` are removed entirely → cost `prefix[start]`.
+- All piles strictly above `arr[start] + k` (after the window) are trimmed DOWN to
+  `arr[start] + k` → cost `sum(arr[j] - (arr[start] + k))` for `j` in the right region.
+- Piles inside the window stay unchanged → cost 0.
+
+`dp[start]` = minimum coins removed if `arr[start]` is the smallest surviving pile value.
 
 ### Recurrence Relation
+Let `end` = first index with `arr[end] > arr[start] + k`, and let `prefix[i]` = sum of
+`arr[0..i-1]` (prefix sum of the sorted array). Then:
+
 ```
-For each pile i and carry c (coins removed from pile i-1 paired with pile i):
-  remaining = piles[i] - c
-  We can pair up to remaining // 2 operations between pile i and pile i+1.
-  dp[i+1][0] = min(dp[i+1][0], dp[i][c] + remaining % 2)
-  dp[i+1][1] = min(dp[i+1][1], dp[i][c] + (remaining - 1) % 2 + 1)  if remaining >= 1
+window_coins = prefix[end] - prefix[start]          # coins of piles inside the window (kept)
+right_count  = n - end                              # number of piles after the window
+right_total  = prefix[n] - prefix[end]             # their total coins
+
+dp[start] = prefix[start]                            # remove every pile before window
+          + (right_total - right_count * (arr[start] + k))   # trim every pile after window to upper bound
 ```
-Simplified: at each pile, we choose how many to pair with the next pile.
+
+`prefix[start] + window_coins + right_count*(arr[start] + k)` equals `total`, so this is
+exactly "total − coins allowed to stay" = coins removed. We return `min(dp[start])` over all
+`start`. (Removing every pile is always valid, giving cost `total` as the initial upper bound.)
 
 ### Base Cases
-- `dp[0][0] = 0`, `dp[0][1] = piles[0]` (if we treat an imaginary borrow).
+- If `n == 0`: return 0.
+- Upper bound `ans = total` (remove everything).
 
 ### Intuition (Why This Works)
-The key insight is that pairing between pile `i` and `i+1` is the only freedom. We greedily
-maximize pairs at each step. The state tracks how many coins from the previous pile were
-"held back" for pairing. Since each operation removes exactly one from two adjacent piles,
-the leftover at pile `i` after pairing with `i-1` determines what pairs with `i+1`.
+The condition "difference between ANY two piles ≤ k" is equivalent to `max − min ≤ k`. Once we
+sort, the surviving piles are contiguous, so the problem is: **choose a window of allowed pile
+sizes and delete/trim everything outside it**, minimizing what we throw away. There is no 2D
+DP here — it is a 1D optimization over the sorted array. Two ways compute `dp[start]`:
+1. **Binary search + prefix sum** (O(n log n) time, O(n) space): for each `start`, binary
+   search `end`, then use prefix sums for the formula above.
+2. **Two-pointer sliding window** (O(n log n) time, O(1) space): keep a valid window
+   `[start, end)` as `start` advances, so `cost(start)` is updated in O(1) per step.
 
-### Step-by-Step Procedure
-1. If `len(piles) <= 1`: return `sum(piles)` (no adjacent pair possible).
-2. Initialize `dp0 = 0` (no carry from left), `dp1 = float('inf')`.
-3. For each pile `i` from `0` to `n-1`:
-   - For each carry `c` ∈ {0, 1} that is valid:
-     - `rem = piles[i] - c` (coins left after using `c` for pairing with pile `i-1`).
-     - If `rem < 0`: invalid state, skip.
-     - `next_dp0 = min(next_dp0, dp[c] + rem % 2)`.
-     - If `rem >= 1`: `next_dp1 = min(next_dp1, dp[c] + (rem - 1) % 2 + 1)`.
-   - Update `dp0, dp1 = next_dp0, next_dp1`.
-4. Return `dp0`.
+### Step-by-Step Procedure (Two-pointer, Expected Approach)
+1. Sort `arr`; `n = len(arr)`; `total = sum(arr)`; `ans = total`; `prefix = 0`;
+   `window_sum = 0`; `end = 0`.
+2. For `start` from `0` to `n-1`:
+   - While `end < n` and `arr[end] - arr[start] <= k`: `window_sum += arr[end]; end += 1`.
+   - `upper = arr[start] + k`; `right_count = n - end`.
+   - `remove_right = (total - prefix - window_sum) - right_count * upper`.
+   - `removed = prefix + remove_right`; `ans = min(ans, removed)`.
+   - If `end == start`: `end += 1` (empty window, nudge forward); else `window_sum -= arr[start]`.
+   - `prefix += arr[start]`.
+3. Return `ans`.
 
 ### Worked Example (Dry Run)
-`piles = [4, 1, 5, 3]`.
+`arr = [1, 5, 1, 2, 5, 1], k = 3`. Sorted: `[1, 1, 1, 2, 5, 5]`, `total = 15`.
 
 ```
-i=0, pile=4:
-  c=0: rem=4. next_dp0 = 0 + 4%2 = 0. next_dp1 = 0 + 3%2+1 = 2
-  dp0=0, dp1=2
+start=0, arr[start]=1, upper=4
+  window expands to end=4 (covers 1,1,1,2); window_sum=5; prefix=0
+  right_count=2; remove_right=(15-0-5) - 2*4 = 10-8 = 2
+  removed = 0 + 2 = 2   -> ans = 2
+  window_sum -= 1 -> 4; prefix=1
 
-i=1, pile=1:
-  c=0: rem=1. next_dp0 = 0+1%2=1. next_dp1 = 0+0%2+1=1.
-  c=1: rem=0. next_dp0 = min(1, 2+0)=1. next_dp1 = invalid (rem<1).
-  dp0=1, dp1=1
+start=1, arr[start]=1, upper=4
+  window covers 1,1,2 (window_sum=4); right_count=2
+  remove_right=(15-1-4) - 2*4 = 10-8 = 2 ; removed = 1+2 = 3 ; ans stays 2
 
-i=2, pile=5:
-  c=0: rem=5. next_dp0=1+5%2=2. next_dp1=1+4%2+1=2.
-  c=1: rem=4. next_dp0=min(2,1+4%2)=2. next_dp1=min(2,1+3%2+1)=2.
-  dp0=2, dp1=2
+start=2, arr[start]=1, upper=4
+  window_sum=3 (1+2); remove_right=(15-2-3)-2*4 = 10-8=2; removed=2+2=4; ans stays 2
 
-i=3, pile=3:
-  c=0: rem=3. ans=2+3%2=3.
-  c=1: rem=2. ans=min(3,2+2%2)=2.
-  dp0=2
+start=3, arr[start]=2, upper=5
+  window expands to end=6 (now includes both 5s); window_sum=12; prefix=3
+  right_count=0; remove_right=(15-3-12) - 0 = 0; removed=3+0=3; ans stays 2
 
-Answer: 2
+start=4, arr[start]=5, upper=8
+  window_sum=12; remove_right=(15-5-12)= -2; removed=5-2=3; ans stays 2
+start=5: removed=3; ans stays 2
+
+Answer: 2   (trim one coin from each pile of 5)
 ```
 
 ### Code
+
 ```python
-def coin_piles_minimum(piles: list) -> int:
-    if len(piles) <= 1:
-        return sum(piles)
-    inf = float('inf')
-    dp0 = 0          # minimum leftover when no coin is carried from the left
-    dp1 = inf        # minimum leftover when 1 coin is carried from the left
-    for i in range(len(piles)):
-        ndp0 = inf
-        ndp1 = inf
-        for c, dp_val in [(0, dp0), (1, dp1)]:
-            rem = piles[i] - c
-            if rem < 0:
-                continue
-            # Pair 0 extra with next: leftover is rem % 2
-            ndp0 = min(ndp0, dp_val + rem % 2)
-            # Pair 1 extra with next (lend 1 to right): leftover is (rem-1)%2 + 1
-            if rem >= 1:
-                ndp1 = min(ndp1, dp_val + (rem - 1) % 2 + 1)
-        dp0, dp1 = ndp0, ndp1
-    return dp0
+# ---- Expected approach: Two-pointer sliding window, O(n log n) time, O(1) space ----
+def minimumCoins(arr: list, k: int) -> int:
+    n = len(arr)
+    arr.sort()
+    total = sum(arr)
+    min_removed = total          # removing everything is always valid
+    window_sum = 0
+    prefix = 0
+    end = 0
+    for start in range(n):
+        # Expand the window to include piles within k of arr[start]
+        while end < n and arr[end] - arr[start] <= k:
+            window_sum += arr[end]
+            end += 1
+        # Any pile after the window must be trimmed down to the upper bound
+        upper = arr[start] + k
+        right_count = n - end
+        remove_right = (total - prefix - window_sum) - right_count * upper
+        removed = prefix + remove_right
+        min_removed = min(min_removed, removed)
+        # Slide the window: drop arr[start] from the kept window
+        if end == start:
+            end += 1
+        else:
+            window_sum -= arr[start]
+        prefix += arr[start]
+    return min_removed
+
+
+# ---- Alternate approach: Binary search + prefix sum, O(n log n) time, O(n) space ----
+import bisect
+
+def minimumCoins_prefix(arr: list, k: int) -> int:
+    arr.sort()
+    n = len(arr)
+    prefix = [0] * (n + 1)
+    for i in range(n):
+        prefix[i + 1] = prefix[i] + arr[i]
+    ans = prefix[n]
+    for i in range(n):
+        # skip duplicate values (same L gives same cost)
+        if i > 0 and arr[i] == arr[i - 1]:
+            continue
+        upper = arr[i] + k
+        pos = bisect.bisect_right(arr, upper, i, n)   # first index > upper
+        # coins removed = all before i  +  (coins after window - capped value)
+        remove_after = (prefix[n] - prefix[pos]) - (n - pos) * upper
+        ans = min(ans, prefix[i] + remove_after)
+    return ans
+
+
+arr = [1, 5, 1, 2, 5, 1]
+k = 3
+print(minimumCoins(arr, k))        # 2
+print(minimumCoins_prefix(arr, k)) # 2
 ```
 
 ### Complexity
-- Time: O(n) — each pile is visited once with constant states.
-- Space: O(1) — only two state variables.
+- Time: **O(n log n)** — dominated by sorting; each start is processed once (two-pointer) or
+  with one binary search.
+- Space: **O(1)** for the two-pointer version; **O(n)** for the prefix-sum version.
 
 ### Common Mistakes & Edge Cases
-- **Single pile:** return `piles[0]` (no adjacent pile to pair with).
-- **All piles equal and even:** every coin can be paired, answer is 0.
-- **All piles equal and odd:** one coin per pair is left, answer is `n % 2` or similar.
-- **Negative `rem`:** the `c=1` carry is invalid when `piles[i] = 0`.
-- **Greedy correctness:** the local optimal pairing is globally optimal because operations
-  only affect adjacent piles.
+- **Wrong problem framing:** this is NOT a 2D/adjacency DP. The kept piles are a contiguous
+  segment of the SORTED array, so it is a 1D optimization, not pairwise removal.
+- **Forgetting a whole pile can be removed:** piles before the window are removed entirely
+  (cost = their full coin count), they are NOT trimmed to `upper`.
+- **Off-by-one with prefix sums:** `prefix[i]` must mean `sum(arr[0..i-1])` so `prefix[n]` is
+  the total and `prefix[i]` is "coins before index i".
+- **Cap is `arr[start] + k`, not a fixed number:** the upper bound moves with the chosen
+  smallest kept pile.
+- **Duplicate start values:** skipping `arr[i] == arr[i-1]` avoids recomputing the same cost
+  (binary-search version); the two-pointer version handles it naturally.
+- **`k = 0`:** then all surviving piles must be exactly equal; the window keeps only one
+  distinct value.
 
 ---
 
@@ -915,7 +986,7 @@ def minimum_cost(n: int, costs: list, k: int) -> int:
 │ Bags of Tokens (LC #948)                     │ Greedy+DP  │ O(n logn)│ O(1)     │
 │ Partition K Subsets (LC #698)                │ Bitmask DP │ O(n*2^n) │ O(2^n)   │
 │ Job Scheduling (LC #1235)                    │ Interval   │ O(n logn)│ O(n)     │
-│ Coin Piles Minimum                           │ State DP   │ O(n)     │ O(1)     │
+│ Coin Piles Diff ≤ K (GFG)                    │ Sort+2ptr  │ O(n logn)│ O(1)     │
 │ Subsequence Sum Target                       │ Subset Sum │ O(n*tgt) │ O(tgt)   │
 │ Min Diff Partition (LC #2035)                │ Subset Sum │ O(n*tgt) │ O(tgt)   │
 │ Count Subsets with Diff                      │ Count SS   │ O(n*tgt) │ O(tgt)   │
