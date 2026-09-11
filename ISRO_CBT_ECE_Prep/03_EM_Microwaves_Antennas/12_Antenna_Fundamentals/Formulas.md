@@ -1,79 +1,67 @@
 # Antenna Fundamentals - Formulas
 
-## Directivity
+## Directivity & Gain
 ```
-D = Umax / Uavg = 4*pi*Umax / Prad
-
-U = radiation intensity (W/sr)
-Prad = total radiated power (W)
-```
-
-## Gain
-```
-G = eta_ant * D
-
-eta_ant = radiation efficiency = Prad/Pinput
-G accounts for ohmic losses, D does not
+D = 4pi U_max / P_rad (U in W/steradian)
+G = 4pi U_max / P_in = eta_rad * D
+D(dBi) = 10 log10(D)
+G(dBi) = 10 log10(G)
 ```
 
 ## Effective Aperture
 ```
-Ae = (lambda^2 * G) / (4*pi)
-
-For aperture antenna: Ae = eta_a * A_physical
-eta_a = aperture efficiency (typically 0.5-0.7)
+Ae = lambda^2 G / (4 pi)
+Ae (max) = lambda^2 D/(4 pi)  (lossless)
+[Ae in m^2, lambda in m]
 ```
 
-## Friis Transmission Equation
+## Friis Transmission
 ```
-Pr/Pt = Gt * Gr * (lambda / (4*pi*R))^2
-
-Pr = received power
-Pt = transmitted power
-Gt = transmit antenna gain
-Gr = receive antenna gain
-R = distance between antennas
+Pr = Pt * Gt * Gr * (lambda/(4 pi R))^2
+(Space loss factor = (lambda/4piR)^2)
+Free-space path loss (dB) = 20 log10(4 pi R/lambda)
+EIRP = Pt * Gt
 ```
 
-## EIRP (Effective Isotropic Radiated Power)
+## Beamwidth / Directivity approximation
 ```
-EIRP = Pt * Gt (in dB: EIRP_dB = Pt_dB + Gt_dB)
-Equivalent power radiated by isotropic antenna for same field strength
-```
-
-## Radiation Resistance
-```
-For short dipole (l << lambda):
-  Rr = 80*pi^2*(l/lambda)^2 = 20*(pi*l/lambda)^2
-
-For half-wave dipole:
-  Rr = 73 ohms
-
-For monopole (quarter-wave over ground plane):
-  Rr = 36.5 ohms (half of half-wave dipole)
+D ~ 4 pi / (Theta_HPBW_pi * Phi_HPBW_pi)  (radians)
+  For pencil beam (small angles)
+D ~ 1/(beam solid angle)
 ```
 
-## Beamwidth
+## Radiation resistance
 ```
-HPBW = angle between half-power (-3dB) points
-First null beamwidth (FNBW) = angle between first nulls
-
-For uniform linear array of N elements:
-  HPBW approximately 0.886*lambda/(N*d) (in radians)
+Dipole (half-wave): Rr ~ 73 ohms
+Monopole (quarter-wave): Rr ~ 36.5 ohms
+Short dipole: Rr = 80 pi^2 (L/lambda)^2  (small L)
 ```
 
-## Antenna Noise Temperature
+## Pattern
 ```
-Ta = (Prad)/(kB) where k = Boltzmann constant = 1.38e-23 J/K
-G/T ratio: figure of merit for receiving system
+HPBW = angle between half-power (-3dB) points of main lobe
+Radiation intensity: U = r^2 * P_avg (power per steradian)
+```
+
+## Loss / Polarization mismatch
+```
+Polarization loss factor = cos^2(delta angle between polarizations)
+Available power at receiver = (power density)*(Ae) 
+```
+
+## Efficiency
+```
+eta_rad = P_rad/P_in = Rr/(Rr + R_loss)
+Antenna efficiency often good (lossless for most)
 ```
 
 ## Quick Reference
-| Parameter | Formula | Unit |
-|-----------|---------|------|
-| Directivity | D = 4pi*Umax/Prad | dimensionless (dBi) |
-| Gain | G = eta*D | dimensionless (dBi) |
-| EIRP | Pt*Gt | Watts (dBW) |
-| Friis | Pr = Pt*Gt*Gr*(lambda/4piR)^2 | Watts |
-| Rr (half-wave) | 73 ohms | ohms |
-| HPBW | 0.886*lambda/L | radians |
+| Quantity | Formula |
+|----------|---------|
+| G | eta*D |
+| Ae | lambda^2 G/4pi |
+| Friis Pr | Pt Gt Gr (lam/4piR)^2 |
+| D | 4pi/theta phi (approx) |
+| Dipole Rr | 73 ohm |
+| Monopole Rr | 36.5 ohm |
+| Path loss | (4piR/lam)^2 |
