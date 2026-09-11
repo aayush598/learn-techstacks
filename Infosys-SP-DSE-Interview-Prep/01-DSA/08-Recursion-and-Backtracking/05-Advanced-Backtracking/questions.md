@@ -1,308 +1,301 @@
-# 05 Advanced Backtracking — Recursion / And / Backtracking
+# Recursion And Backtracking — Advanced Backtracking Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What counts as advanced backtracking?
+**A:** Combinatorial enumeration with tight pruning, bitmask states, symmetry-breaking, memoised-tallies, and NP-hard problems solved heuristically (N-Queens > 20, exact cover).
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: How do you solve 'word squares' with backtracking + trie?
+**A:** Backtrack placing words; validate each column prefix against a trie; prune when any column prefix has no candidates. O(words·2^L) pruned.
 
-1. **What counts as advanced backtracking?**
-   - Combinatorial enumeration with tight pruning, bitmask states, symmetry-breaking, memoised-tallies, and NP-hard problems solved heuristically (N-Queens > 20, exact cover).
+## Q3: What is bitmask-n-queens (positions as bits)?
+**A:** Cols/diag1/diag2 as integers; candidate positions = free bits; recur for each set bit with updated masks — O(n!) but extremely fast/pruned.
 
-2. **How do you solve 'word squares' with backtracking + trie?**
-   - Backtrack placing words; validate each column prefix against a trie; prune when any column prefix has no candidates. O(words·2^L) pruned.
+## Q4: What is the exact-cover problem and algorithm X / dancing links?
+**A:** Exact cover selects rows covering each column exactly once using a DLX structure; the underlying backtracking enumerates feasible row sets.
 
-3. **What is bitmask-n-queens (positions as bits)?**
-   - Cols/diag1/diag2 as integers; candidate positions = free bits; recur for each set bit with updated masks — O(n!) but extremely fast/pruned.
+## Q5: How do you do symmetry-breaking in cutting problems?
+**A:** Always place a piece in the top-left empty cell (canonical placement) to halve the branching — a key pruning for tiling/rectangle-cutting.
 
-4. **What is the exact-cover problem and algorithm X / dancing links?**
-   - Exact cover selects rows covering each column exactly once using a DLX structure; the underlying backtracking enumerates feasible row sets.
+## Q6: How do you solve 'k-partition with equal sums'?
+**A:** Sort descending, place elements into k buckets via backtracking, prune when a bucket exceeds target or when equal remaining bucket state recurs. O(k^n) with pruning.
 
-5. **How do you do symmetry-breaking in cutting problems?**
-   - Always place a piece in the top-left empty cell (canonical placement) to halve the branching — a key pruning for tiling/rectangle-cutting.
+## Q7: What is branch-and-bound in backtracking?
+**A:** Prune a branch when a fast-computed bound shows it can't beat the incumbent — used in TSP and scheduling to avoid exhaustive search.
 
-6. **How do you solve 'k-partition with equal sums'?**
-   - Sort descending, place elements into k buckets via backtracking, prune when a bucket exceeds target or when equal remaining bucket state recurs. O(k^n) with pruning.
+## Q8: How do you combine backtracking with memoisation (e.g., count of partitions)?
+**A:** State = (mask, last, ...); cache counts by state; the memoised recursion computes tallies exponentially faster than enumerating.
 
-7. **What is branch-and-bound in backtracking?**
-   - Prune a branch when a fast-computed bound shows it can't beat the incumbent — used in TSP and scheduling to avoid exhaustive search.
+## Q9: How do you design a correct backtracking skeleton?
+**A:** Parameters hold partial solution + remaining resources; loop choices; apply choice, recurse, undo; each early exit checks feasibility; base case records the solution. Test a tiny input first.
 
-8. **How do you combine backtracking with memoisation (e.g., count of partitions)?**
-   - State = (mask, last, ...); cache counts by state; the memoised recursion computes tallies exponentially faster than enumerating.
+## Q10: How do you solve 'remove invalid parentheses' with BFS/backtracking?
+**A:** Generate candidates by deleting one paren at a time (BFS levels) returning the max valid length — or DFS reporting min deletions. O(2^n) worst but prunes fast.
 
-9. **How do you design a correct backtracking skeleton?**
-   - Parameters hold partial solution + remaining resources; loop choices; apply choice, recurse, undo; each early exit checks feasibility; base case records the solution. Test a tiny input first.
+## Q11: What is the intuition behind the 05 advanced backtracking technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-10. **How do you solve 'remove invalid parentheses' with BFS/backtracking?**
-   - Generate candidates by deleting one paren at a time (BFS levels) returning the max valid length — or DFS reporting min deletions. O(2^n) worst but prunes fast.
+## Q12: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-11. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q13: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-12. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q14: What common edge cases must be handled in 05 advanced backtracking implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-13. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q15: How would you dry-run your 05 advanced backtracking code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-14. **What common edge cases must be handled in 05 advanced backtracking implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q16: Give a real-world analogy for 05 advanced backtracking.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-15. **How would you dry-run your 05 advanced backtracking code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q17: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-16. **Give a real-world analogy for 05 advanced backtracking.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q18: What is the role of a prefix/suffix precomputation in 05 advanced backtracking?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-17. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q19: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-18. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q20: How is 05 advanced backtracking asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-19. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q21: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-20. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q22: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-21. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q23: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-22. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q24: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-23. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q25: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-24. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q26: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-25. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q27: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-26. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q28: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-27. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q29: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-28. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q30: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-29. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q31: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-30. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q32: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-31. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q33: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-32. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q34: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-33. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q35: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-34. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q36: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-35. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q37: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-36. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q38: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-37. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q39: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-38. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q40: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-39. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q41: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-40. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q42: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-41. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q43: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-42. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q44: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-43. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q45: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-44. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q46: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-45. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q47: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-46. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q48: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-47. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q49: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-48. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q50: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-49. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q51: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-50. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q52: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-51. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q53: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-52. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q54: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-53. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q55: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-54. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q56: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-55. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q57: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-56. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q58: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-57. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q59: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-58. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q60: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-59. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q61: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-60. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q62: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-61. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q63: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-62. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q64: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-63. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q65: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-64. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q66: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-65. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q67: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-66. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q68: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-67. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q69: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-68. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q70: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-69. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q71: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-70. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q72: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-71. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q73: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-72. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q74: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-73. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q75: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-74. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q76: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-75. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q77: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-76. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q78: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-77. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q79: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-78. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q80: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-79. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q81: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-80. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q82: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-81. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q83: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-82. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q84: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-83. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q85: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-84. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q86: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-85. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q87: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-86. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q88: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-87. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q89: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-88. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q90: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-89. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q91: What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-90. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q92: Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-91. **What is the intuition behind the 05 advanced backtracking technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q93: State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-92. **Write the brute-force approach for a typical 05 advanced backtracking problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q94: What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-93. **State the time and space complexity of the optimal solution for most 05 advanced backtracking problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q95: How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-94. **What common edge cases must be handled in 05 advanced backtracking implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q96: Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.
+**A:** Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-95. **How would you dry-run your 05 advanced backtracking code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q97: How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-96. **Give a real-world analogy for 05 advanced backtracking. Extend your answer with a second example.**
-   - Analogy: 05 advanced backtracking is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q98: What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-97. **How do you decide between a hash map, sorting, or two pointers as tools for 05 advanced backtracking? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q99: Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-98. **What is the role of a prefix/suffix precomputation in 05 advanced backtracking? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
-
-99. **Explain the optimisation step you would mention after writing the naive version for 05 advanced backtracking. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
-
-100. **How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
-
-</details>
+## Q100: How is 05 advanced backtracking asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.

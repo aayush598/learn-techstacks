@@ -1,308 +1,301 @@
-# 01 Ctc Understanding — Salary / And / Negotiation
+# Salary And Negotiation — Ctc Understanding Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: How is CTC different from in-hand salary?
+**A:** CTC includes employer-paid components — basic, HRA, allowances, PF/gratuity, insurance, and variable pay; in-hand is what actually lands monthly after deductions — citing this distinction shows you understand offer letters.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What is a variable pay or bonus component?
+**A:** Performance-linked pay paid periodically (often annual) based on individual and company performance — not guaranteed monthly; treat it as upside, not base.
 
-1. **How is CTC different from in-hand salary?**
-   - CTC includes employer-paid components — basic, HRA, allowances, PF/gratuity, insurance, and variable pay; in-hand is what actually lands monthly after deductions — citing this distinction shows you understand offer letters.
+## Q3: What fixed vs variable split should you expect?
+**A:** Fresher offers are mostly fixed with a small variable/performance component; I'd ask the recruiter for the exact split and the variable's frequency and threshold before signing.
 
-2. **What is a variable pay or bonus component?**
-   - Performance-linked pay paid periodically (often annual) based on individual and company performance — not guaranteed monthly; treat it as upside, not base.
+## Q4: What deductions are standard in Indian offers?
+**A:** Employer PF + employee PF, gratuity, and professional tax reduce gross; the rest largely reaches your account — a quick deduction walkthrough shows financial literacy.
 
-3. **What fixed vs variable split should you expect?**
-   - Fresher offers are mostly fixed with a small variable/performance component; I'd ask the recruiter for the exact split and the variable's frequency and threshold before signing.
+## Q5: What is the difference between gross and net salary?
+**A:** Gross = total earnings before deductions; net = what's banked after PF/gratuity/professional tax — always compute net before committing to expenses.
 
-4. **What deductions are standard in Indian offers?**
-   - Employer PF + employee PF, gratuity, and professional tax reduce gross; the rest largely reaches your account — a quick deduction walkthrough shows financial literacy.
+## Q6: How would you evaluate an offer beyond CTC?
+**A:** Effective hourly rate, training quality, role growth, project exposure, work location, and benefits (insurance, learning budget) — CTC alone overvalues less-critical-per-kg offers.
 
-5. **What is the difference between gross and net salary?**
-   - Gross = total earnings before deductions; net = what's banked after PF/gratuity/professional tax — always compute net before committing to expenses.
+## Q7: What is joining bonus vs retention bonus?
+**A:** Joining bonus is paid at onboarding (usually clawed back if you leave within a window); retention bonus rewards staying — two different incentives to read carefully.
 
-6. **How would you evaluate an offer beyond CTC?**
-   - Effective hourly rate, training quality, role growth, project exposure, work location, and benefits (insurance, learning budget) — CTC alone overvalues less-critical-per-kg offers.
+## Q8: What salary range would be acceptable for your role?
+**A:** State a researched, confident-but-flexible range for SP DSE — anchor on market rates for Infosys specialist freshers and say the primary driver is learning and role fit — never say 'whatever you give'.
 
-7. **What is joining bonus vs retention bonus?**
-   - Joining bonus is paid at onboarding (usually clawed back if you leave within a window); retention bonus rewards staying — two different incentives to read carefully.
+## Q9: How do you plan your expenses with a variable income?
+**A:** Budget on fixed in-hand, treat variable pay as savings/investment, and keep an emergency buffer — a disciplined answer shows maturity in stability and planning.
 
-8. **What salary range would be acceptable for your role?**
-   - State a researched, confident-but-flexible range for SP DSE — anchor on market rates for Infosys specialist freshers and say the primary driver is learning and role fit — never say 'whatever you give'.
+## Q10: What is the employer's perspective on Fresher compensation?
+**A:** They price in training cost, deployment velocity, and market bands — so negotiating leverage comes from demonstrated skills, not needs; I'd negotiate on evidence, not urgency.
 
-9. **How do you plan your expenses with a variable income?**
-   - Budget on fixed in-hand, treat variable pay as savings/investment, and keep an emergency buffer — a disciplined answer shows maturity in stability and planning.
+## Q11: Tell me about a time you demonstrated 01 ctc understanding (STAR method).
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-10. **What is the employer's perspective on Fresher compensation?**
-   - They price in training cost, deployment velocity, and market bands — so negotiating leverage comes from demonstrated skills, not needs; I'd negotiate on evidence, not urgency.
+## Q12: How does 01 ctc understanding show up in a typical IT services project at Infosys?
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-11. **Tell me about a time you demonstrated 01 ctc understanding (STAR method).**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q13: What is your honest personal strength and a related weakness around 01 ctc understanding?
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-12. **How does 01 ctc understanding show up in a typical IT services project at Infosys?**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q14: Give a self-introduction that showcases 01 ctc understanding.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-13. **What is your honest personal strength and a related weakness around 01 ctc understanding?**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q15: How do you behave when a teammate does not exhibit 01 ctc understanding?
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-14. **Give a self-introduction that showcases 01 ctc understanding.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q16: Describe a failure caused by lack of 01 ctc understanding and your corrective action.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-15. **How do you behave when a teammate does not exhibit 01 ctc understanding?**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q17: Why should we hire you? Base the answer on 01 ctc understanding.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-16. **Describe a failure caused by lack of 01 ctc understanding and your corrective action.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q18: How do you handle pressure and deadlines in relation to 01 ctc understanding?
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-17. **Why should we hire you? Base the answer on 01 ctc understanding.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q19: What questions would you ask the panel that also show 01 ctc understanding?
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-18. **How do you handle pressure and deadlines in relation to 01 ctc understanding?**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q20: Rate yourself on 01 ctc understanding and justify it.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-19. **What questions would you ask the panel that also show 01 ctc understanding?**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q21: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-20. **Rate yourself on 01 ctc understanding and justify it.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q22: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-21. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q23: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-22. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q24: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-23. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q25: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-24. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q26: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-25. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q27: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-26. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q28: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-27. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q29: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-28. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q30: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-29. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q31: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-30. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q32: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-31. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q33: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-32. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q34: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-33. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q35: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-34. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q36: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-35. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q37: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-36. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q38: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-37. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q39: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-38. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q40: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-39. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q41: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-40. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q42: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-41. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q43: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-42. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q44: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-43. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q45: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-44. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q46: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-45. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q47: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-46. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q48: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-47. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q49: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-48. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q50: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-49. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q51: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-50. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q52: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-51. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q53: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-52. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q54: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-53. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q55: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-54. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q56: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-55. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q57: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-56. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q58: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-57. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q59: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-58. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q60: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-59. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q61: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-60. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q62: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-61. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q63: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-62. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q64: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-63. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q65: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-64. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q66: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-65. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q67: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-66. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q68: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-67. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q69: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-68. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q70: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-69. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q71: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-70. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q72: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-71. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q73: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-72. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q74: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-73. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q75: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-74. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q76: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-75. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q77: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-76. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q78: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-77. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q79: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-78. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q80: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-79. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q81: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-80. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q82: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-81. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q83: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-82. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q84: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-83. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q85: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-84. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q86: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-85. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q87: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-86. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q88: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-87. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q89: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-88. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q90: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-89. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q91: Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-90. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q92: How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-91. **Tell me about a time you demonstrated 01 ctc understanding (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q93: What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-92. **How does 01 ctc understanding show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 ctc understanding determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q94: Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-93. **What is your honest personal strength and a related weakness around 01 ctc understanding? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q95: How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-94. **Give a self-introduction that showcases 01 ctc understanding. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q96: Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-95. **How do you behave when a teammate does not exhibit 01 ctc understanding? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q97: Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-96. **Describe a failure caused by lack of 01 ctc understanding and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q98: How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-97. **Why should we hire you? Base the answer on 01 ctc understanding. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q99: What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-98. **How do you handle pressure and deadlines in relation to 01 ctc understanding? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
-
-99. **What questions would you ask the panel that also show 01 ctc understanding? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
-
-100. **Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
-
-</details>
+## Q100: Rate yourself on 01 ctc understanding and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.

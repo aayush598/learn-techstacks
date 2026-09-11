@@ -1,308 +1,301 @@
-# 06 Asyncio — Python / Advanced
+# Python Advanced — Asyncio Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is asyncio and the event loop?
+**A:** A library for concurrent I/O via coroutines: an event loop schedules awaitables, multiplexing blocking waits with selectors — one thread, many tasks.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What is a coroutine?
+**A:** An async def function that runs until an await, suspending the task; awaited via await or scheduled with asyncio.create_task.
 
-1. **What is asyncio and the event loop?**
-   - A library for concurrent I/O via coroutines: an event loop schedules awaitables, multiplexing blocking waits with selectors — one thread, many tasks.
+## Q3: What is the difference between async def and a normal function?
+**A:** Calling an async def returns a coroutine object (nothing runs) until awaited; a normal function executes immediately — the fundamental async distinction.
 
-2. **What is a coroutine?**
-   - An async def function that runs until an await, suspending the task; awaited via await or scheduled with asyncio.create_task.
+## Q4: What is await and blocking calls inside coroutines?
+**A:** await yields control to the loop; blocking (time.sleep, requests.get) inside a coroutine stalls all tasks — always use async.sleep/async HTTP clients (httpx/aiohttp).
 
-3. **What is the difference between async def and a normal function?**
-   - Calling an async def returns a coroutine object (nothing runs) until awaited; a normal function executes immediately — the fundamental async distinction.
+## Q5: What is asyncio.gather?
+**A:** Runs multiple awaitables concurrently awaiting all results: asyncio.gather(*tasks, return_exceptions=True) — the default parallel fan-out pattern.
 
-4. **What is await and blocking calls inside coroutines?**
-   - await yields control to the loop; blocking (time.sleep, requests.get) inside a coroutine stalls all tasks — always use async.sleep/async HTTP clients (httpx/aiohttp).
+## Q6: What is asyncio.create_task vs awaiting directly?
+**A:** create_task schedules in the background for parallel progress; direct await runs sequentially — create_tasks to fire-and-wait multiple I/Os at once.
 
-5. **What is asyncio.gather?**
-   - Runs multiple awaitables concurrently awaiting all results: asyncio.gather(*tasks, return_exceptions=True) — the default parallel fan-out pattern.
+## Q7: What is an async generator (async for)?
+**A:** async def __aiter__ using await and yield per item — streaming from a database cursor or websocket without blocking the loop.
 
-6. **What is asyncio.create_task vs awaiting directly?**
-   - create_task schedules in the background for parallel progress; direct await runs sequentially — create_tasks to fire-and-wait multiple I/Os at once.
+## Q8: What is asyncio.run?
+**A:** asyncio.run(main()) creates a new loop, runs the coroutine, and closes it — the entry point replacing manual loop handling in scripts.
 
-7. **What is an async generator (async for)?**
-   - async def __aiter__ using await and yield per item — streaming from a database cursor or websocket without blocking the loop.
+## Q9: What is to_thread?
+**A:** asyncio.to_thread(fn, ...) runs the blocking function in a worker thread freeing the loop — bridging sync libraries into async code simply.
 
-8. **What is asyncio.run?**
-   - asyncio.run(main()) creates a new loop, runs the coroutine, and closes it — the entry point replacing manual loop handling in scripts.
+## Q10: How does async compare with threading in Python?
+**A:** async: cooperative, one thread, huge fan-out for I/O; threading: preemptive, GIL-bound; async avoids thread-safety and overhead but requires async libraries throughout.
 
-9. **What is to_thread?**
-   - asyncio.to_thread(fn, ...) runs the blocking function in a worker thread freeing the loop — bridging sync libraries into async code simply.
+## Q11: Define 06 asyncio in one line and then expand with a real-world example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-10. **How does async compare with threading in Python?**
-   - async: cooperative, one thread, huge fan-out for I/O; threading: preemptive, GIL-bound; async avoids thread-safety and overhead but requires async libraries throughout.
+## Q12: Why is 06 asyncio important in real production systems?
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-11. **Define 06 asyncio in one line and then expand with a real-world example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q13: What are the advantages and disadvantages of 06 asyncio?
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-12. **Why is 06 asyncio important in real production systems?**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q14: Compare 06 asyncio with alternatives and state when to prefer which.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-13. **What are the advantages and disadvantages of 06 asyncio?**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q15: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-14. **Compare 06 asyncio with alternatives and state when to prefer which.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q16: What common misconceptions exist about 06 asyncio?
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-15. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q17: How would you test correctness of a system that relies on 06 asyncio?
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-16. **What common misconceptions exist about 06 asyncio?**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q18: Describe 06 asyncio as if explaining to a new hire.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-17. **How would you test correctness of a system that relies on 06 asyncio?**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q19: How does 06 asyncio interact with performance (time/space trade-off)?
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-18. **Describe 06 asyncio as if explaining to a new hire.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q20: What would you change about how 06 asyncio is taught, based on your experience?
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-19. **How does 06 asyncio interact with performance (time/space trade-off)?**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q21: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-20. **What would you change about how 06 asyncio is taught, based on your experience?**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q22: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-21. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q23: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-22. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q24: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-23. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q25: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-24. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q26: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-25. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q27: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-26. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q28: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-27. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q29: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-28. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q30: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-29. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q31: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-30. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q32: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-31. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q33: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-32. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q34: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-33. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q35: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-34. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q36: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-35. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q37: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-36. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q38: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-37. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q39: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-38. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q40: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-39. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q41: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-40. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q42: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-41. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q43: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-42. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q44: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-43. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q45: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-44. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q46: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-45. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q47: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-46. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q48: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-47. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q49: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-48. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q50: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-49. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q51: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-50. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q52: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-51. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q53: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-52. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q54: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-53. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q55: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-54. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q56: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-55. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q57: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-56. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q58: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-57. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q59: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-58. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q60: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-59. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q61: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-60. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q62: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-61. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q63: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-62. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q64: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-63. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q65: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-64. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q66: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-65. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q67: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-66. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q68: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-67. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q69: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-68. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q70: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-69. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q71: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-70. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q72: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-71. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q73: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-72. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q74: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-73. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q75: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-74. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q76: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-75. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q77: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-76. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q78: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-77. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q79: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-78. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q80: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-79. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q81: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-80. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q82: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-81. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q83: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-82. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q84: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-83. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q85: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-84. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q86: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-85. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q87: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-86. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q88: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-87. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q89: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-88. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q90: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-89. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q91: Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-90. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q92: Why is 06 asyncio important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-91. **Define 06 asyncio in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 06 asyncio is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q93: What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-92. **Why is 06 asyncio important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q94: Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-93. **What are the advantages and disadvantages of 06 asyncio? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q95: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-94. **Compare 06 asyncio with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q96: What common misconceptions exist about 06 asyncio? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-95. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 06 asyncio knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q97: How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-96. **What common misconceptions exist about 06 asyncio? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q98: Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-97. **How would you test correctness of a system that relies on 06 asyncio? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q99: How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-98. **Describe 06 asyncio as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
-
-99. **How does 06 asyncio interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
-
-100. **What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
-
-</details>
+## Q100: What would you change about how 06 asyncio is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.

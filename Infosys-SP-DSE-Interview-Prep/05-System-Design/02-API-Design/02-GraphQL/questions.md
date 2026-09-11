@@ -1,308 +1,301 @@
-# 02 Graphql — Api / Design
+# Api Design — Graphql Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is GraphQL?
+**A:** A query language where clients request exactly the fields they need in one round trip — a single endpoint with a typed schema.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What is the core difference between REST and GraphQL?
+**A:** REST: resources + server-defined shapes + multiple round trips. GraphQL: client-defined query shapes + one endpoint + a schema enforced by the server.
 
-1. **What is GraphQL?**
-   - A query language where clients request exactly the fields they need in one round trip — a single endpoint with a typed schema.
+## Q3: What is a query vs a mutation in GraphQL?
+**A:** query reads data (parallelisable, cacheable); mutation writes (executed serially) — the read/write separation of the schema.
 
-2. **What is the core difference between REST and GraphQL?**
-   - REST: resources + server-defined shapes + multiple round trips. GraphQL: client-defined query shapes + one endpoint + a schema enforced by the server.
+## Q4: What is a resolver?
+**A:** The function resolving each field — retrieving/transforming data; GraphQL composes a tree of resolvers per query.
 
-3. **What is a query vs a mutation in GraphQL?**
-   - query reads data (parallelisable, cacheable); mutation writes (executed serially) — the read/write separation of the schema.
+## Q5: What is the N+1 problem in GraphQL?
+**A:** A list query triggers a resolver per item hitting the DB N+1 times — solved with Dataloader batching/batching per field.
 
-4. **What is a resolver?**
-   - The function resolving each field — retrieving/transforming data; GraphQL composes a tree of resolvers per query.
+## Q6: What is schema-driven development?
+**A:** The schema is the contract defined first; clients and servers type-generate from it — the collaboration pattern teams adopt.
 
-5. **What is the N+1 problem in GraphQL?**
-   - A list query triggers a resolver per item hitting the DB N+1 times — solved with Dataloader batching/batching per field.
+## Q7: What are the trade-offs of GraphQL vs REST?
+**A:** GraphQL: precise payloads, fewer round trips, but complex caching, DoS via nested queries, and a harder learning curve — REST simpler and cacheable.
 
-6. **What is schema-driven development?**
-   - The schema is the contract defined first; clients and servers type-generate from it — the collaboration pattern teams adopt.
+## Q8: What is a GraphQL subscription?
+**A:** A subscription is a persistent stream of updates (over WebSocket) — real-time push as opposed to query/mutation's request-response.
 
-7. **What are the trade-offs of GraphQL vs REST?**
-   - GraphQL: precise payloads, fewer round trips, but complex caching, DoS via nested queries, and a harder learning curve — REST simpler and cacheable.
+## Q9: How do you protect a GraphQL API?
+**A:** Query-depth and complexity limits (cost analysis), persisted-queries allowlists, and rate limiting — preventing deeply-nested abusive queries.
 
-8. **What is a GraphQL subscription?**
-   - A subscription is a persistent stream of updates (over WebSocket) — real-time push as opposed to query/mutation's request-response.
+## Q10: When would you choose GraphQL?
+**A:** Dashboards/mobile apps with differing field needs, many clients — but avoid it if caching/simplicity or a broad REST ecosystem dominates your use case.
 
-9. **How do you protect a GraphQL API?**
-   - Query-depth and complexity limits (cost analysis), persisted-queries allowlists, and rate limiting — preventing deeply-nested abusive queries.
+## Q11: Define 02 graphql in one line and then expand with a real-world example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-10. **When would you choose GraphQL?**
-   - Dashboards/mobile apps with differing field needs, many clients — but avoid it if caching/simplicity or a broad REST ecosystem dominates your use case.
+## Q12: Why is 02 graphql important in real production systems?
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-11. **Define 02 graphql in one line and then expand with a real-world example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q13: What are the advantages and disadvantages of 02 graphql?
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-12. **Why is 02 graphql important in real production systems?**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q14: Compare 02 graphql with alternatives and state when to prefer which.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-13. **What are the advantages and disadvantages of 02 graphql?**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q15: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-14. **Compare 02 graphql with alternatives and state when to prefer which.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q16: What common misconceptions exist about 02 graphql?
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-15. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q17: How would you test correctness of a system that relies on 02 graphql?
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-16. **What common misconceptions exist about 02 graphql?**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q18: Describe 02 graphql as if explaining to a new hire.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-17. **How would you test correctness of a system that relies on 02 graphql?**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q19: How does 02 graphql interact with performance (time/space trade-off)?
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-18. **Describe 02 graphql as if explaining to a new hire.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q20: What would you change about how 02 graphql is taught, based on your experience?
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-19. **How does 02 graphql interact with performance (time/space trade-off)?**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q21: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-20. **What would you change about how 02 graphql is taught, based on your experience?**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q22: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-21. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q23: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-22. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q24: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-23. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q25: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-24. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q26: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-25. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q27: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-26. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q28: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-27. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q29: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-28. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q30: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-29. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q31: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-30. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q32: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-31. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q33: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-32. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q34: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-33. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q35: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-34. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q36: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-35. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q37: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-36. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q38: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-37. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q39: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-38. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q40: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-39. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q41: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-40. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q42: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-41. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q43: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-42. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q44: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-43. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q45: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-44. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q46: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-45. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q47: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-46. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q48: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-47. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q49: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-48. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q50: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-49. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q51: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-50. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q52: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-51. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q53: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-52. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q54: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-53. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q55: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-54. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q56: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-55. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q57: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-56. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q58: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-57. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q59: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-58. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q60: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-59. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q61: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-60. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q62: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-61. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q63: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-62. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q64: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-63. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q65: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-64. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q66: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-65. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q67: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-66. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q68: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-67. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q69: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-68. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q70: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-69. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q71: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-70. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q72: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-71. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q73: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-72. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q74: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-73. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q75: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-74. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q76: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-75. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q77: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-76. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q78: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-77. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q79: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-78. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q80: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-79. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q81: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-80. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q82: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-81. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q83: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-82. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q84: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-83. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q85: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-84. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q86: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-85. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q87: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-86. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q88: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-87. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q89: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-88. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q90: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-89. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q91: Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-90. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q92: Why is 02 graphql important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-91. **Define 02 graphql in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 graphql is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q93: What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-92. **Why is 02 graphql important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q94: Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-93. **What are the advantages and disadvantages of 02 graphql? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q95: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-94. **Compare 02 graphql with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q96: What common misconceptions exist about 02 graphql? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-95. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 graphql knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q97: How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-96. **What common misconceptions exist about 02 graphql? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q98: Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-97. **How would you test correctness of a system that relies on 02 graphql? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q99: How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-98. **Describe 02 graphql as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
-
-99. **How does 02 graphql interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
-
-100. **What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
-
-</details>
+## Q100: What would you change about how 02 graphql is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.

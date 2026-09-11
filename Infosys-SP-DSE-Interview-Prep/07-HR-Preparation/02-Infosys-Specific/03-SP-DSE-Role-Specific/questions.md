@@ -1,308 +1,301 @@
-# 03 Sp Dse Role Specific — Infosys / Specific
+# Infosys Specific — Sp Dse Role Specific Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What does a Data Services/Data Engineering Specialist do?
+**A:** The SP DSE role sits in Infosys's Data practice: building data pipelines (ingestion, transformation, quality), database systems, and the data foundations that feed analytics and AI — combining DSA thinking, SQL, scripting, and engineering discipline.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What skills does a DSE need?
+**A:** Programming (Python — my core), databases (PostgreSQL/SQLite) and SQL, data pipelines and ETL thinking, data structures for performance, debugging, and basic ML once data flows — exactly the stack I already work in daily.
 
-1. **What does a Data Services/Data Engineering Specialist do?**
-   - The SP DSE role sits in Infosys's Data practice: building data pipelines (ingestion, transformation, quality), database systems, and the data foundations that feed analytics and AI — combining DSA thinking, SQL, scripting, and engineering discipline.
+## Q3: How is DSE different from a generic developer role?
+**A:** The emphasis is on data: volume, quality, movement, and storage correctness — DSE engineers are the ones making data computable and trustworthy before anyone models on it.
 
-2. **What skills does a DSE need?**
-   - Programming (Python — my core), databases (PostgreSQL/SQLite) and SQL, data pipelines and ETL thinking, data structures for performance, debugging, and basic ML once data flows — exactly the stack I already work in daily.
+## Q4: What will you contribute in your first project?
+**A:** Reliability from day one: clean ETL scripts, tested data transformations, clear SQL, and documentation — I'll bring the discipline of writing tested code to data pipelines immediately.
 
-3. **How is DSE different from a generic developer role?**
-   - The emphasis is on data: volume, quality, movement, and storage correctness — DSE engineers are the ones making data computable and trustworthy before anyone models on it.
+## Q5: What do you know about data pipelines?
+**A:** Ingest (batch/stream) -> validate -> transform -> store -> serve; orchestration, idempotency, and monitoring — I can map my RAG ingestion pipeline (chunk->embed->index) as a mini data pipeline and scale that understanding.
 
-4. **What will you contribute in your first project?**
-   - Reliability from day one: clean ETL scripts, tested data transformations, clear SQL, and documentation — I'll bring the discipline of writing tested code to data pipelines immediately.
+## Q6: Why do DSA skills matter for a DSE?
+**A:** Real pipelines hit performance walls: joining millions of rows, hash-partitioning, windowing, index design — the same complexity reasoning as DSA, applied to data at scale.
 
-5. **What do you know about data pipelines?**
-   - Ingest (batch/stream) -> validate -> transform -> store -> serve; orchestration, idempotency, and monitoring — I can map my RAG ingestion pipeline (chunk->embed->index) as a mini data pipeline and scale that understanding.
+## Q7: How does your ML background help in a DSE role?
+**A:** ML is downstream of data quality — understanding what features/embeddings need (clean, typed, well-split data) makes me a better data engineer, not just a better model-builder.
 
-6. **Why do DSA skills matter for a DSE?**
-   - Real pipelines hit performance walls: joining millions of rows, hash-partitioning, windowing, index design — the same complexity reasoning as DSA, applied to data at scale.
+## Q8: What is your comfort level with large datasets?
+**A:** I've processed datasets with pandas/NumPy and built pipelines for code corpora (ScriptVector) and scripts (MigratorGen); comfortable with batch processing, and eager to learn the true scale tooling — Spark/data lake — that enterprises use.
 
-7. **How does your ML background help in a DSE role?**
-   - ML is downstream of data quality — understanding what features/embeddings need (clean, typed, well-split data) makes me a better data engineer, not just a better model-builder.
+## Q9: What tools do you want to learn first in this role?
+**A:** Spark/Hadoop for scale, a workflow orchestrator (Airflow), and cloud data services — I'd map each to what I already know (pandas/ETL patterns) so the ramp is fast.
 
-8. **What is your comfort level with large datasets?**
-   - I've processed datasets with pandas/NumPy and built pipelines for code corpora (ScriptVector) and scripts (MigratorGen); comfortable with batch processing, and eager to learn the true scale tooling — Spark/data lake — that enterprises use.
+## Q10: How do you stay productive as a DSE on a long project?
+**A:** Tests, documentation, and incremental delivery: pipelines decompose into unit-testable stages — the same habits that keep ML projects honest; plus observability (logging, data-quality checks) from the start.
 
-9. **What tools do you want to learn first in this role?**
-   - Spark/Hadoop for scale, a workflow orchestrator (Airflow), and cloud data services — I'd map each to what I already know (pandas/ETL patterns) so the ramp is fast.
+## Q11: Tell me about a time you demonstrated 03 sp dse role specific (STAR method).
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-10. **How do you stay productive as a DSE on a long project?**
-   - Tests, documentation, and incremental delivery: pipelines decompose into unit-testable stages — the same habits that keep ML projects honest; plus observability (logging, data-quality checks) from the start.
+## Q12: How does 03 sp dse role specific show up in a typical IT services project at Infosys?
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-11. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method).**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q13: What is your honest personal strength and a related weakness around 03 sp dse role specific?
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-12. **How does 03 sp dse role specific show up in a typical IT services project at Infosys?**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q14: Give a self-introduction that showcases 03 sp dse role specific.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-13. **What is your honest personal strength and a related weakness around 03 sp dse role specific?**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q15: How do you behave when a teammate does not exhibit 03 sp dse role specific?
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-14. **Give a self-introduction that showcases 03 sp dse role specific.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q16: Describe a failure caused by lack of 03 sp dse role specific and your corrective action.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-15. **How do you behave when a teammate does not exhibit 03 sp dse role specific?**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q17: Why should we hire you? Base the answer on 03 sp dse role specific.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-16. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q18: How do you handle pressure and deadlines in relation to 03 sp dse role specific?
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-17. **Why should we hire you? Base the answer on 03 sp dse role specific.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q19: What questions would you ask the panel that also show 03 sp dse role specific?
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-18. **How do you handle pressure and deadlines in relation to 03 sp dse role specific?**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q20: Rate yourself on 03 sp dse role specific and justify it.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-19. **What questions would you ask the panel that also show 03 sp dse role specific?**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q21: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-20. **Rate yourself on 03 sp dse role specific and justify it.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q22: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-21. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q23: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-22. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q24: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-23. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q25: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-24. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q26: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-25. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q27: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-26. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q28: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-27. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q29: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-28. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q30: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-29. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q31: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-30. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q32: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-31. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q33: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-32. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q34: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-33. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q35: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-34. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q36: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-35. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q37: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-36. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q38: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-37. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q39: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-38. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q40: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-39. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q41: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-40. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q42: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-41. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q43: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-42. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q44: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-43. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q45: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-44. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q46: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-45. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q47: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-46. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q48: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-47. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q49: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-48. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q50: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-49. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q51: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-50. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q52: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-51. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q53: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-52. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q54: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-53. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q55: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-54. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q56: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-55. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q57: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-56. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q58: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-57. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q59: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-58. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q60: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-59. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q61: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-60. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q62: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-61. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q63: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-62. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q64: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-63. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q65: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-64. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q66: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-65. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q67: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-66. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q68: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-67. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q69: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-68. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q70: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-69. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q71: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-70. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q72: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-71. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q73: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-72. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q74: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-73. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q75: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-74. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q76: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-75. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q77: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-76. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q78: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-77. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q79: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-78. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q80: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-79. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q81: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-80. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q82: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-81. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q83: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-82. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q84: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-83. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q85: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-84. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q86: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-85. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q87: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-86. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q88: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-87. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q89: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-88. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q90: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-89. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q91: Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-90. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q92: How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-91. **Tell me about a time you demonstrated 03 sp dse role specific (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q93: What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-92. **How does 03 sp dse role specific show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 03 sp dse role specific determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q94: Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-93. **What is your honest personal strength and a related weakness around 03 sp dse role specific? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q95: How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-94. **Give a self-introduction that showcases 03 sp dse role specific. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q96: Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-95. **How do you behave when a teammate does not exhibit 03 sp dse role specific? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q97: Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-96. **Describe a failure caused by lack of 03 sp dse role specific and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q98: How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-97. **Why should we hire you? Base the answer on 03 sp dse role specific. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q99: What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-98. **How do you handle pressure and deadlines in relation to 03 sp dse role specific? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
-
-99. **What questions would you ask the panel that also show 03 sp dse role specific? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
-
-100. **Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
-
-</details>
+## Q100: Rate yourself on 03 sp dse role specific and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.

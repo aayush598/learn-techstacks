@@ -2,26 +2,20 @@
 
 Complete interview-prep resource for the **Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)** role.
 
-> **248 topics × 100 Q&A = 24,800 interview questions**, organized into 9 domains. Every leaf folder contains a `questions.md` with exactly 100 questions in expandable `<details>` blocks.
+> **248 topics × 100 Q&A = 24,800 interview questions**, organized into 9 domains. Every leaf folder contains a `questions.md` with 100 questions in the standard samora-ai flashcard format (`## QN:` question / `**A:**` answer), ready to be parsed for flashcard generation.
 
 ## Format
 
-Every topic folder (`questions.md`) contains:
+Every topic folder (`questions.md`) follows the same `## QN:` / `**A:**` format used across the `samora-ai/` directory:
 
 ```
-# <Leaf Name> — <Parent Domain>
+# Arrays — Basics Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is an array?
+**A:** An array is a linear data structure...
 
-<details open>
-  <summary>Tap to expand all 100 questions</summary>
-
-  1. **Question...**
-     - Answer...
-
-  ...
-
-</details>
+## Q2: Why does an array give O(1) access time?
+**A:** Because...
 ```
 
 ## Structure (248 leaves)
@@ -56,7 +50,7 @@ The `07-HR-Preparation` answers are personalized to **Aayush Gid** (B.Tech ECE 2
 1. Start with `07-HR-Preparation` and `09-Aptitude` the week before — quick wins.
 2. Drill `08-Coding-Patterns` to build recognition speed for the OA.
 3. Go domain-by-domain through `01-DSA` → `02-CS-Fundamentals` → `03-Python` → `04-AI-ML` → `05-System-Design` → `06-DevOps`.
-4. Open each `questions.md`, read the question, answer out loud, then expand to verify.
+This is the format a flashcard parser needs, so open each `questions.md`, read the question, answer out loud, then check the `**A:**` line.
 
 ## How to Rebuild
 

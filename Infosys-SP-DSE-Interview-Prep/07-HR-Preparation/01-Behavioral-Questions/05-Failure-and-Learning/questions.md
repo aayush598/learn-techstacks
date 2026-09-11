@@ -1,308 +1,301 @@
-# 05 Failure And Learning — Behavioral / Questions
+# Behavioral Questions — Failure And Learning Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: Describe a time you failed.
+**A:** A strong, genuine script: an early version of Mapie or ScriptVector's retrieval returned poor relevance because I picked naive chunking — I had to re-architect the chunking + reranking, and it taught me to prototype retrieval quality before building the full app.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What is your biggest mistake and what did you learn?
+**A:** Ship-too-late perfectionism: I over-engineered before validating the core assumption. Lesson: validate the riskiest assumption first with a 2-day spike — I now do exactly that before building.
 
-1. **Describe a time you failed.**
-   - A strong, genuine script: an early version of Mapie or ScriptVector's retrieval returned poor relevance because I picked naive chunking — I had to re-architect the chunking + reranking, and it taught me to prototype retrieval quality before building the full app.
+## Q3: Have you ever missed a deadline?
+**A:** If asked, answer honestly with root cause (over-optimistic estimates), the mitigation you added (buffer + earlier comms), and end with the time you turned a near-miss into an on-time delivery.
 
-2. **What is your biggest mistake and what did you learn?**
-   - Ship-too-late perfectionism: I over-engineered before validating the core assumption. Lesson: validate the riskiest assumption first with a 2-day spike — I now do exactly that before building.
+## Q4: What do you do when you don't know something?
+**A:** I say 'I don't know yet' and name the plan to find out (docs, experiment, ask a senior), then follow through — honesty plus a learning loop, not bluffed silence.
 
-3. **Have you ever missed a deadline?**
-   - If asked, answer honestly with root cause (over-optimistic estimates), the mitigation you added (buffer + earlier comms), and end with the time you turned a near-miss into an on-time delivery.
+## Q5: What is your biggest technical challenge?
+**A:** Making RAG retrieval reliable for code snippets — semantically similar but contextually different code collides in embedding space; I learned to combine embeddings with metadata filters and a reranker.
 
-4. **What do you do when you don't know something?**
-   - I say 'I don't know yet' and name the plan to find out (docs, experiment, ask a senior), then follow through — honesty plus a learning loop, not bluffed silence.
+## Q6: How do you learn from failure?
+**A:** A personal post-mortem: what was the assumption, where did it break, what's the new rule — I keep these notes and they become my interview stories because they're structural, not anecdotal.
 
-5. **What is your biggest technical challenge?**
-   - Making RAG retrieval reliable for code snippets — semantically similar but contextually different code collides in embedding space; I learned to combine embeddings with metadata filters and a reranker.
+## Q7: Tell me about a bug that took long to fix.
+**A:** Chose an honest story: an LLM pipeline producing subtly wrong outputs because of prompt-cache/token-order issues — I added structured logging and traced the actual payload, not the assumption.
 
-6. **How do you learn from failure?**
-   - A personal post-mortem: what was the assumption, where did it break, what's the new rule — I keep these notes and they become my interview stories because they're structural, not anecdotal.
+## Q8: How do you handle rejection?
+**A:** Ask for specific feedback, separate my work quality from the outcome, and target one concrete improvement next — SIH/Techfest rounds and rejected PRs all taught this.
 
-7. **Tell me about a bug that took long to fix.**
-   - Chose an honest story: an LLM pipeline producing subtly wrong outputs because of prompt-cache/token-order issues — I added structured logging and traced the actual payload, not the assumption.
+## Q9: What do you regret or would do differently?
+**A:** I'd have started contributing to open source and doing internships earlier — the compounding value of real code under review is the biggest accelerator I've found.
 
-8. **How do you handle rejection?**
-   - Ask for specific feedback, separate my work quality from the outcome, and target one concrete improvement next — SIH/Techfest rounds and rejected PRs all taught this.
+## Q10: How do you stay updated as technology changes?
+**A:** A learning stack: official docs for depth, release notes for signal, and building something weekly for retention — I learned LangChain/LangGraph/Agno the same way; curiosity is a habit.
 
-9. **What do you regret or would do differently?**
-   - I'd have started contributing to open source and doing internships earlier — the compounding value of real code under review is the biggest accelerator I've found.
+## Q11: Tell me about a time you demonstrated 05 failure and learning (STAR method).
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-10. **How do you stay updated as technology changes?**
-   - A learning stack: official docs for depth, release notes for signal, and building something weekly for retention — I learned LangChain/LangGraph/Agno the same way; curiosity is a habit.
+## Q12: How does 05 failure and learning show up in a typical IT services project at Infosys?
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-11. **Tell me about a time you demonstrated 05 failure and learning (STAR method).**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q13: What is your honest personal strength and a related weakness around 05 failure and learning?
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-12. **How does 05 failure and learning show up in a typical IT services project at Infosys?**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q14: Give a self-introduction that showcases 05 failure and learning.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-13. **What is your honest personal strength and a related weakness around 05 failure and learning?**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q15: How do you behave when a teammate does not exhibit 05 failure and learning?
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-14. **Give a self-introduction that showcases 05 failure and learning.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q16: Describe a failure caused by lack of 05 failure and learning and your corrective action.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-15. **How do you behave when a teammate does not exhibit 05 failure and learning?**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q17: Why should we hire you? Base the answer on 05 failure and learning.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-16. **Describe a failure caused by lack of 05 failure and learning and your corrective action.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q18: How do you handle pressure and deadlines in relation to 05 failure and learning?
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-17. **Why should we hire you? Base the answer on 05 failure and learning.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q19: What questions would you ask the panel that also show 05 failure and learning?
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-18. **How do you handle pressure and deadlines in relation to 05 failure and learning?**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q20: Rate yourself on 05 failure and learning and justify it.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-19. **What questions would you ask the panel that also show 05 failure and learning?**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q21: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-20. **Rate yourself on 05 failure and learning and justify it.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q22: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-21. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q23: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-22. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q24: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-23. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q25: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-24. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q26: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-25. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q27: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-26. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q28: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-27. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q29: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-28. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q30: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-29. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q31: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-30. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q32: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-31. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q33: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-32. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q34: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-33. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q35: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-34. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q36: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-35. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q37: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-36. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q38: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-37. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q39: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-38. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q40: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-39. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q41: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-40. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q42: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-41. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q43: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-42. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q44: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-43. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q45: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-44. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q46: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-45. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q47: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-46. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q48: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-47. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q49: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-48. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q50: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-49. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q51: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-50. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q52: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-51. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q53: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-52. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q54: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-53. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q55: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-54. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q56: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-55. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q57: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-56. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q58: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-57. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q59: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-58. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q60: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-59. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q61: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-60. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q62: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-61. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q63: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-62. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q64: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-63. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q65: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-64. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q66: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-65. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q67: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-66. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q68: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-67. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q69: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-68. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q70: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-69. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q71: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-70. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q72: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-71. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q73: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-72. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q74: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-73. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q75: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-74. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q76: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-75. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q77: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-76. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q78: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-77. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q79: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-78. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q80: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-79. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q81: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-80. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q82: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-81. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q83: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-82. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q84: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-83. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q85: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-84. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q86: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-85. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q87: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-86. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q88: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-87. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q89: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-88. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q90: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-89. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q91: Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-90. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q92: How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-91. **Tell me about a time you demonstrated 05 failure and learning (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q93: What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-92. **How does 05 failure and learning show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 05 failure and learning determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q94: Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-93. **What is your honest personal strength and a related weakness around 05 failure and learning? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q95: How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-94. **Give a self-introduction that showcases 05 failure and learning. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q96: Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-95. **How do you behave when a teammate does not exhibit 05 failure and learning? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q97: Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-96. **Describe a failure caused by lack of 05 failure and learning and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q98: How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-97. **Why should we hire you? Base the answer on 05 failure and learning. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q99: What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-98. **How do you handle pressure and deadlines in relation to 05 failure and learning? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
-
-99. **What questions would you ask the panel that also show 05 failure and learning? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
-
-100. **Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
-
-</details>
+## Q100: Rate yourself on 05 failure and learning and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.

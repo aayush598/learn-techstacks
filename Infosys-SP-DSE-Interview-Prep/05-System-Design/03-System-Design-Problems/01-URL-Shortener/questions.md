@@ -1,308 +1,301 @@
-# 01 Url Shortener — System / Design / Problems
+# System Design Problems — Url Shortener Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: Design a URL shortener — core requirements?
+**A:** Shorten (long URL -> tiny slug), redirect (tiny -> long), high throughput/read-heavy, and collision-free. Capacity tuning: ~100x more reads than writes.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: How do you generate the short code?
+**A:** Base62-encode a monotonically increasing ID (or hash with collision check) to a 6-8 char slug — choose base62/Counter over random for no collisions.
 
-1. **Design a URL shortener — core requirements?**
-   - Shorten (long URL -> tiny slug), redirect (tiny -> long), high throughput/read-heavy, and collision-free. Capacity tuning: ~100x more reads than writes.
+## Q3: What is the write path?
+**A:** Client POST long URL -> generate slug -> store (id, slug, long_url, created_at) -> return short link; DB keyed by slug.
 
-2. **How do you generate the short code?**
-   - Base62-encode a monotonically increasing ID (or hash with collision check) to a 6-8 char slug — choose base62/Counter over random for no collisions.
+## Q4: What is the read path and why is it cached?
+**A:** GET slug -> cache lookup (Redis) -> DB on miss -> 301/302 redirect to long_url; ~80% cache hit cuts DB traffic massively.
 
-3. **What is the write path?**
-   - Client POST long URL -> generate slug -> store (id, slug, long_url, created_at) -> return short link; DB keyed by slug.
+## Q5: What database would you choose?
+**A:** Relational (PostgreSQL/MySQL) for transactional writes + unique indexes, or a KV store — the read-heavy profile favours an in-memory cache in front.
 
-4. **What is the read path and why is it cached?**
-   - GET slug -> cache lookup (Redis) -> DB on miss -> 301/302 redirect to long_url; ~80% cache hit cuts DB traffic massively.
+## Q6: What is a 301 vs 302 redirect for a shortener?
+**A:** 301 is permanently cached by browsers (harder to change); 302 transient — analytics-driven shorteners pick 302 so every click counts.
 
-5. **What database would you choose?**
-   - Relational (PostgreSQL/MySQL) for transactional writes + unique indexes, or a KV store — the read-heavy profile favours an in-memory cache in front.
+## Q7: How do you scale reads and writes?
+**A:** Stateless app replicas behind an LB, read replicas/cache for reads, and DB sharding by slug hash if writes grow — the horizontal scaling playbook.
 
-6. **What is a 301 vs 302 redirect for a shortener?**
-   - 301 is permanently cached by browsers (harder to change); 302 transient — analytics-driven shorteners pick 302 so every click counts.
+## Q8: What about custom aliases and expiry?
+**A:** Optional user-provided slug (collision check) and TTL cleanup via scheduled scans or lazy deletion on access.
 
-7. **How do you scale reads and writes?**
-   - Stateless app replicas behind an LB, read replicas/cache for reads, and DB sharding by slug hash if writes grow — the horizontal scaling playbook.
+## Q9: How do you monitor such a system?
+**A:** Redirect latency, cache hit rate, error rate, and click analytics per link — the observability surface for a read-heavy API.
 
-8. **What about custom aliases and expiry?**
-   - Optional user-provided slug (collision check) and TTL cleanup via scheduled scans or lazy deletion on access.
+## Q10: What are edge cases?
+**A:** Very long URLs, reserved slugs, expired links, and abuse (spam URLs) — design decisions announced in the interview, redeemed in ops.
 
-9. **How do you monitor such a system?**
-   - Redirect latency, cache hit rate, error rate, and click analytics per link — the observability surface for a read-heavy API.
+## Q11: Define 01 url shortener in one line and then expand with a real-world example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-10. **What are edge cases?**
-   - Very long URLs, reserved slugs, expired links, and abuse (spam URLs) — design decisions announced in the interview, redeemed in ops.
+## Q12: Why is 01 url shortener important in real production systems?
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-11. **Define 01 url shortener in one line and then expand with a real-world example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q13: What are the advantages and disadvantages of 01 url shortener?
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-12. **Why is 01 url shortener important in real production systems?**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q14: Compare 01 url shortener with alternatives and state when to prefer which.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-13. **What are the advantages and disadvantages of 01 url shortener?**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q15: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-14. **Compare 01 url shortener with alternatives and state when to prefer which.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q16: What common misconceptions exist about 01 url shortener?
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-15. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q17: How would you test correctness of a system that relies on 01 url shortener?
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-16. **What common misconceptions exist about 01 url shortener?**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q18: Describe 01 url shortener as if explaining to a new hire.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-17. **How would you test correctness of a system that relies on 01 url shortener?**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q19: How does 01 url shortener interact with performance (time/space trade-off)?
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-18. **Describe 01 url shortener as if explaining to a new hire.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q20: What would you change about how 01 url shortener is taught, based on your experience?
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-19. **How does 01 url shortener interact with performance (time/space trade-off)?**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q21: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-20. **What would you change about how 01 url shortener is taught, based on your experience?**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q22: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-21. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q23: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-22. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q24: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-23. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q25: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-24. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q26: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-25. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q27: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-26. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q28: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-27. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q29: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-28. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q30: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-29. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q31: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-30. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q32: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-31. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q33: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-32. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q34: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-33. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q35: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-34. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q36: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-35. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q37: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-36. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q38: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-37. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q39: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-38. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q40: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-39. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q41: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-40. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q42: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-41. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q43: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-42. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q44: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-43. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q45: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-44. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q46: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-45. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q47: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-46. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q48: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-47. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q49: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-48. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q50: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-49. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q51: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-50. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q52: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-51. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q53: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-52. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q54: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-53. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q55: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-54. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q56: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-55. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q57: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-56. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q58: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-57. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q59: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-58. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q60: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-59. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q61: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-60. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q62: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-61. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q63: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-62. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q64: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-63. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q65: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-64. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q66: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-65. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q67: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-66. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q68: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-67. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q69: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-68. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q70: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-69. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q71: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-70. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q72: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-71. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q73: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-72. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q74: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-73. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q75: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-74. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q76: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-75. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q77: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-76. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q78: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-77. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q79: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-78. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q80: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-79. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q81: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-80. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q82: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-81. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q83: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-82. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q84: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-83. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q85: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-84. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q86: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-85. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q87: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-86. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q88: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-87. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q89: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-88. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q90: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-89. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q91: Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-90. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q92: Why is 01 url shortener important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-91. **Define 01 url shortener in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 01 url shortener is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q93: What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-92. **Why is 01 url shortener important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q94: Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-93. **What are the advantages and disadvantages of 01 url shortener? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q95: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-94. **Compare 01 url shortener with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q96: What common misconceptions exist about 01 url shortener? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-95. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 01 url shortener knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q97: How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-96. **What common misconceptions exist about 01 url shortener? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q98: Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-97. **How would you test correctness of a system that relies on 01 url shortener? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q99: How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-98. **Describe 01 url shortener as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
-
-99. **How does 01 url shortener interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
-
-100. **What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
-
-</details>
+## Q100: What would you change about how 01 url shortener is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.

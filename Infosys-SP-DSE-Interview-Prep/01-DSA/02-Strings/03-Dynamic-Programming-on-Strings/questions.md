@@ -1,308 +1,301 @@
-# 03 Dynamic Programming On Strings — Strings
+# Strings — Dynamic Programming On Strings Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: Overview of DP on strings and standard state design.
+**A:** State is typically (i,j) = position in string A and string B. Transitions come from char match/mismatch, gap, or replace choices — forming LCS, edit-distance, palindromes and interleaving problems.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: How is Longest Common Subsequence defined and solved?
+**A:** LCS keeps order without adjacency. Recurrence: if a[i]==b[j]: dp[i][j]=dp[i-1][j-1]+1 else max of dp[i-1][j], dp[i][j-1]. O(n*m) DP; reconstruct by backtracking.
 
-1. **Overview of DP on strings and standard state design.**
-   - State is typically (i,j) = position in string A and string B. Transitions come from char match/mismatch, gap, or replace choices — forming LCS, edit-distance, palindromes and interleaving problems.
+## Q3: Explain edit distance (Levenshtein).
+**A:** Min ops (insert/delete/replace) to turn a into b. dp[i][j]=min(insert, delete, replace). If chars equal, carry dp[i-1][j-1]. O(n*m).
 
-2. **How is Longest Common Subsequence defined and solved?**
-   - LCS keeps order without adjacency. Recurrence: if a[i]==b[j]: dp[i][j]=dp[i-1][j-1]+1 else max of dp[i-1][j], dp[i][j-1]. O(n*m) DP; reconstruct by backtracking.
+## Q4: How do you find the longest palindromic subsequence?
+**A:** LCS of s with reversed(s), or DP palindrome recurrence: if s[i]==s[j]: dp[i][j]=dp[i+1][j-1]+2 else max(dp[i+1][j],dp[i][j-1]). Fill by increasing length.
 
-3. **Explain edit distance (Levenshtein).**
-   - Min ops (insert/delete/replace) to turn a into b. dp[i][j]=min(insert, delete, replace). If chars equal, carry dp[i-1][j-1]. O(n*m).
+## Q5: How do you find the minimum insertions to make a string a palindrome?
+**A:** Insertions needed = len(s) - longest_palindromic_subsequence(s). The complement of already-matching characters is what must be added symmetrically.
 
-4. **How do you find the longest palindromic subsequence?**
-   - LCS of s with reversed(s), or DP palindrome recurrence: if s[i]==s[j]: dp[i][j]=dp[i+1][j-1]+2 else max(dp[i+1][j],dp[i][j-1]). Fill by increasing length.
+## Q6: How do you check if a string is an interleaving of two others?
+**A:** dp[i][j] True if s3[0:i+j] is an interleaving of s1[0:i] and s2[0:j]; transitions consume from s1 or s2 when chars match s3. O(n*m).
 
-5. **How do you find the minimum insertions to make a string a palindrome?**
-   - Insertions needed = len(s) - longest_palindromic_subsequence(s). The complement of already-matching characters is what must be added symmetrically.
+## Q7: What is a substring edit-distance variant (segment change)?
+**A:** Common variants restrict operations (e.g., only delete), early-exit when distance>k, or ask for distinct edits — adapt states accordingly and add pruning.
 
-6. **How do you check if a string is an interleaving of two others?**
-   - dp[i][j] True if s3[0:i+j] is an interleaving of s1[0:i] and s2[0:j]; transitions consume from s1 or s2 when chars match s3. O(n*m).
+## Q8: How do you compute edit distance with O(m) space?
+**A:** Roll dp arrays: only two rows are needed because transitions reference i-1 row only. From row to row, keep prev and current. O(n*m) time, O(m) space.
 
-7. **What is a substring edit-distance variant (segment change)?**
-   - Common variants restrict operations (e.g., only delete), early-exit when distance>k, or ask for distinct edits — adapt states accordingly and add pruning.
+## Q9: How does the 'delete operation for two strings' problem work?
+**A:** Min deletions to make s and t equal = n + m - 2*LCS(s,t). Only delete operations allowed means unchanged parts are exactly the common subsequence.
 
-8. **How do you compute edit distance with O(m) space?**
-   - Roll dp arrays: only two rows are needed because transitions reference i-1 row only. From row to row, keep prev and current. O(n*m) time, O(m) space.
+## Q10: How do you find the longest common substring?
+**A:** DP where dp[i][j]=dp[i-1][j-1]+1 only when chars match (reset on mismatch). Keep global max. O(n*m) time; suffix array gives O(n log n).
 
-9. **How does the 'delete operation for two strings' problem work?**
-   - Min deletions to make s and t equal = n + m - 2*LCS(s,t). Only delete operations allowed means unchanged parts are exactly the common subsequence.
+## Q11: How do you build all distinct LCS (or DP backtracking) answers?
+**A:** Backtrack through equal-value transitions collecting paths; dedupe with a set. Exponential worst-case output, so report count or all with memoised sets.
 
-10. **How do you find the longest common substring?**
-   - DP where dp[i][j]=dp[i-1][j-1]+1 only when chars match (reset on mismatch). Keep global max. O(n*m) time; suffix array gives O(n log n).
+## Q12: What is the shortest common supersequence problem?
+**A:** SCS(a,b) length = n+m-LCS(a,b). Reconstruction merges a and b avoiding duplicate overlap of the LCS portion. Classic interview follow-up to LCS.
 
-11. **How do you build all distinct LCS (or DP backtracking) answers?**
-   - Backtrack through equal-value transitions collecting paths; dedupe with a set. Exponential worst-case output, so report count or all with memoised sets.
+## Q13: How do you solve 'longest repeating subsequence'?
+**A:** LCS with i!=j constraint: apply LCS recurrence but only carry dp[i-1][j-1]+1 when a[i]==b[j] and i!=j (same string). O(n^2).
 
-12. **What is the shortest common supersequence problem?**
-   - SCS(a,b) length = n+m-LCS(a,b). Reconstruction merges a and b avoiding duplicate overlap of the LCS portion. Classic interview follow-up to LCS.
+## Q14: How do you count distinct palindromic substrings (Manacher-based DP)?
+**A:** Count centres O(n) with Manacher's radius array; total distinct substrings via set of all palindromes found in O(n) radius scan.
 
-13. **How do you solve 'longest repeating subsequence'?**
-   - LCS with i!=j constraint: apply LCS recurrence but only carry dp[i-1][j-1]+1 when a[i]==b[j] and i!=j (same string). O(n^2).
+## Q15: Explain memoisation vs tabulation on string DP problems.
+**A:** Memoisation (top-down recursion + cache) is intuitive and skips unreachable states; tabulation (bottom-up loops) is iterative and faster. Both give identical answers; choose by clarity in interviews.
 
-14. **How do you count distinct palindromic substrings (Manacher-based DP)?**
-   - Count centres O(n) with Manacher's radius array; total distinct substrings via set of all palindromes found in O(n) radius scan.
+## Q16: How do you handle large strings in DP without timeouts?
+**A:** Use O(1)-space row compaction, prune unreachable states, early-exit when result threshold reached, and avoid slicing strings inside loops (index instead).
 
-15. **Explain memoisation vs tabulation on string DP problems.**
-   - Memoisation (top-down recursion + cache) is intuitive and skips unreachable states; tabulation (bottom-up loops) is iterative and faster. Both give identical answers; choose by clarity in interviews.
+## Q17: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-16. **How do you handle large strings in DP without timeouts?**
-   - Use O(1)-space row compaction, prune unreachable states, early-exit when result threshold reached, and avoid slicing strings inside loops (index instead).
+## Q18: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-17. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q19: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-18. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q20: What common edge cases must be handled in 03 dynamic programming on strings implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-19. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q21: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-20. **What common edge cases must be handled in 03 dynamic programming on strings implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q22: Give a real-world analogy for 03 dynamic programming on strings.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-21. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q23: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-22. **Give a real-world analogy for 03 dynamic programming on strings.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q24: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-23. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q25: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-24. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q26: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-25. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q27: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-26. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q28: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-27. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q29: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-28. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q30: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-29. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q31: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-30. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q32: Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-31. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q33: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-32. **Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q34: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-33. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q35: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-34. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q36: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-35. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q37: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-36. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q38: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-37. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q39: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-38. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q40: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-39. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q41: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-40. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q42: Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-41. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q43: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-42. **Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q44: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-43. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q45: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-44. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q46: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-45. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q47: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-46. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q48: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-47. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q49: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-48. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q50: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-49. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q51: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-50. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q52: Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-51. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q53: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-52. **Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q54: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-53. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q55: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-54. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q56: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-55. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q57: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-56. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q58: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-57. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q59: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-58. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q60: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-59. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q61: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-60. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q62: Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-61. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q63: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-62. **Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q64: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-63. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q65: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-64. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q66: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-65. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q67: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-66. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q68: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-67. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q69: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-68. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q70: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-69. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q71: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-70. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q72: Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-71. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q73: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-72. **Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q74: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-73. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q75: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-74. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q76: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-75. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q77: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-76. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q78: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-77. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q79: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-78. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q80: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-79. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q81: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-80. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q82: Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-81. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q83: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-82. **Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q84: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-83. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q85: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-84. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q86: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-85. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q87: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-86. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q88: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-87. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q89: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-88. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q90: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-89. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q91: How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-90. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q92: Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-91. **How would you dry-run your 03 dynamic programming on strings code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q93: How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-92. **Give a real-world analogy for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - Analogy: 03 dynamic programming on strings is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q94: What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-93. **How do you decide between a hash map, sorting, or two pointers as tools for 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q95: Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-94. **What is the role of a prefix/suffix precomputation in 03 dynamic programming on strings? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q96: How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-95. **Explain the optimisation step you would mention after writing the naive version for 03 dynamic programming on strings. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q97: What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-96. **How is 03 dynamic programming on strings asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q98: Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-97. **What is the intuition behind the 03 dynamic programming on strings technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q99: State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-98. **Write the brute-force approach for a typical 03 dynamic programming on strings problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
-
-99. **State the time and space complexity of the optimal solution for most 03 dynamic programming on strings problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
-
-100. **What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
-
-</details>
+## Q100: What common edge cases must be handled in 03 dynamic programming on strings implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.

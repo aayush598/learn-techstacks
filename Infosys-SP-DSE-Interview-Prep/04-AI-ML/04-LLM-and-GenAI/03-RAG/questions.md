@@ -1,308 +1,301 @@
-# 03 Rag — Llm / And / Genai
+# Llm And Genai — Rag Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is RAG?
+**A:** Retrieval-Augmented Generation: retrieve relevant documents from an external store, stuff them into the prompt, and generate grounded answers — fixing hallucination and freshness.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What is the RAG pipeline?
+**A:** Ingest: chunk documents -> embed -> index in vector DB. Query: embed the question -> top-k retrieve -> LLM answers grounded in chunks.
 
-1. **What is RAG?**
-   - Retrieval-Augmented Generation: retrieve relevant documents from an external store, stuff them into the prompt, and generate grounded answers — fixing hallucination and freshness.
+## Q3: What is a chunk and how do you choose chunk size?
+**A:** A retrievable text unit (~200-800 tokens) with overlap; content-aware splitters (headers/sections) beat fixed sizes for coherence.
 
-2. **What is the RAG pipeline?**
-   - Ingest: chunk documents -> embed -> index in vector DB. Query: embed the question -> top-k retrieve -> LLM answers grounded in chunks.
+## Q4: What is an embedding?
+**A:** A dense vector encoding meaning such that similar text is near — the bridge between natural language and vector search.
 
-3. **What is a chunk and how do you choose chunk size?**
-   - A retrievable text unit (~200-800 tokens) with overlap; content-aware splitters (headers/sections) beat fixed sizes for coherence.
+## Q5: What are the retrieval strategies — vector vs keyword vs hybrid?
+**A:** Vector: semantic. Keyword (BM25/full-text): exact terms. Hybrid: reciprocal-rank fusion — hybrid wins on precision+recall for real corpora.
 
-4. **What is an embedding?**
-   - A dense vector encoding meaning such that similar text is near — the bridge between natural language and vector search.
+## Q6: What is top-k and reranking?
+**A:** k candidates pulled; a reranker (cross-encoder) re-scores them before the prompt — with reranking the prompt gets the highest-quality passages, not just nearest.
 
-5. **What are the retrieval strategies — vector vs keyword vs hybrid?**
-   - Vector: semantic. Keyword (BM25/full-text): exact terms. Hybrid: reciprocal-rank fusion — hybrid wins on precision+recall for real corpora.
+## Q7: What is the chunking-relevance trade-off?
+**A:** Small chunks are precise but lose context; large chunks are coherent but dilute relevance — chunk with overlap plus reranking balances it.
 
-6. **What is top-k and reranking?**
-   - k candidates pulled; a reranker (cross-encoder) re-scores them before the prompt — with reranking the prompt gets the highest-quality passages, not just nearest.
+## Q8: What is a vector database and how does it store vectors?
+**A:** Indexes embeddings with approximate nearest-neighbour (HNSW/IVF) — trade-offs recall vs latency; the persistent RAG memory.
 
-7. **What is the chunking-relevance trade-off?**
-   - Small chunks are precise but lose context; large chunks are coherent but dilute relevance — chunk with overlap plus reranking balances it.
+## Q9: What is the difference between RAG and fine-tuning?
+**A:** RAG injects fresh/external knowledge at query time (no training, updatable); fine-tuning embeds knowledge in weights (training, domain skills) — they combine, not compete.
 
-8. **What is a vector database and how does it store vectors?**
-   - Indexes embeddings with approximate nearest-neighbour (HNSW/IVF) — trade-offs recall vs latency; the persistent RAG memory.
+## Q10: What are the failure modes of RAG?
+**A:** Retrieved-but-irrelevant chunks, retrieval misses, prompt bloat, and outdated indexes — evaluated with retrieval metrics (recall@k) and grounded generation.
 
-9. **What is the difference between RAG and fine-tuning?**
-   - RAG injects fresh/external knowledge at query time (no training, updatable); fine-tuning embeds knowledge in weights (training, domain skills) — they combine, not compete.
+## Q11: How do you evaluate RAG?
+**A:** Retrieval: precision/recall@k, MRR. Generation: faithfulness, answer relevance, and answer correctness judged by LLM/human — the RAG eval suite.
 
-10. **What are the failure modes of RAG?**
-   - Retrieved-but-irrelevant chunks, retrieval misses, prompt bloat, and outdated indexes — evaluated with retrieval metrics (recall@k) and grounded generation.
+## Q12: What is a Graph-RAG or multi-step RAG variant?
+**A:** Graph-RAG indexes entries as a knowledge graph answering relational questions; agentic RAG iterates retrieve-then-think — each addresses a RAG limitation.
 
-11. **How do you evaluate RAG?**
-   - Retrieval: precision/recall@k, MRR. Generation: faithfulness, answer relevance, and answer correctness judged by LLM/human — the RAG eval suite.
+## Q13: Define 03 rag in one line and then expand with a real-world example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-12. **What is a Graph-RAG or multi-step RAG variant?**
-   - Graph-RAG indexes entries as a knowledge graph answering relational questions; agentic RAG iterates retrieve-then-think — each addresses a RAG limitation.
+## Q14: Why is 03 rag important in real production systems?
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-13. **Define 03 rag in one line and then expand with a real-world example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q15: What are the advantages and disadvantages of 03 rag?
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-14. **Why is 03 rag important in real production systems?**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q16: Compare 03 rag with alternatives and state when to prefer which.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-15. **What are the advantages and disadvantages of 03 rag?**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q17: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-16. **Compare 03 rag with alternatives and state when to prefer which.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q18: What common misconceptions exist about 03 rag?
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-17. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q19: How would you test correctness of a system that relies on 03 rag?
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-18. **What common misconceptions exist about 03 rag?**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q20: Describe 03 rag as if explaining to a new hire.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-19. **How would you test correctness of a system that relies on 03 rag?**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q21: How does 03 rag interact with performance (time/space trade-off)?
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-20. **Describe 03 rag as if explaining to a new hire.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q22: What would you change about how 03 rag is taught, based on your experience?
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-21. **How does 03 rag interact with performance (time/space trade-off)?**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q23: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-22. **What would you change about how 03 rag is taught, based on your experience?**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q24: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-23. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q25: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-24. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q26: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-25. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q27: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-26. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q28: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-27. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q29: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-28. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q30: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-29. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q31: How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-30. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q32: What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-31. **How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q33: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-32. **What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q34: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-33. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q35: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-34. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q36: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-35. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q37: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-36. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q38: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-37. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q39: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-38. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q40: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-39. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q41: How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-40. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q42: What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-41. **How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q43: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-42. **What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q44: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-43. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q45: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-44. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q46: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-45. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q47: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-46. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q48: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-47. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q49: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-48. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q50: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-49. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q51: How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-50. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q52: What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-51. **How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q53: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-52. **What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q54: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-53. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q55: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-54. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q56: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-55. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q57: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-56. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q58: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-57. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q59: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-58. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q60: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-59. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q61: How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-60. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q62: What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-61. **How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q63: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-62. **What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q64: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-63. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q65: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-64. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q66: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-65. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q67: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-66. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q68: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-67. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q69: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-68. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q70: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-69. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q71: How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-70. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q72: What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-71. **How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q73: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-72. **What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q74: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-73. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q75: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-74. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q76: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-75. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q77: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-76. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q78: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-77. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q79: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-78. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q80: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-79. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q81: How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-80. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q82: What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-81. **How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q83: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-82. **What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q84: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-83. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q85: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-84. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q86: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-85. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q87: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-86. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q88: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-87. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q89: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-88. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q90: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-89. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q91: How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-90. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q92: What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-91. **How does 03 rag interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q93: Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-92. **What would you change about how 03 rag is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q94: Why is 03 rag important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-93. **Define 03 rag in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 03 rag is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q95: What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-94. **Why is 03 rag important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q96: Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-95. **What are the advantages and disadvantages of 03 rag? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q97: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-96. **Compare 03 rag with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q98: What common misconceptions exist about 03 rag? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-97. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 03 rag knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q99: How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-98. **What common misconceptions exist about 03 rag? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
-
-99. **How would you test correctness of a system that relies on 03 rag? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
-
-100. **Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
-
-</details>
+## Q100: Describe 03 rag as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.

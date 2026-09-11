@@ -1,308 +1,301 @@
-# 02 Http And Https — Computer / Networks
+# Computer Networks — Http And Https Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is HTTP and what are its request methods?
+**A:** A request/response application protocol: GET (read), POST (create), PUT (replace), PATCH (partial), DELETE, HEAD (headers only), OPTIONS (capabilities).
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What is the difference between GET and POST?
+**A:** GET is idempotent, reads, parameters in URL, cacheable, history-clean; POST sends data in the body (non-idempotent), used for creation/state change.
 
-1. **What is HTTP and what are its request methods?**
-   - A request/response application protocol: GET (read), POST (create), PUT (replace), PATCH (partial), DELETE, HEAD (headers only), OPTIONS (capabilities).
+## Q3: Is DELETE idempotent?
+**A:** Yes — repeating a DELETE returns the same effect (gone) with no additional side effect; idempotency is a key REST design property.
 
-2. **What is the difference between GET and POST?**
-   - GET is idempotent, reads, parameters in URL, cacheable, history-clean; POST sends data in the body (non-idempotent), used for creation/state change.
+## Q4: What are the HTTP status code classes?
+**A:** 1xx informational, 2xx success (200 OK, 201 Created, 204 No Content), 3xx redirection (301 Moved, 304 Not Modified), 4xx client error (400, 401, 403, 404, 429), 5xx server error (500, 502, 503, 504).
 
-3. **Is DELETE idempotent?**
-   - Yes — repeating a DELETE returns the same effect (gone) with no additional side effect; idempotency is a key REST design property.
+## Q5: What is the difference between 401 and 403?
+**A:** 401 Unauthorized = no/invalid credentials (authenticate). 403 Forbidden = authenticated but denied permission. Getting these mixed is a classic API interview slip.
 
-4. **What are the HTTP status code classes?**
-   - 1xx informational, 2xx success (200 OK, 201 Created, 204 No Content), 3xx redirection (301 Moved, 304 Not Modified), 4xx client error (400, 401, 403, 404, 429), 5xx server error (500, 502, 503, 504).
+## Q6: What is a cookie?
+**A:** A small name-value token the server sets via Set-Cookie; the browser echoes it on subsequent requests — maintaining sessions and personalisation over stateless HTTP.
 
-5. **What is the difference between 401 and 403?**
-   - 401 Unauthorized = no/invalid credentials (authenticate). 403 Forbidden = authenticated but denied permission. Getting these mixed is a classic API interview slip.
+## Q7: What is a session vs a token/JWT?
+**A:** Session: server-side state referenced by a session ID cookie. JWT: self-contained signed token, stateless verification on the server. Sessions revoke easily; JWTs scale better.
 
-6. **What is a cookie?**
-   - A small name-value token the server sets via Set-Cookie; the browser echoes it on subsequent requests — maintaining sessions and personalisation over stateless HTTP.
+## Q8: What is HTTP caching and cache-control headers?
+**A:** Cache-Control (max-age, no-cache, private/public) tells proxies/browsers how long to reuse responses — reducing load and latency; ETag/If-None-Match add validation.
 
-7. **What is a session vs a token/JWT?**
-   - Session: server-side state referenced by a session ID cookie. JWT: self-contained signed token, stateless verification on the server. Sessions revoke easily; JWTs scale better.
+## Q9: What is the difference between HTTP and HTTPS?
+**A:** HTTPS wraps HTTP in TLS (encryption, authentication, integrity). Provides confidentiality, authenticity (certs), and tamper-protection over plaintext HTTP.
 
-8. **What is HTTP caching and cache-control headers?**
-   - Cache-Control (max-age, no-cache, private/public) tells proxies/browsers how long to reuse responses — reducing load and latency; ETag/If-None-Match add validation.
+## Q10: What happens during a TLS handshake?
+**A:** Client Hello → Server Hello + Cert → key exchange (diffie-hellman) establishing session keys → Finished. Both sides verify the cert chain and derive keys.
 
-9. **What is the difference between HTTP and HTTPS?**
-   - HTTPS wraps HTTP in TLS (encryption, authentication, integrity). Provides confidentiality, authenticity (certs), and tamper-protection over plaintext HTTP.
+## Q11: What is CORS and why do browsers enforce it?
+**A:** Cross-Origin Resource Sharing: the server declares which origins may call it; the browser enforces it to prevent malicious cross-origin reads — configure headers on your FastAPI backend.
 
-10. **What happens during a TLS handshake?**
-   - Client Hello → Server Hello + Cert → key exchange (diffie-hellman) establishing session keys → Finished. Both sides verify the cert chain and derive keys.
+## Q12: What is a REST endpoint vs a WebSocket?
+**A:** REST: request/response over HTTP, stateless calls. WebSocket: persistent bidirectional connection for real-time push (chat, live dashboards) — the architectural choice differs.
 
-11. **What is CORS and why do browsers enforce it?**
-   - Cross-Origin Resource Sharing: the server declares which origins may call it; the browser enforces it to prevent malicious cross-origin reads — configure headers on your FastAPI backend.
+## Q13: Define 02 http and https in one line and then expand with a real-world example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-12. **What is a REST endpoint vs a WebSocket?**
-   - REST: request/response over HTTP, stateless calls. WebSocket: persistent bidirectional connection for real-time push (chat, live dashboards) — the architectural choice differs.
+## Q14: Why is 02 http and https important in real production systems?
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-13. **Define 02 http and https in one line and then expand with a real-world example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q15: What are the advantages and disadvantages of 02 http and https?
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-14. **Why is 02 http and https important in real production systems?**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q16: Compare 02 http and https with alternatives and state when to prefer which.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-15. **What are the advantages and disadvantages of 02 http and https?**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q17: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-16. **Compare 02 http and https with alternatives and state when to prefer which.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q18: What common misconceptions exist about 02 http and https?
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-17. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q19: How would you test correctness of a system that relies on 02 http and https?
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-18. **What common misconceptions exist about 02 http and https?**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q20: Describe 02 http and https as if explaining to a new hire.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-19. **How would you test correctness of a system that relies on 02 http and https?**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q21: How does 02 http and https interact with performance (time/space trade-off)?
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-20. **Describe 02 http and https as if explaining to a new hire.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q22: What would you change about how 02 http and https is taught, based on your experience?
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-21. **How does 02 http and https interact with performance (time/space trade-off)?**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q23: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-22. **What would you change about how 02 http and https is taught, based on your experience?**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q24: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-23. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q25: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-24. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q26: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-25. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q27: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-26. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q28: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-27. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q29: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-28. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q30: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-29. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q31: How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-30. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q32: What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-31. **How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q33: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-32. **What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q34: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-33. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q35: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-34. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q36: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-35. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q37: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-36. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q38: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-37. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q39: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-38. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q40: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-39. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q41: How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-40. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q42: What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-41. **How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q43: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-42. **What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q44: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-43. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q45: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-44. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q46: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-45. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q47: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-46. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q48: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-47. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q49: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-48. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q50: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-49. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q51: How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-50. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q52: What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-51. **How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q53: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-52. **What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q54: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-53. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q55: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-54. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q56: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-55. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q57: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-56. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q58: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-57. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q59: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-58. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q60: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-59. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q61: How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-60. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q62: What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-61. **How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q63: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-62. **What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q64: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-63. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q65: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-64. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q66: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-65. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q67: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-66. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q68: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-67. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q69: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-68. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q70: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-69. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q71: How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-70. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q72: What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-71. **How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q73: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-72. **What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q74: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-73. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q75: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-74. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q76: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-75. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q77: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-76. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q78: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-77. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q79: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-78. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q80: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-79. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q81: How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-80. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q82: What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-81. **How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q83: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-82. **What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q84: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-83. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q85: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-84. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q86: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-85. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q87: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-86. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q88: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-87. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q89: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-88. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
+## Q90: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
 
-89. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
+## Q91: How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.
+**A:** Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
 
-90. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
+## Q92: What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.
+**A:** Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
 
-91. **How does 02 http and https interact with performance (time/space trade-off)? Extend your answer with a second example.**
-   - Typically it trades one resource for another (space for speed, or latency for consistency). Quantify with complexity wherever possible and mention measurable impact on the user-facing system.
+## Q93: Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.
+**A:** One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
 
-92. **What would you change about how 02 http and https is taught, based on your experience? Extend your answer with a second example.**
-   - Move from memorisation of syntax/terms to practice with small concrete problems, because understanding only solidifies through application — this mirrors how you structured your own learning for placement interviews.
+## Q94: Why is 02 http and https important in real production systems? Extend your answer with a second example.
+**A:** It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
 
-93. **Define 02 http and https in one line and then expand with a real-world example. Extend your answer with a second example.**
-   - One line: 02 http and https is a core concept/mechanism in computer science governing how systems organise and process data. Real-world example: it maps to daily objects (library shelves, queues at a counter) so the abstract idea has an intuitive concrete anchor the interviewer can build on.
+## Q95: What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.
+**A:** Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
 
-94. **Why is 02 http and https important in real production systems? Extend your answer with a second example.**
-   - It directly affects correctness, performance, resource usage and maintainability. Understanding it lets an engineer reason about trade-offs, anticipate failure modes, and choose the right tool, which is exactly the engineering judgement a Specialist Digital Engineer role needs.
+## Q96: Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.
+**A:** Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
 
-95. **What are the advantages and disadvantages of 02 http and https? Extend your answer with a second example.**
-   - Advantages: predictability of behaviour, standardised semantics, widely understood patterns. Disadvantages: each design brings overhead or constraints, so it must be balanced against simplicity and project context whenever an alternative exists.
+## Q97: Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.
+**A:** In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
 
-96. **Compare 02 http and https with alternatives and state when to prefer which. Extend your answer with a second example.**
-   - Compare by criteria: speed, memory, complexity, latency, consistency. There is no universal best — the winner depends on the workload (read-heavy vs write-heavy, scale, consistency requirements); state the decision matrix explicitly.
+## Q98: What common misconceptions exist about 02 http and https? Extend your answer with a second example.
+**A:** People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
 
-97. **Give a scenario from your own projects (FastAPI services, RAG pipelines, COTS automation) where 02 http and https knowledge applied. Extend your answer with a second example.**
-   - In building backend services and AI pipelines, concepts like this guided API design, data flow and error handling; referencing one concrete project decision makes the answer credible and ties theory to your resume.
+## Q99: How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.
+**A:** Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
 
-98. **What common misconceptions exist about 02 http and https? Extend your answer with a second example.**
-   - People confuse terminologies that sound similar, assume a feature is 'automatic' when it needs configuration, or copy-paste patterns without understanding trade-offs. Clearing each misconception shows depth beyond definitions.
-
-99. **How would you test correctness of a system that relies on 02 http and https? Extend your answer with a second example.**
-   - Unit tests for the isolated logic, integration tests for the interplay with other components, plus failure/scenario tests (edge inputs, stress). This matches your pytest/unittest experience with CI pipelines.
-
-100. **Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.**
-   - Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.
-
-</details>
+## Q100: Describe 02 http and https as if explaining to a new hire. Extend your answer with a second example.
+**A:** Start from the goal it serves, add a minimal concrete analogy, state its constraints, then show the simplest possible example — the learning order matters more than dumping terminology.

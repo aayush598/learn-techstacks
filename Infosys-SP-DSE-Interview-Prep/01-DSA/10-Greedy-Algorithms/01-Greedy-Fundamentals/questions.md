@@ -1,308 +1,301 @@
-# 01 Greedy Fundamentals — Greedy / Algorithms
+# Greedy Algorithms — Greedy Fundamentals Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is a greedy algorithm?
+**A:** A greedy algorithm makes the locally optimal choice at each step, hoping it leads to a global optimum. It works only when the problem has the greedy-choice property and optimal substructure.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: How do you prove a greedy algorithm correct?
+**A:** Use the exchange argument: take any optimal solution, show you can swap in the greedy choice without losing optimality, so the greedy solution is optimal. Or show matroid-like structure.
 
-1. **What is a greedy algorithm?**
-   - A greedy algorithm makes the locally optimal choice at each step, hoping it leads to a global optimum. It works only when the problem has the greedy-choice property and optimal substructure.
+## Q3: Give examples where greedy is optimal.
+**A:** Coin change with canonical denominations, Huffman coding, Kruskal/Prim MST, Dijkstra (non-negative), fractional knapsack, activity selection — each has a proven greedy property.
 
-2. **How do you prove a greedy algorithm correct?**
-   - Use the exchange argument: take any optimal solution, show you can swap in the greedy choice without losing optimality, so the greedy solution is optimal. Or show matroid-like structure.
+## Q4: When does greedy fail?
+**A:** When a locally optimal choice harms future options — e.g., 0/1 knapsack, some coin systems, coin returning with arbitrary denominations, and coin change for amount where local max fails.
 
-3. **Give examples where greedy is optimal.**
-   - Coin change with canonical denominations, Huffman coding, Kruskal/Prim MST, Dijkstra (non-negative), fractional knapsack, activity selection — each has a proven greedy property.
+## Q5: How do you decide 'Is this greedy or DP?' in an interview?
+**A:** Test a small counterexample. If a locally optimal step is always safe, greedy; if choices constrain later optimality, DP. State both and choose deliberately.
 
-4. **When does greedy fail?**
-   - When a locally optimal choice harms future options — e.g., 0/1 knapsack, some coin systems, coin returning with arbitrary denominations, and coin change for amount where local max fails.
+## Q6: What is the exchange argument in one line?
+**A:** Show swapping the greedy step into any optimal solution preserves optimality, so there exists an optimal solution matching greedy at every step.
 
-5. **How do you decide 'Is this greedy or DP?' in an interview?**
-   - Test a small counterexample. If a locally optimal step is always safe, greedy; if choices constrain later optimality, DP. State both and choose deliberately.
+## Q7: Explain the fractional vs 0/1 knapsack distinction.
+**A:** Fractional knapsack allows fractional items → sorted by value/weight ratio, greedy optimal. 0/1 doesn't → DP required; greedy ratio fails.
 
-6. **What is the exchange argument in one line?**
-   - Show swapping the greedy step into any optimal solution preserves optimality, so there exists an optimal solution matching greedy at every step.
+## Q8: Name an Infosys-grade greedy problem.
+**A:** Minimum platforms, jump game, candy distribution, gas station, merge intervals, and task scheduling with deadlines are all SP/DSE frequent greeds.
 
-7. **Explain the fractional vs 0/1 knapsack distinction.**
-   - Fractional knapsack allows fractional items → sorted by value/weight ratio, greedy optimal. 0/1 doesn't → DP required; greedy ratio fails.
+## Q9: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-8. **Name an Infosys-grade greedy problem.**
-   - Minimum platforms, jump game, candy distribution, gas station, merge intervals, and task scheduling with deadlines are all SP/DSE frequent greeds.
+## Q10: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-9. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q11: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-10. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q12: What common edge cases must be handled in 01 greedy fundamentals implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-11. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q13: How would you dry-run your 01 greedy fundamentals code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-12. **What common edge cases must be handled in 01 greedy fundamentals implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q14: Give a real-world analogy for 01 greedy fundamentals.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-13. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q15: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-14. **Give a real-world analogy for 01 greedy fundamentals.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q16: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-15. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q17: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-16. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q18: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-17. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q19: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-18. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q20: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-19. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q21: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-20. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q22: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-21. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q23: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-22. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q24: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-23. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q25: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-24. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q26: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-25. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q27: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-26. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q28: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-27. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q29: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-28. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q30: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-29. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q31: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-30. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q32: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-31. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q33: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-32. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q34: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-33. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q35: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-34. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q36: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-35. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q37: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-36. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q38: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-37. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q39: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-38. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q40: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-39. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q41: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-40. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q42: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-41. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q43: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-42. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q44: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-43. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q45: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-44. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q46: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-45. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q47: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-46. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q48: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-47. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q49: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-48. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q50: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-49. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q51: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-50. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q52: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-51. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q53: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-52. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q54: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-53. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q55: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-54. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q56: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-55. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q57: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-56. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q58: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-57. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q59: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-58. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q60: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-59. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q61: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-60. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q62: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-61. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q63: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-62. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q64: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-63. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q65: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-64. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q66: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-65. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q67: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-66. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q68: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-67. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q69: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-68. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q70: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-69. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q71: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-70. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q72: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-71. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q73: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-72. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q74: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-73. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q75: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-74. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q76: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-75. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q77: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-76. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q78: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-77. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q79: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-78. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q80: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-79. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q81: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-80. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q82: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-81. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q83: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-82. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q84: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-83. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q85: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-84. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q86: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-85. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q87: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-86. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q88: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-87. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q89: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-88. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q90: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-89. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q91: State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-90. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q92: What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-91. **State the time and space complexity of the optimal solution for most 01 greedy fundamentals problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q93: How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-92. **What common edge cases must be handled in 01 greedy fundamentals implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q94: Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-93. **How would you dry-run your 01 greedy fundamentals code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q95: How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-94. **Give a real-world analogy for 01 greedy fundamentals. Extend your answer with a second example.**
-   - Analogy: 01 greedy fundamentals is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q96: What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-95. **How do you decide between a hash map, sorting, or two pointers as tools for 01 greedy fundamentals? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q97: Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-96. **What is the role of a prefix/suffix precomputation in 01 greedy fundamentals? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q98: How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-97. **Explain the optimisation step you would mention after writing the naive version for 01 greedy fundamentals. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q99: What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-98. **How is 01 greedy fundamentals asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
-
-99. **What is the intuition behind the 01 greedy fundamentals technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
-
-100. **Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
-
-</details>
+## Q100: Write the brute-force approach for a typical 01 greedy fundamentals problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).

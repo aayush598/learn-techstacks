@@ -1,308 +1,301 @@
-# 04 Advanced Stack Problems — Stacks / And / Queues
+# Stacks And Queues — Advanced Stack Problems Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: How do you evaluate a postfix expression using a stack?
+**A:** Push numbers; on operator pop two operands, compute, push result. At the end the single remaining value is the answer. O(n).
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: How do you convert infix to postfix with a stack?
+**A:** Operands out; operators pushed after popping ≥ precedence; '(' pushed, ')' pops to '('. Handle unary minus and right-associativity explicitly.
 
-1. **How do you evaluate a postfix expression using a stack?**
-   - Push numbers; on operator pop two operands, compute, push result. At the end the single remaining value is the answer. O(n).
+## Q3: How do you implement a basic calculator with parentheses and +, -?
+**A:** Operand stack + sign stack; '(' pushes current result/sign; ')' pops and combines; accumulate on '+'/'-'. Do NOT convert to eval — interviewers test parsing logic.
 
-2. **How do you convert infix to postfix with a stack?**
-   - Operands out; operators pushed after popping ≥ precedence; '(' pushed, ')' pops to '('. Handle unary minus and right-associativity explicitly.
+## Q4: How do you implement an undo/redo with two stacks?
+**A:** Undo-stack stores previous states; redo-stack receives popped states on undo; a new action clears redo. Both are O(1) push/pop.
 
-3. **How do you implement a basic calculator with parentheses and +, -?**
-   - Operand stack + sign stack; '(' pushes current result/sign; ')' pops and combines; accumulate on '+'/'-'. Do NOT convert to eval — interviewers test parsing logic.
+## Q5: How do you validate stack sequences (pushed/popped order)?
+**A:** Simulate: push from pushed; while stack top == popped[j], pop and j++. Valid iff stack empties. O(n).
 
-4. **How do you implement an undo/redo with two stacks?**
-   - Undo-stack stores previous states; redo-stack receives popped states on undo; a new action clears redo. Both are O(1) push/pop.
+## Q6: How do you find the Largest Rectangle in a Matrix of 1s?
+**A:** Treat each row as histogram heights; run monotonic-stack largest-rectangle for each row — O(m*n) total.
 
-5. **How do you validate stack sequences (pushed/popped order)?**
-   - Simulate: push from pushed; while stack top == popped[j], pop and j++. Valid iff stack empties. O(n).
+## Q7: How do you design a stack that supports getMin, push, pop in O(1)?
+**A:** Pair stack or min-stack as described; for eager min, keep both value and running-minitude in parallel.
 
-6. **How do you find the Largest Rectangle in a Matrix of 1s?**
-   - Treat each row as histogram heights; run monotonic-stack largest-rectangle for each row — O(m*n) total.
+## Q8: How do you implement a two-layer 'backspace' behaviour using stacks?
+**A:** Push chars, pop on '#', at end join the stack. Handles consecutive backspaces without index gymnastics.
 
-7. **How do you design a stack that supports getMin, push, pop in O(1)?**
-   - Pair stack or min-stack as described; for eager min, keep both value and running-minitude in parallel.
+## Q9: What is the 'trapping rain water' stack solution?
+**A:** While current height > stack top, pop mid; trapped = (min(left bound,right bound) - mid) * distance. O(n) time/space; two-pointer version uses O(1) space.
 
-8. **How do you implement a two-layer 'backspace' behaviour using stacks?**
-   - Push chars, pop on '#', at end join the stack. Handles consecutive backspaces without index gymnastics.
+## Q10: How do you simulate browser back/forward with two stacks?
+**A:** Back stack of visited pages, forward stack cleared on new visit; back pops into forward, forward pushes back. Classic stack interview scenario.
 
-9. **What is the 'trapping rain water' stack solution?**
-   - While current height > stack top, pop mid; trapped = (min(left bound,right bound) - mid) * distance. O(n) time/space; two-pointer version uses O(1) space.
+## Q11: What is the intuition behind the 04 advanced stack problems technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-10. **How do you simulate browser back/forward with two stacks?**
-   - Back stack of visited pages, forward stack cleared on new visit; back pops into forward, forward pushes back. Classic stack interview scenario.
+## Q12: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-11. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q13: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-12. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q14: What common edge cases must be handled in 04 advanced stack problems implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-13. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q15: How would you dry-run your 04 advanced stack problems code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-14. **What common edge cases must be handled in 04 advanced stack problems implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q16: Give a real-world analogy for 04 advanced stack problems.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-15. **How would you dry-run your 04 advanced stack problems code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q17: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-16. **Give a real-world analogy for 04 advanced stack problems.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q18: What is the role of a prefix/suffix precomputation in 04 advanced stack problems?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-17. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q19: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-18. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q20: How is 04 advanced stack problems asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-19. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q21: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-20. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q22: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-21. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q23: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-22. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q24: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-23. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q25: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-24. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q26: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-25. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q27: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-26. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q28: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-27. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q29: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-28. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q30: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-29. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q31: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-30. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q32: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-31. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q33: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-32. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q34: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-33. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q35: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-34. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q36: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-35. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q37: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-36. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q38: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-37. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q39: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-38. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q40: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-39. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q41: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-40. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q42: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-41. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q43: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-42. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q44: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-43. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q45: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-44. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q46: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-45. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q47: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-46. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q48: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-47. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q49: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-48. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q50: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-49. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q51: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-50. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q52: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-51. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q53: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-52. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q54: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-53. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q55: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-54. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q56: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-55. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q57: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-56. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q58: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-57. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q59: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-58. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q60: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-59. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q61: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-60. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q62: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-61. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q63: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-62. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q64: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-63. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q65: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-64. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q66: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-65. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q67: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-66. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q68: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-67. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q69: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-68. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q70: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-69. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q71: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-70. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q72: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-71. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q73: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-72. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q74: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-73. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q75: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-74. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q76: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-75. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q77: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-76. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q78: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-77. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q79: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-78. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q80: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-79. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q81: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-80. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q82: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-81. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q83: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-82. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q84: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-83. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q85: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-84. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q86: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-85. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q87: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-86. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q88: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-87. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q89: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-88. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q90: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-89. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q91: What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-90. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q92: Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-91. **What is the intuition behind the 04 advanced stack problems technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q93: State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-92. **Write the brute-force approach for a typical 04 advanced stack problems problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q94: What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-93. **State the time and space complexity of the optimal solution for most 04 advanced stack problems problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q95: How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-94. **What common edge cases must be handled in 04 advanced stack problems implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q96: Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.
+**A:** Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-95. **How would you dry-run your 04 advanced stack problems code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q97: How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-96. **Give a real-world analogy for 04 advanced stack problems. Extend your answer with a second example.**
-   - Analogy: 04 advanced stack problems is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q98: What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-97. **How do you decide between a hash map, sorting, or two pointers as tools for 04 advanced stack problems? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q99: Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-98. **What is the role of a prefix/suffix precomputation in 04 advanced stack problems? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
-
-99. **Explain the optimisation step you would mention after writing the naive version for 04 advanced stack problems. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
-
-100. **How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
-
-</details>
+## Q100: How is 04 advanced stack problems asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.

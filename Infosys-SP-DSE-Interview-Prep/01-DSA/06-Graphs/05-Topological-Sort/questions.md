@@ -1,308 +1,301 @@
-# 05 Topological Sort — Graphs
+# Graphs — Topological Sort Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is topological sort and its precondition?
+**A:** A linear order of vertices of a DAG where u precedes v for every edge u→v. It exists iff the graph is acyclic; multiple valid orders usually exist.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: Explain Kahn's algorithm (BFS-based toposort).
+**A:** Compute indegrees; enqueue all indegree-0; dequeue u, append to order, decrement neighbours, enqueue those that hit 0. O(V+E); leftover nodes mean a cycle.
 
-1. **What is topological sort and its precondition?**
-   - A linear order of vertices of a DAG where u precedes v for every edge u→v. It exists iff the graph is acyclic; multiple valid orders usually exist.
+## Q3: How do you topologically sort with DFS?
+**A:** Run DFS, append a node to the order AFTER exploring its descendants (postorder), then reverse at the end. The reverse-finish list is the topological order. O(V+E).
 
-2. **Explain Kahn's algorithm (BFS-based toposort).**
-   - Compute indegrees; enqueue all indegree-0; dequeue u, append to order, decrement neighbours, enqueue those that hit 0. O(V+E); leftover nodes mean a cycle.
+## Q4: Why does DFS toposort require reversal?
+**A:** A node is finished after its dependencies, so finishing order is dependency-first; reversing makes dependents appear after dependencies — the required ordering.
 
-3. **How do you topologically sort with DFS?**
-   - Run DFS, append a node to the order AFTER exploring its descendants (postorder), then reverse at the end. The reverse-finish list is the topological order. O(V+E).
+## Q5: How do you detect a cycle with Kahn's?
+**A:** If processed count < V, the remaining vertices form a cycle (all have indegree>0). Return an error / empty order in that case.
 
-4. **Why does DFS toposort require reversal?**
-   - A node is finished after its dependencies, so finishing order is dependency-first; reversing makes dependents appear after dependencies — the required ordering.
+## Q6: What are classic toposort application problems?
+**A:** Course schedule (can finish all), course schedule II (the order), build-system dependency ordering, compiler header ordering, and task scheduling with prerequisites.
 
-5. **How do you detect a cycle with Kahn's?**
-   - If processed count < V, the remaining vertices form a cycle (all have indegree>0). Return an error / empty order in that case.
+## Q7: How do you solve 'Course Schedule'?
+**A:** Build adjacency (prerequisites), run Kahn's; return whether processed == numCourses. If yes, all courses can be finished without circular prerequisites.
 
-6. **What are classic toposort application problems?**
-   - Course schedule (can finish all), course schedule II (the order), build-system dependency ordering, compiler header ordering, and task scheduling with prerequisites.
+## Q8: How do you produce a lexicographically smallest toposort?
+**A:** Replace the plain queue with a min-heap of indegree-0 vertices so the smallest available label is always taken — O(V log V + E).
 
-7. **How do you solve 'Course Schedule'?**
-   - Build adjacency (prerequisites), run Kahn's; return whether processed == numCourses. If yes, all courses can be finished without circular prerequisites.
+## Q9: What is the link between toposort and longest-path in DAGs?
+**A:** Processing vertices in topological order allows DP over predecessors: longest/shortest distance and counts are computable in O(V+E) — no Dijkstra needed in a DAG.
 
-8. **How do you produce a lexicographically smallest toposort?**
-   - Replace the plain queue with a min-heap of indegree-0 vertices so the smallest available label is always taken — O(V log V + E).
+## Q10: How does toposort determine the total time of a build?
+**A:** DP on topological order: end_time[u] = max over prerequisites (end_time[prereq] + cost[u]); the max is the minimal finish time — the scheduling answer.
 
-9. **What is the link between toposort and longest-path in DAGs?**
-   - Processing vertices in topological order allows DP over predecessors: longest/shortest distance and counts are computable in O(V+E) — no Dijkstra needed in a DAG.
+## Q11: Why can't undirected graphs be topologically sorted?
+**A:** Edge u—v would require u before v and v before u simultaneously, which is impossible unless degenerate; toposort is defined only for directed structures.
 
-10. **How does toposort determine the total time of a build?**
-   - DP on topological order: end_time[u] = max over prerequisites (end_time[prereq] + cost[u]); the max is the minimal finish time — the scheduling answer.
+## Q12: How do you find all topological orders?
+**A:** Backtracking Kahn's (each choice of an indegree-0 vertex branches); exponential output — report count or list carefully.
 
-11. **Why can't undirected graphs be topologically sorted?**
-   - Edge u—v would require u before v and v before u simultaneously, which is impossible unless degenerate; toposort is defined only for directed structures.
+## Q13: What is the intuition behind the 05 topological sort technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-12. **How do you find all topological orders?**
-   - Backtracking Kahn's (each choice of an indegree-0 vertex branches); exponential output — report count or list carefully.
+## Q14: Write the brute-force approach for a typical 05 topological sort problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-13. **What is the intuition behind the 05 topological sort technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q15: State the time and space complexity of the optimal solution for most 05 topological sort problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-14. **Write the brute-force approach for a typical 05 topological sort problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q16: What common edge cases must be handled in 05 topological sort implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-15. **State the time and space complexity of the optimal solution for most 05 topological sort problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q17: How would you dry-run your 05 topological sort code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-16. **What common edge cases must be handled in 05 topological sort implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q18: Give a real-world analogy for 05 topological sort.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-17. **How would you dry-run your 05 topological sort code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q19: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-18. **Give a real-world analogy for 05 topological sort.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q20: What is the role of a prefix/suffix precomputation in 05 topological sort?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-19. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q21: Explain the optimisation step you would mention after writing the naive version for 05 topological sort.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-20. **What is the role of a prefix/suffix precomputation in 05 topological sort?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q22: How is 05 topological sort asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-21. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q23: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-22. **How is 05 topological sort asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q24: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-23. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q25: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-24. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q26: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-25. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q27: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-26. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q28: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-27. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q29: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-28. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q30: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-29. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q31: Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-30. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q32: How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-31. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q33: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-32. **How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q34: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-33. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q35: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-34. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q36: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-35. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q37: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-36. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q38: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-37. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q39: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-38. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q40: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-39. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q41: Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-40. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q42: How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-41. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q43: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-42. **How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q44: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-43. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q45: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-44. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q46: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-45. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q47: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-46. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q48: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-47. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q49: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-48. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q50: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-49. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q51: Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-50. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q52: How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-51. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q53: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-52. **How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q54: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-53. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q55: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-54. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q56: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-55. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q57: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-56. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q58: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-57. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q59: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-58. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q60: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-59. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q61: Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-60. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q62: How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-61. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q63: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-62. **How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q64: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-63. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q65: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-64. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q66: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-65. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q67: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-66. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q68: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-67. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q69: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-68. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q70: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-69. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q71: Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-70. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q72: How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-71. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q73: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-72. **How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q74: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-73. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q75: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-74. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q76: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-75. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q77: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-76. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q78: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-77. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q79: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-78. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q80: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-79. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q81: Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-80. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q82: How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-81. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q83: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-82. **How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q84: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-83. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q85: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-84. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q86: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-85. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q87: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-86. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q88: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-87. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q89: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-88. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q90: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-89. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q91: Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-90. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q92: How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-91. **Explain the optimisation step you would mention after writing the naive version for 05 topological sort. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q93: What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-92. **How is 05 topological sort asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q94: Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-93. **What is the intuition behind the 05 topological sort technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q95: State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-94. **Write the brute-force approach for a typical 05 topological sort problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q96: What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-95. **State the time and space complexity of the optimal solution for most 05 topological sort problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q97: How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-96. **What common edge cases must be handled in 05 topological sort implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q98: Give a real-world analogy for 05 topological sort. Extend your answer with a second example.
+**A:** Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-97. **How would you dry-run your 05 topological sort code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q99: How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-98. **Give a real-world analogy for 05 topological sort. Extend your answer with a second example.**
-   - Analogy: 05 topological sort is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
-
-99. **How do you decide between a hash map, sorting, or two pointers as tools for 05 topological sort? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
-
-100. **What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
-
-</details>
+## Q100: What is the role of a prefix/suffix precomputation in 05 topological sort? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.

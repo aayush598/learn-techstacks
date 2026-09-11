@@ -1,308 +1,301 @@
-# 01 Sorting Algorithms — Sorting / And / Searching
+# Sorting And Searching — Sorting Algorithms Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: List the comparison-based sorting algorithms and their complexities.
+**A:** Bubble O(n^2), selection O(n^2), insertion O(n^2), merge O(n log n), quick O(n log n) avg / O(n^2) worst, heap O(n log n). Stable variants differ per algorithm.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: Explain merge sort.
+**A:** Divide into halves, recursively sort each, merge two sorted halves with two pointers. O(n log n) time guaranteed, O(n) space for the merge buffer. Stable.
 
-1. **List the comparison-based sorting algorithms and their complexities.**
-   - Bubble O(n^2), selection O(n^2), insertion O(n^2), merge O(n log n), quick O(n log n) avg / O(n^2) worst, heap O(n log n). Stable variants differ per algorithm.
+## Q3: Explain quicksort and its partition step.
+**A:** Pick a pivot; partition so smaller elements precede it and larger follow; recurse on each side. Average O(n log n), worst O(n^2) for bad pivots; in-place but unstable.
 
-2. **Explain merge sort.**
-   - Divide into halves, recursively sort each, merge two sorted halves with two pointers. O(n log n) time guaranteed, O(n) space for the merge buffer. Stable.
+## Q4: How does heap sort work?
+**A:** Build a max-heap, repeatedly swap the max to the end and heapify the shrinking prefix. O(n log n), O(1) extra space, not stable. It uses the heap data structure.
 
-3. **Explain quicksort and its partition step.**
-   - Pick a pivot; partition so smaller elements precede it and larger follow; recurse on each side. Average O(n log n), worst O(n^2) for bad pivots; in-place but unstable.
+## Q5: Compare merge sort vs quicksort.
+**A:** Merge: guaranteed O(n log n), stable, needs O(n) space. Quick: in-place, faster constants, unstable, worst O(n^2) — choose by guarantee vs speed requirement.
 
-4. **How does heap sort work?**
-   - Build a max-heap, repeatedly swap the max to the end and heapify the shrinking prefix. O(n log n), O(1) extra space, not stable. It uses the heap data structure.
+## Q6: What is counting sort and when is it applicable?
+**A:** Non-comparison sort over integer keys in range k: counts→prefix→place. O(n+k) time/space; linear only when k is small and keys are integers/naturals.
 
-5. **Compare merge sort vs quicksort.**
-   - Merge: guaranteed O(n log n), stable, needs O(n) space. Quick: in-place, faster constants, unstable, worst O(n^2) — choose by guarantee vs speed requirement.
+## Q7: What is radix sort?
+**A:** Sorts integer keys by digit positions (LSD first) with a stable counting sort per digit. O(d·(n+k)); linear when digits are few.
 
-6. **What is counting sort and when is it applicable?**
-   - Non-comparison sort over integer keys in range k: counts→prefix→place. O(n+k) time/space; linear only when k is small and keys are integers/naturals.
+## Q8: What is bucket sort?
+**A:** Distributes elements into n buckets, sorts each (usually insertion), concatenates. O(n) average for uniformly distributed keys — used in floating-point and histogram problems.
 
-7. **What is radix sort?**
-   - Sorts integer keys by digit positions (LSD first) with a stable counting sort per digit. O(d·(n+k)); linear when digits are few.
+## Q9: What is Timsort (Python's sort)?
+**A:** Hybrid of merge+insertion optimised for real data: finds natural runs, merges with galloping; stable, adaptive O(n) on already-sorted data.
 
-8. **What is bucket sort?**
-   - Distributes elements into n buckets, sorts each (usually insertion), concatenates. O(n) average for uniformly distributed keys — used in floating-point and histogram problems.
+## Q10: How do you sort with a custom comparator in Python?
+**A:** key=lambda x: expr computes a sortable key; for multi-criteria use tuples; for order-reversal negate numerics or use functools.cmp_to_key for comparison semantics.
 
-9. **What is Timsort (Python's sort)?**
-   - Hybrid of merge+insertion optimised for real data: finds natural runs, merges with galloping; stable, adaptive O(n) on already-sorted data.
+## Q11: What does stability mean and why does it matter?
+**A:** Stable sorting preserves the relative order of equal elements — needed when sorting by multiple keys where earlier sorts must not be scrambled (e.g., radix LSD).
 
-10. **How do you sort with a custom comparator in Python?**
-   - key=lambda x: expr computes a sortable key; for multi-criteria use tuples; for order-reversal negate numerics or use functools.cmp_to_key for comparison semantics.
+## Q12: How do you sort nearly-sorted arrays efficiently?
+**A:** Insertion sort is O(n·k) for k-offset arrays; or use a k-size heap for the heap-sort variant. Expected from the interviewer: recognise near-sortedness.
 
-11. **What does stability mean and why does it matter?**
-   - Stable sorting preserves the relative order of equal elements — needed when sorting by multiple keys where earlier sorts must not be scrambled (e.g., radix LSD).
+## Q13: How do you detect if a sorted array is a valid non-descending sequence?
+**A:** One pass checking arr[i] <= arr[i+1] for all i; any violation returns false. O(n).
 
-12. **How do you sort nearly-sorted arrays efficiently?**
-   - Insertion sort is O(n·k) for k-offset arrays; or use a k-size heap for the heap-sort variant. Expected from the interviewer: recognise near-sortedness.
+## Q14: How do you sort strings by frequency?
+**A:** Count via Counter, then sort keys by (-count, char); or bucket by frequency. O(n log n) or O(n) with buckets.
 
-13. **How do you detect if a sorted array is a valid non-descending sequence?**
-   - One pass checking arr[i] <= arr[i+1] for all i; any violation returns false. O(n).
+## Q15: What is the difference between stable unstable examples?
+**A:** Stable: bubble, insertion, merge, counting, Timsort. Unstable: quick, heap, selection (with naive swaps). State this — interviewers ask directly.
 
-14. **How do you sort strings by frequency?**
-   - Count via Counter, then sort keys by (-count, char); or bucket by frequency. O(n log n) or O(n) with buckets.
+## Q16: What is the intuition behind the 01 sorting algorithms technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-15. **What is the difference between stable unstable examples?**
-   - Stable: bubble, insertion, merge, counting, Timsort. Unstable: quick, heap, selection (with naive swaps). State this — interviewers ask directly.
+## Q17: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-16. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q18: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-17. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q19: What common edge cases must be handled in 01 sorting algorithms implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-18. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q20: How would you dry-run your 01 sorting algorithms code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-19. **What common edge cases must be handled in 01 sorting algorithms implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q21: Give a real-world analogy for 01 sorting algorithms.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-20. **How would you dry-run your 01 sorting algorithms code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q22: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-21. **Give a real-world analogy for 01 sorting algorithms.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q23: What is the role of a prefix/suffix precomputation in 01 sorting algorithms?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-22. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q24: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-23. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q25: How is 01 sorting algorithms asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-24. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q26: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-25. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q27: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-26. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q28: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-27. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q29: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-28. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q30: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-29. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q31: Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-30. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q32: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-31. **Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q33: What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-32. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q34: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-33. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q35: How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-34. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q36: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-35. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q37: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-36. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q38: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-37. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q39: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-38. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q40: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-39. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q41: Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-40. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q42: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-41. **Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q43: What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-42. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q44: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-43. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q45: How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-44. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q46: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-45. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q47: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-46. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q48: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-47. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q49: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-48. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q50: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-49. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q51: Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-50. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q52: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-51. **Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q53: What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-52. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q54: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-53. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q55: How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-54. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q56: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-55. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q57: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-56. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q58: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-57. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q59: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-58. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q60: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-59. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q61: Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-60. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q62: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-61. **Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q63: What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-62. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q64: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-63. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q65: How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-64. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q66: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-65. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q67: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-66. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q68: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-67. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q69: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-68. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q70: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-69. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q71: Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-70. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q72: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-71. **Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q73: What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-72. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q74: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-73. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q75: How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-74. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q76: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-75. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q77: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-76. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q78: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-77. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q79: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-78. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q80: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-79. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q81: Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-80. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q82: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-81. **Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q83: What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-82. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q84: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-83. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q85: How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-84. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q86: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-85. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q87: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-86. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q88: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-87. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q89: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-88. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q90: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-89. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q91: Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.
+**A:** Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-90. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q92: How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-91. **Give a real-world analogy for 01 sorting algorithms. Extend your answer with a second example.**
-   - Analogy: 01 sorting algorithms is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q93: What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-92. **How do you decide between a hash map, sorting, or two pointers as tools for 01 sorting algorithms? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q94: Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-93. **What is the role of a prefix/suffix precomputation in 01 sorting algorithms? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q95: How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-94. **Explain the optimisation step you would mention after writing the naive version for 01 sorting algorithms. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q96: What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-95. **How is 01 sorting algorithms asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q97: Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-96. **What is the intuition behind the 01 sorting algorithms technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q98: State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-97. **Write the brute-force approach for a typical 01 sorting algorithms problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q99: What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-98. **State the time and space complexity of the optimal solution for most 01 sorting algorithms problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
-
-99. **What common edge cases must be handled in 01 sorting algorithms implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
-
-100. **How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
-
-</details>
+## Q100: How would you dry-run your 01 sorting algorithms code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.

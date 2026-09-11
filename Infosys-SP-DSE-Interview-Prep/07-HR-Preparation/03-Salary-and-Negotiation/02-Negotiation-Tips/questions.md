@@ -1,308 +1,301 @@
-# 02 Negotiation Tips — Salary / And / Negotiation
+# Salary And Negotiation — Negotiation Tips Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: How do you negotiate as a fresher?
+**A:** Ask for clarity first, negotiate on evidence (projects, achievements, competitive offers), and separate needs (base) from wants (variable, benefits) — then anchor with a researched range, not an ultimatum.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: What is your expected salary?
+**A:** A polished EN: 'I'm primarily interested in the role and growth; based on my research and my AI/ML project experience, I'd expect a fresher specialist band like INR X-Y, and I'm open to a fair market offer.' — flexible but confident.
 
-1. **How do you negotiate as a fresher?**
-   - Ask for clarity first, negotiate on evidence (projects, achievements, competitive offers), and separate needs (base) from wants (variable, benefits) — then anchor with a researched range, not an ultimatum.
+## Q3: Should you disclose other offers?
+**A:** Only if it's true and you're prepared to walk — a verified competing offer is legitimate leverage; inflating it risks credibility you can't afford in this industry.
 
-2. **What is your expected salary?**
-   - A polished EN: 'I'm primarily interested in the role and growth; based on my research and my AI/ML project experience, I'd expect a fresher specialist band like INR X-Y, and I'm open to a fair market offer.' — flexible but confident.
+## Q4: How do you respond to a lower-than-expected offer?
+**A:** Thank them, ask for the reasoning (band structure, min-max), restate your value with one concrete line, and counter with a researched number — always professional, never resentful.
 
-3. **Should you disclose other offers?**
-   - Only if it's true and you're prepared to walk — a verified competing offer is legitimate leverage; inflating it risks credibility you can't afford in this industry.
+## Q5: What would you do if salary is non-negotiable?
+**A:** Negotiate the rest: joining bonus, certification budgets, location preferences, or earlier review dates — total package negotiation beyond the number.
 
-4. **How do you respond to a lower-than-expected offer?**
-   - Thank them, ask for the reasoning (band structure, min-max), restate your value with one concrete line, and counter with a researched number — always professional, never resentful.
+## Q6: How does negotiation work for campus/rollover offers?
+**A:** Individually varied — when eligible, negotiate on asymmetric strengths (internship performance, strong project portfolio, certifications) and be genuinely prepared to decline on principle.
 
-5. **What would you do if salary is non-negotiable?**
-   - Negotiate the rest: joining bonus, certification budgets, location preferences, or earlier review dates — total package negotiation beyond the number.
+## Q7: What is the single most useful negotiation tactic?
+**A:** Silence and specifics: present a researched anchor, then stop talking — the next person to speak often concedes; and never negotiate emotionally.
 
-6. **How does negotiation work for campus/rollover offers?**
-   - Individually varied — when eligible, negotiate on asymmetric strengths (internship performance, strong project portfolio, certifications) and be genuinely prepared to decline on principle.
+## Q8: What factors other than money would you negotiate?
+**A:** Learning budget, project assignment preference, onboarding time, and relocation support — durable value often sits outside the CTC line.
 
-7. **What is the single most useful negotiation tactic?**
-   - Silence and specifics: present a researched anchor, then stop talking — the next person to speak often concedes; and never negotiate emotionally.
+## Q9: How do you avoid a salary negotiation backfiring?
+**A:** Keep the tone collaborative ('help me understand the band'), never issue ultimatums without a brick-and-mortar alternative, and know your walk-away number in advance.
 
-8. **What factors other than money would you negotiate?**
-   - Learning budget, project assignment preference, onboarding time, and relocation support — durable value often sits outside the CTC line.
+## Q10: What is the walk-away point concept?
+**A:** The minimum offer under which you'd decline — decided BEFORE negotiation so emotion doesn't decide it — the discipline behind professional negotiation.
 
-9. **How do you avoid a salary negotiation backfiring?**
-   - Keep the tone collaborative ('help me understand the band'), never issue ultimatums without a brick-and-mortar alternative, and know your walk-away number in advance.
+## Q11: Tell me about a time you demonstrated 02 negotiation tips (STAR method).
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-10. **What is the walk-away point concept?**
-   - The minimum offer under which you'd decline — decided BEFORE negotiation so emotion doesn't decide it — the discipline behind professional negotiation.
+## Q12: How does 02 negotiation tips show up in a typical IT services project at Infosys?
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-11. **Tell me about a time you demonstrated 02 negotiation tips (STAR method).**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q13: What is your honest personal strength and a related weakness around 02 negotiation tips?
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-12. **How does 02 negotiation tips show up in a typical IT services project at Infosys?**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q14: Give a self-introduction that showcases 02 negotiation tips.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-13. **What is your honest personal strength and a related weakness around 02 negotiation tips?**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q15: How do you behave when a teammate does not exhibit 02 negotiation tips?
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-14. **Give a self-introduction that showcases 02 negotiation tips.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q16: Describe a failure caused by lack of 02 negotiation tips and your corrective action.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-15. **How do you behave when a teammate does not exhibit 02 negotiation tips?**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q17: Why should we hire you? Base the answer on 02 negotiation tips.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-16. **Describe a failure caused by lack of 02 negotiation tips and your corrective action.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q18: How do you handle pressure and deadlines in relation to 02 negotiation tips?
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-17. **Why should we hire you? Base the answer on 02 negotiation tips.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q19: What questions would you ask the panel that also show 02 negotiation tips?
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-18. **How do you handle pressure and deadlines in relation to 02 negotiation tips?**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q20: Rate yourself on 02 negotiation tips and justify it.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-19. **What questions would you ask the panel that also show 02 negotiation tips?**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q21: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-20. **Rate yourself on 02 negotiation tips and justify it.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q22: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-21. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q23: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-22. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q24: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-23. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q25: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-24. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q26: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-25. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q27: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-26. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q28: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-27. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q29: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-28. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q30: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-29. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q31: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-30. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q32: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-31. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q33: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-32. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q34: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-33. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q35: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-34. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q36: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-35. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q37: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-36. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q38: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-37. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q39: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-38. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q40: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-39. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q41: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-40. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q42: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-41. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q43: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-42. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q44: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-43. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q45: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-44. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q46: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-45. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q47: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-46. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q48: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-47. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q49: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-48. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q50: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-49. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q51: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-50. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q52: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-51. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q53: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-52. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q54: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-53. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q55: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-54. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q56: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-55. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q57: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-56. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q58: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-57. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q59: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-58. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q60: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-59. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q61: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-60. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q62: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-61. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q63: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-62. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q64: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-63. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q65: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-64. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q66: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-65. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q67: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-66. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q68: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-67. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q69: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-68. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q70: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-69. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q71: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-70. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q72: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-71. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q73: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-72. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q74: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-73. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q75: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-74. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q76: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-75. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q77: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-76. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q78: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-77. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q79: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-78. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q80: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-79. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q81: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-80. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q82: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-81. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q83: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-82. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q84: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-83. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q85: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-84. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q86: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-85. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q87: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-86. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q88: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-87. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q89: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-88. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q90: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-89. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q91: Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-90. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q92: How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-91. **Tell me about a time you demonstrated 02 negotiation tips (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q93: What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-92. **How does 02 negotiation tips show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 negotiation tips determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q94: Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-93. **What is your honest personal strength and a related weakness around 02 negotiation tips? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q95: How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-94. **Give a self-introduction that showcases 02 negotiation tips. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q96: Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-95. **How do you behave when a teammate does not exhibit 02 negotiation tips? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q97: Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-96. **Describe a failure caused by lack of 02 negotiation tips and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q98: How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-97. **Why should we hire you? Base the answer on 02 negotiation tips. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q99: What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-98. **How do you handle pressure and deadlines in relation to 02 negotiation tips? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
-
-99. **What questions would you ask the panel that also show 02 negotiation tips? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
-
-100. **Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
-
-</details>
+## Q100: Rate yourself on 02 negotiation tips and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.

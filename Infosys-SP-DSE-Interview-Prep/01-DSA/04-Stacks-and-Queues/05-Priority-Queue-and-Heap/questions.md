@@ -1,308 +1,301 @@
-# 05 Priority Queue And Heap — Stacks / And / Queues
+# Stacks And Queues — Priority Queue And Heap Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: Define a binary heap and its properties.
+**A:** A complete binary tree stored in an array where parent ≤ children (min-heap) or ≥ (max-heap); heap[0] is the extreme. Height O(log n), operations on root path.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: State the complexity of heap operations.
+**A:** Insert O(log n), extract-min/max O(log n), peek O(1), build-heap O(n) (down-heap from first non-leaf).
 
-1. **Define a binary heap and its properties.**
-   - A complete binary tree stored in an array where parent ≤ children (min-heap) or ≥ (max-heap); heap[0] is the extreme. Height O(log n), operations on root path.
+## Q3: How do you implement heapify (sift-down)?
+**A:** Compare node with children, swap with the extreme child violating order, recurse down until heap property restored. Called on indices n/2-1..0 to build in O(n).
 
-2. **State the complexity of heap operations.**
-   - Insert O(log n), extract-min/max O(log n), peek O(1), build-heap O(n) (down-heap from first non-leaf).
+## Q4: What is the difference between a heap and a priority queue?
+**A:** A priority queue is an interface (insert element with priority, delete the extreme); a heap is the usual array-backed implementation. Same concepts, different abstraction layers.
 
-3. **How do you implement heapify (sift-down)?**
-   - Compare node with children, swap with the extreme child violating order, recurse down until heap property restored. Called on indices n/2-1..0 to build in O(n).
+## Q5: How do you find the K largest elements with a heap?
+**A:** Min-heap of size k: push, and when size>k pop the smallest; the heap holds the k largest. O(n log k) time, O(k) space.
 
-4. **What is the difference between a heap and a priority queue?**
-   - A priority queue is an interface (insert element with priority, delete the extreme); a heap is the usual array-backed implementation. Same concepts, different abstraction layers.
+## Q6: How do you merge k sorted arrays with a heap?
+**A:** Push (value, listIdx, elemIdx) into a min-heap; repeatedly pop min, place in result, push next element from that list. O(N log k).
 
-5. **How do you find the K largest elements with a heap?**
-   - Min-heap of size k: push, and when size>k pop the smallest; the heap holds the k largest. O(n log k) time, O(k) space.
+## Q7: How do you implement a median-of-stream using two heaps?
+**A:** Max-heap for the lower half, min-heap for the upper; rebalance so sizes differ by ≤ 1; median is top of bigger (or average). O(log n) per number.
 
-6. **How do you merge k sorted arrays with a heap?**
-   - Push (value, listIdx, elemIdx) into a min-heap; repeatedly pop min, place in result, push next element from that list. O(N log k).
+## Q8: How do you find the top-k frequent elements?
+**A:** Counter frequencies, then a min-heap of k (keyed by frequency) or bucket sort by frequency count. O(n log k) or O(n).
 
-7. **How do you implement a median-of-stream using two heaps?**
-   - Max-heap for the lower half, min-heap for the upper; rebalance so sizes differ by ≤ 1; median is top of bigger (or average). O(log n) per number.
+## Q9: What is heap sort and its complexity?
+**A:** Build max-heap then repeatedly swap root to end and heapify the shrinking prefix — O(n log n) worst, O(1) extra space, NOT stable.
 
-8. **How do you find the top-k frequent elements?**
-   - Counter frequencies, then a min-heap of k (keyed by frequency) or bucket sort by frequency count. O(n log k) or O(n).
+## Q10: How do you implement a priority queue in Python?
+**A:** heapq provides min-heap on lists; push/pop pairs of (priority, item) for custom priorities; a counter disambiguates ties. queue.PriorityQueue adds thread-safe locking.
 
-9. **What is heap sort and its complexity?**
-   - Build max-heap then repeatedly swap root to end and heapify the shrinking prefix — O(n log n) worst, O(1) extra space, NOT stable.
+## Q11: How do you implement a max-heap in Python?
+**A:** Negate keys (heapq.min-heap with -value), or wrap entries in a class with __lt__ inverted. No dedicated max-heap exists in heapq.
 
-10. **How do you implement a priority queue in Python?**
-   - heapq provides min-heap on lists; push/pop pairs of (priority, item) for custom priorities; a counter disambiguates ties. queue.PriorityQueue adds thread-safe locking.
+## Q12: What is a 'd-ary heap' and its trade-off?
+**A:** Each node has d children: faster key-decrease (O(log_d n)) but slower each child scan; used in Dijkstra optimisations for dense graphs.
 
-11. **How do you implement a max-heap in Python?**
-   - Negate keys (heapq.min-heap with -value), or wrap entries in a class with __lt__ inverted. No dedicated max-heap exists in heapq.
+## Q13: How do you find the K smallest pair sums?
+**A:** Min-heap seeded with (a[0]+b[i]) for each i; pop, push next by advancing a-pointer; dedupe with visited set. O(k log k).
 
-12. **What is a 'd-ary heap' and its trade-off?**
-   - Each node has d children: faster key-decrease (O(log_d n)) but slower each child scan; used in Dijkstra optimisations for dense graphs.
+## Q14: What is a Fibonacci heap and why is it advanced?
+**A:** Supports decrease-key O(1) amortised, used in optimised Dijkstra/Prim; complex pointer-based structure rarely required in interviews but shows depth.
 
-13. **How do you find the K smallest pair sums?**
-   - Min-heap seeded with (a[0]+b[i]) for each i; pop, push next by advancing a-pointer; dedupe with visited set. O(k log k).
+## Q15: How does a heap enable Huffman coding?
+**A:** Merge the two smallest-frequency symbols repeatedly using a min-heap; the tree's leaves encode variable-length optimal prefix codes. O(n log n).
 
-14. **What is a Fibonacci heap and why is it advanced?**
-   - Supports decrease-key O(1) amortised, used in optimised Dijkstra/Prim; complex pointer-based structure rarely required in interviews but shows depth.
+## Q16: What is the intuition behind the 05 priority queue and heap technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-15. **How does a heap enable Huffman coding?**
-   - Merge the two smallest-frequency symbols repeatedly using a min-heap; the tree's leaves encode variable-length optimal prefix codes. O(n log n).
+## Q17: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-16. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q18: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-17. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q19: What common edge cases must be handled in 05 priority queue and heap implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-18. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q20: How would you dry-run your 05 priority queue and heap code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-19. **What common edge cases must be handled in 05 priority queue and heap implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q21: Give a real-world analogy for 05 priority queue and heap.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-20. **How would you dry-run your 05 priority queue and heap code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q22: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-21. **Give a real-world analogy for 05 priority queue and heap.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q23: What is the role of a prefix/suffix precomputation in 05 priority queue and heap?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-22. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q24: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-23. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q25: How is 05 priority queue and heap asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-24. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q26: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-25. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q27: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-26. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q28: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-27. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q29: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-28. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q30: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-29. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q31: Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-30. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q32: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-31. **Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q33: What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-32. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q34: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-33. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q35: How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-34. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q36: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-35. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q37: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-36. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q38: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-37. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q39: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-38. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q40: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-39. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q41: Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-40. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q42: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-41. **Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q43: What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-42. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q44: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-43. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q45: How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-44. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q46: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-45. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q47: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-46. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q48: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-47. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q49: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-48. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q50: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-49. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q51: Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-50. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q52: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-51. **Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q53: What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-52. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q54: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-53. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q55: How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-54. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q56: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-55. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q57: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-56. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q58: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-57. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q59: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-58. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q60: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-59. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q61: Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-60. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q62: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-61. **Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q63: What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-62. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q64: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-63. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q65: How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-64. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q66: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-65. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q67: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-66. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q68: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-67. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q69: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-68. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q70: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-69. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q71: Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-70. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q72: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-71. **Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q73: What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-72. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q74: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-73. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q75: How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-74. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q76: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-75. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q77: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-76. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q78: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-77. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q79: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-78. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q80: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-79. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q81: Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-80. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q82: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-81. **Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q83: What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-82. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q84: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-83. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q85: How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-84. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q86: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-85. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q87: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-86. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q88: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-87. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q89: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-88. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q90: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-89. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q91: Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.
+**A:** Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-90. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q92: How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-91. **Give a real-world analogy for 05 priority queue and heap. Extend your answer with a second example.**
-   - Analogy: 05 priority queue and heap is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q93: What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-92. **How do you decide between a hash map, sorting, or two pointers as tools for 05 priority queue and heap? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q94: Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-93. **What is the role of a prefix/suffix precomputation in 05 priority queue and heap? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q95: How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-94. **Explain the optimisation step you would mention after writing the naive version for 05 priority queue and heap. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q96: What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-95. **How is 05 priority queue and heap asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q97: Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-96. **What is the intuition behind the 05 priority queue and heap technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q98: State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-97. **Write the brute-force approach for a typical 05 priority queue and heap problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q99: What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-98. **State the time and space complexity of the optimal solution for most 05 priority queue and heap problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
-
-99. **What common edge cases must be handled in 05 priority queue and heap implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
-
-100. **How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
-
-</details>
+## Q100: How would you dry-run your 05 priority queue and heap code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.

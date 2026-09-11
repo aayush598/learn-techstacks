@@ -1,308 +1,301 @@
-# 01 1D Dp — Dynamic / Programming
+# Dynamic Programming — 1D Dp Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: What is dynamic programming and its two core properties?
+**A:** DP optimality at a state comes from overlapping subproblems (reused) and optimal substructure (best from best). Store solutions to subproblems; avoid recomputing — the Fibonacci memoisation is the canonical example.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: Explain memoisation (top-down) vs tabulation (bottom-up).
+**A:** Memoisation: recurse and cache results (lazy). Tabulation: fill a table iteratively (eager). Same answer; tabulation avoids recursion depth and is often asked for its O(m)/O(n) space.
 
-1. **What is dynamic programming and its two core properties?**
-   - DP optimality at a state comes from overlapping subproblems (reused) and optimal substructure (best from best). Store solutions to subproblems; avoid recomputing — the Fibonacci memoisation is the canonical example.
+## Q3: How do you climb stairs / reach step N with Fibonacci-like recurrence?
+**A:** Ways(n)=ways(n-1)+ways(n-2) with ways(1)=1, ways(2)=2; iterate storing two suffixes — O(n) time, O(1) space. Recursion without memo is O(2^n).
 
-2. **Explain memoisation (top-down) vs tabulation (bottom-up).**
-   - Memoisation: recurse and cache results (lazy). Tabulation: fill a table iteratively (eager). Same answer; tabulation avoids recursion depth and is often asked for its O(m)/O(n) space.
+## Q4: What is the house-robbor (max non-adjacent sum)?
+**A:** dp[i]=max(dp[i-1], dp[i-2]+nums[i]); use two rolling variables. O(n) time O(1) space. This exact pattern recurs across SP/DSE tests.
 
-3. **How do you climb stairs / reach step N with Fibonacci-like recurrence?**
-   - Ways(n)=ways(n-1)+ways(n-2) with ways(1)=1, ways(2)=2; iterate storing two suffixes — O(n) time, O(1) space. Recursion without memo is O(2^n).
+## Q5: How do you approach a new 1D DP in an interview?
+**A:** Define state meaning, write the recurrence, define base cases, verify on a small example, then optimise space; always climb the 4-step ladder aloud.
 
-4. **What is the house-robbor (max non-adjacent sum)?**
-   - dp[i]=max(dp[i-1], dp[i-2]+nums[i]); use two rolling variables. O(n) time O(1) space. This exact pattern recurs across SP/DSE tests.
+## Q6: How do you solve coin-change (minimum coins for amount)?
+**A:** dp[a]=min over coins (dp[a-c]+1); dp[0]=0; fill amount ascending. Watch for unreachable amounts (infinity). O(amount·coins).
 
-5. **How do you approach a new 1D DP in an interview?**
-   - Define state meaning, write the recurrence, define base cases, verify on a small example, then optimise space; always climb the 4-step ladder aloud.
+## Q7: How do you solve the number-of-ways coin change?
+**A:** Count combinations: dp over coins outer and amounts inner (or use unbounded-knapsack counting) — avoids counting permutations twice. O(amount·coins).
 
-6. **How do you solve coin-change (minimum coins for amount)?**
-   - dp[a]=min over coins (dp[a-c]+1); dp[0]=0; fill amount ascending. Watch for unreachable amounts (infinity). O(amount·coins).
+## Q8: What is the frog-jump / min-cost on stairs variant?
+**A:** Min energy to top: cost[i]+=min(cost[i-1],cost[i-2]) brick-by-brick; the answer accumulates at the last two steps. O(n).
 
-7. **How do you solve the number-of-ways coin change?**
-   - Count combinations: dp over coins outer and amounts inner (or use unbounded-knapsack counting) — avoids counting permutations twice. O(amount·coins).
+## Q9: How do you solve the longest increasing subsequence (LIS)?
+**A:** dp[i]=1+max dp[j] for j<i and nums[j]<nums[i]; O(n^2). The O(n log n) variant uses a patience-sorting 'tails' array — know both.
 
-8. **What is the frog-jump / min-cost on stairs variant?**
-   - Min energy to top: cost[i]+=min(cost[i-1],cost[i-2]) brick-by-brick; the answer accumulates at the last two steps. O(n).
+## Q10: What is 'decode ways' and its DP?
+**A:** Ways to decode digits as letters: dp[i] = (s[i] valid 1..9 ? dp[i-1]:0) + (two-digit 10..26? dp[i-2]:0). Watch '0' edge cases. O(n).
 
-9. **How do you solve the longest increasing subsequence (LIS)?**
-   - dp[i]=1+max dp[j] for j<i and nums[j]<nums[i]; O(n^2). The O(n log n) variant uses a patience-sorting 'tails' array — know both.
+## Q11: How do you count ways to partition integers (integer break)?
+**A:** Max product of split: dp[n]=max(i*(n-i), i*dp[n-i]) over splits; classic product-vs-sum optimisation. O(n^2) or formulas.
 
-10. **What is 'decode ways' and its DP?**
-   - Ways to decode digits as letters: dp[i] = (s[i] valid 1..9 ? dp[i-1]:0) + (two-digit 10..26? dp[i-2]:0). Watch '0' edge cases. O(n).
+## Q12: What is the 'palindromic partitioning min cuts'?
+**A:** dp[i]=min cuts for prefix i; with palindrome check table O(n^2). The answer counts the fewest cuts. O(n^2) time.
 
-11. **How do you count ways to partition integers (integer break)?**
-   - Max product of split: dp[n]=max(i*(n-i), i*dp[n-i]) over splits; classic product-vs-sum optimisation. O(n^2) or formulas.
+## Q13: How do you solve the 'perfect squares' min-count?
+**A:** dp[n]=1+min over squares dp[n - sq^2]; fill ascending. O(n·sqrt(n)) — a classic one-dimensional DP applied to numbers.
 
-12. **What is the 'palindromic partitioning min cuts'?**
-   - dp[i]=min cuts for prefix i; with palindrome check table O(n^2). The answer counts the fewest cuts. O(n^2) time.
+## Q14: How do you handle large N with 1D DP?
+**A:** Keep only needed rows/variables; use modulo for counting problems; use integer overflow care; and prefer tabulation for arrays of size ≥10^5.
 
-13. **How do you solve the 'perfect squares' min-count?**
-   - dp[n]=1+min over squares dp[n - sq^2]; fill ascending. O(n·sqrt(n)) — a classic one-dimensional DP applied to numbers.
+## Q15: What is the bitmask trick for 'subset XOR pairs' style 1D DP?
+**A:** Some count-DPs track parity/mask state rather than position; the 'state' definition transcends 1D-position and is subtly a 2D state machine.
 
-14. **How do you handle large N with 1D DP?**
-   - Keep only needed rows/variables; use modulo for counting problems; use integer overflow care; and prefer tabulation for arrays of size ≥10^5.
+## Q16: What is the intuition behind the 01 1d dp technique used in coding interviews?
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-15. **What is the bitmask trick for 'subset XOR pairs' style 1D DP?**
-   - Some count-DPs track parity/mask state rather than position; the 'state' definition transcends 1D-position and is subtly a 2D state machine.
+## Q17: Write the brute-force approach for a typical 01 1d dp problem and analyse it.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-16. **What is the intuition behind the 01 1d dp technique used in coding interviews?**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q18: State the time and space complexity of the optimal solution for most 01 1d dp problems.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-17. **Write the brute-force approach for a typical 01 1d dp problem and analyse it.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q19: What common edge cases must be handled in 01 1d dp implementations?
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-18. **State the time and space complexity of the optimal solution for most 01 1d dp problems.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q20: How would you dry-run your 01 1d dp code on a small example in an interview?
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-19. **What common edge cases must be handled in 01 1d dp implementations?**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q21: Give a real-world analogy for 01 1d dp.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-20. **How would you dry-run your 01 1d dp code on a small example in an interview?**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q22: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp?
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-21. **Give a real-world analogy for 01 1d dp.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q23: What is the role of a prefix/suffix precomputation in 01 1d dp?
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-22. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp?**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q24: Explain the optimisation step you would mention after writing the naive version for 01 1d dp.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-23. **What is the role of a prefix/suffix precomputation in 01 1d dp?**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q25: How is 01 1d dp asked differently in an online assessment versus a live interview?
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-24. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q26: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-25. **How is 01 1d dp asked differently in an online assessment versus a live interview?**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q27: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-26. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q28: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-27. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q29: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-28. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q30: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-29. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q31: Give a real-world analogy for 01 1d dp. Extend your answer with a second example.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-30. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q32: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-31. **Give a real-world analogy for 01 1d dp. Extend your answer with a second example.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q33: What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-32. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q34: Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-33. **What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q35: How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-34. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q36: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-35. **How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q37: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-36. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q38: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-37. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q39: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-38. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q40: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-39. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q41: Give a real-world analogy for 01 1d dp. Extend your answer with a second example.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-40. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q42: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-41. **Give a real-world analogy for 01 1d dp. Extend your answer with a second example.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q43: What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-42. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q44: Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-43. **What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q45: How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-44. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q46: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-45. **How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q47: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-46. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q48: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-47. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q49: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-48. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q50: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-49. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q51: Give a real-world analogy for 01 1d dp. Extend your answer with a second example.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-50. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q52: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-51. **Give a real-world analogy for 01 1d dp. Extend your answer with a second example.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q53: What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-52. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q54: Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-53. **What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q55: How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-54. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q56: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-55. **How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q57: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-56. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q58: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-57. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q59: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-58. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q60: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-59. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q61: Give a real-world analogy for 01 1d dp. Extend your answer with a second example.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-60. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q62: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-61. **Give a real-world analogy for 01 1d dp. Extend your answer with a second example.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q63: What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-62. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q64: Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-63. **What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q65: How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-64. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q66: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-65. **How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q67: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-66. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q68: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-67. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q69: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-68. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q70: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-69. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q71: Give a real-world analogy for 01 1d dp. Extend your answer with a second example.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-70. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q72: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-71. **Give a real-world analogy for 01 1d dp. Extend your answer with a second example.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q73: What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-72. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q74: Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-73. **What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q75: How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-74. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q76: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-75. **How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q77: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-76. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q78: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-77. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q79: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-78. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q80: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-79. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q81: Give a real-world analogy for 01 1d dp. Extend your answer with a second example.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-80. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q82: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-81. **Give a real-world analogy for 01 1d dp. Extend your answer with a second example.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q83: What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-82. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q84: Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-83. **What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q85: How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-84. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q86: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-85. **How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q87: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-86. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q88: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-87. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q89: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-88. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
+## Q90: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
 
-89. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
+## Q91: Give a real-world analogy for 01 1d dp. Extend your answer with a second example.
+**A:** Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
 
-90. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
+## Q92: How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.
+**A:** Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
 
-91. **Give a real-world analogy for 01 1d dp. Extend your answer with a second example.**
-   - Analogy: 01 1d dp is like scanning a line of people for a specific property while remembering a few key facts — each person is visited once and relevant state is carried forward, exactly how the optimal solution behaves.
+## Q93: What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.
+**A:** Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
 
-92. **How do you decide between a hash map, sorting, or two pointers as tools for 01 1d dp? Extend your answer with a second example.**
-   - Hash map when you need membership/paired lookup in O(1) and space is affordable; sorting when order gives a monotonic advantage (two pointers, binary search); pointers directly when the input is already sorted. Trade space for speed only when constraints allow.
+## Q94: Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.
+**A:** First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
 
-93. **What is the role of a prefix/suffix precomputation in 01 1d dp? Extend your answer with a second example.**
-   - Precomputation turns repeated subcomputations into O(1) lookups, converting an O(n^2) nested loop into O(n). Common wherever the value at index i depends on an aggregate over a range around i.
+## Q95: How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.
+**A:** In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
 
-94. **Explain the optimisation step you would mention after writing the naive version for 01 1d dp. Extend your answer with a second example.**
-   - First remove redundant recomputation via memoisation or prefix arrays; next, exploit monotonicity with two pointers/sliding window; finally, reduce space by keeping running variables instead of full tables — always closing with the improved complexity.
+## Q96: What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.
+**A:** The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
 
-95. **How is 01 1d dp asked differently in an online assessment versus a live interview? Extend your answer with a second example.**
-   - In the assessment only correctness/speed of the final code matters and hidden tests matter; in the live round the interviewer wants your thought process, complexity analysis, edge cases, and a hand trace — both must be practiced.
+## Q97: Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.
+**A:** Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
 
-96. **What is the intuition behind the 01 1d dp technique used in coding interviews? Extend your answer with a second example.**
-   - The core idea is to avoid brute force by exploiting structure: leftover wasted compares are removed, and each element is processed a small constant number of times, driving complexity down to an optimal bound that interviewers expect you to justify.
+## Q98: State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.
+**A:** The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
 
-97. **Write the brute-force approach for a typical 01 1d dp problem and analyse it. Extend your answer with a second example.**
-   - Brute force enumerates every candidate configuration, e.g., every subarray/combination/permutation, giving O(n^2), O(n^3) or O(2^n). It is correct but only useful for small inputs; the interview follow-up is to optimise it to linear or O(n log n).
+## Q99: What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.
+**A:** Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
 
-98. **State the time and space complexity of the optimal solution for most 01 1d dp problems. Extend your answer with a second example.**
-   - The optimal solution is usually O(n) time with O(n) space, or O(n) time with O(1) space when a monotonic/pointer trick applies. Always state constants and best/worst cases explicitly.
-
-99. **What common edge cases must be handled in 01 1d dp implementations? Extend your answer with a second example.**
-   - Empty input, single-element input, all-equal values, negative numbers, duplicates, off-by-one at the last index, and large values where intermediate sums/products can overflow — every one must be tested.
-
-100. **How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.**
-   - Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.
-
-</details>
+## Q100: How would you dry-run your 01 1d dp code on a small example in an interview? Extend your answer with a second example.
+**A:** Pick a tiny input, walk index by index while updating each variable, and show the invariants hold at every step. This proves both correctness and that you truly understand the algorithm, which Infosys interviewers probe by asking you to trace code by hand.

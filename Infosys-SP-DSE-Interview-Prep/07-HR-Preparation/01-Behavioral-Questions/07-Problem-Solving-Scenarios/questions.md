@@ -1,308 +1,301 @@
-# 07 Problem Solving Scenarios — Behavioral / Questions
+# Behavioral Questions — Problem Solving Scenarios Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: A client changes requirements mid-project. What do you do?
+**A:** Assess impact (scope, time, cost), discuss options with trade-offs, get an explicit decision, then communicate the revised plan to the team — change is data, not a crisis.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: Your code works locally but fails in production. How do you debug?
+**A:** Controlled comparison: environment differences (versions, filesystem, DB), log the actual failure, reproduce in a prod-like container, and bisect assumptions — I'd start with env drift since that's the usual culprit.
 
-1. **A client changes requirements mid-project. What do you do?**
-   - Assess impact (scope, time, cost), discuss options with trade-offs, get an explicit decision, then communicate the revised plan to the team — change is data, not a crisis.
+## Q3: A junior asks for help every 10 minutes. How do you respond?
+**A:** Help them learn, not just complete: ask what they've tried, walk the reasoning together, and point to a reference to build independence — while carving one quiet deep-work block before they return.
 
-2. **Your code works locally but fails in production. How do you debug?**
-   - Controlled comparison: environment differences (versions, filesystem, DB), log the actual failure, reproduce in a prod-like container, and bisect assumptions — I'd start with env drift since that's the usual culprit.
+## Q4: A new hire disagrees with your code structure. What now?
+**A:** Ask for their rationale — a fresh perspective often catches real issues; if there are trade-offs, compare them concretely on a small example and decide with the team's standard, not ego.
 
-3. **A junior asks for help every 10 minutes. How do you respond?**
-   - Help them learn, not just complete: ask what they've tried, walk the reasoning together, and point to a reference to build independence — while carving one quiet deep-work block before they return.
+## Q5: Production breaks at 2am and you're on call. What's your process?
+**A:** 1) Stop the bleed (rollback/feature-flag), 2) gather evidence (logs, metrics, trace), 3) find root cause, 4) fix with a test, 5) post-mortem. Fix forward with escalation only if the fix is risky.
 
-4. **A new hire disagrees with your code structure. What now?**
-   - Ask for their rationale — a fresh perspective often catches real issues; if there are trade-offs, compare them concretely on a small example and decide with the team's standard, not ego.
+## Q6: Your team is split 50/50 on an approach. How do you break the tie?
+**A:** Frame a falsifiable comparison: pick the cheapest experiment that discriminates (benchmark, spike, survey of users), set a time box, and let measurement decide — consensus isn't required when data exists.
 
-5. **Production breaks at 2am and you're on call. What's your process?**
-   - 1) Stop the bleed (rollback/feature-flag), 2) gather evidence (logs, metrics, trace), 3) find root cause, 4) fix with a test, 5) post-mortem. Fix forward with escalation only if the fix is risky.
+## Q7: Your senior makes a technical recommendation you strongly disagree with. What do you do?
+**A:** Prepare the specific evidence for my view, raise it respectfully once with the fuller context in mind, and if still overruled, implement their direction well — while making the outcome measurable so the right call shows.
 
-6. **Your team is split 50/50 on an approach. How do you break the tie?**
-   - Frame a falsifiable comparison: pick the cheapest experiment that discriminates (benchmark, spike, survey of users), set a time box, and let measurement decide — consensus isn't required when data exists.
+## Q8: A stakeholder gives you vague praise but no concrete feedback. How do you improve?
+**A:** Ask for one specific example of what went well and one thing to try next; convert vague signals into a targeted experiment — feedback is a requirement you should be expected to clarify.
 
-7. **Your senior makes a technical recommendation you strongly disagree with. What do you do?**
-   - Prepare the specific evidence for my view, raise it respectfully once with the fuller context in mind, and if still overruled, implement their direction well — while making the outcome measurable so the right call shows.
+## Q9: You find a severe security issue in a shipped feature. What's your process?
+**A:** Severity assessment, immediate containment (disable/rollback), notify the right people without delay, then root-cause and fix with a regression test — in that order; secrecy is not the same as prudence.
 
-8. **A stakeholder gives you vague praise but no concrete feedback. How do you improve?**
-   - Ask for one specific example of what went well and one thing to try next; convert vague signals into a targeted experiment — feedback is a requirement you should be expected to clarify.
+## Q10: You inherit a messy legacy codebase. How do you start?
+**A:** Read the entry point and core data flow, map documented behaviour before changing anything, add a characterisation test on the riskiest path, then refactor in small verified steps — understand before improving.
 
-9. **You find a severe security issue in a shipped feature. What's your process?**
-   - Severity assessment, immediate containment (disable/rollback), notify the right people without delay, then root-cause and fix with a regression test — in that order; secrecy is not the same as prudence.
+## Q11: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method).
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-10. **You inherit a messy legacy codebase. How do you start?**
-   - Read the entry point and core data flow, map documented behaviour before changing anything, add a characterisation test on the riskiest path, then refactor in small verified steps — understand before improving.
+## Q12: How does 07 problem solving scenarios show up in a typical IT services project at Infosys?
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-11. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method).**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q13: What is your honest personal strength and a related weakness around 07 problem solving scenarios?
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-12. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys?**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q14: Give a self-introduction that showcases 07 problem solving scenarios.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-13. **What is your honest personal strength and a related weakness around 07 problem solving scenarios?**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q15: How do you behave when a teammate does not exhibit 07 problem solving scenarios?
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-14. **Give a self-introduction that showcases 07 problem solving scenarios.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q16: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-15. **How do you behave when a teammate does not exhibit 07 problem solving scenarios?**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q17: Why should we hire you? Base the answer on 07 problem solving scenarios.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-16. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q18: How do you handle pressure and deadlines in relation to 07 problem solving scenarios?
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-17. **Why should we hire you? Base the answer on 07 problem solving scenarios.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q19: What questions would you ask the panel that also show 07 problem solving scenarios?
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-18. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios?**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q20: Rate yourself on 07 problem solving scenarios and justify it.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-19. **What questions would you ask the panel that also show 07 problem solving scenarios?**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q21: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-20. **Rate yourself on 07 problem solving scenarios and justify it.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q22: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-21. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q23: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-22. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q24: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-23. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q25: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-24. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q26: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-25. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q27: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-26. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q28: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-27. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q29: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-28. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q30: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-29. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q31: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-30. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q32: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-31. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q33: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-32. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q34: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-33. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q35: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-34. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q36: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-35. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q37: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-36. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q38: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-37. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q39: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-38. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q40: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-39. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q41: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-40. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q42: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-41. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q43: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-42. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q44: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-43. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q45: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-44. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q46: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-45. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q47: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-46. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q48: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-47. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q49: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-48. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q50: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-49. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q51: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-50. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q52: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-51. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q53: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-52. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q54: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-53. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q55: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-54. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q56: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-55. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q57: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-56. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q58: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-57. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q59: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-58. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q60: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-59. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q61: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-60. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q62: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-61. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q63: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-62. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q64: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-63. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q65: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-64. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q66: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-65. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q67: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-66. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q68: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-67. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q69: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-68. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q70: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-69. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q71: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-70. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q72: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-71. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q73: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-72. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q74: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-73. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q75: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-74. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q76: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-75. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q77: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-76. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q78: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-77. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q79: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-78. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q80: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-79. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q81: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-80. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q82: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-81. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q83: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-82. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q84: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-83. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q85: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-84. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q86: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-85. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q87: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-86. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q88: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-87. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q89: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-88. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q90: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-89. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q91: Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-90. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q92: How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-91. **Tell me about a time you demonstrated 07 problem solving scenarios (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q93: What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-92. **How does 07 problem solving scenarios show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 07 problem solving scenarios determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q94: Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-93. **What is your honest personal strength and a related weakness around 07 problem solving scenarios? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q95: How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-94. **Give a self-introduction that showcases 07 problem solving scenarios. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q96: Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-95. **How do you behave when a teammate does not exhibit 07 problem solving scenarios? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q97: Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-96. **Describe a failure caused by lack of 07 problem solving scenarios and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q98: How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-97. **Why should we hire you? Base the answer on 07 problem solving scenarios. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q99: What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-98. **How do you handle pressure and deadlines in relation to 07 problem solving scenarios? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
-
-99. **What questions would you ask the panel that also show 07 problem solving scenarios? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
-
-100. **Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
-
-</details>
+## Q100: Rate yourself on 07 problem solving scenarios and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.

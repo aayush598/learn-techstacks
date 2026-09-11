@@ -1,308 +1,301 @@
-# 02 Unexpected Questions — Common / Hr / Questions
+# Common Hr Questions — Unexpected Questions Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: If you were a vegetable, which would you be?
+**A:** A light one that still shows character: 'a potato — versatile, works in any stack, and becomes something amazing when prepared properly' — answer smoothly and briefly, don't overthink it.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: Tell me a joke.
+**A:** Keep it clean and quick — a short one-liner; the point isn't the laugh, it's your composure under a deliberately weird prompt. Have 1-2 ready.
 
-1. **If you were a vegetable, which would you be?**
-   - A light one that still shows character: 'a potato — versatile, works in any stack, and becomes something amazing when prepared properly' — answer smoothly and briefly, don't overthink it.
+## Q3: If you could meet anyone, dead or alive, who would it be?
+**A:** Pick someone tied to your field (e.g., a pioneer of AI/software systems) and say why one conversation with them would change your practice — shows intellectual curiosity, not celebrity.
 
-2. **Tell me a joke.**
-   - Keep it clean and quick — a short one-liner; the point isn't the laugh, it's your composure under a deliberately weird prompt. Have 1-2 ready.
+## Q4: What would you do if your interviewer disagreed with you in this interview?
+**A:** Respectfully probe their view, share my reasoning without insisting, and acknowledge if the stronger argument is theirs — demonstrating the disagreement-handling answer in real time.
 
-3. **If you could meet anyone, dead or alive, who would it be?**
-   - Pick someone tied to your field (e.g., a pioneer of AI/software systems) and say why one conversation with them would change your practice — shows intellectual curiosity, not celebrity.
+## Q5: Describe a time someone changed your mind.
+**A:** A technical example: peer criticism of my retrieval approach in ScriptVector — I benchmarked their suggestion, saw it won on relevance, and switched; shows adaptable, evidence-driven thinking.
 
-4. **What would you do if your interviewer disagreed with you in this interview?**
-   - Respectfully probe their view, share my reasoning without insisting, and acknowledge if the stronger argument is theirs — demonstrating the disagreement-handling answer in real time.
+## Q6: If you won a lottery today, would you still work?
+**A:** Yes — the point of work for me is mastery and impact, not necessity; I'd choose harder, self-directed engineering goals sooner but still build things for real users.
 
-5. **Describe a time someone changed your mind.**
-   - A technical example: peer criticism of my retrieval approach in ScriptVector — I benchmarked their suggestion, saw it won on relevance, and switched; shows adaptable, evidence-driven thinking.
+## Q7: What is something you have no talent for?
+**A:** Pick something harmless (e.g., sketching/painting) and note you respect it — it shows humility and self-awareness without compromising professional perception.
 
-6. **If you won a lottery today, would you still work?**
-   - Yes — the point of work for me is mastery and impact, not necessity; I'd choose harder, self-directed engineering goals sooner but still build things for real users.
+## Q8: How would you explain your project to a five-year-old?
+**A:** Use the ScriptVector example: 'I built a robot that remembers hundreds of code tricks, and when you ask it a question it finds the best trick to answer' — a clear, simple mental model communicates depth.
 
-7. **What is something you have no talent for?**
-   - Pick something harmless (e.g., sketching/painting) and note you respect it — it shows humility and self-awareness without compromising professional perception.
+## Q9: Which animal represents your work style?
+**A:** Pick one with a story: 'an owl watching then diving precisely' (or a bee — systematic) — any answer is fine as long as you attach the reasoning quickly.
 
-8. **How would you explain your project to a five-year-old?**
-   - Use the ScriptVector example: 'I built a robot that remembers hundreds of code tricks, and when you ask it a question it finds the best trick to answer' — a clear, simple mental model communicates depth.
+## Q10: If you had a superpower, what would it be?
+**A:** Something work-relevant: 'perfect recall, so I never forget a stack trace or a design decision' — self-deprecating + professional beats generic flying.
 
-9. **Which animal represents your work style?**
-   - Pick one with a story: 'an owl watching then diving precisely' (or a bee — systematic) — any answer is fine as long as you attach the reasoning quickly.
+## Q11: What would you do differently if you were the interviewer?
+**A:** Ask one candidate question I wish I'd been asked — I'd ask about a time they handled ambiguous requirements, since that predicts delivery quality more than most other questions.
 
-10. **If you had a superpower, what would it be?**
-   - Something work-relevant: 'perfect recall, so I never forget a stack trace or a design decision' — self-deprecating + professional beats generic flying.
+## Q12: What are the five things in your pocket right now?
+**A:** Humour with honesty: phone, wallet, earbuds, a notebook, and confidence — demonstrate calm creativity under a purposefully absurd prompt; do not freeze.
 
-11. **What would you do differently if you were the interviewer?**
-   - Ask one candidate question I wish I'd been asked — I'd ask about a time they handled ambiguous requirements, since that predicts delivery quality more than most other questions.
+## Q13: Tell me about a time you demonstrated 02 unexpected questions (STAR method).
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-12. **What are the five things in your pocket right now?**
-   - Humour with honesty: phone, wallet, earbuds, a notebook, and confidence — demonstrate calm creativity under a purposefully absurd prompt; do not freeze.
+## Q14: How does 02 unexpected questions show up in a typical IT services project at Infosys?
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-13. **Tell me about a time you demonstrated 02 unexpected questions (STAR method).**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q15: What is your honest personal strength and a related weakness around 02 unexpected questions?
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-14. **How does 02 unexpected questions show up in a typical IT services project at Infosys?**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q16: Give a self-introduction that showcases 02 unexpected questions.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-15. **What is your honest personal strength and a related weakness around 02 unexpected questions?**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q17: How do you behave when a teammate does not exhibit 02 unexpected questions?
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-16. **Give a self-introduction that showcases 02 unexpected questions.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q18: Describe a failure caused by lack of 02 unexpected questions and your corrective action.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-17. **How do you behave when a teammate does not exhibit 02 unexpected questions?**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q19: Why should we hire you? Base the answer on 02 unexpected questions.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-18. **Describe a failure caused by lack of 02 unexpected questions and your corrective action.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q20: How do you handle pressure and deadlines in relation to 02 unexpected questions?
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-19. **Why should we hire you? Base the answer on 02 unexpected questions.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q21: What questions would you ask the panel that also show 02 unexpected questions?
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-20. **How do you handle pressure and deadlines in relation to 02 unexpected questions?**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q22: Rate yourself on 02 unexpected questions and justify it.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-21. **What questions would you ask the panel that also show 02 unexpected questions?**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q23: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-22. **Rate yourself on 02 unexpected questions and justify it.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q24: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-23. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q25: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-24. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q26: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-25. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q27: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-26. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q28: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-27. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q29: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-28. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q30: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-29. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q31: What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-30. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q32: Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-31. **What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q33: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-32. **Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q34: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-33. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q35: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-34. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q36: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-35. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q37: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-36. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q38: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-37. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q39: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-38. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q40: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-39. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q41: What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-40. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q42: Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-41. **What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q43: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-42. **Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q44: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-43. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q45: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-44. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q46: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-45. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q47: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-46. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q48: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-47. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q49: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-48. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q50: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-49. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q51: What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-50. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q52: Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-51. **What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q53: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-52. **Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q54: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-53. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q55: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-54. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q56: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-55. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q57: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-56. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q58: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-57. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q59: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-58. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q60: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-59. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q61: What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-60. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q62: Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-61. **What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q63: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-62. **Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q64: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-63. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q65: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-64. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q66: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-65. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q67: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-66. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q68: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-67. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q69: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-68. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q70: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-69. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q71: What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-70. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q72: Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-71. **What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q73: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-72. **Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q74: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-73. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q75: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-74. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q76: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-75. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q77: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-76. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q78: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-77. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q79: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-78. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q80: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-79. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q81: What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-80. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q82: Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-81. **What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q83: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-82. **Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q84: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-83. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q85: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-84. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q86: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-85. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q87: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-86. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q88: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-87. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q89: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-88. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q90: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-89. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q91: What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-90. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q92: Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-91. **What questions would you ask the panel that also show 02 unexpected questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q93: Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-92. **Rate yourself on 02 unexpected questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q94: How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-93. **Tell me about a time you demonstrated 02 unexpected questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q95: What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-94. **How does 02 unexpected questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 02 unexpected questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q96: Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-95. **What is your honest personal strength and a related weakness around 02 unexpected questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q97: How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-96. **Give a self-introduction that showcases 02 unexpected questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q98: Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-97. **How do you behave when a teammate does not exhibit 02 unexpected questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q99: Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-98. **Describe a failure caused by lack of 02 unexpected questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
-
-99. **Why should we hire you? Base the answer on 02 unexpected questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
-
-100. **How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
-
-</details>
+## Q100: How do you handle pressure and deadlines in relation to 02 unexpected questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.

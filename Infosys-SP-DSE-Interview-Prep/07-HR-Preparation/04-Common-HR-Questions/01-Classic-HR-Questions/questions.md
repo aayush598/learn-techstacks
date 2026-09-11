@@ -1,308 +1,301 @@
-# 01 Classic Hr Questions — Common / Hr / Questions
+# Common Hr Questions — Classic Hr Questions Interview Questions and Answers
 
-**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**
+## Q1: Tell me about yourself.
+**A:** Same structured intro: education -> AI/ML engineering evidence (internships, projects, open source) -> why SP DSE/Infosys — trimmed to ~60 seconds, rehearsed to sound spontaneous.
 
-<details open>
-<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>
+## Q2: Where do you see yourself in 5 years?
+**A:** Technical deepenening: from specialist to a data/AI technical lead — but with a growth-oriented framing: 'I want to be someone they trust with harder and harder data problems'.
 
-1. **Tell me about yourself.**
-   - Same structured intro: education -> AI/ML engineering evidence (internships, projects, open source) -> why SP DSE/Infosys — trimmed to ~60 seconds, rehearsed to sound spontaneous.
+## Q3: What are your strengths and weaknesses?
+**A:** Strength: applied engineering (shipping GenAI products with tests/CI). Weakness: over-researching before building — mitigated by time-boxed spikes. Always pair weakness with the fix.
 
-2. **Where do you see yourself in 5 years?**
-   - Technical deepenening: from specialist to a data/AI technical lead — but with a growth-oriented framing: 'I want to be someone they trust with harder and harder data problems'.
+## Q4: Why should we hire you?
+**A:** Because I combine AI/ML depth (internships, projects, IEEE paper, SIH) with software fundamentals (DSA, DBMS, Python) — the exact blend the SP DSE role needs, and I've proven I can ship.
 
-3. **What are your strengths and weaknesses?**
-   - Strength: applied engineering (shipping GenAI products with tests/CI). Weakness: over-researching before building — mitigated by time-boxed spikes. Always pair weakness with the fix.
+## Q5: Why do you want to work with us?
+**A:** Reference their specifics: Infosys's data/AI scale, Topaz, the SP DSE specialist track, and global projects — companies hire people who did homework.
 
-4. **Why should we hire you?**
-   - Because I combine AI/ML depth (internships, projects, IEEE paper, SIH) with software fundamentals (DSA, DBMS, Python) — the exact blend the SP DSE role needs, and I've proven I can ship.
+## Q6: What do you know about our company?
+**A:** Give 3 researched facts you can defend: founded 1981, ~300k+ employees, data/AI-first strategy, training scale, key industries — no vague fluff.
 
-5. **Why do you want to work with us?**
-   - Reference their specifics: Infosys's data/AI scale, Topaz, the SP DSE specialist track, and global projects — companies hire people who did homework.
+## Q7: Are you willing to travel or relocate?
+**A:** Yes, enthusiastically, with a reason (learning from global teams) — and confirm flexibility on location as part of onboarding.
 
-6. **What do you know about our company?**
-   - Give 3 researched facts you can defend: founded 1981, ~300k+ employees, data/AI-first strategy, training scale, key industries — no vague fluff.
+## Q8: What are your salary expectations?
+**A:** A researched range with flexibility and a stated interest in the role over the number — rehearsed so it doesn't catch you off-guard.
 
-7. **Are you willing to travel or relocate?**
-   - Yes, enthusiastically, with a reason (learning from global teams) — and confirm flexibility on location as part of onboarding.
+## Q9: Why are you interested in this position?
+**A:** Because SP DSE mixes DSA/SQL/data engineering with the AI trajectory I've been building toward — it's the intersection of what I'm good at and where I want to grow.
 
-8. **What are your salary expectations?**
-   - A researched range with flexibility and a stated interest in the role over the number — rehearsed so it doesn't catch you off-guard.
+## Q10: What is your long-term career vision?
+**A:** Technical excellence with leadership: become a data/AI expert whom teams trust to design the pipeline and explain it to clients — built on the specialist track and deepened skills, not title-chasing.
 
-9. **Why are you interested in this position?**
-   - Because SP DSE mixes DSA/SQL/data engineering with the AI trajectory I've been building toward — it's the intersection of what I'm good at and where I want to grow.
+## Q11: Tell me about a time you showed initiative.
+**A:** Merged open-source PRs to Agno without being asked, and built ScriptVector/MigratorGen as self-driven projects — initiative demonstrated by shipped, public work.
 
-10. **What is your long-term career vision?**
-   - Technical excellence with leadership: become a data/AI expert whom teams trust to design the pipeline and explain it to clients — built on the specialist track and deepened skills, not title-chasing.
+## Q12: What motivates you?
+**A:** The moment a difficult system works end-to-end — a pipeline, an agent, a benchmark — and the visible user value it creates; evidence-backed motivation reads better than adjectives.
 
-11. **Tell me about a time you showed initiative.**
-   - Merged open-source PRs to Agno without being asked, and built ScriptVector/MigratorGen as self-driven projects — initiative demonstrated by shipped, public work.
+## Q13: Tell me about a time you demonstrated 01 classic hr questions (STAR method).
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-12. **What motivates you?**
-   - The moment a difficult system works end-to-end — a pipeline, an agent, a benchmark — and the visible user value it creates; evidence-backed motivation reads better than adjectives.
+## Q14: How does 01 classic hr questions show up in a typical IT services project at Infosys?
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-13. **Tell me about a time you demonstrated 01 classic hr questions (STAR method).**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q15: What is your honest personal strength and a related weakness around 01 classic hr questions?
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-14. **How does 01 classic hr questions show up in a typical IT services project at Infosys?**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q16: Give a self-introduction that showcases 01 classic hr questions.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-15. **What is your honest personal strength and a related weakness around 01 classic hr questions?**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q17: How do you behave when a teammate does not exhibit 01 classic hr questions?
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-16. **Give a self-introduction that showcases 01 classic hr questions.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q18: Describe a failure caused by lack of 01 classic hr questions and your corrective action.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-17. **How do you behave when a teammate does not exhibit 01 classic hr questions?**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q19: Why should we hire you? Base the answer on 01 classic hr questions.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-18. **Describe a failure caused by lack of 01 classic hr questions and your corrective action.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q20: How do you handle pressure and deadlines in relation to 01 classic hr questions?
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-19. **Why should we hire you? Base the answer on 01 classic hr questions.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q21: What questions would you ask the panel that also show 01 classic hr questions?
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-20. **How do you handle pressure and deadlines in relation to 01 classic hr questions?**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q22: Rate yourself on 01 classic hr questions and justify it.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-21. **What questions would you ask the panel that also show 01 classic hr questions?**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q23: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-22. **Rate yourself on 01 classic hr questions and justify it.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q24: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-23. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q25: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-24. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q26: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-25. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q27: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-26. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q28: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-27. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q29: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-28. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q30: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-29. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q31: What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-30. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q32: Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-31. **What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q33: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-32. **Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q34: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-33. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q35: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-34. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q36: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-35. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q37: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-36. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q38: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-37. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q39: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-38. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q40: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-39. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q41: What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-40. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q42: Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-41. **What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q43: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-42. **Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q44: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-43. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q45: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-44. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q46: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-45. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q47: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-46. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q48: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-47. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q49: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-48. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q50: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-49. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q51: What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-50. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q52: Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-51. **What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q53: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-52. **Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q54: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-53. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q55: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-54. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q56: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-55. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q57: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-56. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q58: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-57. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q59: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-58. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q60: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-59. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q61: What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-60. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q62: Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-61. **What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q63: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-62. **Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q64: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-63. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q65: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-64. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q66: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-65. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q67: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-66. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q68: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-67. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q69: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-68. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q70: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-69. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q71: What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-70. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q72: Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-71. **What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q73: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-72. **Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q74: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-73. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q75: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-74. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q76: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-75. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q77: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-76. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q78: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-77. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q79: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-78. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q80: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-79. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q81: What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-80. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q82: Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-81. **What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q83: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-82. **Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q84: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-83. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q85: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-84. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q86: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-85. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q87: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-86. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q88: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-87. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q89: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-88. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
+## Q90: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
 
-89. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
+## Q91: What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.
+**A:** Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
 
-90. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
+## Q92: Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.
+**A:** Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
 
-91. **What questions would you ask the panel that also show 01 classic hr questions? Extend your answer with a second example.**
-   - Ask about the tech stack you will work on, the training roadmap, project exposure in the first year, and how growth to senior roles is structured — shows seriousness and long-term commitment.
+## Q93: Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.
+**A:** STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
 
-92. **Rate yourself on 01 classic hr questions and justify it. Extend your answer with a second example.**
-   - Pick a number on a 5/10 scale, justify with concrete evidence, and immediately connect to what you are doing to improve — confident, honest and growth-oriented tones win.
+## Q94: How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.
+**A:** Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
 
-93. **Tell me about a time you demonstrated 01 classic hr questions (STAR method). Extend your answer with a second example.**
-   - STAR: Situation (set context), Task (your goal), Action (your specific steps + decisions), Result (measurable outcome + learning). Keep it under 90 seconds, focus on YOUR actions, and end with what you learned.
+## Q95: What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.
+**A:** Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
 
-94. **How does 01 classic hr questions show up in a typical IT services project at Infosys? Extend your answer with a second example.**
-   - Every client project runs on shared processes, teams and deadlines; 01 classic hr questions determines how smoothly collaboration and delivery go, so interviewers probe it via past behaviour with hypotheses like this.
+## Q96: Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.
+**A:** Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
 
-95. **What is your honest personal strength and a related weakness around 01 classic hr questions? Extend your answer with a second example.**
-   - Pick a genuine strength backed by a concrete example, then a real weakness you are actively improving, with the improvement plan — never a disguised strength, never something disqualifying.
+## Q97: How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.
+**A:** Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
 
-96. **Give a self-introduction that showcases 01 classic hr questions. Extend your answer with a second example.**
-   - Structure: who you are, education, relevant internships/projects (with tech + result), achievements, and why this role — in that order, 60-90 seconds, ending on why you fit the SP/DSE profile.
+## Q98: Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.
+**A:** Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
 
-97. **How do you behave when a teammate does not exhibit 01 classic hr questions? Extend your answer with a second example.**
-   - Talk to them privately, understand their constraints first, offer help or clear expectations aligned to the deadline, escalate only if needed — leadership by influence, not authority.
+## Q99: Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.
+**A:** Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
 
-98. **Describe a failure caused by lack of 01 classic hr questions and your corrective action. Extend your answer with a second example.**
-   - Own the failure without blaming others, quantify what went wrong, state the exact corrective action and the prevention mechanism now in place, and close on the lesson retained.
-
-99. **Why should we hire you? Base the answer on 01 classic hr questions. Extend your answer with a second example.**
-   - Differentiate with evidence: internship projects, contributions (merged PRs, hackathon finalist, IEEE publication), breadth across Python/AI/full-stack, and a clear plan for the DSE role — numbers and facts over adjectives.
-
-100. **How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.**
-   - Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.
-
-</details>
+## Q100: How do you handle pressure and deadlines in relation to 01 classic hr questions? Extend your answer with a second example.
+**A:** Break the work into milestones, prioritise by impact, communicate early on blockers, and protect quality gates; give a real project example where this worked under a tight deadline.

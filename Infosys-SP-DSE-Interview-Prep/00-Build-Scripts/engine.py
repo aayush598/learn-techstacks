@@ -11,21 +11,19 @@ def leaf_dirs(base):
             out.append(root)
     return sorted(out)
 
+def human(name):
+    parts = [p for p in name.replace("-", " ").title().split() if not p.isdigit()]
+    return " ".join(parts)
+
 def write_file(rel, title, qa):
     path = os.path.join(BASE, rel, "questions.md")
     lines = []
-    lines.append("# %s" % title)
-    lines.append("")
-    lines.append("**100 Interview Q&A — Infosys Specialist Programmer (SP) / Digital Specialist Engineer (DSE)**")
-    lines.append("")
-    lines.append("<details open>")
-    lines.append("<summary style='cursor:pointer;font-weight:bold;font-size:1.1em'>Tap to expand all 100 questions</summary>")
+    lines.append("# %s Interview Questions and Answers" % title)
     lines.append("")
     for i, (q, a) in enumerate(qa, 1):
-        lines.append("%d. **%s**" % (i, q))
-        lines.append("   - %s" % a)
+        lines.append("## Q%d: %s" % (i, q))
+        lines.append("**A:** %s" % a)
         lines.append("")
-    lines.append("</details>")
     with open(path, "w") as f:
         f.write("\n".join(lines))
     return len(qa)
@@ -36,7 +34,9 @@ def build_all(pool):
     total = 0
     for d in dirs:
         rel = os.path.relpath(d, BASE)
-        title = os.path.basename(d).replace("-", " ").title() + " — " + " / ".join(os.path.basename(os.path.dirname(d)).split("-")[1:]).title()
+        parent = human(os.path.basename(os.path.dirname(d)))
+        leaf = human(os.path.basename(d))
+        title = (parent + " — " + leaf).strip(" —")
         qa = pool.get(rel, [])
         if len(qa) < 100:
             qa = qa + pad(rel, 100 - len(qa))
