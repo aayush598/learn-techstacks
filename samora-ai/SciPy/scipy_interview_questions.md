@@ -151,3 +151,153 @@
 
 ## Q50: What is scipy.stats.probplot used for?
 **A:** probplot creates a probability plot, often a Q-Q plot, that compares sample quantiles against the quantiles of a reference distribution. If the points fall roughly on a straight line, the sample approximately follows the reference distribution. It also returns the correlation coefficient as a fit-quality measure.
+
+## Q51: What is the importance of logpdf in scipy.stats?
+**A:** logpdf computes the natural logarithm of the probability density function. It is numerically stable for extreme values where the density itself would underflow to zero. Use it for computing log-likelihoods in model fitting and for comparing probabilities in a log space.
+
+## Q52: How do you create a custom continuous distribution in scipy.stats?
+**A:** Subclass rv_continuous and implement the _pdf method, plus _cdf or support when needed. The framework provides default machinery for cdf, ppf, random sampling, and moments. Set the support with the support keyword if the distribution is bounded.
+
+## Q53: What is a truncated normal distribution, and how do you work with it?
+**A:** A truncated normal restricts the normal distribution to a range such as between a and b. scipy.stats.truncnorm represents it, and you pass the normalized bounds as a and b along with loc and scale. It is used when data is physically bounded, such as test scores or sensor readings.
+
+## Q54: What is scipy.stats.expon used for?
+**A:** expon models the exponential distribution, which describes time between events in a Poisson process. It has a single rate parameter encoded through loc and scale, with scale equal to the mean. The memoryless property means the remaining waiting time does not depend on the time already elapsed.
+
+## Q55: How do you compute the correlation of ranks in scipy.stats?
+**A:** Use spearmanr on two samples. It ranks the data and computes the Pearson correlation on the ranks, so it measures monotonic association and is robust to outliers. The result contains the correlation coefficient and a p-value for the null hypothesis of no association.
+
+## Q56: What is scipy.stats.gmean used for?
+**A:** gmean computes the geometric mean of a sample, which is the n-th root of the product of the values. It is appropriate for ratios, growth rates, and data that spans several orders of magnitude. Unlike the arithmetic mean, it is not distorted by large outliers.
+
+## Q57: What is the difference between the mode and the median?
+**A:** The mode is the most frequently occurring value, while the median is the middle value when data is sorted. scipy.stats.mode returns the modal value and its count, and the median is available in numpy and the scipy distributions. The mode is meaningful mainly for data with repeating values.
+
+## Q58: How do you compute the variance and standard deviation with scipy?
+**A:** scipy.stats.tstd computes the sample standard deviation using n minus 1 degrees of freedom by default. The tvar variant returns the sample variance. The std and var methods on distribution objects return the theoretical values of the underlying distribution.
+
+## Q59: What is the interquartile range, and why is it useful?
+**A:** The interquartile range, IQR, is the difference between the 75th and 25th percentiles, and scipy.stats.iqr computes it. It measures the spread of the middle half of the data and is robust to outliers. It is commonly used in box plots and in the outlier rule that flags values beyond 1.5 times the IQR.
+
+## Q60: What is scipy.stats.zscore used for?
+**A:** zscore standardizes a sample so that it has a mean of zero and a standard deviation of one. It returns how many standard deviations each value is from the mean. It is used to compare values across different scales and to flag outliers above a threshold such as 3.
+
+## Q61: What is the Kruskal-Wallis test in scipy?
+**A:** scipy.stats.kruskal performs the Kruskal-Wallis H test, the non-parametric alternative to one-way ANOVA. It compares the medians of two or more independent groups using ranks. It is preferred when the normality assumption for ANOVA is violated.
+
+## Q62: What is the Mann-Whitney U test used for?
+**A:** scipy.stats.mannwhitneyu tests whether two independent samples come from the same distribution. It is the non-parametric alternative to the two-sample t test and compares ranks rather than means. It is useful when the data is ordinal or not normally distributed.
+
+## Q63: What is scipy.stats.wilcoxon used for?
+**A:** wilcoxon performs the Wilcoxon signed-rank test for paired samples. It is the non-parametric alternative to the paired t test. It tests whether the distribution of differences between matched pairs is symmetric around zero.
+
+## Q64: How do you test whether a sample is normally distributed?
+**A:** Several options exist in scipy.stats. shapiro and normaltest test for normality directly. The Anderson-Darling test via anderson and the Kolmogorov-Smirnov test via kstest compare the sample against the normal distribution. No test proves normality, so combine the p-value with a visual histogram or a Q-Q plot.
+
+## Q65: What is the Anderson-Darling test?
+**A:** scipy.stats.anderson is a modification of the Kolmogorov-Smirnov test that gives more weight to the tails. It compares the empirical distribution against a reference distribution and returns the statistic and critical values for several significance levels. It is more sensitive than kstest for detecting deviations in the tails.
+
+## Q66: What is a confidence interval for a population mean?
+**A:** A confidence interval is a range that is likely to contain the true population mean with a stated probability, often 95 percent. For known variance use norm, and for unknown variance use the t distribution with the sample standard deviation. scipy.stats provides the interval method on frozen distributions for this purpose.
+
+## Q67: How do you compute percentiles and quantiles in scipy.stats?
+**A:** Use the ppf method of a distribution for theoretical quantiles, or numpy.percentile and numpy.quantile for empirical quantiles from data. scipy.stats also has functions such as scoreatpercentile. Quantiles and percentiles differ only in the scale, since a quantile of 0.5 equals the 50th percentile.
+
+## Q68: What is scipy.stats.describe returned by the describe function?
+**A:** describe returns a named tuple with nobs, minmax, mean, variance, skewness, and kurtosis. The minmax field holds the minimum and maximum values. It gives a quick summary of a data set without computing each statistic separately.
+
+## Q69: How do you perform a one-sample t test in scipy?
+**A:** Use scipy.stats.ttest_1samp with the sample array and the hypothesized population mean. It returns a test statistic and a two-tailed p-value. Set the alternative parameter to less or greater for one-sided hypotheses where supported.
+
+## Q70: What is the difference between a one-tailed and a two-tailed test?
+**A:** A two-tailed test checks whether a parameter is different from a target value in either direction. A one-tailed test checks only greater than or only less than. scipy.stats supports the alternative parameter in many tests, and the choice must be fixed before looking at the data.
+
+## Q71: How do you simulate a normal distribution in scipy?
+**A:** Call norm.rvs with a loc, scale, and size. For reproducibility pass random_state with a fixed seed. The same rvs method exists for every distribution in scipy.stats.
+
+## Q72: What is a p-value, and how is it used in decision making?
+**A:** A p-value is the probability of observing results at least as extreme as the sample, assuming the null hypothesis is true. A small p-value suggests that such results are unlikely under the null. The null hypothesis is typically rejected when the p-value is below the chosen significance level alpha.
+
+## Q73: What is the difference between alpha and the p-value?
+**A:** Alpha is the significance level chosen in advance, such as 0.05, and it sets the acceptable risk of a false rejection. The p-value is computed from the data and tells you how extreme the result is. Rejecting the null when the p-value is below alpha controls the rate of Type I errors.
+
+## Q74: What are the errors in hypothesis testing called?
+**A:** A Type I error rejects a true null hypothesis and has probability alpha. A Type II error fails to reject a false null hypothesis and relates to beta. The power of a test is one minus beta, the probability of correctly detecting a real effect.
+
+## Q75: What is scipy.stats.sem used for?
+**A:** sem computes the standard error of the mean, which is the sample standard deviation divided by the square root of the sample size. It measures how much the sample mean would vary across repeated samples. It is used directly when building confidence intervals.
+
+## Q76: How do you measure the strength of agreement between two raters in scipy?
+**A:** Use scipy.stats.cohen_kappa for inter-rater agreement on categorical judgments. It returns Cohen kappa, which accounts for agreement that happens by chance. Values near one indicate strong agreement.
+
+## Q77: What is scipy.stats.entropy used for?
+**A:** scipy.stats.entropy computes the Shannon entropy, or a relative entropy such as the Kullback-Leibler divergence when two arguments are given. The base parameter controls the logarithm base. Higher entropy values mean more uncertainty or randomness in the distribution.
+
+## Q78: How do you work with the chi-squared distribution in scipy?
+**A:** scipy.stats.chi2 represents the chi-squared distribution with a degrees-of-freedom parameter. It is used for goodness-of-fit tests, variance tests, and the distribution of the chi-squared test statistic. The ppf method provides critical values for confidence intervals on variance.
+
+## Q79: What is scipy.stats.norm.fit and what does it return?
+**A:** norm.fit estimates the parameters of a normal distribution from data using maximum likelihood. It returns the loc and scale values, which estimate the mean and the standard deviation. The fitted distribution can then be used for further probability calculations.
+
+## Q80: How do you compare two independent group means when variances are unequal?
+**A:** Use scipy.stats.ttest_ind with the equal_var parameter set to False. This applies the Welch test, which does not assume equal variances between groups. Welch t test is the safer default for real-world data.
+
+## Q81: What is scipy.stats.f_oneway versus the Kruskal test?
+**A:** f_oneway is the parametric one-way ANOVA based on the F distribution and assumes normally distributed groups. kruskal is its non-parametric rank-based alternative. Use ANOVA when assumptions hold, otherwise prefer kruskal.
+
+## Q82: What is the geometric distribution in scipy.stats?
+**A:** The geometric distribution models the number of trials until the first success in repeated independent trials. scipy.stats.geom provides its pmf and cdf among other methods. Each trial has a success probability p with mean one over p.
+
+## Q83: How do you evaluate a probability density for many points efficiently?
+**A:** The pdf and cdf methods accept array arguments directly, so pass the whole array instead of looping. For log-space work use logpdf and logcdf. These vectorized calls run in compiled code and are much faster than per-point functions.
+
+## Q84: What is scipy.stats.binom and what does it do?
+**A:** binom is the binomial distribution, which counts the number of successes in n fixed independent trials. Its parameters are n and p, and its methods include pmf, cdf, ppf, and rvs. It is the basis for proportion tests and coin-flip style probability problems.
+
+## Q85: What does scipy.stats.poisson model?
+**A:** poisson models the number of events occurring in a fixed interval given a constant average rate. Its single parameter mu is both the mean and the variance. It is used for call volumes, arrivals, and rare-event counting.
+
+## Q86: How do you compute cumulative probabilities for discrete distributions?
+**A:** Use the cdf method, which returns the probability of observing a value less than or equal to x. For the complementary upper tail use the survival function sf, which is one minus the cdf. The sf is numerically more stable for large values.
+
+## Q87: What is the difference between pmf and pdf?
+**A:** The pmf applies to discrete distributions and gives the exact probability of a single value. The pdf applies to continuous distributions and gives a density, not a probability, so it must be integrated over a range. scipy.stats uses pdf and pmf on their respective distribution types.
+
+## Q88: How do you select a sample that reproduces a given distribution in scipy.stats?
+**A:** Use the rvs method with the size argument, and fix random_state when reproducibility is needed. For inverse-transform sampling of a custom distribution, evaluate the ppf at uniform random values. This approach works for any distribution with a cdf.
+
+## Q89: What is scipy.stats.gaussian_kde bandwidth?
+**A:** The bandwidth controls the smoothness of the density estimate. scipy.stats.gaussian_kde selects a bandwidth automatically by Scott's rule by default, or Silverman's rule if requested. A small bandwidth fits the data closely, while a large bandwidth gives a smoother curve.
+
+## Q90: How do you compute the covariance between two samples in scipy?
+**A:** Use scipy.stats.covariance or numpy.cov for the covariance matrix. scipy.stats also provides cov with comparable behavior. The correlation coefficient normalizes the covariance to a range between negative one and one.
+
+## Q91: What is scipy.stats.t for, and what is a degree of freedom?
+**A:** scipy.stats.t is the Student t distribution used for testing means when the variance is unknown. The degrees of freedom typically equal the sample size minus one. As the degrees of freedom grow, the t distribution approaches the standard normal.
+
+## Q92: What is the F distribution used for in scipy?
+**A:** scipy.stats.f models the F distribution, which is the ratio of two scaled chi-squared variables. It is used in ANOVA for the ratio of between-group to within-group variance. The ppf provides critical values for comparing an F statistic.
+
+## Q93: How do you perform a paired test with scipy.stats?
+**A:** Use scipy.stats.ttest_rel for paired parametric data, or wilcoxon for the non-parametric paired case. Both expect two arrays of equal length with matched observations. The paired analysis removes subject-to-subject variation.
+
+## Q94: What is the standard error of the proportion, and how do you compute it in scipy?
+**A:** The standard error of a proportion is the square root of p times one minus p divided by n. Compute it directly with numpy and use norm.ppf for the critical value in a confidence interval. scipy.stats does not have a dedicated function for proportions.
+
+## Q95: What is scipy.stats.beta used for?
+**A:** beta is the beta distribution on the interval from zero to one. It is a flexible model for probabilities, proportions, and rates, and its parameters a and b shape the curve. In Bayesian analysis it is the conjugate prior for the binomial likelihood.
+
+## Q96: What is scipy.stats.gamma used for?
+**A:** gamma is the continuous gamma distribution, often used for waiting times and sums of exponential variables. Its shape parameter a and scale parameter control the distribution. It generalizes the exponential distribution when the shape is one.
+
+## Q97: How do you compute relative entropy between two distributions?
+**A:** Use scipy.stats.entropy with two probability arrays and base two to get the Kullback-Leibler divergence in bits. The divergence is non-negative and becomes zero when the distributions are identical. It is not symmetric, so the order of the arguments matters.
+
+## Q98: What is scipy.stats.multivariate_normal used for?
+**A:** multivariate_normal models a vector of jointly normal random variables with a mean vector and a covariance matrix. This is needed for portfolio modeling, Gaussian processes observations, and correlated features. Its methods accept arrays of points.
+
+## Q99: How do you time-series test for randomness with scipy?
+**A:** Use scipy.stats.lilliefors for normality on residuals, or the runs test via scipy.stats.runstest_1samp when available. For correlation in order, use scipy.stats.autocorrelation or lag correlation with numpy. Autocorrelation near zero supports randomness.
+
+## Q100: What is a Q-Q plot and which scipy function creates it?
+**A:** A Q-Q plot compares quantiles of the sample against quantiles of a reference distribution. scipy.stats.probplot creates the plot and also returns the fit parameters and a correlation coefficient. If the points lie close to a straight line, the distribution assumption is supported.
