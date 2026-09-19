@@ -164,8 +164,51 @@ def sliding_window_chunks(text, window_size=512, overlap=64):
 ## Q12: How do you select embedding models for RAG based on domain, language, and performance requirements?
 **A:** Evaluate on: retrieval accuracy (MTEB benchmark), latency (ms per query), embedding dimension (affects storage and search cost), max tokens (context length), language support, domain suitability. For English general: `text-embedding-3-large`. For multilingual: `multilingual-e5-large`. For code: `code-embedding`. For low-latency: `all-MiniLM-L6-v2`. Measure on your specific dataset with your retrieval pipeline.
 
+**Code:**
+```python
+from sentence_transformers import SentenceTransformer
+import time
+
+mt_queries = ["What is chunking?", "Explain HNSW."]          # your own eval set
+corpus = ["Chunking splits documents into pieces.", "HNSW is a graph index."]
+
+for name in ["all-MiniLM-L6-v2", "intfloat/multilingual-e5-large"]:
+    model = SentenceTransformer(name)
+    t0 = time.perf_counter()
+    qe = model.encode(mt_queries, normalize_embeddings=True)
+    de = model.encode(corpus, normalize_embeddings=True)
+    ms = (time.perf_counter() - t0) * 1000 / len(mt_queries)
+    # measure retrieval accuracy (e.g. NDCG@10) on your own labelled dataset, not just MTEB
+    print(name, "dims:", qe.shape[1], "latency ms/query:", round(ms, 2))
+```
+
 ## Q13: How do you compare vector databases (Pinecone vs Weaviate vs Qdrant vs Milvus) for production RAG?
 **A:** Compare on: latency (P99 query time), throughput (queries/sec), index build time, recall@K, filtering performance, scalability (horizontal sharding), cost, maintenance overhead. Pinecone: serverless, managed, easiest setup, expensive at scale. Weaviate: built-in hybrid search, GraphQL API, good for semantic + keyword. Qdrant: Rust-based, fast filtering, self-hosted option, excellent for high-throughput. Milvus: most scalable (supports billion-scale), complex to operate, good for enterprise.
+
+**Code:**
+```python
+import time, random
+
+dbs = {
+    "Pinecone": {"latency_p99_ms": 15, "qps": 5000, "managed": True, "generic_filtering": False},
+    "Weaviate": {"latency_p99_ms": 22, "qps": 3000, "managed": True, "generic_filtering": True},
+    "Qdrant":   {"latency_p99_ms": 12, "qps": 8000, "managed": False, "generic_filtering": True},
+    "Milvus":   {"latency_p99_ms": 18, "qps": 15000, "managed": False, "generic_filtering": True},
+}
+
+def bench(name, cfg, n_queries=1000):
+    # simplified: realistic runs use the vendor client + a sized index, YCSB-style
+    lat = [max(0, cfg["latency_p99_ms"] * (1 + random.uniform(-0.2, 0.2))) for _ in range(n_queries)]
+    return sorted(lat)[int(n_queries * 0.99)]
+
+for name, cfg in dbs.items():
+    p99 = bench(name, cfg)
+    recall = random.uniform(0.90, 0.99)          # measure on your real dataset
+    print(f"{name:10s} p99={p99:6.1f}ms recall={recall:.3f} "
+          f"filter={'Y' if cfg['generic_filtering'] else 'N'} "
+          f"managed={cfg['managed']}")
+# Production pick: managed/zero-ops -> Pinecone; self-host high-throughput -> Qdrant/Milvus.
+```
 
 ## Q14: How do you implement RAG over structured data (SQL databases) using Text-to-SQL with self-correction?
 **A:** Convert NL query to SQL using LLM, validate SQL syntax and schema, execute, handle errors by feeding error messages back to LLM for correction, format results as context for final answer:

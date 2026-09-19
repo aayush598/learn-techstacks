@@ -3,11 +3,53 @@
 ## Q1: How does Flask's internal request dispatching work?
 **A:** Flask uses Werkzeug's routing system. When a request arrives, Flask's `wsgi_app` method is called. It creates a `Request` object, matches the URL against the URL map (`url_map`), and calls the matched view function. The routing uses `Rule` objects compiled to regular expressions. Matching considers: URL pattern, HTTP method constraints, subdomain, and `strict_slashes`. The matched endpoint name is used to look up the view function. Before calling the view, Flask processes `before_request` hooks. After the view returns, `after_request` hooks modify the response. The response goes through WSGI processing. Custom URL converters can be registered for complex parameter parsing.
 
+**Code:**
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route("/user/<name>", strict_slashes=False)
+def user(name):
+    return name
+
+# inspect the compiled Rule objects from the URL map
+for rule in app.url_map.iter_rules():
+    print(rule.rule, sorted(rule.methods))
+```
+
 ## Q2: What is the difference between `Flask.g` and `flask.session`?
 **A:** `g` (global context) is a request-scoped object for storing data during a single request. It's cleared after each request. Common uses: caching database connections, storing current user, sharing data between `before_request` and view functions. `session` is a cookie-based object that persists across requests (within a client's browser session). Session data is cryptographically signed (stored in a cookie). `g` is per-request, cleared automatically. `session` is per-user-session, persists across requests. `g` is not shared between requests; `session` is not shared between users. Both are thread-local proxies.
 
+**Code:**
+```python
+from flask import Flask, g, session
+
+app = Flask(__name__)
+app.secret_key = "dev"
+
+@app.before_request
+def load_user():
+    g.user = "alice"            # per-request storage
+    session["theme"] = "dark"   # persists across browser sessions
+```
+
 ## Q3: How do you implement WebSocket support in Flask?
 **A:** Flask doesn't natively support WebSockets (it's WSGI-based). Options: (1) **Flask-SocketIO** — integrates Socket.IO with Flask, supports WebSocket fallback, (2) **gevent-websocket** — monkey-patches WSGI for WebSocket support, (3) Use ASGI — migrate to Quart (Flask-like ASGI framework) or FastAPI. Flask-SocketIO example:
+
+**Code:**
+```python
+# Option: migrate to ASGI with Quart
+from quart import Quart, websocket
+
+app = Quart(__name__)
+
+@app.websocket("/ws")
+async def ws():
+    while True:
+        data = await websocket.receive()
+        await websocket.send(f"echo: {data}")
+```
 
 ```python
 from flask import Flask
@@ -26,8 +68,38 @@ SocketIO supports: rooms, namespaces, event-based messaging, automatic reconnect
 ## Q4: Explain Flask's `teardown_request` and `teardown_appcontext`.
 **A:** `teardown_request` is called at the end of each request regardless of whether an exception occurred. It's used for cleanup that must happen after every request (closing database connections, releasing locks). `teardown_appcontext` is called when the application context is torn down (typically at the end of a request or CLI command). Difference: `teardown_request` fires per-request; `teardown_appcontext` fires per-application-context (which may span multiple requests). `teardown_request` receives the exception (or None). For cleanup that must happen even on errors, use `try/finally` in the request handler or `teardown_request`.
 
+**Code:**
+```python
+from flask import Flask, g
+
+app = Flask(__name__)
+
+@app.teardown_request
+def close_request(exc=None):
+    print("per-request cleanup, exc =", exc)
+
+@app.teardown_appcontext
+def close_context(exc=None):
+    db = g.pop("db", None)
+    if db is not None:
+        db.close()
+```
+
 ## Q5: How do you implement database migrations in Flask?
 **A:** Flask-Migrate (based on Alembic) handles database migrations: `flask db init`, `flask db migrate -m "message"`, `flask db upgrade`, `flask db downgrade`. Configuration:
+
+**Code:**
+```python
+from flask_migrate import Migrate
+
+migrate = Migrate(app, db)
+
+# CLI:
+# flask db init
+# flask db migrate -m "add users table"
+# flask db upgrade
+# flask db downgrade
+```
 
 ```python
 from flask import Flask
@@ -43,8 +115,43 @@ Best practices: (1) always review auto-generated migrations before committing, (
 ## Q6: What is Flask's `url_for` and how does it handle dynamic URLs?
 **A:** `url_for(endpoint, **values)` generates URLs for named routes. It supports: (1) path parameters, (2) query string (extra kwargs become `?key=value`), (3) `_external=True` for absolute URLs, (4) `_anchor` for hash fragments, (5) `_method` for HTTP method. `url_for` uses the URL map to generate URLs — it raises `BuildError` for non-existent endpoints. Using `url_for` instead of hardcoded URLs enables easy URL structure changes. For static files: `url_for('static', filename='style.css')`.
 
+**Code:**
+```python
+from flask import Flask, url_for
+
+app = Flask(__name__)
+
+@app.route("/items/<int:item_id>", methods=["GET"])
+def item(item_id):
+    return str(item_id)
+
+with app.app_context():
+    print(url_for("item", item_id=3, editable=True, _external=True))
+```
+
 ## Q7: How do you implement role-based access control (RBAC) in Flask?
 **A:** RBAC with custom decorators:
+
+**Code:**
+```python
+from functools import wraps
+from flask import abort, current_user
+
+def has_role(*roles):
+    def wrapper(fn):
+        @wraps(fn)
+        def inner(*args, **kwargs):
+            if current_user.role not in roles:
+                abort(403)
+            return fn(*args, **kwargs)
+        return inner
+    return wrapper
+
+@app.route("/admin")
+@has_role("admin")
+def admin_panel():
+    return "Admins only"
+```
 
 ```python
 from functools import wraps
@@ -73,6 +180,21 @@ For complex RBAC: store roles in database with many-to-many relationships, suppo
 ## Q8: Explain Flask's `abort()` function and custom error pages.
 **A:** `abort(status_code, description=None)` raises an HTTP exception:
 
+**Code:**
+```python
+from flask import abort, render_template
+
+@app.errorhandler(404)
+def not_found(error):
+    return render_template("errors/404.html"), 404
+
+@app.route("/item/<int:item_id>")
+def get_item(item_id):
+    if item_id <= 0:
+        abort(404, description="Item not found")
+    return render_template("item.html", item=item_id)
+```
+
 ```python
 @app.route('/item/<int:item_id>')
 def get_item(item_id):
@@ -90,6 +212,22 @@ def not_found(error):
 
 ## Q9: How do you implement Flask background tasks without Celery?
 **A:** Lightweight options:
+
+**Code:**
+```python
+from concurrent.futures import ThreadPoolExecutor
+
+executor = ThreadPoolExecutor(max_workers=4)
+
+@app.route("/send")
+def send():
+    executor.submit(send_mail, to="x@y.com", body="Hello")
+    return "queued"
+
+def send_mail(to, body):
+    with app.app_context():
+        mail.send(to, body)
+```
 
 ```python
 import threading
@@ -111,8 +249,40 @@ Other approaches: (1) Queue with Python's `queue.Queue` — background worker th
 ## Q10: What is the Flask `before_request` and `after_request` lifecycle?
 **A:** Request lifecycle order: (1) `before_first_request` (runs once, deprecated in 2.3+), (2) `before_request` — runs before each view (return a Response to short-circuit), (3) view function, (4) `after_request` — runs after each view (must return a Response), (5) `teardown_request` — runs even on exceptions. When `before_request` returns a Response, the view isn't called — the response goes directly to `after_request` handlers. Use `before_request` for: auth, DB connection, rate limiting. Use `after_request` for: headers, logging, response modification.
 
+**Code:**
+```python
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.before_request
+def before():
+    print("before", request.path)
+
+@app.after_request
+def after(response):
+    print("after", response.status_code)
+    return response
+
+@app.teardown_request
+def teardown(exc=None):
+    print("teardown", exc)
+```
+
 ## Q11: How do you implement caching in Flask?
 **A:** Flask-Caching provides multiple backends:
+
+**Code:**
+```python
+from flask_caching import Cache
+
+cache = Cache(app, config={"CACHE_TYPE": "RedisCache"})
+
+@app.route("/expensive")
+@cache.cached(timeout=60)
+def expensive():
+    return expensive_database_query()
+```
 
 ```python
 from flask_caching import Cache
@@ -131,8 +301,36 @@ Cache types: `SimpleCache` (in-memory, per-process), `FileSystemCache` (shared d
 ## Q12: Explain Flask's `request` object properties and methods.
 **A:** The `request` object provides: `request.url` (full URL), `request.path` (path only), `request.args` (query params), `request.form` (form data), `request.json` (parsed JSON), `request.data` (raw bytes), `request.files` (uploaded files), `request.method` (HTTP method), `request.headers` (headers), `request.cookies`, `request.content_type`, `request.remote_addr` (client IP), `request.user_agent`, `request.referrer`, `request.host`, `request.scheme` (http/https), `request.is_secure`, `request.is_json`, `request.accept_mimetypes`, `request.access_route` (proxy-aware IP chain). `request` is a thread-local proxy accessible only within an active request context.
 
+**Code:**
+```python
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route("/debug")
+def debug():
+    return (
+        f"url={request.url} method={request.method} "
+        f"is_json={request.is_json} ip={request.remote_addr}"
+    )
+```
+
 ## Q13: How do you implement API rate limiting in Flask?
 **A:** Flask-Limiter provides flexible rate limiting:
+
+**Code:**
+```python
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
+limiter = Limiter(app, default_limits=["200 per day"],
+                  key_func=get_remote_address)
+
+@app.route("/api")
+@limiter.limit("10 per minute")
+def api():
+    return "OK"
+```
 
 ```python
 from flask_limiter import Limiter
@@ -150,8 +348,35 @@ Rate limit strategies: fixed window, sliding window, token bucket. Key functions
 ## Q14: What is the difference between `Flask.jsonify` and `json.dumps`?
 **A:** `jsonify(data)` creates a `Response` object with `application/json` content type. It serializes data to JSON and wraps it in a Flask response. `json.dumps(data)` returns a JSON string (no response object). `jsonify` handles: setting MIME type, JSONP support, serializer defaults (datetimes, Decimal), response creation. Flask 2.3+ deprecated `jsonify` in favor of returning dicts directly (Flask auto-converts). For custom serialization, use `app.json` provider pattern.
 
+**Code:**
+```python
+from flask import jsonify
+import json
+
+resp = jsonify({"ok": True})   # Response object, Content-Type: application/json
+text = json.dumps({"ok": True})  # plain JSON string, not a Response
+```
+
 ## Q15: How do you implement Flask forms with CSRF protection?
 **A:** Flask-WTF provides CSRF-protected forms:
+
+**Code:**
+```python
+from flask_wtf import FlaskForm
+from wtforms import StringField
+from wtforms.validators import DataRequired, Email
+
+class ContactForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired(), Email()])
+
+# template: <form method="post">{{ form.csrf_token() }}</form>
+@app.route("/contact", methods=["GET", "POST"])
+def contact():
+    form = ContactForm()
+    if form.validate_on_submit():
+        return f"Thank you {form.email.data}"
+    return render_template("contact.html", form=form)
+```
 
 ```python
 from flask_wtf import FlaskForm
@@ -169,6 +394,15 @@ CSRF protection: Flask-WTF generates a unique CSRF token per session, included a
 ## Q16: Explain Flask's `stream_template` and template streaming.
 **A:** Flask supports streaming template rendering for lower Time-To-First-Byte:
 
+**Code:**
+```python
+from flask import stream_template, Response
+
+@app.route("/stream")
+def stream():
+    return Response(stream_template("grid.html", items=range(10000)))
+```
+
 ```python
 @app.route('/stream')
 def streamed_page():
@@ -184,6 +418,20 @@ Flask 2.3+ provides `stream_template('template.html', items=items)`. Streaming b
 
 ## Q17: How do you implement Flask testing with pytest?
 **A:** Flask application testing with pytest:
+
+**Code:**
+```python
+import pytest
+from app import create_app
+
+@pytest.fixture
+def client():
+    app = create_app({"TESTING": True})
+    return app.test_client()
+
+def test_index(client):
+    assert client.get("/").status_code == 200
+```
 
 ```python
 @pytest.fixture
@@ -205,6 +453,17 @@ Tools: `client.get/post/put/delete`, `response.get_json()`, `response.status_cod
 ## Q18: What is Flask's `stream_with_context` and when is it needed?
 **A:** `stream_with_context` pushes the application context for streaming responses:
 
+**Code:**
+```python
+from flask import stream_with_context, Response, request
+
+@app.route("/feed")
+def feed():
+    def generate():
+        yield f"user={request.args['user']}\n"
+    return Response(stream_with_context(generate()), mimetype="text/plain")
+```
+
 ```python
 from flask import stream_with_context, Response
 
@@ -222,6 +481,22 @@ Without it, the generator runs outside the request context — `request`, `g`, `
 
 ## Q19: How do you implement Flask CLI commands?
 **A:** Custom CLI commands with Click:
+
+**Code:**
+```python
+import click
+from flask.cli import AppGroup
+
+user_cli = AppGroup("user")
+app.cli.add_command(user_cli)
+
+@user_cli.command("create")
+@click.argument("username")
+def create(username):
+    click.echo(f"created {username}")
+
+# Run: flask user create admin
+```
 
 ```python
 import click
@@ -250,6 +525,20 @@ Run: `flask init-db`, `flask create-user --admin alice`.
 ## Q20: Explain Flask's `register_error_handler` vs `errorhandler` decorator.
 **A:** Both register error handlers but differ in usage:
 
+**Code:**
+```python
+from flask import Flask
+
+app = Flask(__name__)
+
+def handle_api_error(error):
+    return {"error": str(error)}, 404
+
+# method form is usable inside an app factory
+def create_app():
+    app.register_error_handler(404, handle_api_error)
+```
+
 ```python
 # Decorator approach
 @app.errorhandler(404)
@@ -267,6 +556,21 @@ Blueprint error handlers only handle errors within that blueprint's context. App
 
 ## Q21: How do you implement database encryption with Flask-SQLAlchemy?
 **A:** Column-level encryption using custom types:
+
+**Code:**
+```python
+from sqlalchemy import TypeDecorator, LargeBinary
+from cryptography.fernet import Fernet
+
+class EncryptedString(TypeDecorator):
+    impl = LargeBinary
+
+    def process_bind_param(self, value, dialect):
+        return Fernet(SECRET_KEY).encrypt(value.encode()) if value else None
+
+    def process_result_value(self, value, dialect):
+        return Fernet(SECRET_KEY).decrypt(value).decode() if value else None
+```
 
 ```python
 from sqlalchemy import LargeBinary, TypeDecorator
@@ -290,8 +594,32 @@ Best practices: store keys in environment variables, use separate keys per envir
 ## Q22: What is Flask's `_app_ctx_stack` and how does it work?
 **A:** `_app_ctx_stack` is a `LocalStack` that manages application contexts. When an application context is pushed (`app.app_context().push()`), it's stored on this stack. The `current_app` proxy looks up the stack to find the active application context. Similarly, `_request_ctx_stack` manages request contexts. These stacks are thread-local (each thread has its own). Key behavior: pushing creates a new `AppContext` with the app's `url_adapter`, `g` is stored on the application context, multiple apps can be pushed.
 
+**Code:**
+```python
+from flask import Flask, _app_ctx_stack, current_app
+
+app = Flask(__name__)
+
+with app.app_context():
+    ctx = _app_ctx_stack.top
+    print(ctx.app is app, current_app.name)
+```
+
 ## Q23: How do you implement Flask HTTPS and TLS configuration?
 **A:** Flask HTTPS configuration:
+
+**Code:**
+```python
+import ssl
+from flask import Flask
+
+app = Flask(__name__)
+
+if __name__ == "__main__":
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain("cert.pem", "key.pem")
+    app.run(host="0.0.0.0", port=443, ssl_context=context)
+```
 
 ```python
 # Development (self-signed)
@@ -314,6 +642,19 @@ Production: terminate TLS at reverse proxy (Nginx, Cloudflare, ALB). Configure F
 ## Q24: Explain Flask's `json.provider` and custom JSON handling.
 **A:** Flask 2.3+ uses a JSON provider pattern:
 
+**Code:**
+```python
+from flask import Flask
+from flask.json.provider import DefaultJSONProvider
+
+class PrettyJSONProvider(DefaultJSONProvider):
+    def dumps(self, obj, **kwargs):
+        return super().dumps(obj, indent=2, **kwargs)
+
+app = Flask(__name__)
+app.json = PrettyJSONProvider(app)
+```
+
 ```python
 from flask.json.provider import JSONProvider
 import orjson
@@ -332,6 +673,19 @@ Built-in provider: `DefaultJSONProvider`. Custom providers control `dumps()` and
 
 ## Q25: How do you implement Flask request validation with Marshmallow?
 **A:** Flask-Marshmallow + Marshmallow:
+
+**Code:**
+```python
+from marshmallow import Schema, fields
+
+class UserSchema(Schema):
+    id = fields.Int()
+    name = fields.Str()
+
+schema = UserSchema()
+data = schema.load({"name": "alice"})   # validates/coerces
+out = schema.dump({"id": 1, "name": "alice"})  # serializes
+```
 
 ```python
 from flask_marshmallow import Marshmallow
@@ -361,6 +715,22 @@ Marshmallow features: nested schemas, pre/post processing hooks (`@pre_load`), c
 ## Q26: What is Flask's `app.config` and best practices for configuration management?
 **A:** Configuration management:
 
+**Code:**
+```python
+import os
+
+class Config:
+    SECRET_KEY = os.environ.get("SECRET_KEY")
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+
+class ProductionConfig(Config):
+    DEBUG = False
+
+app = Flask(__name__)
+app.config.from_object(ProductionConfig)
+app.config.from_prefixed_env("FLASK")  # reads FLASK_* env vars
+```
+
 ```python
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY')
@@ -379,6 +749,23 @@ Best practices: environment variables for secrets, configuration classes per env
 
 ## Q27: How do you implement WebSocket with Flask-SocketIO?
 **A:** Flask-SocketIO for real-time bidirectional communication:
+
+**Code:**
+```python
+from flask_socketio import SocketIO, emit, join_room, leave_room
+
+socketio = SocketIO(app)
+
+@socketio.on("join")
+def on_join(data):
+    room = data["room"]
+    join_room(room)
+    emit("message", f"{data['name']} joined", to=room)
+
+@socketio.on("leave")
+def on_leave(data):
+    leave_room(data["room"])
+```
 
 ```python
 from flask_socketio import SocketIO, emit, join_room, leave_room
@@ -399,6 +786,20 @@ Events: `connect`, `disconnect`, custom events. Features: rooms, namespaces, bro
 ## Q28: Explain Flask's `send_file` and `send_from_directory`.
 **A:** Flask file serving:
 
+**Code:**
+```python
+from flask import send_file, send_from_directory
+
+@app.route("/download")
+def download():
+    return send_file("reports/summary.pdf", as_attachment=True,
+                     download_name="summary.pdf")
+
+@app.route("/uploads/<path:filename>")
+def uploads(filename):
+    return send_from_directory(app.config["UPLOAD_FOLDER"], filename)
+```
+
 ```python
 from flask import send_file, send_from_directory
 
@@ -416,6 +817,15 @@ Features: conditional response (ETag, `If-Modified-Since`), range requests, MIME
 ## Q29: How do you implement Flask-SQLAlchemy lazy loading and eager loading?
 **A:** Relationship loading strategies:
 
+**Code:**
+```python
+from sqlalchemy.orm import joinedload, selectinload
+
+# eager-load a relationship to avoid N+1 queries
+users = db.session.query(User).options(joinedload(User.posts)).all()
+users = db.session.query(User).options(selectinload(User.posts)).all()
+```
+
 ```python
 from sqlalchemy.orm import joinedload, selectinload
 
@@ -432,6 +842,14 @@ Strategies: `lazy='select'` (default), `lazy='joined'` (LEFT JOIN), `lazy='subqu
 ## Q30: What is Flask's `request.get_json()` and when to use it?
 **A:** `request.get_json(silent=False, force=False, cache=True)` parses incoming JSON:
 
+**Code:**
+```python
+data = request.get_json()                    # default: requires JSON content type
+data = request.get_json(force=True)          # parse regardless of Content-Type
+data = request.get_json(silent=True)         # None instead of 400 on bad JSON
+data = request.get_json(cache=True)          # cache result for repeat calls
+```
+
 ```python
 data = request.get_json()
 data = request.get_json(force=True)    # Parse even with wrong Content-Type
@@ -442,6 +860,19 @@ Parameters: `silent=False` — raises 400 on parse error; `force=False` — only
 
 ## Q31: How do you implement Flask blueprint modularization for large applications?
 **A:** Blueprint-based application structure:
+
+**Code:**
+```python
+from flask import Blueprint, Flask
+
+def create_app():
+    app = Flask(__name__)
+    from auth import auth_bp
+    from blog import blog_bp
+    app.register_blueprint(auth_bp, url_prefix="/auth")
+    app.register_blueprint(blog_bp, url_prefix="/blog")
+    return app
+```
 
 ```python
 auth_bp = Blueprint('auth', __name__, url_prefix='/auth')
@@ -461,6 +892,15 @@ Blueprint features: `url_prefix`, `template_folder`, `static_folder`, `subdomain
 ## Q32: Explain Flask's `context processors` and when to use them.
 **A:** Context processors inject variables into all templates:
 
+**Code:**
+```python
+from datetime import datetime
+
+@app.context_processor
+def inject_globals():
+    return {"app_name": "MyApp", "current_year": datetime.utcnow().year}
+```
+
 ```python
 @app.context_processor
 def inject_globals():
@@ -474,6 +914,19 @@ Use cases: site-wide constants, current user in all templates, navigation menus,
 
 ## Q33: How do you implement Flask-JWT authentication?
 **A:** Flask-JWT-Extended:
+
+**Code:**
+```python
+from flask_jwt_extended import create_access_token, create_refresh_token
+
+@app.route("/login", methods=["POST"])
+def login():
+    user = User.query.filter_by(email=request.json["email"]).first()
+    return {
+        "access_token": create_access_token(identity=user.id),
+        "refresh_token": create_refresh_token(identity=user.id),
+    }
+```
 
 ```python
 from flask_jwt_extended import JWTManager, create_access_token, jwt_required, get_jwt_identity
@@ -499,6 +952,19 @@ Features: access + refresh tokens, token freshness, token blocklist (revocation)
 ## Q34: What is Flask's `message flashing` and how does it work?
 **A:** Flask's flash messaging for one-time notifications:
 
+**Code:**
+```python
+from flask import flash, redirect, url_for
+
+@app.route("/settings", methods=["POST"])
+def save_settings():
+    form.validate()
+    flash("Settings saved", "success")
+    return redirect(url_for("settings"))
+
+# template: {% for cat, msg in get_flashed_messages(with_categories=true) %}...{% endfor %}
+```
+
 ```python
 flash('Invalid credentials', 'error')
 return redirect(url_for('login'))
@@ -518,6 +984,20 @@ Template:
 ## Q35: How do you implement Flask database connection pooling with SQLAlchemy?
 **A:** SQLAlchemy connection pool configuration:
 
+**Code:**
+```python
+from sqlalchemy import create_engine
+
+engine = create_engine(
+    "postgresql://user:pass@db/app",
+    pool_size=10,
+    max_overflow=20,
+    pool_timeout=30,
+    pool_recycle=3600,
+    pool_pre_ping=True,
+)
+```
+
 ```python
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'pool_size': 10,
@@ -532,6 +1012,18 @@ Pool sizing: `pool_size = max_workers * (query_time / total_time)`. Monitor data
 
 ## Q36: Explain Flask's `app.logger` and logging configuration.
 **A:** Flask logging configuration:
+
+**Code:**
+```python
+import logging
+
+handler = logging.StreamHandler()
+handler.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
+app.logger.addHandler(handler)
+app.logger.setLevel(logging.INFO)
+
+app.logger.info("App started")
+```
 
 ```python
 import logging
@@ -551,6 +1043,16 @@ Flask uses Python's standard logging. `app.logger` is `'flask.app'`. For product
 ## Q37: How do you implement Flask-Security for authentication?
 **A:** Flask-Security provides comprehensive auth:
 
+**Code:**
+```python
+from flask_security import Security, SQLAlchemyUserDatastore
+
+user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+security = Security(app, user_datastore)
+
+# gives you /login, /logout, /reset, @login_required, forms, etc.
+```
+
 ```python
 from flask_security import Security, SQLAlchemyUserDatastore, UserMixin, RoleMixin, login_required
 
@@ -568,6 +1070,18 @@ Features: registration, login/logout, password reset, email confirmation, role m
 ## Q38: What is Flask's `make_response` and when to use it?
 **A:** `make_response` creates a Response object from various return types:
 
+**Code:**
+```python
+from flask import make_response, jsonify
+
+@app.route("/api")
+def api():
+    response = make_response(jsonify({"ok": True}), 200)
+    response.headers["X-Custom-Header"] = "value"
+    response.set_cookie("key", "value", max_age=3600, httponly=True)
+    return response
+```
+
 ```python
 response = make_response(render_template('page.html'))
 response.headers['X-Custom-Header'] = 'value'
@@ -580,6 +1094,27 @@ return response
 
 ## Q39: How do you implement Flask template inheritance and blocks?
 **A:** Jinja2 template inheritance:
+
+**Code:**
+```python
+# base.html
+# {% block title %}Default Title{% endblock %}
+# {% block content %}{% endblock %}
+#
+# child.html
+# {% extends "base.html" %}
+# {% block title %}Profile{% endblock %}
+# {% block content %}
+#   {{ super() }}
+#   <h1>{{ user.name }}</h1>
+# {% endblock %}
+
+from flask import render_template
+
+@app.route("/profile")
+def profile():
+    return render_template("child.html", user=get_user())
+```
 
 ```html
 {# base.html #}
@@ -599,6 +1134,23 @@ Features: `{{ super() }}` includes parent content, nested blocks, multiple inher
 ## Q40: Explain Flask's `abort` with custom error descriptions.
 **A:** `abort` with custom details:
 
+**Code:**
+```python
+from flask import abort
+
+class ApiError(Exception):
+    status = 500
+    code = "API_ERROR"
+
+@app.errorhandler(403)
+def handle_forbidden(error):
+    return {"code": error.code, "detail": error.description}, 403
+
+@app.route("/secret")
+def secret():
+    abort(403, description="Permission denied")
+```
+
 ```python
 abort(404, description=f"Item {item_id} not found")
 abort(403, description="Permission denied")
@@ -613,6 +1165,25 @@ Custom exception classes extend `HTTPException`. Properties: `code`, `name`, `de
 
 ## Q41: How do you implement Flask test factories and fixtures?
 **A:** Advanced testing with factory pattern:
+
+**Code:**
+```python
+import pytest
+from app import create_app, db
+
+@pytest.fixture(scope="module")
+def app():
+    app = create_app("testing")
+    yield app
+
+@pytest.fixture
+def client(app):
+    with app.test_client() as client:
+        yield client
+
+def test_me(client):
+    assert client.get("/me").status_code == 200
+```
 
 ```python
 @pytest.fixture(scope='module')
@@ -634,6 +1205,19 @@ Best practices: use `app.test_request_context()` for URL generation, test error 
 ## Q42: What is Flask's `url_defaults` and `url_value_preprocessor`?
 **A:** These hooks allow default URL parameter injection:
 
+**Code:**
+```python
+from flask import g
+
+@bp.url_defaults
+def add_theme(endpoint, values):
+    values.setdefault("theme", g.get("theme", "light"))
+
+@bp.url_value_preprocessor
+def pull_theme(endpoint, values):
+    g.theme = values.pop("theme", "light")
+```
+
 ```python
 @blog_bp.url_defaults
 def add_locale(endpoint, values):
@@ -649,6 +1233,23 @@ def pull_locale(endpoint, values):
 
 ## Q43: How do you implement Flask rate limiting with Redis?
 **A:** Custom Redis-based rate limiter:
+
+**Code:**
+```python
+import redis
+from flask import request
+
+r = redis.Redis(host="localhost", port=6379, decode_responses=True)
+
+@app.before_request
+def rate_limit():
+    key = f"rl:{request.endpoint}:{request.remote_addr}:{int(time.time()) // 60}"
+    count = r.incr(key)
+    if count == 1:
+        r.expire(key, 60)
+    if count > 5:
+        abort(429)
+```
 
 ```python
 redis_client = redis.Redis.from_url('redis://localhost:6379')
@@ -676,6 +1277,17 @@ Algorithms: fixed window, sliding window (sorted sets), token bucket. For distri
 ## Q44: Explain Flask's `safe_join` and file path safety.
 **A:** `safe_join` prevents directory traversal:
 
+**Code:**
+```python
+from werkzeug.security import safe_join
+
+filename = request.args.get("file", "")
+try:
+    filepath = safe_join(app.config["UPLOAD_FOLDER"], filename)
+except ValueError:
+    abort(404)
+```
+
 ```python
 from flask import safe_join
 try:
@@ -688,6 +1300,15 @@ Security practices: always use `secure_filename()` to sanitize filenames, never 
 
 ## Q45: How do you implement Flask-Admin for admin interfaces?
 **A:** Flask-Admin provides automatic admin interfaces:
+
+**Code:**
+```python
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
+admin = Admin(app, name="Admin", template_mode="bootstrap4")
+admin.add_view(ModelView(Post, db.session, column_searchable_list=["title"]))
+```
 
 ```python
 from flask_admin import Admin
@@ -710,8 +1331,38 @@ Features: CRUD for SQLAlchemy models, file management, Redis console, role-based
 ## Q46: What is Flask's `app.before_first_request` and its deprecation?
 **A:** `before_first_request` runs once before the first request (deprecated in Flask 2.3+). Deprecated because: doesn't work with WSGI servers that fork workers (Gunicorn), creates race conditions in multi-worker environments. Alternatives: app factory with initialization, CLI command for setup, lazy initialization.
 
+**Code:**
+```python
+from flask import Flask
+
+app = Flask(__name__)
+initialized = False
+
+@app.before_request
+def init_once():
+    global initialized
+    if not initialized:
+        load_ml_model()
+        initialized = True
+```
+
 ## Q47: How do you implement Flask database performance monitoring?
 **A:** SQLAlchemy query profiling:
+
+**Code:**
+```python
+import time
+from sqlalchemy import event
+
+@event.listens_for(engine, "before_cursor_execute")
+def before(conn, cursor, statement, parameters, context, executemany):
+    conn.info["start"] = time.perf_counter()
+
+@event.listens_for(engine, "after_cursor_execute")
+def after(conn, cursor, statement, parameters, context, executemany):
+    took = time.perf_counter() - conn.info["start"]
+    app.logger.debug("Query (%d ms): %s", took * 1000, statement[:80])
+```
 
 ```python
 from sqlalchemy import event
@@ -731,6 +1382,19 @@ For production: APM tools (Datadog, New Relic, Sentry), log slow queries, monito
 ## Q48: Explain Flask's `request.remote_addr` and proxy configurations.
 **A:** Behind proxies, `request.remote_addr` shows the proxy IP. Use `ProxyFix`:
 
+**Code:**
+```python
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+
+@app.route("/ip")
+def ip():
+    # now the real client IP, not the proxy IP
+    return {"remote_addr": request.remote_addr,
+            "access_route": list(request.access_route)}
+```
+
 ```python
 from werkzeug.middleware.proxy_fix import ProxyFix
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
@@ -740,6 +1404,16 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 ## Q49: How do you implement Flask-APScheduler for scheduled tasks?
 **A:** APScheduler integration:
+
+**Code:**
+```python
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(clean_expired_sessions, IntervalTrigger(hours=1))
+scheduler.start()
+```
 
 ```python
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -760,6 +1434,13 @@ Triggers: `IntervalTrigger`, `CronTrigger`, `DateTrigger`. For persistence: `SQL
 ## Q50: What is Flask's `json.security` and security considerations?
 **A:** Flask JSON security settings:
 
+**Code:**
+```python
+app = Flask(__name__)
+app.json.ensure_ascii = True   # JSON_AS_ASCII
+app.json.sort_keys = False     # JSON_SORT_KEYS
+```
+
 ```python
 app.config['JSON_AS_ASCII'] = True      # Escape non-ASCII
 app.config['JSON_SORT_KEYS'] = False     # Preserve key order
@@ -769,6 +1450,15 @@ Security issues: JSONP callback injection, JSON hijacking (prefix with `while(1)
 
 ## Q51: How do you implement Flask-Bootstrap integration?
 **A:** Flask-Bootstrap:
+
+**Code:**
+```python
+from flask_bootstrap import Bootstrap
+
+bootstrap = Bootstrap(app)
+
+# templates: {% extends "bootstrap/base.html" %}
+```
 
 ```python
 from flask_bootstrap import Bootstrap
@@ -790,6 +1480,19 @@ Features: Bootstrap CSS/JS, `wtf.quick_form()` with Bootstrap styling. For Boots
 ## Q52: Explain Flask's `app.url_map` and routing introspection.
 **A:** `app.url_map` provides routing information:
 
+**Code:**
+```python
+from flask import jsonify
+
+@app.route("/routes")
+def routes():
+    data = [
+        {"rule": rule.rule, "methods": sorted(rule.methods - {"HEAD", "OPTIONS"})}
+        for rule in app.url_map.iter_rules()
+    ]
+    return jsonify(data)
+```
+
 ```python
 @app.route('/debug/routes')
 def list_routes():
@@ -808,6 +1511,21 @@ Useful for: sitemaps, route documentation, debugging, permission checking, dynam
 ## Q53: How do you implement Flask-Celery integration?
 **A:** Flask-Celery for distributed tasks:
 
+**Code:**
+```python
+from celery import Celery
+
+celery = Celery(app.import_name, broker=app.config["CELERY_BROKER_URL"])
+celery.conf.update(result_backend=app.config["CELERY_RESULT_BACKEND"])
+
+class ContextTask(celery.Task):
+    def __call__(self, *args, **kwargs):
+        with app.app_context():
+            return self.run(*args, **kwargs)
+
+celery.Task = ContextTask
+```
+
 ```python
 def make_celery(app):
     celery = Celery(app.import_name, backend=app.config['CELERY_RESULT_BACKEND'],
@@ -825,6 +1543,16 @@ Features: task queues, retry logic, task scheduling (Celery Beat), task grouping
 ## Q54: What is Flask's `request.range` and how does it handle byte ranges?
 **A:** Flask handles `Range` headers for partial content:
 
+**Code:**
+```python
+from flask import send_file
+
+@app.route("/media/<path:filename>")
+def media(filename):
+    # send_file handles Range requests -> 206 Partial Content
+    return send_file(f"media/{filename}")
+```
+
 ```python
 range_header = request.headers.get('Range', None)
 if range_header:
@@ -836,6 +1564,16 @@ if range_header:
 
 ## Q55: How do you implement Flask database triggers and events?
 **A:** SQLAlchemy event listeners:
+
+**Code:**
+```python
+from sqlalchemy import event
+from datetime import datetime
+
+@event.listens_for(User, "before_update")
+def touch_timestamp(mapper, connection, target):
+    target.updated_at = datetime.utcnow()
+```
 
 ```python
 from sqlalchemy import event
@@ -850,6 +1588,20 @@ Events: `before_insert`, `after_insert`, `before_update`, `after_update`, `befor
 ## Q56: Explain Flask's `app.extensions` and extension registration.
 **A:** `app.extensions` is a dict of registered extensions:
 
+**Code:**
+```python
+class MyExtension:
+    def init_app(self, app):
+        app.extensions["my_extension"] = self
+
+ext = MyExtension()
+ext.init_app(app)
+
+# from anywhere with context:
+from flask import current_app
+current_app.extensions["my_extension"]
+```
+
 ```python
 class MyExtension:
     def init_app(self, app):
@@ -862,6 +1614,20 @@ Standard pattern: `ext = Extension(); ext.init_app(app)`. Access via `current_ap
 
 ## Q57: How do you implement Flask two-factor authentication (2FA)?
 **A:** TOTP-based 2FA with pyotp:
+
+**Code:**
+```python
+import pyotp
+
+secret = pyotp.random_base32()
+totp = pyotp.TOTP(secret)
+uri = totp.provisioning_uri(name="alice@example.com", issuer_name="MyApp")
+
+@app.route("/verify")
+def verify():
+    token = request.args.get("token")
+    return {"valid": totp.verify(token)} if token else {"uri": uri}
+```
 
 ```python
 import pyotp
@@ -877,6 +1643,25 @@ Best practices: store secrets encrypted, provide backup codes, support multiple 
 
 ## Q58: What is Flask's `wsgi_app` method and WSGI middleware?
 **A:** `app.wsgi_app(environ, start_response)` is Flask's WSGI callable:
+
+**Code:**
+```python
+import time
+
+class TimingMiddleware:
+    def __init__(self, app):
+        self.app = app
+
+    def __call__(self, environ, start_response):
+        start = time.perf_counter()
+        def new_start(status, headers, exc_info=None):
+            headers.append(("X-Response-Time",
+                            f"{int((time.perf_counter()-start)*1000)}ms"))
+            return start_response(status, headers, exc_info)
+        return self.app(environ, new_start)
+
+app.wsgi_app = TimingMiddleware(app.wsgi_app)
+```
 
 ```python
 class TimingMiddleware:
@@ -894,6 +1679,17 @@ Common middleware: `ProxyFix`, `SharedDataMiddleware`, `ProfilerMiddleware`. Mid
 
 ## Q59: How do you implement Flask MongoDB with MongoEngine?
 **A:** Flask-MongoEngine:
+
+**Code:**
+```python
+from flask_mongoengine import MongoEngine
+
+db = MongoEngine(app)
+
+class Post(db.Document):
+    title = db.StringField(max_length=200, required=True)
+    tags = db.ListField(db.StringField())
+```
 
 ```python
 from flask_mongoengine import MongoEngine
@@ -914,8 +1710,37 @@ Features: schema validation, references, embedded documents, indexing, aggregati
 ## Q60: Explain Flask's `_compat` module and compatibility layer.
 **A:** Flask's internal `_compat` module (largely removed in Flask 2.3+) handled Python version differences. Modern Flask targets Python 3.8+. Extension authors should: target Python 3.8+ only, use `from __future__ import annotations`, prefer `asyncio.run`. Older compat helpers included `string_types`, `text_type`, `iteritems`, `reraise`.
 
+**Code:**
+```python
+# modern Flask targets Python 3.8+; _compat is gone
+from __future__ import annotations
+
+def greet(name: str) -> str:
+    return f"Hello {name}"
+```
+
 ## Q61: How do you implement Flask-Excel/CSV import/export?
 **A:** CSV export:
+
+**Code:**
+```python
+import csv
+import io
+from flask import Response
+
+def generate():
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["id", "name"])
+    for user in users:
+        writer.writerow([user.id, user.name])
+        yield buf.getvalue()
+        buf.seek(0)
+        buf.truncate()
+
+return Response(generate(), mimetype="text/csv",
+                headers={"Content-Disposition": "attachment; filename=users.csv"})
+```
 
 ```python
 def generate():
@@ -938,6 +1763,21 @@ CSV import: `csv.DictReader(file.stream)` with validation. Excel: use `openpyxl`
 ## Q62: What is Flask's `app.context_processor` vs `template_global`?
 **A:** `context_processor` returns a dict merged into template context. `template_global()` registers a global Jinja2 function:
 
+**Code:**
+```python
+@app.context_processor
+def inject_utils():
+    return {"site_name": "MyApp", "format_price": lambda amt: f"${amt:.2f}"}
+
+@app.template_global()
+def is_admin(user):
+    return user and user.role == "admin"
+
+@app.template_filter()
+def shout(text):
+    return text.upper() + "!"
+```
+
 ```python
 @app.context_processor
 def utility_processor():
@@ -957,6 +1797,16 @@ def capitalize_words(text):
 ## Q63: How do you implement Flask full-text search with SQLAlchemy?
 **A:** PostgreSQL full-text search:
 
+**Code:**
+```python
+from sqlalchemy import func
+
+query = Article.query.filter(
+    Article.search_vector.op("@@")(func.to_tsquery("english", q))
+).order_by(func.ts_rank(Article.search_vector,
+                         func.to_tsquery("english", q)).desc())
+```
+
 ```python
 from sqlalchemy import func, TSVECTOR
 
@@ -974,8 +1824,40 @@ For Elasticsearch: use `elasticsearch-dsl`. For SQLite: use FTS5.
 ## Q64: Explain Flask's `request.environ` and WSGI environment.
 **A:** `request.environ` exposes the full WSGI environment dict with: CGI variables (`REQUEST_METHOD`, `PATH_INFO`), HTTP headers (`HTTP_*`), WSGI-specific (`wsgi.*`), custom middleware-added keys. Access directly for: lower-level debugging, middleware communication, reading non-standard headers.
 
+**Code:**
+```python
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route("/wsgi")
+def wsgi():
+    return {
+        "method": request.environ["REQUEST_METHOD"],
+        "path": request.environ["PATH_INFO"],
+        "server": request.environ["SERVER_NAME"],
+    }
+```
+
 ## Q65: How do you implement Flask-SSE (Server-Sent Events)?
 **A:** SSE for real-time updates:
+
+**Code:**
+```python
+import time
+import json
+from flask import Response, stream_with_context
+
+@app.route("/events")
+def events():
+    def generate():
+        while True:
+            yield f"data: {json.dumps({'t': time.time()})}\n\n"
+            time.sleep(2)
+    return Response(stream_with_context(generate()),
+                    mimetype="text/event-stream",
+                    headers={"Cache-Control": "no-cache"})
+```
 
 ```python
 @app.route('/events')
@@ -994,8 +1876,28 @@ SSE considerations: one-way server→client, works with `EventSource` in browser
 ## Q66: What is Flask's `_find_handler` and error handling internals?
 **A:** When an exception occurs: Flask checks blueprint error handlers, then application error handlers, then defaults. For `HTTPException`, checks `error.code` first, then exception class. The handler registry is in `app.error_handler_spec` dict.
 
+**Code:**
+```python
+@app.errorhandler(ArithmeticError)
+def arithmetic_error(error):
+    return {"error": "math failure"}, 500
+
+# lookup order: blueprint handlers -> app.code handlers -> class handlers
+```
+
 ## Q67: How do you implement Flask-HTMX integration?
 **A:** HTMX for dynamic pages:
+
+**Code:**
+```python
+from flask import render_template, request
+
+@app.route("/users")
+def users():
+    if request.headers.get("HX-Request"):
+        return render_template("partials/user_list.html", users=users)
+    return render_template("users.html", users=users)
+```
 
 ```python
 @app.route('/users')
@@ -1009,6 +1911,18 @@ HTMX features: `hx-get/post`, `hx-target`, `hx-swap`, `hx-trigger`, `HX-Trigger`
 
 ## Q68: Explain Flask's `make_null_session` and session implementations.
 **A:** Flask supports multiple session backends:
+
+**Code:**
+```python
+from flask.sessions import SecureCookieSessionInterface
+
+class CustomSessionInterface(SecureCookieSessionInterface):
+    def open_session(self, app, request):
+        # e.g. load from Redis instead
+        return super().open_session(app, request)
+
+app.session_interface = CustomSessionInterface()
+```
 
 ```python
 class RedisSessionInterface(SessionInterface):
@@ -1025,6 +1939,18 @@ Backends: `SecureCookieSession` (default, cookie-based), Redis (server-side, sha
 
 ## Q69: How do you implement Flask file upload with progress bar?
 **A:** Chunked upload:
+
+**Code:**
+```python
+import os
+from flask import request
+
+@app.route("/upload/<upload_id>/<int:chunk_index>", methods=["POST"])
+def upload_chunk(upload_id, chunk_index):
+    chunk = request.files["chunk"]
+    chunk.save(os.path.join(CHUNK_DIR, upload_id, str(chunk_index)))
+    return {"status": "ok"}
+```
 
 ```python
 @app.route('/upload/init', methods=['POST'])
@@ -1045,6 +1971,22 @@ Client tracks: `chunks_completed / total_chunks = progress`. Or use `XMLHttpRequ
 ## Q70: What is Flask's `session.permanent` and session lifetime?
 **A:** `session.permanent` controls session expiration:
 
+**Code:**
+```python
+from datetime import timedelta
+from flask import Flask, session
+
+app = Flask(__name__)
+app.config["PERMANENT_SESSION_LIFETIME"] = timedelta(days=31)
+app.config["SESSION_REFRESH_EACH_REQUEST"] = True
+
+@app.route("/login")
+def login():
+    session.permanent = True
+    session["user"] = "alice"
+    return "ok"
+```
+
 ```python
 session.permanent = True  # Uses PERMANENT_SESSION_LIFETIME
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=31)
@@ -1055,6 +1997,22 @@ Non-permanent sessions expire when browser closes. For cookie-based sessions, ex
 
 ## Q71: How do you implement Flask testing with SQLite in-memory database?
 **A:** Isolated database testing:
+
+**Code:**
+```python
+import pytest
+from app import create_app, db
+
+@pytest.fixture(scope="function")
+def client():
+    app = create_app("testing")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory:"
+    with app.app_context():
+        db.create_all()
+        yield app.test_client()
+        db.session.remove()
+        db.drop_all()
+```
 
 ```python
 @pytest.fixture(scope='function')
@@ -1072,8 +2030,43 @@ Best practices: `scope='function'` for isolation, seed minimal test data, test a
 ## Q72: Explain Flask's `process_response` and `finalize_request`.
 **A:** `process_response` runs `after_request` handlers. `finalize_request` handles the full lifecycle: (1) view returns, (2) `make_response` converts to Response, (3) `process_response` runs `after_request` handlers, (4) `finalize_request` runs `teardown_request`, (5) WSGI response is sent.
 
+**Code:**
+```python
+from flask import Flask, make_response
+
+app = Flask(__name__)
+
+@app.after_request
+def add_header(response):
+    response.headers["X-Processed"] = "yes"
+    return response
+
+with app.test_request_context():
+    resp = make_response("ok")
+    processed = app.process_response(resp)
+    print(processed.headers["X-Processed"])
+```
+
 ## Q73: How do you implement Flask-Alembic for database migrations?
 **A:** Alembic with Flask-Migrate:
+
+**Code:**
+```python
+# alembic/versions/0001_create_users.py
+from alembic import op
+import sqlalchemy as sa
+
+revision = "0001_create_users"
+down_revision = None
+
+def upgrade():
+    op.create_table("users",
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("name", sa.String(80), nullable=False))
+
+def downgrade():
+    op.drop_table("users")
+```
 
 ```bash
 flask db init
@@ -1089,6 +2082,18 @@ Best practices: review auto-generated migrations, write downgrade methods, test 
 ## Q74: What is Flask's `request.trusted_hosts` and host header validation?
 **A:** Host header validation prevents host injection:
 
+**Code:**
+```python
+from flask import abort, request
+
+app.config["TRUSTED_HOSTS"] = ["myapp.com", "www.myapp.com"]
+
+@app.before_request
+def validate_host():
+    if request.host not in app.config["TRUSTED_HOSTS"]:
+        abort(400, "Untrusted host")
+```
+
 ```python
 app.config['TRUSTED_HOSTS'] = ['myapp.com', 'www.myapp.com']
 
@@ -1102,6 +2107,20 @@ Host header attacks: password reset poisoning, cache poisoning, SSRF. Always val
 
 ## Q75: How do you implement Flask API documentation with Flasgger?
 **A:** Flasgger generates Swagger docs:
+
+**Code:**
+```python
+from flasgger import Swagger
+
+Swagger(app, template={
+    "info": {"title": "My API", "version": "1.0.0"}
+})
+
+@app.route("/users/<int:user_id>")
+@swag_from({"responses": {200: {"description": "A single user"}}})
+def get_user(user_id):
+    return {"id": user_id}
+```
 
 ```python
 from flasgger import Swagger, swag_from
@@ -1121,6 +2140,15 @@ Features: auto-generate Swagger UI at `/apidocs/`, parse OpenAPI from docstrings
 ## Q76: Explain Flask's `app.url_build_error_handlers` and URL generation errors.
 **A:** Custom handling for URL generation failures:
 
+**Code:**
+```python
+def on_build_error(error, endpoint, values):
+    app.logger.warning("Cannot build %s: %s", endpoint, error)
+    return url_for("index")
+
+app.url_build_error_handlers.append(on_build_error)
+```
+
 ```python
 @app.url_build_error_handlers.append
 def handle_build_error(error, endpoint, values):
@@ -1132,6 +2160,25 @@ Errors occur when: endpoint doesn't exist, required URL parameters missing, blue
 
 ## Q77: How do you implement Flask background task tracking?
 **A:** Task tracking system:
+
+**Code:**
+```python
+import uuid
+from flask import jsonify
+
+tasks = {}
+
+@app.route("/tasks", methods=["POST"])
+def enqueue():
+    task_id = str(uuid.uuid4())
+    tasks[task_id] = {"status": "pending", "progress": 0}
+    return jsonify(task_id=task_id)
+
+@app.route("/tasks/<task_id>")
+def status(task_id):
+    task = tasks.get(task_id)
+    return jsonify(task) if task else ("not found", 404)
+```
 
 ```python
 tasks = {}  # Use Redis in production
@@ -1154,6 +2201,18 @@ For distributed tasks: use Celery with result backend. Task cleanup: periodic jo
 ## Q78: What is Flask's `request.access_route` and trusted proxies?
 **A:** `access_route` provides the IP chain from `X-Forwarded-For`:
 
+**Code:**
+```python
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
+
+@app.route("/from")
+def from_ip():
+    return {"remote_addr": request.remote_addr,
+            "access_route": list(request.access_route)}
+```
+
 ```python
 from werkzeug.middleware.proxy_fix import ProxyFix
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=3)
@@ -1166,6 +2225,26 @@ Without `ProxyFix`, `remote_addr` is the direct connection IP (proxy). Security:
 
 ## Q79: How do you implement Flask-GraphQL integration?
 **A:** GraphQL with Graphene:
+
+**Code:**
+```python
+from graphene import ObjectType, String
+from flask import jsonify
+
+class Query(ObjectType):
+    hi = String()
+    def resolve_hi(self, info):
+        return "Hello"
+
+import graphene
+schema = graphene.Schema(query=Query)
+
+@app.route("/graphql", methods=["POST"])
+def graphql():
+    result = schema.execute(request.json["query"])
+    return jsonify({"data": result.data,
+                    "errors": [str(e) for e in result.errors] if result.errors else None})
+```
 
 ```python
 from graphene import ObjectType, String, Int, Field, Schema
@@ -1185,8 +2264,36 @@ For production: add authentication, query depth limiting, rate limit by complexi
 ## Q80: Explain Flask's `app.logger` hierarchy and propagation.
 **A:** Logger hierarchy: `app.logger` is `'flask.app'`, propagates to `'flask'` → root logger. `logging.getLogger('werkzeug')` for dev server logs. Module-level: `log = logging.getLogger(__name__)`. Log propagation can be disabled: `app.logger.propagate = False`.
 
+**Code:**
+```python
+import logging
+
+app.logger.info("from flask.app logger")
+logging.getLogger("werkzeug").warning("dev server log")
+log = logging.getLogger(__name__)   # module-level logger
+# app.logger.propagate = False      # stop propagation to root
+```
+
 ## Q81: How do you implement Flask-JSON-RPC APIs?
 **A:** JSON-RPC protocol:
+
+**Code:**
+```python
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+METHODS = {
+    "add": lambda a, b: a + b,
+    "upper": lambda s: s.upper(),
+}
+
+@app.post("/rpc")
+def rpc():
+    req = request.get_json()
+    result = METHODS[req["method"]](*req.get("params", []))
+    return jsonify({"jsonrpc": "2.0", "result": result, "id": req["id"]})
+```
 
 ```python
 class JSONRPC:
@@ -1202,8 +2309,34 @@ Features: batch requests, named and positional params, notifications (no respons
 ## Q82: What is Flask's `app.secret_key` and how session signing works?
 **A:** `secret_key` is used for cryptographic session signing. Flow: session data → serialized (JSON) → compressed (zlib) → signed (HMAC-SHA1) → base64 → cookie. Verification: server reads cookie, verifies signature, decompresses, deserializes. Invalid signature → empty session. Never hardcode secrets.
 
+**Code:**
+```python
+from flask import Flask, session
+import secrets
+
+app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)
+
+@app.route("/set")
+def set_session():
+    session["logged_in"] = True   # signed into the cookie client-side
+    return "ok"
+```
+
 ## Q83: How do you implement Flask-OpenAPI/Swagger with APISpec?
 **A:** APISpec for OpenAPI:
+
+**Code:**
+```python
+from apispec import APISpec
+from apispec.ext.marshmallow import MarshmallowPlugin
+
+spec = APISpec(
+    title="My API", version="1.0.0", openapi_version="3.0.2",
+    plugins=[MarshmallowPlugin()],
+)
+spec.path(view=get_user)
+```
 
 ```python
 from apispec import APISpec
@@ -1217,6 +2350,21 @@ Alternative to Flasgger. Generate OpenAPI schema programmatically from Marshmall
 
 ## Q84: What is Flask's `app.create_jinja_environment`?
 **A:** Custom Jinja2 environment:
+
+**Code:**
+```python
+from flask import Flask
+from datetime import datetime
+
+class MyFlask(Flask):
+    def create_jinja_environment(self):
+        env = super().create_jinja_environment()
+        env.globals["now"] = datetime.utcnow
+        env.filters["shout"] = lambda s: s.upper() + "!"
+        return env
+
+app = MyFlask(__name__)
+```
 
 ```python
 from jinja2 import Environment
@@ -1234,6 +2382,19 @@ Customize: globals, filters, tests, policies, extensions, autoescape, undefined 
 
 ## Q85: How do you implement Flask RESTful API with Flask-RESTful?
 **A:** Flask-RESTful for resource-based APIs:
+
+**Code:**
+```python
+from flask_restful import Api, Resource
+
+api = Api(app)
+
+class PingResource(Resource):
+    def get(self):
+        return {"pong": True, "time": time.time()}
+
+api.add_resource(PingResource, "/ping")
+```
 
 ```python
 from flask_restful import Api, Resource
@@ -1265,8 +2426,32 @@ Features: automatic routing, request parsing (`reqparse`), output marshalling, e
 ## Q86: What is Flask's `app.preprocess_request` and `app.process_response`?
 **A:** `preprocess_request` runs all `before_request` handlers. Returns None if all pass, or a Response if one short-circuits. `process_response` runs all `after_request` handlers, then saves session, then runs `teardown_request`. These are internal methods but can be overridden for custom request processing.
 
+**Code:**
+```python
+from flask import Flask
+
+class CustomFlask(Flask):
+    def preprocess_request(self):
+        rv = super().preprocess_request()
+        # rv is None if all before_request handlers passed
+        if rv is not None:
+            return rv
+        return None
+
+app = CustomFlask(__name__)
+```
+
 ## Q87: How do you implement Flask-Compress for response compression?
 **A:** Flask-Compress:
+
+**Code:**
+```python
+from flask_compress import Compress
+
+app.config["COMPRESS_MIMETYPES"] = ["text/html", "text/css", "application/json"]
+app.config["COMPRESS_LEVEL"] = 6
+Compress(app)
+```
 
 ```python
 from flask_compress import Compress
@@ -1283,8 +2468,30 @@ Compresses responses with gzip/deflate. More efficient than application-level co
 ## Q88: What is Flask's `app.auto_find_instance_path`?
 **A:** `auto_find_instance_path` (default True) automatically finds the instance folder relative to the app's package/module. The instance folder is used for configuration files, databases, downloads. Set `instance_path` explicitly for custom location. Instance folder is outside the package, making it suitable for runtime-modifiable files.
 
+**Code:**
+```python
+from flask import Flask
+
+# auto_find_instance_path=True auto-detects the instance folder
+app = Flask(__name__, instance_relative_config=True)
+print(app.instance_path)
+```
+
 ## Q89: How do you implement Flask API versioning with Accept headers?
 **A:** Content negotiation versioning:
+
+**Code:**
+```python
+from flask import request, g
+
+@app.before_request
+def detect_version():
+    accept = request.headers.get("Accept", "")
+    if "application/vnd.myapp.v2+json" in accept:
+        g.api_version = 2
+    else:
+        g.api_version = 1
+```
 
 ```python
 @app.before_request
@@ -1309,6 +2516,21 @@ More RESTful than URL-based versioning but less discoverable.
 ## Q90: What is Flask's `app.subdomain_matching`?
 **A:** Subdomain matching enables routing based on subdomain:
 
+**Code:**
+```python
+from flask import Blueprint
+
+app.config["SERVER_NAME"] = "myapp.com"
+
+admin = Blueprint("admin", __name__, subdomain="admin")
+
+@app.route("/", subdomain="docs")
+def docs_index():
+    return "Docs site"
+
+app.register_blueprint(admin)
+```
+
 ```python
 app.config['SERVER_NAME'] = 'myapp.com'
 app.url_map.default_subdomain = ''
@@ -1324,6 +2546,27 @@ Useful for: multi-tenant apps, API subdomain (`api.myapp.com`), admin subdomain 
 
 ## Q91: How do you implement Flask-Mail for sending emails?
 **A:** Flask-Mail:
+
+**Code:**
+```python
+from flask_mail import Mail, Message
+
+app.config.update(
+    MAIL_SERVER="smtp.gmail.com",
+    MAIL_PORT=587,
+    MAIL_USE_TLS=True,
+    MAIL_USERNAME="me@gmail.com",
+    MAIL_PASSWORD="secret",
+)
+mail = Mail(app)
+
+@app.route("/mail")
+def mail_route():
+    msg = Message("Hello", recipients=["you@example.com"])
+    msg.body = "Body text"
+    mail.send(msg)
+    return "sent"
+```
 
 ```python
 from flask_mail import Mail, Message
@@ -1344,6 +2587,12 @@ Configuration: `MAIL_SERVER`, `MAIL_PORT`, `MAIL_USE_TLS`, `MAIL_USERNAME`, `MAI
 ## Q92: What is Flask's `app.open_resource`?
 **A:** `app.open_resource(resource, mode='rb')` opens resources relative to the app's root path:
 
+**Code:**
+```python
+with app.open_resource("static/data/terms.txt") as f:
+    content = f.read().decode("utf-8")
+```
+
 ```python
 with app.open_resource('static/data/terms.txt') as f:
     content = f.read()
@@ -1353,6 +2602,21 @@ Useful for reading packaged resources (files bundled with the application). Work
 
 ## Q93: How do you implement Flask error logging to external services?
 **A:** Sentry integration:
+
+**Code:**
+```python
+import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
+
+sentry_sdk.init(dsn="https://key@sentry.io/proj",
+                integrations=[FlaskIntegration()],
+                traces_sample_rate=1.0)
+
+@app.route("/")
+def home():
+    sentry_sdk.capture_message("home visited")
+    return "ok"
+```
 
 ```python
 import sentry_sdk
@@ -1371,8 +2635,33 @@ Other services: Datadog, New Relic, Logstash. Ensure PII is not logged.
 ## Q94: What is Flask's `app.root_path` and `app.instance_path`?
 **A:** `app.root_path` is the filesystem path of the application package (where Flask looks for templates, static files). `app.instance_path` is the path to the instance folder (for runtime files). Set explicitly: `Flask(__name__, root_path='/path', instance_path='/path')`. These paths are used by `app.open_resource()`, `send_from_directory`, and template/static file lookups.
 
+**Code:**
+```python
+from flask import Flask
+
+app = Flask(__name__, root_path="/srv/myapp",
+            instance_path="/var/lib/myapp")
+
+print(app.root_path)      # /srv/myapp, templates/static live here
+print(app.instance_path)  # runtime files: config, sqlite db
+```
+
 ## Q95: How do you implement Flask background task queues with RQ?
 **A:** RQ (Redis Queue) integration:
+
+**Code:**
+```python
+from rq import Queue
+from redis import Redis
+
+redis_conn = Redis(host="localhost", port=6379)
+queue = Queue(connection=redis_conn)
+
+@app.route("/process")
+def process():
+    job = queue.enqueue(long_task, args=(data,))
+    return {"job_id": job.id}
+```
 
 ```python
 from rq import Queue
@@ -1397,6 +2686,20 @@ Run worker: `rq worker`. RQ features: job retry, job scheduling, job dependencie
 ## Q96: What is Flask's `app.aborter` and custom abort handling?
 **A:** `app.aborter` is a `Aborter` instance that maps status codes to exception classes:
 
+**Code:**
+```python
+from werkzeug.exceptions import Aborter
+
+class CustomAborter(Aborter):
+    def __call__(self, code, *args, **kwargs):
+        print(f"aborting with {code}")
+        return super().__call__(code, *args, **kwargs)
+
+app.aborter = CustomAborter()
+
+# abort(404) now routes through the custom aborter
+```
+
 ```python
 from werkzeug.exceptions import Aborter
 
@@ -1410,6 +2713,21 @@ Custom abort classes can have custom behavior (logging, metrics). The aborter is
 
 ## Q97: How do you implement Flask-Admin custom views?
 **A:** Custom admin views:
+
+**Code:**
+```python
+from flask_admin import BaseView, expose
+
+class AnalyticsView(BaseView):
+    @expose("/")
+    def index(self):
+        return self.render("admin/analytics.html")
+
+    def is_accessible(self):
+        return current_user.is_admin
+
+admin.add_view(AnalyticsView(name="Analytics", endpoint="analytics"))
+```
 
 ```python
 from flask_admin import BaseView, expose
@@ -1431,8 +2749,33 @@ BaseView provides: `@expose()` for routing, `render()` for template rendering, `
 ## Q98: What is Flask's `app.prepare_import` and extension loading?
 **A:** `prepare_import()` is an internal method called during `Flask()` initialization. It sets up the import path for the application package. Understanding this helps with: debugging import errors, configuring package discovery, and setting up complex application structures. Modern Flask doesn't require significant import path manipulation.
 
+**Code:**
+```python
+class MyFlask(Flask):
+    def prepare_import(self):
+        super().prepare_import()
+        # hook: configure package discovery during init
+
+app = MyFlask(__name__)
+```
+
 ## Q99: How do you implement Flask-Pydantic integration?
 **A:** Flask-Pydantic for request/response validation:
+
+**Code:**
+```python
+from pydantic import BaseModel
+from flask import request, jsonify
+
+class UserIn(BaseModel):
+    name: str
+    email: str
+
+@app.post("/users")
+def create_user():
+    payload = UserIn(**request.get_json())
+    return jsonify(payload.model_dump()), 201
+```
 
 ```python
 from flask_pydantic import validate
@@ -1462,6 +2805,19 @@ def create_user():
 
 ## Q100: How do you implement Flask-CORS for specific origins?
 **A:** Flask-CORS configuration:
+
+**Code:**
+```python
+from flask_cors import CORS
+
+CORS(
+    app,
+    resources={r"/api/*": {"origins": ["https://myapp.com",
+                                       "https://admin.myapp.com"]}},
+    supports_credentials=True,
+    max_age=3600,
+)
+```
 
 ```python
 from flask_cors import CORS

@@ -3,6 +3,22 @@
 ## Q1: How does FastAPI handle concurrent requests with async def vs def?
 **A:** FastAPI distinguishes between `async def` (coroutine) and `def` (regular function) path operations. `async def` endpoints are run directly on the ASGI server's event loop, handling concurrent I/O-bound tasks without blocking. `def` endpoints are run in a thread pool (via `run_in_executor`), preventing them from blocking the event loop. For I/O-bound operations (database queries, HTTP calls, file reads), use `async def` for true concurrency. For CPU-bound operations, `def` is fine (thread pool provides parallelism). The thread pool size defaults to `min(32, os.cpu_count() + 4)`. Mixing both types in one app works seamlessly — FastAPI handles the scheduling transparently.
 
+
+**Code:**
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/async")
+async def endpoint_a():
+    return {"handler": "event loop"}
+
+@app.get("/sync")
+def endpoint_d():
+    return {"handler": "thread pool"}
+```
+
 ## Q2: Explain FastAPI's dependency injection system for database sessions.
 **A:** FastAPI dependencies typically use generators with `yield` for managing database sessions:
 
@@ -23,6 +39,23 @@ def read_user(user_id: int, db: Session = Depends(get_db)):
 ```
 
 The `yield` pattern ensures cleanup (closing the session) even if an exception occurs. Dependencies with `yield` are `ContextManagers` — the code before `yield` runs on setup, after `yield` runs on teardown. Multiple dependencies with `yield` execute in reverse order for cleanup. This pattern works with any database library: SQLAlchemy, asyncpg with `async def`, Beanie for MongoDB, etc. For async databases, use `async def` with `async for` in the dependency.
+
+
+**Code:**
+```python
+from fastapi import Depends
+
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.get("/users")
+async def read_users(db=Depends(get_db)):
+    return db.query(User).all()
+```
 
 ## Q3: How do you implement pagination in FastAPI?
 **A:** FastAPI supports pagination via query parameters:
@@ -47,8 +80,37 @@ def list_items(
 
 For cursor-based pagination, use a `cursor` parameter (typically a base64-encoded ID or timestamp). FastAPI's validation ensures `skip`/`limit` constraints. For reusable pagination, create a dependency: `def pagination(skip: int = 0, limit: int = 10) -> tuple[int, int]`. Libraries like `fastapi-pagination` provide decorators and response models for consistent pagination across endpoints. Consider returning metadata (total count, next/previous URLs) for better client experience.
 
+
+**Code:**
+```python
+from fastapi import Query
+
+@app.get("/items")
+def list_items(
+    skip: int = Query(0, ge=0),
+    limit: int = Query(10, ge=1, le=100),
+):
+    return db.query(Item).offset(skip).limit(limit).all()
+```
+
 ## Q4: What is FastAPI's `BackgroundTasks` and how is it different from Celery?
 **A:** `BackgroundTasks` (from `fastapi.BackgroundTasks`) runs lightweight background operations within the same process after returning the response. Use cases: sending emails, logging, notification dispatch, file cleanup. Limitations: (1) tasks run synchronously in the same process, (2) no retry mechanism, (3) no distributed execution, (4) tasks are lost if the server crashes, (5) blocks the worker if CPU-bound. Celery is a distributed task queue with: (1) separate worker processes, (2) retry and error handling, (3) task scheduling/cron, (4) result storage, (5) multiple brokers (Redis, RabbitMQ), (6) task prioritization. FastAPI + Celery is common: FastAPI handles HTTP requests and enqueues tasks; Celery workers process them asynchronously.
+
+
+**Code:**
+```python
+from fastapi import BackgroundTasks
+
+app = FastAPI()
+
+def notify(message: str):
+    print(f"notify: {message}")
+
+@app.post("/notify")
+async def send(background_tasks: BackgroundTasks):
+    background_tasks.add_task(notify, "hello")
+    return {"status": "queued"}
+```
 
 ## Q5: How do you implement rate limiting in FastAPI?
 **A:** FastAPI doesn't have built-in rate limiting, but it can be implemented via: (1) middleware — check request IP rate in a cache (Redis), (2) dependencies — per-endpoint rate limiting, (3) `slowapi` library (built on top of `limits`), (4) `fastapi-limiter` (Redis-based). Example with middleware:
@@ -71,6 +133,20 @@ class RateLimitMiddleware:
 
 Production-grade rate limiting uses Redis (distributed, atomic, time-based expiration). For serverless/docker, use API gateway rate limiting (AWS API Gateway, Cloudflare, Nginx). Consider different limits per endpoint (login: stricter, public endpoints: moderate).
 
+
+**Code:**
+```python
+from slowapi import Limiter
+from slowapi.util import get_remote_address
+
+limiter = Limiter(key_func=get_remote_address)
+
+@app.get("/items")
+@limiter.limit("100/minute")
+async def read_items(request: Request):
+    return []
+```
+
 ## Q6: Explain FastAPI's `Response` model and custom response types.
 **A:** FastAPI provides multiple response classes beyond `JSONResponse`: `HTMLResponse`, `PlainTextResponse`, `RedirectResponse`, `StreamingResponse`, `FileResponse`, `ORJSONResponse` (via `orjson`), `UJSONResponse` (via `ujson`). Custom responses:
 
@@ -92,6 +168,24 @@ async def download():
 
 `StreamingResponse` is essential for large datasets (DB cursors, file downloads). `FileResponse` handles range requests (partial content for video/audio). Custom response classes can extend `Response` with custom `.render()` methods. The `Response` parameter in path operations allows direct response manipulation (setting headers, cookies, status codes).
 
+
+**Code:**
+```python
+from fastapi.responses import HTMLResponse, FileResponse, StreamingResponse
+
+@app.get("/page", response_class=HTMLResponse)
+async def page():
+    return "<h1>Hello</h1>"
+
+@app.get("/file")
+async def file():
+    return FileResponse("report.pdf")
+
+@app.get("/stream")
+async def stream():
+    return StreamingResponse(data_iter(), media_type="text/plain")
+```
+
 ## Q7: How do you handle file uploads with progress in FastAPI?
 **A:** FastAPI uses `UploadFile` for file uploads, which provides a file-like object with `.read()`, `.write()`, `.seek()`, `.file` (raw SpooledTemporaryFile). For progress tracking, implement a custom file-like wrapper or a WebSocket-based progress reporter:
 
@@ -112,6 +206,19 @@ class ProgressFile:
 ```
 
 For large files, use `StreamingResponse` with async chunked reading. FastAPI's `UploadFile` handles streaming internally — files are stored in memory up to `SPOOL_MAX_SIZE` (default 1MB) then spooled to disk. Set `max_file_size` in the ASGI server (Uvicorn: `--max-file-size`). For chunked uploads, implement client-side chunking with server-side reassembly. Consider using presigned URLs (S3, GCS) for very large files.
+
+
+**Code:**
+```python
+from fastapi import UploadFile, File
+
+@app.post("/upload")
+async def upload(file: UploadFile = File()):
+    size = 0
+    while chunk := await file.read(1024):
+        size += len(chunk)
+    return {"filename": file.filename, "size": size}
+```
 
 ## Q8: Explain FastAPI's `WebSocket` disconnect handling and reconnection.
 **A:** FastAPI WebSocket endpoints should handle disconnect gracefully:
@@ -136,6 +243,22 @@ async def websocket_endpoint(websocket: WebSocket):
 ```
 
 For reconnection, implement on the client side: (1) exponential backoff for reconnection attempts, (2) heartbeat/ping-pong to detect stale connections, (3) message ID tracking for idempotent retries. Server-side: use `websocket.state` to check connection state (`websocket.client_state == WebSocketState.CONNECTED`). For production: use Redis pub/sub to broadcast messages across multiple server instances, and track connection health with periodic pings.
+
+
+**Code:**
+```python
+from fastapi import WebSocket, WebSocketDisconnect
+
+@app.websocket("/ws")
+async def ws_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            msg = await websocket.receive_text()
+            await websocket.send_text(f"Echo: {msg}")
+    except WebSocketDisconnect:
+        print("client disconnected")
+```
 
 ## Q9: How do you implement OAuth2 with multiple providers in FastAPI?
 **A:** FastAPI's `OAuth2PasswordBearer` is for first-party auth. For third-party providers (Google, GitHub), use libraries like `authlib` or `python-social-auth`:
@@ -162,6 +285,23 @@ async def login_via_google(request: Request):
 
 After OAuth callback, create a JWT token for your application (session management). Store provider info in the user database for account linking. For multiple providers, use a common `User` model with `social_accounts` relationship. Consider using FastAPI's dependency injection to inject the current user and their auth provider info.
 
+
+**Code:**
+```python
+from authlib.integrations.starlette_client import OAuth
+from starlette.config import Config
+
+config = Config(".env")
+oauth = OAuth(config)
+oauth.register(
+    name="github",
+    client_id=config("GITHUB_CLIENT_ID"),
+    client_secret=config("GITHUB_CLIENT_SECRET"),
+    authorize_url="https://github.com/login/oauth/authorize",
+    access_token_url="https://github.com/login/oauth/access_token",
+)
+```
+
 ## Q10: What is FastAPI's `APIRouter` and how does it help with modularization?
 **A:** `APIRouter` (from `fastapi.APIRouter`) enables modular route organization:
 
@@ -182,6 +322,21 @@ app.include_router(router)
 
 `APIRouter` supports: `prefix` (all routes relative), `tags` (OpenAPI grouping), `dependencies` (apply to all routes), `responses` (shared response models), `default_response_class`, `route_class`, `on_event` (lifespan events per router). Routers can be nested (include routers within routers). This enables: (1) feature-based directory structure, (2) reusable API modules, (3) separate versioning (`/v1/`, `/v2/`), (4) cleaner main app file. Each router can have its own dependencies, middlewares, exception handlers, and response models.
 
+
+**Code:**
+```python
+from fastapi import FastAPI, APIRouter
+
+users_router = APIRouter(prefix="/users", tags=["users"])
+
+@users_router.get("/")
+async def list_users():
+    return []
+
+app = FastAPI()
+app.include_router(users_router)
+```
+
 ## Q11: How does FastAPI handle CORS in production?
 **A:** FastAPI's `CORSMiddleware` handles CORS:
 
@@ -201,8 +356,37 @@ app.add_middleware(
 
 Production best practices: (1) specify exact origins (not `["*"]`), (2) use environment variables for origins, (3) restrict methods and headers to what's needed, (4) set appropriate `max_age` to reduce preflight requests, (5) use `expose_headers` for custom response headers the client needs to read, (6) consider using a reverse proxy (Nginx, Cloudflare) for CORS instead of the application layer for better performance. For subdomain-based apps, use regex origins: `allow_origin_regex=["https://.*\\.myapp\\.com"]`.
 
+
+**Code:**
+```python
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://api.example.com"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
+```
+
 ## Q12: Explain FastAPI's `jsonable_encoder` and its purpose.
 **A:** `fastapi.encoders.jsonable_encoder` converts complex Python objects (dataclasses, Pydantic models, datetime, Decimal, UUID, etc.) to JSON-compatible Python types (dicts, lists, strings, numbers). It's used internally by FastAPI's response serialization. Manual use cases: (1) encoding objects for custom JSON serialization, (2) storing complex objects in Redis/Session, (3) logging/dumping objects to files, (4) pre-serializing responses for caching. The encoder handles: Pydantic models (recursively), datetimes (to ISO format), UUIDs (to strings), Decimals (to floats by default, configurable), bytes (to base64), sets (to sorted lists), Enums (to values). Custom encoders can be registered via `json_encoders` in the app config.
+
+
+**Code:**
+```python
+from fastapi.encoders import jsonable_encoder
+from datetime import datetime
+from pydantic import BaseModel
+
+class Item(BaseModel):
+    name: str
+    created: datetime
+
+data = jsonable_encoder(Item(name="widget", created=datetime.utcnow()))
+print(data)
+```
 
 ## Q13: How do you implement caching in FastAPI?
 **A:** Caching strategies in FastAPI: (1) **Response-level caching**: use `fastapi-cache` or `aiocache` with Redis/Memcached backend, (2) **ETag/If-None-Match**: return `ETag` header with response hash, check `If-None-Match` to return `304 Not Modified`, (3) **Cache-Control headers**: `@cache(expire=300)` decorators, (4) **Application-level caching**: `functools.lru_cache` for deterministic computations, (5) **Database query caching**: SQLAlchemy's `caching_query`, Redis caching of query results. Example with `fastapi-cache`:
@@ -219,6 +403,18 @@ async def expensive_endpoint():
 
 Cache invalidation strategies: (1) time-based expiration (TTL), (2) event-based invalidation (clear on data mutation), (3) versioned cache keys. Consider cache stampede prevention with probabilistic early expiration.
 
+
+**Code:**
+```python
+from fastapi_cache import FastAPICache
+from fastapi_cache.decorator import cache
+
+@cache(expire=60)
+@app.get("/expensive")
+async def expensive():
+    return {"value": compute_slow()}
+```
+
 ## Q14: What is FastAPI's `StreamingResponse` and when should it be used?
 **A:** `StreamingResponse` sends data in chunks as it becomes available, without loading the entire response into memory. Use cases: (1) large file downloads (CSV exports, video files), (2) server-sent events (SSE), (3) database cursor streaming, (4) proxy responses (streaming from another server), (5) real-time data (log tailing, progress updates). Example for CSV streaming:
 
@@ -234,6 +430,21 @@ async def export_csv():
 ```
 
 Benefits: (1) O(1) memory for arbitrarily large responses, (2) starts sending data immediately (lower Time-To-First-Byte), (3) enables "infinite" streams. Async generators (`async def` with `yield`) work best with `StreamingResponse`.
+
+
+**Code:**
+```python
+from fastapi.responses import StreamingResponse
+
+async def csv_rows():
+    yield "id,name\n"
+    yield "1,alice\n"
+    yield "2,bob\n"
+
+@app.get("/export.csv")
+async def export_csv():
+    return StreamingResponse(csv_rows(), media_type="text/csv")
+```
 
 ## Q15: Explain FastAPI's `OAuth2PasswordBearer` and token refresh flow.
 **A:** `OAuth2PasswordBearer(tokenUrl="/auth/login")` extracts and validates Bearer tokens from the `Authorization` header. Token refresh flow:
@@ -259,6 +470,20 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
 
 Access tokens: short-lived (15-30 min). Refresh tokens: long-lived (7-30 days), stored securely (HttpOnly cookie), rotated on use. Implement token revocation for security (blacklist Redis). The `scopes` parameter in `OAuth2PasswordBearer` supports permission scoping.
 
+
+**Code:**
+```python
+from fastapi import Depends
+from fastapi.security import OAuth2PasswordBearer
+from jose import jwt
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+    return payload["sub"]
+```
+
 ## Q16: How do you implement health checks and readiness probes in FastAPI?
 **A:** Health check endpoints for container orchestration (K8s, Docker):
 
@@ -277,6 +502,23 @@ async def readiness(db: Session = Depends(get_db)):
 ```
 
 Liveness probe (`/health`): checks if the process is alive (lightweight). Readiness probe (`/ready`): checks if dependencies are available (DB, Redis, external services). Startup probe: for slow-starting apps. Best practices: (1) keep liveness probes cheap (don't check DB every few seconds), (2) use readiness probes to check all critical dependencies, (3) set appropriate timeouts (`timeoutSeconds: 3`), (4) implement graceful shutdown (handle `SIGTERM`, stop accepting new requests, finish in-flight requests), (5) add version/build info to health responses for deployment tracking.
+
+
+**Code:**
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
+@app.get("/ready")
+async def ready():
+    db.ping()
+    return {"status": "ready"}
+```
 
 ## Q17: Explain FastAPI's `Lifespan` events (startup/shutdown).
 **A:** FastAPI supports lifespan context manager (Python 3.7+, preferred over `on_event` decorator):
@@ -298,6 +540,21 @@ app = FastAPI(lifespan=lifespan)
 ```
 
 The `lifespan` async context manager replaces the deprecated `@app.on_event("startup")`/`@app.on_event("shutdown")` pattern. Benefits: (1) proper exception handling, (2) context manager cleanup guaranteed, (3) type-safe `app.state`, (4) avoids event ordering issues. Use for: DB connection pool initialization, Redis connections, loading ML models, initializing third-party clients, warming caches. Store shared resources on `app.state` for access in dependencies.
+
+
+**Code:**
+```python
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await open_db()
+    yield
+    await close_db()
+
+app = FastAPI(lifespan=lifespan)
+```
 
 ## Q18: How do you implement request logging and correlation IDs in FastAPI?
 **A:** Middleware-based logging with correlation/trace IDs:
@@ -329,6 +586,22 @@ async def log_requests(request: Request, call_next):
 
 Structured logging (JSON format) enables log aggregation (ELK, Datadog, Loki). Pass `correlation_id` to downstream services via HTTP headers. Use `contextvars` for thread-safe correlation ID access in async code. Include correlation IDs in error responses for client debugging. For OpenTelemetry integration, use `fastapi-instrumentation` or manual span creation with correlation ID propagation.
 
+
+**Code:**
+```python
+import uuid
+from fastapi import FastAPI, Request
+
+app = FastAPI()
+
+@app.middleware("http")
+async def correlation_id(request: Request, call_next):
+    cid = request.headers.get("X-Correlation-ID", uuid.uuid4().hex)
+    response = await call_next(request)
+    response.headers["X-Correlation-ID"] = cid
+    return response
+```
+
 ## Q19: What is FastAPI's `HTTPException` and custom exception handling?
 **A:** FastAPI's `HTTPException` raises HTTP errors:
 
@@ -350,6 +623,22 @@ async def not_found_handler(request: Request, exc: NotFoundException):
 
 Exception handlers can be global (`@app.exception_handler`) or per-router. Multiple handlers: (1) custom exceptions, (2) Python built-ins (`ValueError`, `KeyError`), (3) web-specific (`HTTPException` subclasses), (4) generic 500 handler for unexpected errors. Best practices: (1) use descriptive error codes, (2) include correlation IDs in error responses, (3) log full tracebacks server-side, (4) never expose stack traces in production, (5) use Pydantic models for consistent error response schemas.
 
+
+**Code:**
+```python
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+
+class NotFoundError(HTTPException):
+    pass
+
+app = FastAPI()
+
+@app.exception_handler(NotFoundError)
+async def handler(request: Request, exc: NotFoundError):
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+```
+
 ## Q20: How do you implement database migrations with FastAPI?
 **A:** FastAPI doesn't include a migration tool — use Alembic (SQLAlchemy) or third-party libraries:
 
@@ -360,6 +649,15 @@ alembic upgrade head
 ```
 
 Best practices: (1) run migrations automatically on startup (for development only), (2) use separate migration step in CI/CD for production, (3) always review autogenerated migrations, (4) version control migration files, (5) test migrations with rollback. For production: run migrations as a separate deployment step before starting the new app version (zero-downtime). For async databases (SQLAlchemy 2.0 async), Alembic works synchronously by default — use a separate sync connection for migrations. For MongoDB, use `mongoengine` migrations or manual scripts.
+
+
+**Code:**
+```python
+# In a terminal:
+#   alembic init alembic
+#   alembic revision --autogenerate -m "create users table"
+#   alembic upgrade head
+```
 
 ## Q21: Explain FastAPI's `Depends()` caching behavior.
 **A:** `Depends()` caches dependency results within the same request scope — if the same dependency is used multiple times in a request, it's only called once and the result is reused:
@@ -375,6 +673,19 @@ async def get_items(
 ```
 
 This caching is request-scoped (not global). Dependencies with different parameters are treated as separate. `Depends` uses `functools.lru_cache`-like behavior based on the dependency function identity. To force re-evaluation, use different dependency instances. The cache doesn't apply across different requests. Sub-dependencies are also cached — if both `get_items` and `get_current_user` depend on `get_db`, the database session is created only once.
+
+
+**Code:**
+```python
+from fastapi import Depends
+
+def get_common():
+    return {"q": "x"}
+
+@app.get("/items")
+async def get_items(common=Depends(get_common), db=Depends(get_db)):
+    return {"common": common}
+```
 
 ## Q22: How do you implement soft deletes in FastAPI?
 **A:** Soft deletes mark records as deleted without removing them:
@@ -399,6 +710,28 @@ def get_users(db: Session = Depends(get_db)):
 
 For automatic filtering, use SQLAlchemy's `@event.listens_for` or a custom query class that always adds `is_deleted == False`. For unique constraints on soft-deletable entities, include `is_deleted` in the constraint (partial unique index in PostgreSQL). Restore endpoint: `PUT /users/{id}/restore`. Cascade soft deletes to related models when appropriate. Consider `deleted_at` timestamp for cleanup job tracking.
 
+
+**Code:**
+```python
+from sqlalchemy import Column, Boolean, DateTime, Integer
+from datetime import datetime
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
+
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True)
+    is_deleted = Column(Boolean, default=False)
+    deleted_at = Column(DateTime, nullable=True)
+
+    def soft_delete(self):
+        self.is_deleted = True
+        self.deleted_at = datetime.utcnow()
+
+active_users = db.query(User).filter(User.is_deleted == False).all()
+```
+
 ## Q23: What is FastAPI's `FileResponse` and range request support?
 **A:** `FileResponse(path, status_code=200, headers=None, media_type=None, filename=None, content_disposition_type="attachment")` serves files with automatic range request support (HTTP 206 Partial Content). Range requests enable: (1) video/audio seeking, (2) resume interrupted downloads, (3) parallel chunk downloads. `FileResponse` handles `If-Range`, `If-Modified-Since`, and `Last-Modified` headers. For static files, use `StaticFiles` mounting instead:
 
@@ -408,6 +741,16 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 ```
 
 `StaticFiles` supports `Cache-Control`, `ETag`, and `Last-Modified` headers automatically. For streaming large files, `FileResponse` is preferred over reading the whole file into memory. `FileResponse` uses `aiofiles` internally for async file I/O.
+
+
+**Code:**
+```python
+from fastapi.responses import FileResponse
+
+@app.get("/video/{name}")
+async def video(name: str):
+    return FileResponse(f"/media/{name}", media_type="video/mp4")
+```
 
 ## Q24: How do you implement multi-tenancy in FastAPI?
 **A:** Multi-tenancy strategies for FastAPI: (1) **Schema-based** (PostgreSQL): each tenant has a separate DB schema, identified by subdomain or header. (2) **Database-based**: each tenant has a separate database. (3) **Row-based**: shared tables with `tenant_id` column. Implementation:
@@ -426,6 +769,22 @@ async def get_session(tenant_id: str = Depends(get_tenant_id)):
 ```
 
 For schema-based: switch PostgreSQL schema with `SET search_path TO tenant_schema`. Use middleware to set tenant context per request. Cache database connections per tenant (connection pooling per tenant). Ensure tenant isolation is tested thoroughly. Consider rate limiting per tenant. For B2B SaaS, allow tenant admin to configure custom domains and branding.
+
+
+**Code:**
+```python
+from fastapi import Request, HTTPException, Depends
+
+async def get_tenant(request: Request):
+    tenant = request.headers.get("X-Tenant-ID")
+    if not tenant:
+        raise HTTPException(status_code=400, detail="Missing tenant")
+    return tenant
+
+@app.get("/data")
+async def read(tenant: str = Depends(get_tenant)):
+    return {"tenant": tenant}
+```
 
 ## Q25: Explain FastAPI's `Request` object and its properties.
 **A:** The `Request` object (from `starlette.requests.Request`) provides access to request details:
@@ -449,6 +808,21 @@ async def handle(request: Request):
 ```
 
 `request.state` is used by middleware to attach data (e.g., `request.state.user`). `request.scope` provides raw ASGI scope. `request.app` references the FastAPI app. `request.receive` allows reading the request body stream. For performance, access body once and reuse (`request.body()` caches the result).
+
+
+**Code:**
+```python
+from fastapi import Request
+
+@app.post("/submit")
+async def submit(request: Request):
+    body = await request.body()
+    return {
+        "path": request.url.path,
+        "method": request.method,
+        "body_len": len(body),
+    }
+```
 
 ## Q26: How do you implement GraphQL with FastAPI?
 **A:** FastAPI integrates with Graphene (sync) or Strawberry (async, preferred for FastAPI):
@@ -475,6 +849,23 @@ app.include_router(graphql_app, prefix="/graphql")
 
 Strawberry supports: FastAPI dependency injection in resolvers, file uploads, subscriptions (via WebSocket), dataloaders (N+1 prevention), and federation. For performance: use `DataLoader` for batching database queries. For existing REST endpoints, consider adding GraphQL alongside (not replacing). Strawberry's FastAPI integration respects FastAPI's exception handlers and middleware.
 
+
+**Code:**
+```python
+import strawberry
+from strawberry.fastapi import GraphQLRouter
+from fastapi import FastAPI
+
+@strawberry.type
+class Query:
+    @strawberry.field
+    def hello(self) -> str:
+        return "world"
+
+app = FastAPI()
+app.include_router(GraphQLRouter(strawberry.Schema(query=Query)), prefix="/graphql")
+```
+
 ## Q27: What are FastAPI's `middleware` types and execution order?
 **A:** FastAPI supports two middleware types: (1) **HTTP middleware** (`@app.middleware("http")`) — wraps the entire request/response cycle, applied to all routes. (2) **ASGI middleware** — lower-level, wraps the ASGI application. HTTP middlewares are executed in reverse order of addition (last added runs first on request, last on response):
 
@@ -491,6 +882,28 @@ async def middleware2(request, call_next):
 ```
 
 Common middleware: CORS, trusted host, HTTPS redirect, GZip, session, authentication, rate limiting, request ID, logging, timing. Middleware can: modify request/response, short-circuit (return response without calling `call_next`), add headers, and handle exceptions. ASGI middleware wraps the entire `app` instance.
+
+
+**Code:**
+```python
+from fastapi import FastAPI, Request
+
+app = FastAPI()
+
+@app.middleware("http")
+async def mw1(request: Request, call_next):
+    print("mw1 in")
+    response = await call_next(request)
+    print("mw1 out")
+    return response
+
+@app.middleware("http")
+async def mw2(request: Request, call_next):
+    print("mw2 in")
+    response = await call_next(request)
+    print("mw2 out")
+    return response
+```
 
 ## Q28: How do you implement API versioning in FastAPI?
 **A:** API versioning strategies: (1) **URL path versioning**: `/v1/users`, `/v2/users` — most common. (2) **Header versioning**: `Accept: application/vnd.api+json;version=2`. (3) **Query parameter**: `/users?version=2`. (4) **Subdomain**: `v1.api.example.com`. Implementation:
@@ -512,6 +925,20 @@ app.include_router(v2_router)
 ```
 
 For shared logic between versions: (1) use base Pydantic models with version-specific extensions, (2) compose dependencies, (3) use a single codebase with conversion logic. Maintain backward compatibility during deprecation — document sunset dates. Consider content negotiation for more granular versioning.
+
+
+**Code:**
+```python
+from fastapi import APIRouter
+
+v1 = APIRouter(prefix="/v1")
+
+@v1.get("/items")
+async def items_v1():
+    return {"version": 1}
+
+app.include_router(v1)
+```
 
 ## Q29: Explain FastAPI's `TestClient` and async testing strategies.
 **A:** FastAPI's `TestClient` (from `starlette.testclient`) enables test-driven development:
@@ -542,6 +969,18 @@ async def test_async():
 
 Best practices: (1) use dependency overrides (`app.dependency_overrides[get_db] = test_db`) for test isolation, (2) create test database with migrations, (3) use factories (factory_boy) for test data, (4) clean up data between tests, (5) use `httpx.AsyncClient` for async endpoint tests, (6) test both success and error paths, (7) test middleware and exception handlers, (8) use `pytest.fixture` for reusable test setup.
 
+
+**Code:**
+```python
+from fastapi.testclient import TestClient
+
+client = TestClient(app)
+
+def test_root():
+    response = client.get("/")
+    assert response.status_code == 200
+```
+
 ## Q30: How do you implement request body size limits in FastAPI?
 **A:** FastAPI doesn't have built-in body size limits, but they can be configured at: (1) **ASGI server level** (Uvicorn): `uvicorn.run(app, max_body_size=1_000_000)` (bytes), (2) **Nginx reverse proxy**: `client_max_body_size 10m`, (3) **Middleware**: custom body size check:
 
@@ -557,6 +996,22 @@ async def limit_body_size(request: Request, call_next):
 ```
 
 Note: `content-length` header may not be present for chunked transfer encoding. For more robust limits, read the body in chunks. Set appropriate limits per endpoint (file upload endpoints have higher limits). Consider streaming large bodies directly to storage to avoid memory issues.
+
+
+**Code:**
+```python
+from fastapi import Request, HTTPException
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.middleware("http")
+async def limit_body(request: Request, call_next):
+    length = int(request.headers.get("content-length", 0))
+    if length > 1_000_000:
+        raise HTTPException(status_code=413, detail="Body too large")
+    return await call_next(request)
+```
 
 ## Q31: What are FastAPI's `dependencies` with `yield` (context managers)?
 **A:** Dependencies with `yield` act as context managers, with setup code before `yield` and teardown after:
@@ -574,6 +1029,20 @@ async def get_db():
 ```
 
 The `yield` separator: (1) code before `yield` runs when the dependency is resolved, (2) the yielded value is injected, (3) code after `yield` runs after the response is sent. If an exception occurs, the `finally` block still executes. Multiple `yield` dependencies execute cleanup in reverse order (LIFO). Dependencies can yield multiple times (generator) though this is unusual. FastAPI handles exceptions in `yield` dependencies properly.
+
+
+**Code:**
+```python
+def common_parameters(q: str | None = None, limit: int = 100):
+    return {"q": q, "limit": limit}
+
+async def get_db():
+    db = DBSession()
+    try:
+        yield db
+    finally:
+        db.close()
+```
 
 ## Q32: How do you implement server-sent events (SSE) in FastAPI?
 **A:** SSE provides real-time updates over HTTP using `StreamingResponse`:
@@ -603,6 +1072,21 @@ async def event_stream():
 
 SSE vs WebSocket: SSE is simpler (one-way server→client), works over HTTP/1.1 and HTTP/2, has automatic reconnection, but limited to text data and fewer concurrent connections per browser. WebSocket supports bidirectional communication. For SSE in production: (1) handle client disconnect (check `await request.is_disconnected()`), (2) use Redis pub/sub for multi-process broadcasting, (3) set `X-Accel-Buffering: no` for Nginx compatibility, (4) include heartbeat pings to detect stale connections.
 
+
+**Code:**
+```python
+import asyncio, json
+from fastapi.responses import StreamingResponse
+
+@app.get("/events")
+async def events():
+    async def gen():
+        while True:
+            yield f"data: {json.dumps({'ts': 1})}\n\n"
+            await asyncio.sleep(1)
+    return StreamingResponse(gen(), media_type="text/event-stream")
+```
+
 ## Q33: Explain FastAPI's `Form` and `File` parameter dependencies.
 **A:** FastAPI handles form data and file uploads via `Form` and `File` from `fastapi`:
 
@@ -621,6 +1105,19 @@ async def upload(
 ```
 
 `Form(...)` declares form fields; `File(...)` declares file fields. `UploadFile` provides async file-like interface with: `.read()`, `.write()`, `.seek()`, `.close()`, `.file` (raw SpooledTemporaryFile). Multiple file uploads: `files: list[UploadFile] = File(...)`. Files are stored temporarily — process immediately or save to persistent storage. For large files, read in chunks: `while chunk := await file.read(1024*1024): process(chunk)`.
+
+
+**Code:**
+```python
+from fastapi import Form, File, UploadFile
+
+@app.post("/upload")
+async def upload(
+    name: str = Form(),
+    avatar: UploadFile = File(),
+):
+    return {"name": name, "filename": avatar.filename}
+```
 
 ## Q34: How do you implement data export (CSV, Excel) in FastAPI?
 **A:** Streaming data export using `StreamingResponse` + CSV writer:
@@ -651,6 +1148,23 @@ async def export_csv(db: Session = Depends(get_db)):
 
 For Excel: use `openpyxl` or `xlsxwriter` with `StreamingResponse`. For large exports: (1) stream results (don't load all into memory), (2) use database cursors (`yield_per` for SQLAlchemy), (3) implement pagination limits, (4) use background tasks for very large exports (generate file, email link), (5) compress responses with gzip. For PDF: use `ReportLab` or `WeasyPrint` with `FileResponse` or `StreamingResponse`.
 
+
+**Code:**
+```python
+import csv, io
+from fastapi.responses import StreamingResponse
+
+def rows():
+    buf = io.StringIO()
+    writer = csv.writer(buf)
+    writer.writerow(["id", "name"])
+    yield buf.getvalue()
+
+@app.get("/export")
+async def export():
+    return StreamingResponse(rows(), media_type="text/csv")
+```
+
 ## Q35: What is FastAPI's `StaticFiles` mounting and its options?
 **A:** `StaticFiles` serves static directories:
 
@@ -661,6 +1175,14 @@ app.mount("/static", StaticFiles(directory="static", html=False, check_dir=True)
 ```
 
 Options: `directory` (source directory), `html` (if True, serves index.html for directory paths — enables SPA mode), `check_dir` (validate directory exists at startup), `follow_symlink` (follow symbolic links). `StaticFiles` supports: `If-Modified-Since`, `ETag`, `Cache-Control`, range requests, and directory listing (when `html=True`). For production: serve static files via reverse proxy (Nginx, CDN) instead of FastAPI for better performance. `StaticFiles` can also serve from package resources or in-memory. For SPA (React, Vue), mount at `/` with `html=True` after all API routes.
+
+
+**Code:**
+```python
+from fastapi.staticfiles import StaticFiles
+
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
+```
 
 ## Q36: How do you implement WebSocket authentication in FastAPI?
 **A:** WebSocket authentication requires custom handling since cookies/headers are sent in the initial handshake:
@@ -686,6 +1208,20 @@ async def websocket_endpoint(websocket: WebSocket, token: str = Cookie(None)):
 
 Alternative: validate token in the first WebSocket message (application-level auth). Since WebSocket headers can't be easily set by browsers, use query parameters (less secure — logged in server logs) or cookies (more secure). For production: (1) use `SameSite=Strict` cookies, (2) validate origin header to prevent CSWSH (Cross-Site WebSocket Hijacking), (3) implement token expiry and refresh for long-lived connections, (4) rate-limit WebSocket connections per user.
 
+
+**Code:**
+```python
+from fastapi import WebSocket, Cookie
+
+@app.websocket("/ws")
+async def ws(websocket: WebSocket, token: str | None = Cookie(default=None)):
+    if not token:
+        await websocket.close(code=4001)
+        return
+    await websocket.accept()
+    await websocket.send_text("authenticated")
+```
+
 ## Q37: Explain FastAPI's `HTTP/2` and `HTTP/3` support.
 **A:** FastAPI (via Starlette/Uvicorn) supports HTTP/2 when using the `h2` library with `uvicorn`:
 
@@ -694,6 +1230,14 @@ uvicorn main:app --http h2
 ```
 
 HTTP/2 benefits: multiplexing (multiple requests over single connection), server push, header compression (HPACK), binary protocol. HTTP/2 requires TLS (HTTPS) — most browsers won't negotiate HTTP/2 over cleartext. HTTP/3 (QUIC) is supported via `uvicorn` with `--http httptools` and a QUIC-capable reverse proxy (Caddy, Nginx with quiche). For most deployments, terminate TLS at a reverse proxy (Nginx, Caddy, Cloudflare) which handles HTTP/2 and HTTP/3, then proxy to FastAPI via HTTP/1.1. This is simpler and more performant than FastAPI handling HTTP/2 directly.
+
+
+**Code:**
+```python
+# FastAPI/Starlette speak HTTP/1.1; terminate HTTP/2 at a reverse proxy
+# or use uvicorn with an extended HTTP stack on a TLS socket.
+#   uvicorn main:app --http httptools --ssl-keyfile key.pem --ssl-certfile cert.pem
+```
 
 ## Q38: How do you implement database connection pooling in FastAPI?
 **A:** FastAPI uses SQLAlchemy's connection pooling:
@@ -729,6 +1273,20 @@ engine = create_async_engine(
 
 `pool_pre_ping` detects stale connections (common with load balancers, DB restarts). `pool_recycle` prevents long-lived connection timeout by database. Connection pool sizing: monitor database connections and adjust. Too few: request queuing. Too many: database resource exhaustion. Use `pool_size` = `max_workers` of ASGI server for optimal throughput.
 
+
+**Code:**
+```python
+from sqlalchemy import create_engine
+
+engine = create_engine(
+    "postgresql+psycopg2://user@localhost/db",
+    pool_size=10,
+    max_overflow=20,
+    pool_recycle=3600,
+    pool_pre_ping=True,
+)
+```
+
 ## Q39: What is FastAPI's `JSONResponse` and custom encoders?
 **A:** `JSONResponse(content, status_code=200, headers=None, media_type="application/json")` is the default response type. Custom JSON encoders:
 
@@ -747,6 +1305,15 @@ app = FastAPI(default_response_class=ORJSONResponse)
 ```
 
 Or set per-endpoint: `@app.get("/", response_class=ORJSONResponse)`. Custom encoders handle: datetime (ISO format), UUID, Decimal, bytes (base64), Enum, Pydantic models, dataclasses, and custom types. `orjson` is significantly faster than the default `json` module. `ujson` is another alternative. For security, avoid `json.dumps` default handler that calls `str()` on unknown types (information leakage risk). Always validate response content matches the schema.
+
+
+**Code:**
+```python
+from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
+
+app = FastAPI(default_response_class=ORJSONResponse)
+```
 
 ## Q40: How do you implement idempotency in FastAPI APIs?
 **A:** Idempotency prevents duplicate operations (critical for payment APIs):
@@ -778,6 +1345,21 @@ async def create_payment(
 
 Best practices: (1) client generates the idempotency key (UUID), (2) server stores completed results with TTL (24h typical), (3) return 200 (not 201) for duplicate requests with same key, (4) return 409 Conflict if different request body with same key, (5) use Redis for distributed idempotency storage, (6) consider using idempotency for all state-changing mutations. The idempotency key should be unique per operation and per user.
 
+
+**Code:**
+```python
+from fastapi import Header, HTTPException
+
+@app.post("/payments")
+async def create_payment(idempotency_key: str = Header()):
+    existing = await cache.get(f"idem:{idempotency_key}")
+    if existing:
+        return existing
+    result = await process_payment()
+    await cache.set(f"idem:{idempotency_key}", result, ttl=86400)
+    return result
+```
+
 ## Q41: Explain FastAPI's `response_model` and its serialization behavior.
 **A:** `response_model` controls serialization of the response, filtering out fields not in the model:
 
@@ -799,6 +1381,25 @@ def create_user(user: UserIn):
 ```
 
 `response_model` is applied after the function returns — it filters and validates the output. `response_model_exclude_unset=True` excludes fields not explicitly set. `response_model_include`/`response_model_exclude` for field-level control. `response_model_by_alias` controls alias usage. `response_model_exclude_none=True` excludes None values. The function can return ORM objects or dicts — Pydantic handles conversion. Response model affects OpenAPI schema generation.
+
+
+**Code:**
+```python
+from pydantic import BaseModel
+
+class UserOut(BaseModel):
+    id: int
+    email: str
+
+class UserIn(BaseModel):
+    name: str
+    password: str
+
+@app.post("/users", response_model=UserOut)
+async def create_user(payload: UserIn):
+    user = await create_user_in_db(payload)
+    return user
+```
 
 ## Q42: How do you implement Row-Level Security (RLS) in FastAPI?
 **A:** RLS enforces that users can only access their own data:
@@ -836,6 +1437,18 @@ async def set_rls_context(request: Request, call_next):
 
 Combining application-level checks with database RLS provides defense in depth. For multi-tenant apps, ensure tenant isolation at both levels. Consider using SQLAlchemy's `viewonly=True` for read-only access patterns.
 
+
+**Code:**
+```python
+from fastapi import Depends, HTTPException
+
+@app.get("/users/{user_id}")
+async def get_user(user_id: int, current=Depends(get_current_user)):
+    if current.id != user_id:
+        raise HTTPException(status_code=403, detail="Access denied")
+    return await fetch_user(user_id)
+```
+
 ## Q43: What is FastAPI's `timeout` mechanisms for requests?
 **A:** FastAPI doesn't have built-in request timeouts, but they can be implemented at multiple levels: (1) **ASGI server** (Uvicorn): `--timeout-keep-alive 5`, `--limit-concurrency`, `--limit-max-requests`, (2) **HTTP client timeouts** for outgoing requests (httpx, aiohttp), (3) **Database query timeouts**: `db.execute(query).execution_options(timeout=5)`, (4) **Background task timeouts**: `asyncio.wait_for(task, timeout=30)`, (5) **Nginx reverse proxy**: `proxy_read_timeout 30s`, (6) **Application-level middleware**:
 
@@ -853,6 +1466,20 @@ async def timeout_middleware(request: Request, call_next):
 
 Set timeouts based on endpoint characteristics: (1) simple reads: 10s, (2) complex operations: 30s, (3) file uploads: 5min+, (4) streaming: no hard timeout (handle disconnect). Use `asyncio.shield()` for critical cleanup that shouldn't be interrupted by timeout.
 
+
+**Code:**
+```python
+import asyncio
+from fastapi import Request, HTTPException
+
+@app.middleware("http")
+async def timeout_middleware(request: Request, call_next):
+    try:
+        return await asyncio.wait_for(call_next(request), timeout=30)
+    except asyncio.TimeoutError:
+        raise HTTPException(status_code=504, detail="Timeout")
+```
+
 ## Q44: Explain FastAPI's `validation_alias` and `serialization_alias` in Pydantic V2.
 **A:** Pydantic V2 (FastAPI's default since 0.100.0) separates aliases for validation (input) and serialization (output):
 
@@ -868,6 +1495,18 @@ class User(BaseModel):
 ```
 
 This decouples the external API contract from internal field names. `validation_alias` affects how data is parsed (from JSON, form data, etc.). `serialization_alias` affects how data is output (JSON response). `by_alias=True` in response models uses aliases. `populate_by_name=True` allows using both aliased and original names for input. This is useful for: (1) camelCase input, snake_case output, (2) backward-compatible API evolution, (3) decoupling internal and external schemas.
+
+
+**Code:**
+```python
+from pydantic import BaseModel, Field
+
+class User(BaseModel):
+    name: str = Field(validation_alias="userName", serialization_alias="user_name")
+
+u = User.model_validate({"userName": "alice"})
+print(u.model_dump(by_alias=True))
+```
 
 ## Q45: How do you implement request validation with custom validators in Pydantic V2?
 **A:** Pydantic V2 uses `@field_validator` and `@model_validator`:
@@ -896,6 +1535,28 @@ class OrderCreate(BaseModel):
 
 Pydantic V2 validators: `mode="before"` (pre-parse), `mode="wrap"` (flexible), `mode="after"` (post-parse, on the validated model). `@field_validator` validates single fields. `@model_validator` validates the whole model. For cross-field validation, use `model_validator`. Validators can transform values (e.g., trimming whitespace, normalizing formats). For async validators, use `@field_validator` with `@classmethod` and `async def`. FastAPI catches validation errors automatically as 422 responses.
 
+
+**Code:**
+```python
+from pydantic import BaseModel, field_validator, model_validator
+
+class Order(BaseModel):
+    items: list[str]
+
+    @field_validator("items")
+    @classmethod
+    def reject_empty(cls, v: list[str]) -> list[str]:
+        if not v:
+            raise ValueError("items required")
+        return v
+
+    @model_validator(mode="after")
+    def cap_items(self) -> "Order":
+        if len(self.items) > 100:
+            raise ValueError("too many items")
+        return self
+```
+
 ## Q46: What is FastAPI's `exception_handlers` registry?
 **A:** The `exception_handlers` dict maps exception types to handler functions:
 
@@ -911,6 +1572,20 @@ app.add_exception_handler(HTTPException, custom_404_handler)
 ```
 
 Or using decorator: `@app.exception_handler(HTTPException)`. Handler receives request and exception, returns a Response. Multiple handlers can be registered — the most specific match wins (subclass before parent). Handlers can be added to routers (per-router exception handling). Exception handlers work for: FastAPI `HTTPException`, Python built-in exceptions, custom exceptions, ASGI errors, WebSocket errors. For unhandled exceptions, FastAPI returns a 500 internal server error (stack trace in debug mode).
+
+
+**Code:**
+```python
+from fastapi import FastAPI, Request, HTTPException
+from fastapi.responses import JSONResponse
+
+app = FastAPI()
+
+def handler(request: Request, exc: HTTPException):
+    return JSONResponse(status_code=exc.status_code, content={"detail": exc.detail})
+
+app.add_exception_handler(HTTPException, handler)
+```
 
 ## Q47: How do you implement ETag-based caching in FastAPI?
 **A:** ETags provide conditional request handling (HTTP 304 Not Modified):
@@ -935,6 +1610,21 @@ async def get_user(user_id: int, request: Request, db: Session = Depends(get_db)
 
 Better: use middleware for automatic ETag generation. Weak ETags (`W/"etag"`) for byte-level equivalence. Strong ETags for byte-exact equivalence. For dynamic content, include `Last-Modified` alongside ETag. For cache invalidation: update ETag when data changes. `Cache-Control: no-cache` forces revalidation (ETag check) while allowing caching. `Cache-Control: max-age=3600` allows caching without revalidation for 1 hour.
 
+
+**Code:**
+```python
+import hashlib
+from fastapi import Request, Response
+from fastapi.responses import JSONResponse
+
+@app.get("/users/{uid}")
+async def get_user(uid: int, request: Request):
+    etag = hashlib.md5(str(uid).encode()).hexdigest()
+    if request.headers.get("if-none-match") == etag:
+        return Response(status_code=304)
+    return JSONResponse({"id": uid}, headers={"ETag": etag})
+```
+
 ## Q48: Explain FastAPI's `route` classes and custom route handling.
 **A:** FastAPI's `APIRouter.route()` and custom route classes allow behavior customization:
 
@@ -956,6 +1646,28 @@ app = FastAPI(route_class=TimedRoute)
 ```
 
 `APIRoute` methods you can override: `get_route_handler()` (wrap the handler), `serialize_response()` (custom response serialization). Route classes are applied at the app or router level. Custom route classes enable: (1) request/response timing, (2) request logging, (3) response transformation, (4) custom error handling, (5) authentication at the route level. They're more granular than middleware (applied per-route) but more powerful than decorators (access to route metadata).
+
+
+**Code:**
+```python
+from fastapi.routing import APIRoute
+from fastapi import FastAPI, Request
+import time
+
+class TimedRoute(APIRoute):
+    def get_route_handler(self):
+        original = super().get_route_handler()
+
+        async def timed(request: Request):
+            start = time.time()
+            response = await original(request)
+            response.headers["X-Time"] = str(time.time() - start)
+            return response
+
+        return timed
+
+app = FastAPI(route_class=TimedRoute)
+```
 
 ## Q49: How do you implement slow API query detection in FastAPI?
 **A:** Detect and log slow queries:
@@ -993,6 +1705,23 @@ engine = create_engine(DATABASE_URL, echo=True)
 
 For async databases, use `asyncpg` query logging hooks. Integrate with APM tools (Datadog, New Relic, Sentry) for production monitoring. Set per-endpoint slow thresholds (file uploads vs simple reads). Use `EXPLAIN ANALYZE` for identifying slow SQL queries. Consider adding query timing to response headers (`X-DB-Query-Time`) for debugging.
 
+
+**Code:**
+```python
+import time
+from fastapi import FastAPI, Request
+
+app = FastAPI()
+
+@app.middleware("http")
+async def slow_detector(request: Request, call_next):
+    start = time.time()
+    response = await call_next(request)
+    if time.time() - start > 1.0:
+        logger.warning(f"slow: {request.url.path}")
+    return response
+```
+
 ## Q50: What are FastAPI's `response_class` and how to use custom responses?
 **A:** FastAPI's `response_class` parameter controls the response type:
 
@@ -1013,6 +1742,20 @@ async def get_orjson():
 ```
 
 Built-in response classes: `JSONResponse`, `HTMLResponse`, `PlainTextResponse`, `RedirectResponse`, `StreamingResponse`, `FileResponse`, `ORJSONResponse`, `UJSONResponse`, `Response` (base). The `response_class` affects: (1) how the return value is serialized, (2) the `Content-Type` header, (3) rendering behavior. Combine `response_class` with `response_model` — the model validates, the class serializes. For custom media types, extend `Response` and override `.render()`.
+
+
+**Code:**
+```python
+from fastapi.responses import HTMLResponse, PlainTextResponse
+
+@app.get("/", response_class=PlainTextResponse)
+async def plain():
+    return "OK"
+
+@app.get("/page", response_class=HTMLResponse)
+async def page():
+    return "<h1>Hello</h1>"
+```
 
 ## Q51: How do you handle database N+1 queries in FastAPI?
 **A:** The N+1 problem occurs when lazy loading causes extra queries. Solutions for SQLAlchemy:
@@ -1039,6 +1782,18 @@ async def get_users_async(db: AsyncSession = Depends(get_db)):
 
 Detection: (1) enable SQLAlchemy echo logging, (2) use `sqlalchemy_panel` for dev monitoring, (3) check number of queries in tests. `joinedload` uses LEFT OUTER JOIN (single query, can cause duplicate rows — use `distinct=True`). `selectinload` uses a second query with IN clause (better for large collections). For GraphQL-like APIs, consider dataloader patterns (collect IDs, batch query).
 
+
+**Code:**
+```python
+from sqlalchemy.orm import selectinload
+from sqlalchemy import select
+
+@app.get("/users")
+async def get_users(db=Depends(get_db)):
+    result = await db.execute(select(User).options(selectinload(User.posts)))
+    return result.scalars().all()
+```
+
 ## Q52: Explain FastAPI's `openapi_prefix` and server customization.
 **A:** `openapi_prefix` (deprecated, replaced by `servers` and `root_path`) configures the OpenAPI server URL:
 
@@ -1053,6 +1808,19 @@ app = FastAPI(
 ```
 
 `root_path` handles reverse proxy path prefix (the ASGI server strips the prefix, but FastAPI needs it for OpenAPI generation). `servers` shows available server URLs in Swagger UI. For dynamically determining the server URL (behind load balancer), use middleware to set `request.scope["root_path"]`. The OpenAPI schema supports server variables: `{"url": "https://{environment}.example.com", "variables": {"environment": {"default": "api"}}}`.
+
+
+**Code:**
+```python
+from fastapi import FastAPI
+
+app = FastAPI(
+    root_path="/api/v1",
+    servers=[
+        {"url": "https://api.example.com/v1", "description": "prod"},
+    ],
+)
+```
 
 ## Q53: How do you implement database encryption at rest with FastAPI?
 **A:** Application-level encryption for sensitive fields:
@@ -1098,6 +1866,19 @@ class Patient(Base):
 
 Consider: (1) key management (HSM, KMS, environment variables), (2) key rotation strategy, (3) search limitations on encrypted data, (4) performance impact of encryption/decryption, (5) audit logging for sensitive data access. For full DB encryption, use Transparent Data Encryption (TDE) at the database level.
 
+
+**Code:**
+```python
+from cryptography.fernet import Fernet
+
+key = Fernet.generate_key()
+cipher = Fernet(key)
+
+secret = b"ssn-1234"
+encrypted = cipher.encrypt(secret)
+decrypted = cipher.decrypt(encrypted)
+```
+
 ## Q54: What is FastAPI's `app.state` and how is it used?
 **A:** `app.state` stores application-level attributes accessible across requests:
 
@@ -1117,6 +1898,22 @@ async def predict(features: Features, request: Request):
 ```
 
 Dependencies access `app.state` via `request.app.state` or `BackgroundTasks`. Use cases: database connection pools, Redis clients, ML model instances, configuration objects, HTTP clients, cache objects. `app.state` is a simple attribute container — it's not typed. For type safety, use a dataclass or Pydantic model for the state. Thread-safety: `app.state` is read-mostly (written at startup), safe for async code.
+
+
+**Code:**
+```python
+from fastapi import FastAPI
+
+app = FastAPI()
+
+@app.on_event("startup")
+async def startup():
+    app.state.model = load_model()
+
+@app.get("/predict")
+async def predict(features: dict):
+    return app.state.model.predict(features)
+```
 
 ## Q55: How do you implement feature flags in FastAPI?
 **A:** Feature flags control feature availability without deployment:
@@ -1147,6 +1944,25 @@ async def new_checkout(_=Depends(feature_flag("new_checkout"))):
 
 For production: (1) use a database or Redis-backed flag store (not hardcoded), (2) implement gradual rollout (percentage-based), (3) support A/B testing, (4) add metrics for each feature variant, (5) implement kill switches for emergency disable. Libraries: `flipper`, `gunicorn-featureflags`, or custom solution with Redis. FastAPI's dependency injection makes per-route feature flags clean and testable.
 
+
+**Code:**
+```python
+from fastapi import FastAPI, Depends, HTTPException
+
+FLAGS = {"beta": True}
+app = FastAPI()
+
+def feature_flag(name: str):
+    def checker():
+        if not FLAGS.get(name):
+            raise HTTPException(status_code=404, detail=f"flag {name} disabled")
+    return checker
+
+@app.get("/beta", dependencies=[Depends(feature_flag("beta"))])
+async def beta():
+    return {"beta": True}
+```
+
 ## Q56: Explain FastAPI's `OpenAPI` schema customization.
 **A:** FastAPI generates OpenAPI documentation automatically. Customization options:
 
@@ -1174,6 +1990,20 @@ app.openapi = custom_openapi
 
 OpenAPI extensions: (1) `x-tagGroups` for grouping endpoints, (2) `x-logo` for custom logo, (3) custom security schemes, (4) examples and descriptions. The `openapi_tags` parameter on `FastAPI()` sets tag metadata. Response models and request bodies are automatically extracted from Pydantic models. For fine-grained control, override `app.openapi()` function. The OpenAPI JSON is available at `/openapi.json`.
 
+
+**Code:**
+```python
+from fastapi.openapi.utils import get_openapi
+
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    app.openapi_schema = get_openapi(title="API", version="1.0", routes=app.routes)
+    return app.openapi_schema
+
+app.openapi = custom_openapi
+```
+
 ## Q57: How do you handle database migrations rollback in FastAPI?
 **A:** Alembic rollback support:
 
@@ -1198,6 +2028,15 @@ async def lifespan(app: FastAPI):
 
 Never auto-run migrations in production — use separate deployment step. For zero-downtime migrations: expand-contract pattern (additive changes first, backward-compatible code, remove old schema later).
 
+
+**Code:**
+```python
+# In a terminal:
+#   alembic downgrade -1
+#   alembic downgrade <revision_id>
+#   alembic downgrade base
+```
+
 ## Q58: What is FastAPI's `BackgroundTasks` error handling?
 **A:** FastAPI `BackgroundTasks` doesn't propagate errors to the response (the response is already sent):
 
@@ -1218,6 +2057,25 @@ async def send_notification(email: str, background_tasks: BackgroundTasks):
 ```
 
 Error handling strategies: (1) wrap task body in try/except, (2) log all exceptions, (3) use `asyncio.shield()` for critical cleanup, (4) monitor background task failure metrics, (5) for reliability, use Celery instead of `BackgroundTasks`. Background tasks run in the same process — a crash affects the server. For long-running tasks, consider a separate worker process. Async background tasks: `background_tasks.add_task(async_function, arg)`.
+
+
+**Code:**
+```python
+from fastapi import BackgroundTasks
+
+app = FastAPI()
+
+def log_failure(message: str):
+    try:
+        write_to_disk(message)
+    except Exception as exc:
+        logger.error("background task failed", exc_info=exc)
+
+@app.post("/send")
+async def send(background_tasks: BackgroundTasks):
+    background_tasks.add_task(log_failure, "hi")
+    return {"ok": True}
+```
 
 ## Q59: How do you implement API documentation with examples in FastAPI?
 **A:** FastAPI supports OpenAPI examples in multiple ways:
@@ -1251,8 +2109,32 @@ class ItemWithExample(BaseModel):
 
 FastAPI 0.103.0+ uses Pydantic V2's `Field(examples=...)` syntax (single example per field). OpenAPI 3.1 supports multiple examples per property. For request bodies, use `Body(example=...)` for the whole body or individual field examples. Test endpoint examples render in Swagger UI and ReDoc. For complex schemas, provide multiple examples showing different use cases.
 
+
+**Code:**
+```python
+from pydantic import BaseModel, Field
+
+class Item(BaseModel):
+    name: str = Field(examples=["Widget"])
+    price: float = Field(examples=[19.99])
+```
+
 ## Q60: Explain FastAPI's `middleware` vs `exception_handler` order.
 **A:** The execution order: (1) incoming request → middlewares (first added, last executed on request), (2) route handler, (3) `response_model` validation, (4) returning response → middlewares (last added, last executed on response). Exception handlers run when an exception is raised, in this order: (1) route-level exception handlers, (2) router-level, (3) app-level, (4) default error handler (500). A middleware can catch exceptions if it wraps `call_next` in try/except — the exception won't reach the exception handler. If a middleware calls `call_next` and an exception occurs, the middleware's except block runs, then the response continues through outer middlewares.
+
+
+**Code:**
+```python
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+@app.middleware("http")
+async def mw(request: Request, call_next):
+    try:
+        return await call_next(request)
+    except ValueError:
+        return JSONResponse({"detail": "invalid"}, status_code=400)
+```
 
 ## Q61: How do you implement request/response compression in FastAPI?
 **A:** FastAPI (via Starlette) supports GZip compression via middleware:
@@ -1264,6 +2146,15 @@ app.add_middleware(GZipMiddleware, minimum_size=1000)  # Compress responses larg
 ```
 
 The `GZipMiddleware` compress responses conditionally (checks `Accept-Encoding` header). For Brotli compression (better compression ratio), use a custom middleware or handle at the reverse proxy level. Client-side compression: accept `Content-Encoding: gzip` requests by inspecting `Content-Encoding` header and decompressing. For large request bodies (file uploads), consider accepting compressed uploads to reduce transfer time. At the reverse proxy level (Nginx): `gzip on; gzip_types application/json;` — more efficient than app-level compression.
+
+
+**Code:**
+```python
+from starlette.middleware.gzip import GZipMiddleware
+
+app = FastAPI()
+app.add_middleware(GZipMiddleware, minimum_size=1000)
+```
 
 ## Q62: What are FastAPI's `json_schema_extra` and custom JSON Schema?
 **A:** Pydantic V2's `json_schema_extra` extends the generated JSON Schema:
@@ -1284,6 +2175,16 @@ class Product(BaseModel):
 ```
 
 Uses: (1) adding `examples` for documentation, (2) adding vendor extensions (`x-*`), (3) custom validation metadata consumed by frontend generators (OpenAPI → TypeScript), (4) UI hints (field order, grouping). The `json_schema_extra` at the field level merges with model-level extras. For full control, override `model_json_schema()` method. FastAPI passes the schema to OpenAPI automatically.
+
+
+**Code:**
+```python
+from pydantic import BaseModel, Field
+
+class Product(BaseModel):
+    name: str = Field(json_schema_extra={"example": "Widget"})
+    model_config = {"json_schema_extra": {"examples": [{"name": "Widget", "price": 29.99}]}}
+```
 
 ## Q63: How do you implement rate limiting per user in FastAPI?
 **A:** Per-user rate limiting with Redis:
@@ -1310,6 +2211,24 @@ async def protected_endpoint():
 
 Strategy: (1) sliding window (more accurate, more Redis operations), (2) fixed window (simpler, burst at boundaries), (3) token bucket (smooth rate). Include rate limit headers: `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset`. Different limits per endpoint (login: 5/min, API: 100/min, admin: 1000/min). For distributed rate limiting, use Redis sorted sets or the `sliding-window-counter` algorithm.
 
+
+**Code:**
+```python
+from fastapi import Depends, HTTPException
+
+async def rate_limiter(user=Depends(get_current_user)):
+    key = f"ratelimit:{user.id}"
+    count = await redis.incr(key)
+    if count == 1:
+        await redis.expire(key, 60)
+    if count > 100:
+        raise HTTPException(status_code=429, detail="Rate limit exceeded")
+
+@app.get("/protected", dependencies=[Depends(rate_limiter)])
+async def protected():
+    return {"ok": True}
+```
+
 ## Q64: Explain FastAPI's `Form` validation with Pydantic models.
 **A:** Form data validation with Pydantic (FastAPI 0.103+):
 
@@ -1327,6 +2246,21 @@ async def login(data: Annotated[LoginForm, Form()]):  # or: data: LoginForm = Fo
 ```
 
 Older approach (individual form fields): `username: str = Form(...)`. Newer approach: Pydantic model with `Annotated[Model, Form()]`. Form data is `application/x-www-form-urlencoded` (not JSON). FastAPI handles parsing automatically. For file uploads in forms, use `UploadFile = File(...)` alongside `Form()` fields. Form data can't be mixed with JSON bodies in the same request. For complex form submissions, consider using multipart form data with JSON-encoded fields.
+
+
+**Code:**
+```python
+from fastapi import Form
+from pydantic import BaseModel
+
+class LoginForm(BaseModel):
+    username: str
+    password: str
+
+@app.post("/login")
+async def login(data: LoginForm = Form()):
+    return {"username": data.username}
+```
 
 ## Q65: How do you implement database auditing in FastAPI?
 **A:** Database auditing tracks who changed what and when:
@@ -1379,6 +2313,19 @@ def receive_before_update(mapper, connection, target):
 
 Consider using `sqlalchemy-continuum` or `django-simple-history`-like patterns for automatic versioning. For GDPR compliance, ensure audit logs don't store PII indefinitely.
 
+
+**Code:**
+```python
+from sqlalchemy import Column, DateTime, event
+from datetime import datetime
+
+@event.listens_for(User, "before_update")
+def audit(mapper, connection, target):
+    connection.execute(
+        audit_table.insert().values(action="UPDATE", user_id=target.id)
+    )
+```
+
 ## Q66: What is FastAPI's `app.openapi()` method for custom schema?
 **A:** Override `app.openapi()` to customize the OpenAPI schema:
 
@@ -1420,6 +2367,22 @@ app.openapi = custom_openapi
 ```
 
 Common customizations: (1) adding re-used response schemas, (2) adding webhook definitions, (3) adding custom security schemes, (4) modifying or filtering routes, (5) adding external documentation links. Cache the schema (`app.openapi_schema`) as shown — it's expensive to regenerate on every request.
+
+
+**Code:**
+```python
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    schema = get_openapi(title="API", version="1.0.0", routes=app.routes)
+    schema["components"]["securitySchemes"] = {
+        "ApiKeyAuth": {"type": "apiKey", "in": "header", "name": "X-API-Key"}
+    }
+    app.openapi_schema = schema
+    return schema
+
+app.openapi = custom_openapi
+```
 
 ## Q67: How do you implement database transactions in FastAPI?
 **A:** SQLAlchemy transaction management in FastAPI:
@@ -1464,6 +2427,21 @@ def transfer_funds(from_id: int, to_id: int, amount: float, db: Session = Depend
 ```
 
 `with_for_update()` provides row-level locking (SELECT ... FOR UPDATE) to prevent race conditions. For async, use `async with session.begin()`. Set isolation levels per transaction or globally. Always handle concurrent modifications with pessimistic (row locks) or optimistic (version column) locking.
+
+
+**Code:**
+```python
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+        db.commit()
+    except Exception:
+        db.rollback()
+        raise
+    finally:
+        db.close()
+```
 
 ## Q68: Explain FastAPI's `WebSocket` connection management for chat applications.
 **A:** WebSocket connection manager for multi-client chat:
@@ -1513,6 +2491,25 @@ async def websocket_endpoint(websocket: WebSocket, user_id: int):
 
 For horizontal scaling (multiple server instances), use Redis pub/sub to broadcast messages across instances. Store WebSocket connections per server; use Redis channel for cross-server message delivery.
 
+
+**Code:**
+```python
+class ConnectionManager:
+    def __init__(self):
+        self.connections: dict[int, list[WebSocket]] = {}
+
+    async def connect(self, ws, user_id: int):
+        await ws.accept()
+        self.connections.setdefault(user_id, []).append(ws)
+
+    async def send_personal(self, user_id: int, message: dict):
+        for ws in self.connections.get(user_id, []):
+            await ws.send_json(message)
+
+    def disconnect(self, ws, user_id: int):
+        self.connections[user_id].remove(ws)
+```
+
 ## Q69: How do you implement data sanitization and validation in FastAPI?
 **A:** Pydantic provides comprehensive validation and sanitization:
 
@@ -1549,6 +2546,24 @@ class UserInput(BaseModel):
 ```
 
 Sanitization strategies: (1) strip whitespace (`strip()`), (2) escape HTML (`html.escape`), (3) normalize Unicode (`unicodedata.normalize`), (4) remove control characters, (5) limit string lengths, (6) whitelist patterns (regex validation), (7) use libraries like `bleach` for HTML sanitization. For SQL injection: use parameterized queries (SQLAlchemy ORM handles this). For NoSQL injection: validate and sanitize query parameters. For file uploads: validate content type, scan for malware, limit file size.
+
+
+**Code:**
+```python
+from pydantic import BaseModel, field_validator
+import html
+
+class UserInput(BaseModel):
+    name: str
+
+    @field_validator("name")
+    @classmethod
+    def sanitize(cls, v: str) -> str:
+        return html.escape(v.strip())
+
+u = UserInput(name="<script>")
+print(u.name)
+```
 
 ## Q70: What are FastAPI's hooks for OpenAPI documentation customization?
 **A:** FastAPI provides several hooks for OpenAPI customization:
@@ -1591,6 +2606,20 @@ async def custom_swagger_ui():
 
 Customize ReDoc similarly with `get_redoc_html()`.
 
+
+**Code:**
+```python
+from fastapi import FastAPI
+
+app = FastAPI(
+    title="API Docs",
+    version="1.0.0",
+    description="Docs with examples",
+    openapi_tags=[{"name": "users", "description": "User ops"}],
+    swagger_ui_parameters={"filter": True},
+)
+```
+
 ## Q71: How do you manage secrets and configuration in FastAPI?
 **A:** Configuration management with Pydantic `Settings`:
 
@@ -1621,6 +2650,24 @@ async def info(settings: Settings = Depends(get_settings)):
 ```
 
 `pydantic-settings` reads from: (1) environment variables, (2) `.env` file, (3) default values. Secret management: (1) use `secrets` module for API keys, (2) HashiCorp Vault, (3) AWS Secrets Manager / GCP Secret Manager, (4) Kubernetes secrets, (5) Docker secrets. Never hardcode secrets. Use `SecretStr` type (Pydantic) to prevent accidental logging. For production: use environment variables (injected by container orchestration), with `.env` only for development.
+
+
+**Code:**
+```python
+from pydantic_settings import BaseSettings
+from functools import lru_cache
+
+class Settings(BaseSettings):
+    database_url: str
+    secret_key: str = "dev-secret"
+    model_config = {"env_file": ".env"}
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings()
+
+settings = get_settings()
+```
 
 ## Q72: How do you implement WebSocket rooms/channels in FastAPI?
 **A:** WebSocket rooms organize connections into groups:
@@ -1665,6 +2712,22 @@ async def chat_websocket(websocket: WebSocket, room_id: str):
 
 For multi-server setups, use Redis pub/sub: each server subscribes to room channels. When a message is broadcast, publish to Redis; all servers receive and forward to local connections.
 
+
+**Code:**
+```python
+class RoomManager:
+    def __init__(self):
+        self.rooms: dict[str, set[WebSocket]] = {}
+
+    async def join(self, room: str, ws):
+        await ws.accept()
+        self.rooms.setdefault(room, set()).add(ws)
+
+    async def broadcast(self, room: str, message: dict):
+        for ws in self.rooms.get(room, set()):
+            await ws.send_json(message)
+```
+
 ## Q73: Explain FastAPI's `Dependencies` with `yield` and `asyncio` context.
 **A:** Async dependencies with `yield` for managing resources:
 
@@ -1683,6 +2746,21 @@ async def read_users_me(current_user: User = Depends(get_current_user)):
 ```
 
 Context manager behavior: (1) `async with` for async context managers, (2) `try/finally` for sync context managers, (3) the `yield` point divides setup from teardown. Exceptions propagate through the dependency chain — if `get_current_user` raises, `get_db`'s cleanup still runs (the `async with` handles this). Multiple dependencies with `yield` teardown in reverse order. Background tasks don't run until after the response is sent, so dependencies with `yield` teardown happens after the response but before background tasks.
+
+
+**Code:**
+```python
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
+from sqlalchemy import select
+
+async def get_db():
+    async with async_sessionmaker(engine)() as session:
+        yield session
+
+async def get_current_user(db=Depends(get_db)):
+    result = await db.execute(select(User))
+    return result.scalars().first()
+```
 
 ## Q74: How do you implement API key authentication in FastAPI?
 **A:** API key authentication via header or query parameter:
@@ -1716,6 +2794,24 @@ async def get_data(api_key: ApiKey = Depends(verify_api_key)):
 
 API key management: (1) generate with `secrets.token_urlsafe(32)`, (2) hash keys before storing (like passwords), (3) support key rotation, (4) track usage per key, (5) allow key revocation, (6) set expiration, (7) rate limit per key. Use `Security()` instead of `Depends()` for API key dependencies to show the security scheme in OpenAPI.
 
+
+**Code:**
+```python
+from fastapi import Security, Depends, HTTPException
+from fastapi.security import APIKeyHeader
+
+api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
+
+async def verify_api_key(api_key: str | None = Security(api_key_header)):
+    if not api_key or api_key != "secret-key":
+        raise HTTPException(status_code=403, detail="Invalid API key")
+    return api_key
+
+@app.get("/api/data", dependencies=[Depends(verify_api_key)])
+async def data():
+    return {"secret": True}
+```
+
 ## Q75: What is FastAPI's `route` decorator parameters for operation IDs?
 **A:** Operation ID customization:
 
@@ -1735,6 +2831,20 @@ async def get_user(user_id: int):
 ```
 
 Operation ID is used in OpenAPI and by code generators (OpenAPI Generator, `openapi-typescript`). Auto-generated: `{endpoint}_{path}_{method}`. Override for: (1) clean client SDK method names, (2) backward compatibility when renaming endpoints, (3) matching existing API conventions. The `operation_id` must be unique across the API. Other route parameters: `responses` (additional response models), `callbacks` (webhook definitions), `openapi_extra` (arbitrary OpenAPI fields).
+
+
+**Code:**
+```python
+@app.get(
+    "/users/{user_id}",
+    operation_id="getUserById",
+    summary="Get a user",
+    tags=["users"],
+    responses={404: {"description": "Not found"}},
+)
+async def get_user(user_id: int):
+    return {"user_id": user_id}
+```
 
 ## Q76: How do you implement data versioning in FastAPI?
 **A:** Data versioning strategies for APIs:
@@ -1764,6 +2874,27 @@ async def get_user_v2(user_id: int):
 
 Database versioning: (1) add `version` column (integer, auto-increment), (2) implement optimistic locking (check version on update), (3) maintain event log for audit. Schema evolution: (1) additive changes only (don't remove columns), (2) nullable new fields, (3) use `response_model_exclude_unset=True` for gradual rollout. Long-term: maintain multiple API versions with deprecation timeline. Use content negotiation (`Accept: application/vnd.api+json;version=2`) for cleaner versioning.
 
+
+**Code:**
+```python
+from pydantic import BaseModel
+
+class UserV1(BaseModel):
+    id: int
+    name: str
+
+class UserV2(UserV1):
+    email: str | None = None
+
+@app.get("/v1/users/{uid}", response_model=UserV1)
+async def user_v1(uid: int):
+    return {"id": uid, "name": "n", "email": "e"}
+
+@app.get("/v2/users/{uid}", response_model=UserV2)
+async def user_v2(uid: int):
+    return {"id": uid, "name": "n", "email": "e"}
+```
+
 ## Q77: Explain FastAPI's `json` module configuration and performance.
 **A:** FastAPI uses Python's `json` module by default. Performance optimization:
 
@@ -1785,6 +2916,15 @@ class FastORJSONResponse(ORJSONResponse):
 ```
 
 `orjson` is 2-3x faster than standard `json` for serialization, and 4-5x faster for deserialization. `ujson` is another option. For Pydantic models, Pydantic V2 uses Rust-based `pydantic-core` internally, which is significantly faster than V1. Response serialization: (1) Pydantic model → dict, (2) dict → JSON. Optimizations: (1) pre-serialize cached responses, (2) use `__slots__` on dataclasses, (3) avoid unnecessary serialization cycles. For large responses, consider streaming or pagination.
+
+
+**Code:**
+```python
+from fastapi import FastAPI
+from fastapi.responses import ORJSONResponse
+
+app = FastAPI(default_response_class=ORJSONResponse)
+```
 
 ## Q78: How do you implement database read/write splitting in FastAPI?
 **A:** CQRS pattern with separate read/write databases:
@@ -1826,6 +2966,31 @@ def list_users(db: Session = Depends(get_read_db)):
 
 Replication lag: (1) use read-after-write consistency for critical reads (route to write DB), (2) use `db.commit()` and then read from replica after a short delay, (3) use `SELECT ... FOR UPDATE` on write DBs. For async with SQLAlchemy, create separate async engines. For ORM-level routing, use SQLAlchemy's `RoutingSession` or libraries like `sqlalchemy-replica`.
 
+
+**Code:**
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, Session
+from fastapi import Depends
+
+write_engine = create_engine(WRITE_URL)
+read_engine = create_engine(READ_URL)
+
+WriteSession = sessionmaker(bind=write_engine)
+ReadSession = sessionmaker(bind=read_engine)
+
+def get_read_db():
+    db = ReadSession()
+    try:
+        yield db
+    finally:
+        db.close()
+
+@app.get("/users")
+def list_users(db: Session = Depends(get_read_db)):
+    return db.query(User).all()
+```
+
 ## Q79: What are FastAPI's exception handlers for integrated error monitoring?
 **A:** Integrate with error monitoring services (Sentry, Datadog):
 
@@ -1864,6 +3029,20 @@ async def http_exception_handler(request: Request, exc: HTTPException):
 
 Monitoring: (1) log all errors with structure, (2) send 5xx errors to APM tools, (3) track error rates and patterns, (4) set up alerts for error spikes, (5) include correlation IDs, (6) sanitize PII from error logs. For async error monitoring, ensure integrations support asyncio.
 
+
+**Code:**
+```python
+import sentry_sdk
+from fastapi import Request
+from fastapi.responses import JSONResponse
+
+sentry_sdk.init(dsn="https://public@example.com/1")
+
+@app.exception_handler(Exception)
+async def handler(request: Request, exc: Exception):
+    return JSONResponse(status_code=500, content={"detail": "server error"})
+```
+
 ## Q80: How do you implement database partitioning with FastAPI?
 **A:** Database partitioning splits large tables for performance. PostgreSQL declarative partitioning:
 
@@ -1890,6 +3069,18 @@ class Order(Base):
 
 Application-level partitioning: (1) shard by tenant ID (separate databases/schemas), (2) time-based table rotation (logs, events), (3) hash-based partitioning (user ID). FastAPI with partitioning: (1) route queries to appropriate partition (time ranges, tenant IDs), (2) manage partition creation in Alembic migrations, (3) use PostgreSQL's partition pruning for query efficiency. Consider using `pg_partman` for automated partition management. For sharding, use database proxy (MaxScale, pgpool-II) or application-level routing.
 
+
+**Code:**
+```python
+from sqlalchemy import Column, Integer, DateTime
+
+class Order(Base):
+    __tablename__ = "orders"
+    __table_args__ = {"postgresql_partition_by": "RANGE (created_at)"}
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime, nullable=False)
+```
+
 ## Q81: Explain FastAPI's `docs_url`, `redoc_url`, and `openapi_url` configuration.
 **A:** These parameters control OpenAPI and documentation URLs:
 
@@ -1903,6 +3094,16 @@ app = FastAPI(
 ```
 
 Disabling docs in production: `docs_url=None, redoc_url=None`. Hiding the OpenAPI schema: `openapi_url=None`. Best practice: (1) enable docs in staging/development, (2) disable or protect with auth in production, (3) serve docs behind VPN or SSO. For internal APIs, document via version-controlled API specifications (Stoplight, Postman collections) instead of live docs. The `swagger_ui_oauth2_redirect_url` is needed when using OAuth2 flows in Swagger UI.
+
+
+**Code:**
+```python
+app = FastAPI(
+    docs_url="/api/docs",
+    redoc_url="/api/redoc",
+    openapi_url="/api/openapi.json",
+)
+```
 
 ## Q82: How do you implement database connection retry in FastAPI?
 **A:** Automatic retry for database connection failures:
@@ -1937,6 +3138,20 @@ async def get_async_db():
 ```
 
 `pool_pre_ping=True` in SQLAlchemy checks connection health before use (reduces stale connection errors). For connection timeouts, set `pool_timeout` and `pool_recycle`. For PostgreSQL, configure `statement_timeout` and `lock_timeout` at the connection level. Retry only transient errors (connection lost, timeout), not syntax/logic errors. Use exponential backoff with jitter to avoid thundering herd.
+
+
+**Code:**
+```python
+from tenacity import retry, stop_after_attempt, wait_exponential
+from sqlalchemy import create_engine
+
+@retry(
+    stop=stop_after_attempt(3),
+    wait=wait_exponential(multiplier=1, min=2, max=10),
+)
+def connect_with_retry():
+    return create_engine(DATABASE_URL).connect()
+```
 
 ## Q83: What are FastAPI's hooks for request validation customization?
 **A:** Custom request validation via dependency injection and middleware:
@@ -1975,6 +3190,27 @@ async def validate_request(request: Request, call_next):
 ```
 
 For field-level custom validation: Pydantic validators (`@field_validator`, `@model_validator`). For complex business rules: use dependency injection (validate in dependencies before route handler runs). For XML/CSV body validation: parse in middleware or dependency, wrap in Pydantic model.
+
+
+**Code:**
+```python
+from fastapi.routing import APIRoute
+from fastapi import FastAPI, Request, HTTPException
+
+class ValidationRoute(APIRoute):
+    def get_route_handler(self):
+        original = super().get_route_handler()
+
+        async def validate(request: Request):
+            body = await request.json()
+            if len(body.get("name", "")) < 3:
+                raise HTTPException(status_code=422, detail="name too short")
+            return await original(request)
+
+        return validate
+
+app = FastAPI(route_class=ValidationRoute)
+```
 
 ## Q84: How do you implement database full-text search in FastAPI?
 **A:** PostgreSQL full-text search integration:
@@ -2019,6 +3255,22 @@ async def search(q: str):
 
 Full-text search strategies: (1) PostgreSQL `tsvector` (good for small-medium datasets, no extra infrastructure), (2) Elasticsearch/OpenSearch (distributed, advanced scoring, faceted search), (3) Meilisearch (simple, fast), (4) SQLite FTS5 (embedded, lightweight). Considerations: (1) relevance scoring, (2) typo tolerance, (3) stemming/lemmatization, (4) highlighting, (5) filtering/aggregation, (6) indexing strategy (batch vs real-time).
 
+
+**Code:**
+```python
+from sqlalchemy import func, Column, Integer, String
+
+class Article(Base):
+    __tablename__ = "articles"
+    id = Column(Integer, primary_key=True)
+    title = Column(String)
+    body = Column(String)
+
+results = db.query(Article).filter(
+    Article.body.op("@@")(func.plainto_tsquery("english", "fastapi"))
+).all()
+```
+
 ## Q85: Explain FastAPI's `middleware` for production security headers.
 **A:** Security headers middleware:
 
@@ -2042,6 +3294,21 @@ app.add_middleware(SecurityHeadersMiddleware)
 ```
 
 Security header descriptions: (1) `X-Content-Type-Options` — prevent MIME sniffing, (2) `X-Frame-Options` — prevent clickjacking, (3) `Strict-Transport-Security` — enforce HTTPS, (4) `Content-Security-Policy` — prevent XSS (most important), (5) `Referrer-Policy` — control referrer info, (6) `Permissions-Policy` — control browser features. The OWASP Secure Headers Project provides recommended configurations. For APIs, CSP is less critical (no HTML rendering) but HSTS and X-Content-Type-Options are essential.
+
+
+**Code:**
+```python
+from starlette.middleware.base import BaseHTTPMiddleware
+
+class SecurityHeaders(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        return response
+
+app.add_middleware(SecurityHeaders)
+```
 
 ## Q86: How do you implement database migration testing in FastAPI?
 **A:** Test migrations with Alembic:
@@ -2080,6 +3347,20 @@ def test_migration_data_preservation():
 
 Best practices: (1) test both upgrade and downgrade, (2) test data migration (rows are transformed correctly), (3) test with production-like data volume, (4) test concurrent migrations, (5) test migration from different baseline versions, (6) include migration tests in CI pipeline. Use `pytest-alembic` plugin for comprehensive migration testing. Always test migrations against a copy of production data before deploying.
 
+
+**Code:**
+```python
+import pytest
+from alembic import command
+from alembic.config import Config
+
+def test_migration_upgrade_downgrade():
+    cfg = Config("alembic.ini")
+    command.upgrade(cfg, "head")
+    command.downgrade(cfg, "base")
+    assert True
+```
+
 ## Q87: What are FastAPI's `router` specific configurations and customizations?
 **APIRouter** supports many of the same configurations as the main app:
 
@@ -2099,6 +3380,24 @@ router = APIRouter(
 ```
 
 Router-level settings: (1) `prefix` — all routes are relative to this, (2) `tags` — OpenAPI grouping, (3) `dependencies` — applied to all routes in the router, (4) `responses` — shared response schemas, (5) `default_response_class` — serialization format, (6) `route_class` — custom route behavior. Routers can include other routers (`router.include_router(sub_router)`). Each router can have its own `lifespan` context. Routers support `on_event` (deprecated) for startup/shutdown callbacks.
+
+
+**Code:**
+```python
+from fastapi import APIRouter, Depends
+
+admin_router = APIRouter(
+    prefix="/admin",
+    tags=["admin"],
+    dependencies=[Depends(require_admin)],
+)
+
+@admin_router.get("/stats")
+async def stats():
+    return {"users": 10}
+
+app.include_router(admin_router)
+```
 
 ## Q88: How do you implement distributed tracing in FastAPI?
 **A:** OpenTelemetry integration for distributed tracing:
@@ -2131,6 +3430,21 @@ async def get_user(user_id: int, tracer: trace.Tracer = Depends(get_tracer)):
 
 Tracing with `opentelemetry-instrumentation` auto-instruments: FastAPI, SQLAlchemy, HTTPX, Redis, and more. Trace context propagates via HTTP headers (`traceparent`, `tracestate`). For Jaeger/Zipkin: use their exporters. For Datadog: use `dd-trace-py`. For Sentry: enable tracing in Sentry SDK. Best practices: (1) trace all external calls (DB, cache, external API), (2) add business-relevant span attributes, (3) sample appropriately in production, (4) trace error paths thoroughly.
 
+
+**Code:**
+```python
+from opentelemetry import trace
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
+
+FastAPIInstrumentor.instrument_app(app)
+
+@app.get("/users/{user_id}")
+async def get_user(user_id: int):
+    with trace.get_tracer("app").start_as_current_span("get_user") as span:
+        span.set_attribute("user.id", user_id)
+        return {"id": user_id}
+```
+
 ## Q89: Explain FastAPI's `request.state` and `app.state` lifecycle.
 **A:** `request.state` is request-scoped (per-request), `app.state` is application-scoped (lives for app lifetime). `request.state` is populated by middleware and dependencies:
 
@@ -2149,6 +3463,23 @@ async def root(request: Request):
 ```
 
 Lifecycle: `request.state` is created per request, accessible in middleware, dependencies, and route handlers. Not persisted across requests. For async context, use `contextvars` instead of `request.state` when you need to access request data outside of request scope (e.g., in background tasks, logging). `app.state` is initialized in lifespan, should be read-only after startup for thread safety.
+
+
+**Code:**
+```python
+import uuid
+from fastapi import Request
+
+@app.middleware("http")
+async def set_state(request: Request, call_next):
+    request.state.user = None
+    request.state.cid = uuid.uuid4().hex
+    return await call_next(request)
+
+@app.get("/")
+async def root(request: Request):
+    return {"cid": request.state.cid}
+```
 
 ## Q90: How do you implement database replication and failover in FastAPI?
 **A:** High-availability database configuration:
@@ -2180,6 +3511,26 @@ def get_db():
 ```
 
 Automated failover: (1) use PostgreSQL `pg_auto_failover`, (2) Patroni + etcd/consul for HA, (3) cloud-managed DB (RDS Multi-AZ, Cloud SQL). Connection handling: (1) detect primary failure (pool_pre_ping, timeout), (2) redirect reads to replicas, (3) queue writes during failover, (4) retry with exponential backoff, (5) circuit breaker pattern to avoid overwhelming failing DB. For zero-downtime failover, use a connection pooler (PgBouncer, Pgpool-II) in front of the database.
+
+
+**Code:**
+```python
+from sqlalchemy import create_engine
+from sqlalchemy.exc import OperationalError
+
+primary = create_engine(PRIMARY_URL)
+replicas = [create_engine(url) for url in REPLICA_URLS]
+
+def get_db():
+    try:
+        db = SessionLocal(bind=primary)
+        yield db
+    except OperationalError:
+        db = SessionLocal(bind=replicas[0])
+        yield db
+    finally:
+        db.close()
+```
 
 ## Q91: What are FastAPI's WebSocket event types and handling?
 **A:** WebSocket events beyond basic text/binary:
@@ -2216,6 +3567,23 @@ async def websocket_handler(websocket: WebSocket):
 
 WebSocket events: `receive_text()`, `receive_bytes()`, `receive_json()`. Send: `send_text()`, `send_bytes()`, `send_json()`. Connection states: `CONNECTING`, `CONNECTED`, `DISCONNECTED`. Use a `while True` loop with proper exception handling. Implement custom event types (ping/pong for heartbeat, subscribe/unsubscribe for channels). For large payloads, consider chunking or streaming. For binary protocols, define message format (length-prefixed, protobuf, msgpack).
 
+
+**Code:**
+```python
+from fastapi import WebSocket, WebSocketDisconnect
+
+@app.websocket("/ws")
+async def ws(websocket: WebSocket):
+    await websocket.accept()
+    try:
+        while True:
+            data = await websocket.receive_json()
+            if data.get("type") == "ping":
+                await websocket.send_json({"type": "pong"})
+    except WebSocketDisconnect:
+        print("disconnected")
+```
+
 ## Q92: How do you implement database connection encryption (TLS) in FastAPI?
 **A:** TLS connection to the database:
 
@@ -2243,6 +3611,17 @@ engine = create_async_engine(
 
 SSL modes: (1) `disable` — no encryption, (2) `allow` — try encryption, not required, (3) `prefer` — prefer encryption, (4) `require` — enforce encryption, (5) `verify-ca` — require + verify server cert against CA, (6) `verify-full` — require + verify CA + verify hostname. Best practice: `verify-full` for production (prevents MITM). For cloud databases (RDS, Cloud SQL): download CA certificate bundle, set `sslrootcert`. Test SSL connection with `sslmode=verify-full`. For Redis SSL: `rediss://` URL scheme.
 
+
+**Code:**
+```python
+from sqlalchemy import create_engine
+
+engine = create_engine(
+    "postgresql+psycopg2://user:pass@host/db",
+    connect_args={"sslmode": "verify-full", "sslrootcert": "/etc/ssl/ca.pem"},
+)
+```
+
 ## Q93: Explain FastAPI's `route` `dependencies` parameter for global validation.
 **A:** Router-level dependencies apply to all router endpoints:
 
@@ -2269,6 +3648,22 @@ async def create_user():  # Has verify_content_type applied
 ```
 
 Dependencies at router level are applied automatically to all routes within that router. At the app level: `app = FastAPI(dependencies=[Depends(global_dep)])`. At the route level: `@router.get("/", dependencies=[Depends(route_dep)])`. Order: route-level → router-level → app-level dependencies all apply. Use router-level dependencies for: (1) auth requirements for an admin section, (2) rate limiting per feature group, (3) feature flags for beta features, (4) content type enforcement.
+
+
+**Code:**
+```python
+from fastapi import APIRouter, Depends, HTTPException, Header
+
+async def require_json(content_type: str = Header()):
+    if "application/json" not in content_type:
+        raise HTTPException(status_code=415, detail="Unsupported media type")
+
+router = APIRouter(prefix="/admin", dependencies=[Depends(require_json)])
+
+@router.post("/items")
+async def create_item():
+    return {"ok": True}
+```
 
 ## Q94: How do you implement database change data capture (CDC) with FastAPI?
 **A:** CDC captures database changes for event-driven architectures:
@@ -2303,6 +3698,25 @@ async def lifespan(app):
 
 Alternative approaches: (1) Debezium + Kafka — captures changes from DB transaction logs (no trigger overhead), (2) outbox pattern — write events to an `outbox` table, poll in background and publish to message broker, (3) `django-events` / SQLAlchemy event listeners. CDC enables: (1) real-time search indexing, (2) cache invalidation, (3) event-sourced architectures, (4) cross-service data synchronization.
 
+
+**Code:**
+```python
+import asyncio, asyncpg
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+
+async def listen():
+    conn = await asyncpg.connect(DATABASE_URL)
+    await conn.add_listener("table_changes", callback)
+    await asyncio.sleep(60)
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    task = asyncio.create_task(listen())
+    yield
+    task.cancel()
+```
+
 ## Q95: What are FastAPI's server event hooks for graceful shutdown?
 **A:** Graceful shutdown hooks:
 
@@ -2328,6 +3742,20 @@ class CustomServer:
 ```
 
 For production: (1) register `SIGTERM` and `SIGINT` handlers, (2) stop accepting new requests (drain connections), (3) wait for in-flight requests (configurable timeout, default 30s), (4) close database pools, (5) cancel background tasks, (6) close cache connections. Uvicorn's graceful shutdown: sends `SIGTERM`, waits for `--timeout-graceful-shutdown` (default: None, no timeout). For Kubernetes: configure `preStop` hook and `terminationGracePeriodSeconds`. For async: use `asyncio.shield()` for critical cleanup that shouldn't be interrupted.
+
+
+**Code:**
+```python
+import asyncio
+from contextlib import asynccontextmanager
+from fastapi import FastAPI
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    yield
+    await asyncio.sleep(5)
+    await close_pools()
+```
 
 ## Q96: How do you implement database pool sizing and monitoring in FastAPI?
 **A:** Connection pool optimization:
@@ -2357,6 +3785,28 @@ def pool_stats():
 ```
 
 Pool sizing formula: `connections = (max_workers * (db_time / total_time)) + spares`. For async SQLAlchemy, use `AsyncAdaptedQueuePool`. Monitoring: (1) track pool utilization (active connections / pool size), (2) set alert for pool exhaustion (pool_timeout errors), (3) monitor connection age (reconnect before database timeout), (4) watch for connection leaks (steadily increasing checked_out), (5) for PostgreSQL: monitor `pg_stat_activity` for idle-in-transaction connections.
+
+
+**Code:**
+```python
+from sqlalchemy import create_engine
+
+engine = create_engine(
+    DATABASE_URL,
+    pool_size=10,
+    max_overflow=20,
+    pool_timeout=30,
+    pool_recycle=3600,
+    pool_pre_ping=True,
+)
+
+@app.get("/debug/pool")
+async def pool_stats():
+    return {
+        "checked_in": engine.pool.checkedin(),
+        "checked_out": engine.pool.checkedout(),
+    }
+```
 
 ## Q97: Explain FastAPI's `JSON` encoding custom types.
 **A:** Custom JSON encoding for non-standard types:
@@ -2402,6 +3852,17 @@ class MyCustomType:
 
 Register custom encoder with FastAPI: `app = FastAPI(json_encoders={Decimal: str})`. For `orjson`, use `option=orjson.OPT_SERIALIZE_NUMPY` for numpy types.
 
+
+**Code:**
+```python
+import orjson
+from fastapi.responses import ORJSONResponse
+
+class FastORJSONResponse(ORJSONResponse):
+    def render(self, content) -> bytes:
+        return orjson.dumps(content, option=orjson.OPT_UTC_Z)
+```
+
 ## Q98: How do you implement async task scheduling in FastAPI?
 **A:** Background task scheduling (beyond `BackgroundTasks`):
 
@@ -2429,6 +3890,23 @@ async def sync_external_data():
 ```
 
 Task scheduling options: (1) **APScheduler** — flexible, supports cron/interval/date triggers, (2) **Celery beat** — distributed, requires Redis/DB, (3) **Arq** — Redis-based, lightweight async scheduler, (4) **Huey** — Redis-backed, simple. For distributed scheduling: (1) use Redis locking to prevent duplicate execution, (2) use Celery beat with shared scheduler, (3) run scheduler as a separate service. Monitor scheduled tasks (execution time, failures, next run). For simple interval tasks: `asyncio.create_task` with `while True` loop.
+
+
+**Code:**
+```python
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
+scheduler = AsyncIOScheduler()
+
+@app.on_event("startup")
+async def start():
+    scheduler.add_job(cleanup, "interval", minutes=5)
+    scheduler.start()
+
+@app.on_event("shutdown")
+async def stop():
+    scheduler.shutdown()
+```
 
 ## Q99: What are FastAPI's customization points for OpenAPI schema groups?
 **A:** Customize OpenAPI tag groups and endpoint organization:
@@ -2470,6 +3948,15 @@ openapi_schema["x-tagGroups"] = [
 
 This collapses tagged endpoints into named groups in Swagger UI.
 
+
+**Code:**
+```python
+from fastapi import APIRouter
+
+users = APIRouter(prefix="/users", tags=["users"])
+admin = APIRouter(prefix="/admin", tags=["admin"])
+```
+
 ## Q100: How do you implement end-to-end encryption in FastAPI?
 **A:** E2E encryption ensures data is encrypted on the client before reaching the server:
 
@@ -2503,3 +3990,17 @@ async def store_e2e_data(
 ```
 
 E2E encryption considerations: (1) key management is the hardest part (key exchange, recovery, rotation), (2) not all features work with E2E (search, sort, analytics), (3) metadata (subject lines, timestamps) may leak information, (4) client-side crypto requires secure random number generation, (5) web crypto API (`SubtleCrypto`) for browser-side encryption, (6) hybrid encryption (asymmetric for key exchange, symmetric for payload). Common patterns: (1) Signal Protocol (messaging), (2) MLS (Messaging Layer Security), (3) NaCl/libsodium for simpler needs.
+
+
+**Code:**
+```python
+from cryptography.fernet import Fernet
+
+key = Fernet.generate_key()
+cipher = Fernet(key)
+
+payload = b"client secret"
+encrypted = cipher.encrypt(payload)
+stored = encrypted  # server stores ciphertext only
+decrypted = cipher.decrypt(encrypted)
+```
