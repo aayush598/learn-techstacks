@@ -2,6 +2,7 @@
 
 ## Q1: How do you implement Bayesian hyperparameter optimization with Gaussian Processes for neural network training?
 **A:** Bayesian optimization uses a surrogate model (Gaussian Process) to model the objective function. An acquisition function (EI, PI, UCB) selects the next hyperparameter configuration to evaluate. Libraries like Optuna, Hyperopt, and SMAC3 implement this. It requires fewer evaluations than grid/random search for high-dimensional spaces:
+**Code:**
 
 ```python
 import optuna
@@ -15,6 +16,7 @@ study.optimize(objective, n_trials=100)
 
 ## Q2: How do you implement gradient accumulation correctly with batch normalization layers?
 **A:** Gradient accumulation simulates larger batch sizes by accumulating gradients over multiple forward/backward passes before stepping the optimizer. With batch norm, running statistics are computed per micro-batch, which differs from true large-batch training. Use `torch.nn.SyncBatchNorm` for distributed gradient accumulation or freeze batch norm statistics during accumulation steps:
+**Code:**
 
 ```python
 optimizer.zero_grad()
@@ -28,6 +30,7 @@ for i, batch in enumerate(dataloader):
 
 ## Q3: How do you implement mixed precision training (AMP) with gradient scaling and avoid underflow/overflow?
 **A:** Use `torch.cuda.amp.autocast` for automatic mixed precision. The loss scale manager prevents gradient underflow (FP16) by scaling the loss up before backward and down after. Gradient clipping must be applied to unscaled gradients. Check for `inf`/`NaN` in scaled gradients to detect overflow:
+**Code:**
 
 ```python
 scaler = torch.cuda.amp.GradScaler()
@@ -42,9 +45,27 @@ scaler.update()
 
 ## Q4: How do you choose between DDP (Distributed Data Parallel), FSDP (Fully Sharded Data Parallel), and DeepSpeed ZeRO for distributed training?
 **A:** DDP replicates the model on each GPU and synchronizes gradients (best for models fitting in single GPU memory). FSDP shards model parameters, gradients, and optimizer states across GPUs (good for larger models, e.g., 1B-10B params). DeepSpeed ZeRO offers three stages: ZeRO-1 (optimizer states), ZeRO-2 (+ gradients), and ZeRO-3 (+ parameters), with additional optimizations like offloading to CPU/NVMe. Choose DDP for speed on smaller models, FSDP for balance, DeepSpeed for largest models with advanced memory optimizations.
+**Code:**
+```python
+import torch.distributed as dist
+
+# DDP: replicate the model, shard the batch across GPUs
+dist.init_process_group("nccl")
+model = torch.nn.parallel.DistributedDataParallel(model)
+
+# FSDP: shard params + gradients + optimizer states across GPUs
+from torch.distributed.fsdp import FullyShardedDataParallel as FSDP
+model = FSDP(model)
+
+# DeepSpeed ZeRO-3 for the largest models
+import deepspeed
+config = {"zero_optimization": {"stage": 3}, "train_batch_size": 1024}
+model, opt, _, _ = deepspeed.initialize(model=model, config=config)
+```
 
 ## Q5: How do you implement learning rate schedules with warmup, cosine decay, and cooldown in PyTorch?
 **A:** Compose multiple schedulers:
+**Code:**
 
 ```python
 from torch.optim.lr_scheduler import LinearLR, CosineAnnealingLR, SequentialLR
@@ -55,9 +76,22 @@ scheduler = SequentialLR(optimizer, schedulers=[warmup, cosine], milestones=[100
 
 ## Q6: How do you implement weight decay correctly with adaptive optimizers (AdamW vs Adam with L2 regularization)?
 **A:** AdamW decouples weight decay from gradient updates, applying weight decay directly to weights AFTER the optimizer step rather than adding L2 penalty to the loss. This prevents interaction with adaptive learning rates. Use `optim.AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)` instead of manually adding L2 to the loss with Adam.
+**Code:**
+```python
+from torch import optim
+
+# Correct: AdamW applies weight decay directly to the weights
+opt_w = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=0.01)
+opt_w.zero_grad(); loss.backward(); opt_w.step()
+
+# Incorrect: Adam + L2 penalty in the loss couples decay to the adaptive LR
+# opt_a = optim.Adam(model.parameters(), lr=1e-4)
+# loss = task_loss + 0.01 * sum(p.square().sum() for p in model.parameters())
+```
 
 ## Q7: How do you analyze the gradient noise scale to determine optimal batch size during training?
 **A:** The gradient noise scale measures the ratio of gradient variance to the squared gradient norm. When noise scale is large, increasing batch size reduces variance and speeds convergence. When noise scale is small, larger batch sizes won't help. Compute online during training:
+**Code:**
 
 ```python
 noise_scale = torch.var(grads).mean() / (torch.mean(grads) ** 2)
@@ -66,6 +100,7 @@ noise_scale = torch.var(grads).mean() / (torch.mean(grads) ** 2)
 
 ## Q8: How do you implement lookahead optimizer with any base optimizer for improved convergence?
 **A:** Lookahead maintains two sets of weights: slow and fast. The fast weights (base optimizer) update k steps, then the slow weights move toward the fast weights via interpolation:
+**Code:**
 
 ```python
 class Lookahead:
@@ -83,9 +118,21 @@ class Lookahead:
 
 ## Q9: How do you implement gradient clipping by global norm vs by value and when to use each?
 **A:** Clip by global norm (`torch.nn.utils.clip_grad_norm_`) scales all gradients proportionally when their total norm exceeds a threshold. This preserves direction. Clip by value (`clip_grad_value_`) clips each gradient element to [-threshold, threshold]. Use norm clipping for transformers and RNNs (preserves relative magnitudes). Use value clipping for simpler models or when individual gradient outliers cause issues.
+**Code:**
+```python
+import torch
+
+loss.backward()
+# Global-norm clip: scale everything if total norm > max_norm
+torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)   # use for transformers/RNNs
+# Value clip: clamp each gradient element to [-clip_value, clip_value]
+# torch.nn.utils.clip_grad_value_(model.parameters(), clip_value=1.0)
+optimizer.step()
+```
 
 ## Q10: How do you implement early stopping with patience, restoration of best weights, and plateau detection?
 **A:** Track validation metric. If no improvement for `patience` epochs, restore the best model weights. Extend with `min_delta` (ignore improvements below threshold) and `mode` (min/max). Use a callback:
+**Code:**
 
 ```python
 class EarlyStopping:
@@ -104,6 +151,7 @@ class EarlyStopping:
 
 ## Q11: How do you implement data augmentation policies automatically using AutoAugment, RandAugment, or TrivialAugment?
 **A:** AutoAugment searches for optimal augmentation policies via RL (costly). RandAugment simplifies to N augmentations with magnitude M, randomly selected:
+**Code:**
 
 ```python
 from torchvision.transforms import RandAugment
@@ -112,6 +160,7 @@ transform = Compose([RandAugment(num_ops=2, magnitude=9), ToTensor()])
 
 ## Q12: How do you implement label smoothing with temperature scaling for classification training?
 **A:** Label smoothing replaces hard one-hot targets with a mixture of the true label distribution and a uniform distribution:
+**Code:**
 
 ```python
 def label_smoothed_loss(logits, targets, smoothing=0.1):
@@ -124,6 +173,7 @@ def label_smoothed_loss(logits, targets, smoothing=0.1):
 
 ## Q13: How do you implement knowledge distillation with temperature, hard/soft loss weighting, and teacher-student architecture?
 **A:** The student learns from both ground truth labels (hard loss) and teacher soft predictions (soft loss). Temperature T softens the teacher's distribution. Alpha balances the two losses:
+**Code:**
 
 ```python
 def distillation_loss(student_logits, teacher_logits, targets, T=4.0, alpha=0.7):
@@ -138,6 +188,7 @@ def distillation_loss(student_logits, teacher_logits, targets, T=4.0, alpha=0.7)
 
 ## Q14: How do you implement model pruning (magnitude, structured, and Lottery Ticket Hypothesis)?
 **A:** Magnitude pruning removes weights below a threshold. Structured pruning removes entire neurons/channels. Lottery Ticket Hypothesis: train, prune smallest-magnitude weights, reset remaining weights to original initialization, re-train. Iterative pruning finds winning tickets:
+**Code:**
 
 ```python
 def magnitude_prune(model, amount=0.5):
@@ -150,6 +201,7 @@ def magnitude_prune(model, amount=0.5):
 
 ## Q15: How do you implement LoRA fine-tuning with rank selection, scaling factor, and merging?
 **A:** LoRA inserts low-rank matrices A (random init) and B (zero init) alongside frozen weights. The update is `W + (B @ A) * alpha / rank`. Rank controls expressiveness (4-64 typical). Higher alpha gives more update magnitude. After training, merge LoRA weights into the base model for inference:
+**Code:**
 
 ```python
 class LoRALayer(nn.Module):
@@ -165,6 +217,7 @@ class LoRALayer(nn.Module):
 
 ## Q16: How do you implement QLoRA with 4-bit NormalFloat quantization and double quantization?
 **A:** QLoRA uses 4-bit NormalFloat (NF4) quantization of the base model, which optimally distributes quantization levels for normally distributed weights. Double quantization quantizes the quantization constants themselves (saving ~0.5 bits per parameter). Use `bitsandbytes`:
+**Code:**
 
 ```python
 from transformers import BitsAndBytesConfig, AutoModelForCausalLM
@@ -177,6 +230,7 @@ model = AutoModelForCausalLM.from_pretrained("model", quantization_config=bnb_co
 
 ## Q17: How do you implement catastrophic forgetting mitigation with Elastic Weight Consolidation (EWC), Synaptic Intelligence, or Progressive Neural Networks?
 **A:** EWC adds a quadratic penalty to prevent important weights from changing. Importance is estimated from the Fisher Information Matrix diagonal:
+**Code:**
 
 ```python
 def ewc_loss(model, fisher, opt_params, old_params, lambda_=100):
@@ -188,6 +242,7 @@ def ewc_loss(model, fisher, opt_params, old_params, lambda_=100):
 
 ## Q18: How do you implement transfer learning with progressive unfreezing and discriminative learning rates?
 **A:** Progressive unfreezing: train the last layer first, then gradually unfreeze earlier layers. Discriminative learning rates: use lower learning rates for earlier layers (extractors) and higher for later layers (task-specific). Implement with parameter groups:
+**Code:**
 
 ```python
 optimizer = torch.optim.AdamW([
@@ -199,12 +254,37 @@ optimizer = torch.optim.AdamW([
 
 ## Q19: How do you select evaluation metrics for imbalanced, multi-label, or ranking tasks beyond simple accuracy?
 **A:** For imbalanced: F1 (macro/micro/weighted), Matthews Correlation Coefficient (MCC), AUC-PR. For multi-label: mean Average Precision (mAP), label-ranking average precision (LRAP), Hamming loss, subset accuracy. For ranking: NDCG@K, Mean Reciprocal Rank (MRR), Hit Rate@K. Select based on business impact: precision for low-false-positive-critical tasks, recall for low-false-negative-critical tasks.
+**Code:**
+```python
+from sklearn.metrics import (f1_score, matthews_corrcoef, average_precision_score,
+                             label_ranking_average_precision_score, ndcg_score)
+
+y_true, y_pred = [...], [...]
+f1 = f1_score(y_true, y_pred, average="macro")            # imbalanced
+mcc = matthews_corrcoef(y_true, y_pred)                   # imbalanced
+ap = average_precision_score(y_true, y_score)             # multi-label (per class)
+lrap = label_ranking_average_precision_score(y_bin, y_score)
+ndcg = ndcg_score([y_true_ranking], [y_score_ranking], k=10)  # ranking
+```
 
 ## Q20: How do you detect overfitting during training using gap analysis, gradient statistics, and activation monitoring?
 **A:** Monitor: training vs validation loss gap (diverging indicates overfitting), gradient norms (near-zero gradients in early layers can signal memorization), weight magnitude growth, and activation distributions (saturation of activations). Tools: TensorBoard histograms, weight decay impact analysis, and k-fold cross-validation consistency.
+**Code:**
+```python
+import matplotlib.pyplot as plt
+
+# Gap analysis: diverging train/val curves indicate overfitting
+plt.plot(train_losses, label="train"); plt.plot(val_losses, label="val")
+
+# Gradient statistics per layer
+for name, p in model.named_parameters():
+    if p.grad is not None:
+        print(name, p.grad.norm().item())   # near-zero early-layer norms -> blocked learning
+```
 
 ## Q21: How do you implement experiment tracking with MLflow including parameter logging, metric tracking, artifact storage, and model registry?
 **A:** Use MLflow's autologging or manual API:
+**Code:**
 
 ```python
 import mlflow
@@ -220,9 +300,27 @@ with mlflow.start_run():
 
 ## Q22: How do you ensure reproducibility in training experiments across different hardware and software environments?
 **A:** Fix all random seeds, set `torch.backends.cudnn.deterministic = True` and `torch.backends.cudnn.benchmark = False`, pin data loader workers with `worker_init_fn` using a seeded generator, log environment (CUDA version, PyTorch version, GPU type), use deterministic algorithms via `torch.use_deterministic_algorithms(True)`, and containerize with Docker.
+**Code:**
+```python
+import random, numpy as np, torch
+
+def seed_everything(seed=42):
+    random.seed(seed); np.random.seed(seed); torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+    torch.use_deterministic_algorithms(True)
+
+seed_everything()
+def worker_init_fn(wid):                  # separately seed each data worker
+    np.random.seed(42 + wid)
+loader = DataLoader(ds, batch_size=32, num_workers=4,
+                    worker_init_fn=worker_init_fn)
+```
 
 ## Q23: How do you implement checkpointing strategies with save-before-validation, periodic snapshots, and best-model tracking?
 **A:** Save checkpoints with: epoch number, model state dict, optimizer state dict, scheduler state dict, metrics, and random state for resumability. Implement:
+**Code:**
 
 ```python
 checkpoint = {
@@ -237,6 +335,7 @@ torch.save(checkpoint, f'checkpoint_epoch_{epoch}.pt')
 
 ## Q24: How do you implement gradient checkpointing (activation checkpointing) for memory-constrained training?
 **A:** Gradient checkpointing trades compute (~20-30% overhead) for memory by not storing intermediate activations during forward pass. They are recomputed during backward pass:
+**Code:**
 
 ```python
 model = torch.utils.checkpoint.checkpoint_sequential(model.chunks, segments=4, input)
@@ -247,6 +346,7 @@ def forward(self, x):
 
 ## Q25: How do you implement curriculum learning with dynamic difficulty adjustment based on performance?
 **A:** Start with easy examples (low noise, short sequences, clear patterns), gradually increase difficulty. Monitor per-sample loss: if loss is below threshold, increase difficulty; if above, provide easier examples. Implement with a sorted dataloader that ranks examples by difficulty and a sliding threshold:
+**Code:**
 
 ```python
 # Score samples by difficulty (e.g., length, noise level, loss from a small model)
@@ -258,9 +358,26 @@ loader = DataLoader(samples[:window_size], shuffle=True)
 
 ## Q26: How do you implement automated architecture search (NAS) with weight-sharing (ENAS, DARTS) or evolutionary methods?
 **A:** DARTS relaxes the discrete architecture search to continuous, enabling gradient-based optimization. The search space is a super-network where operations are weighted by learnable architecture parameters (alpha). After search, the highest-weight operations form the final architecture. ENAS uses a controller (RNN) to sample architectures and shares weights across sampled architectures.
+**Code:**
+```python
+import torch, torch.nn as nn
+
+class DARTSCell(nn.Module):
+    def __init__(self, ops):
+        super().__init__(); self.ops = nn.ModuleList(ops)
+        self.alpha = nn.Parameter(torch.zeros(len(ops)))   # arch weights
+    def forward(self, x):
+        w = torch.softmax(self.alpha, dim=-1)
+        return sum(wi * op(x) for wi, op in zip(w, self.ops))
+
+cell = DARTSCell([nn.Sigmoid(), nn.ReLU(), nn.Conv1d(16, 16, 3, padding=1)])
+arch_opt = torch.optim.Adam(cell.parameters(), lr=1e-3)
+arch_opt.step()          # bic-level: alternate weight vs alpha updates
+```
 
 ## Q27: How do you implement progressive resizing for efficient training (small images first, then larger)?
 **A:** Start training with smaller input sizes (e.g., 64x64) for faster iterations, then gradually increase to full resolution (e.g., 224x224) as training progresses. Each resolution change requires adjusting position embeddings or interpolation:
+**Code:**
 
 ```python
 resolutions = [(64, 64), (128, 128), (224, 224)]
@@ -270,6 +387,7 @@ current_res = resolutions[resolution_schedule[epoch]]
 
 ## Q28: How do you implement MixUp and CutMix augmentation for improved generalization?
 **A:** MixUp creates convex combinations of input samples and their labels:
+**Code:**
 
 ```python
 lam = np.random.beta(alpha, alpha)
@@ -281,6 +399,7 @@ loss = lam * criterion(model(mixed_x), y) + (1 - lam) * criterion(model(mixed_x)
 
 ## Q29: How do you implement Cosine Annealing with Warm Restarts (SGDR) for escaping sharp minima?
 **A:** SGDR periodically resets the learning rate to the initial value, potentially escaping sharp minima. Each cycle length can increase (multiply by factor):
+**Code:**
 
 ```python
 scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
@@ -290,6 +409,7 @@ scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(
 
 ## Q30: How do you implement RAdam (Rectified Adam) with automatic warmup for stable training?
 **A:** RAdam rectifies the variance of the adaptive learning rate, providing automatic warmup without requiring manual warmup steps. It computes the variance of the moving average of squared gradients and uses it to adjust the effective learning rate:
+**Code:**
 
 ```python
 optimizer = torch.optim.RAdam(model.parameters(), lr=1e-3)
@@ -298,6 +418,7 @@ optimizer = torch.optim.RAdam(model.parameters(), lr=1e-3)
 
 ## Q31: How do you implement the One-Cycle learning rate policy with momentum cycling?
 **A:** The One-Cycle policy (Leslie Smith) has three phases: warmup (LR increases), then annealing (LR decreases to very low). Momentum cycles opposite. The max LR is found via LR range test:
+**Code:**
 
 ```python
 scheduler = torch.optim.lr_scheduler.OneCycleLR(
@@ -309,6 +430,7 @@ scheduler = torch.optim.lr_scheduler.OneCycleLR(
 
 ## Q32: How do you implement the SWA (Stochastic Weight Averaging) and SWAG for better generalization?
 **A:** After the main training, SWA averages weights sampled from the end of training (every N epochs). This finds flatter minima with better generalization:
+**Code:**
 
 ```python
 swa_model = torch.optim.swa_utils.AveragedModel(model)
@@ -322,6 +444,7 @@ torch.optim.swa_utils.update_bn(loader, swa_model)
 
 ## Q33: How do you implement multi-task learning with dynamic loss weighting (uncertainty weighting, GradNorm, Dynamic Weight Average)?
 **A:** Uncertainty weighting learns task-specific noise parameters:
+**Code:**
 
 ```python
 log_sigma_a = nn.Parameter(torch.zeros(1))
@@ -332,6 +455,7 @@ loss = (1 / (2 * log_sigma_a.exp())) * loss_a + log_sigma_a + \
 
 ## Q34: How do you implement adversarial training (FGSM, PGD, TRADES) for robust models?
 **A:** PGD adversarial training generates adversarial examples via multi-step gradient ascent and trains on them:
+**Code:**
 
 ```python
 def pgd_attack(model, x, y, epsilon=0.03, alpha=0.01, steps=7):
@@ -346,6 +470,7 @@ def pgd_attack(model, x, y, epsilon=0.03, alpha=0.01, steps=7):
 
 ## Q35: How do you implement Self-Supervised Learning with contrastive objectives (SimCLR, MoCo, BYOL) without labels?
 **A:** SimCLR maximizes agreement between differently augmented views of the same image. It uses a contrastive loss (NT-Xent) that pulls positive pairs together and pushes negative pairs apart:
+**Code:**
 
 ```python
 def nt_xent_loss(z1, z2, temperature=0.5):
@@ -359,6 +484,7 @@ def nt_xent_loss(z1, z2, temperature=0.5):
 
 ## Q36: How do you implement the GELU activation function and why is it preferred over ReLU in transformers?
 **A:** GELU (Gaussian Error Linear Unit) weights inputs by their probability under a standard normal: `x * Φ(x)`. It's smooth (unlike ReLU's hard kink at 0), non-monotonic, and approximates the expected value of a stochastic regularizer. Transformers (BERT, GPT) use GELU because its smoothness aids gradient flow in deep networks:
+**Code:**
 
 ```python
 def gelu(x):
@@ -367,9 +493,23 @@ def gelu(x):
 
 ## Q37: How do you implement Layer Normalization vs Batch Normalization and know when to choose each?
 **A:** LayerNorm normalizes across features for each sample (good for RNNs/Transformers, variable-length sequences, small batches). BatchNorm normalizes across the batch for each feature (good for CNNs, requires large batches, adds regularization). LayerNorm is preferred in transformers because it's independent of batch size and handles varying sequence lengths. BatchNorm is better for CNNs with fixed-size inputs and large batches.
+**Code:**
+```python
+import torch.nn as nn
+
+ln = nn.LayerNorm(d_model)            # per-sample, over features
+bn = nn.BatchNorm1d(features)         # per-feature, over batch
+
+x = torch.randn(seq_len, batch, d_model)
+ln_out = ln(x)                        # works for variable-length / small batch
+
+y = torch.randn(batch, features)
+bn_out = bn(y)                        # needs a large, representative batch
+```
 
 ## Q38: How do you implement weight standardization and how does it improve training?
 **A:** Weight standardization normalizes each kernel's weights to zero mean and unit variance before the forward pass. It smooths the loss landscape, enables larger learning rates, and accelerates convergence, especially in micro-batch training. Used in NFNets:
+**Code:**
 
 ```python
 def weight_standardization(w):
@@ -380,6 +520,7 @@ def weight_standardization(w):
 
 ## Q39: How do you implement spectral normalization for GAN training to enforce Lipschitz constraint?
 **A:** Spectral normalization constrains the spectral norm (largest singular value) of each weight matrix to 1, enforcing Lipschitz continuity. This stabilizes GAN training by preventing discriminator gradients from exploding:
+**Code:**
 
 ```python
 def spectral_norm(w, u=None, num_iters=1):
@@ -393,6 +534,7 @@ def spectral_norm(w, u=None, num_iters=1):
 
 ## Q40: How do you implement training with gradient noise (adding Gaussian noise to gradients) for improved generalization?
 **A:** Add Gaussian noise to gradients before the optimizer step. The noise magnitude should decrease over training (simulated annealing). This helps escape sharp minima and improves generalization:
+**Code:**
 
 ```python
 noise_std = initial_noise * (1 - epoch / total_epochs)
@@ -403,9 +545,23 @@ for param in model.parameters():
 
 ## Q41: How do you implement sharded data loading with multiple workers avoiding deadlocks and memory issues?
 **A:** Set `num_workers > 0` with `prefetch_factor=2` and `persistent_workers=True` (PyTorch 2.0+). Use `shared_memory=False` for large datasets. Avoid deadlocks by using `fork` (Linux) or `spawn` (Windows/macOS) for multiprocessing. Monitor worker memory with `torch.cuda.empty_cache()` between epochs.
+**Code:**
+```python
+from torch.utils.data import DataLoader
+
+loader = DataLoader(ds, batch_size=32, num_workers=4,
+                    prefetch_factor=2, persistent_workers=True,
+                    pin_memory=True, multiprocessing_context="fork")
+
+for epoch in range(epochs):
+    for xb, yb in loader:
+        train_step(xb, yb)
+    torch.cuda.empty_cache()       # free stale cached blocks between epochs
+```
 
 ## Q42: How do you implement the SAM (Sharpness-Aware Minimization) optimizer for flatter minima?
 **A:** SAM seeks parameters in neighborhoods with uniformly low loss (flat minima). It first computes gradient, then ascents to find worst-case perturbation, then descents from that point:
+**Code:**
 
 ```python
 def sam_step(model, loss_fn, data, optimizer, rho=0.05):
@@ -428,9 +584,22 @@ def sam_step(model, loss_fn, data, optimizer, rho=0.05):
 
 ## Q43: How do you implement token-level and sequence-level mixed precision for NLP model training?
 **A:** For NLP, use `torch.cuda.amp.autocast` with `bfloat16` (native support in A100/H100). BF16 has the same exponent range as FP32 (no overflow issues) but less precision. For loss scaling, BF16 doesn't need it, simplifying training. Enable TF32 via `torch.backends.cuda.matmul.allow_tf32 = True`.
+**Code:**
+```python
+import torch
+
+torch.backends.cuda.matmul.allow_tf32 = True        # Ampere+ matmuls in TF32
+
+scaler = torch.amp.GradScaler("cuda")               # FP16 path (needs scaling)
+with torch.autocast(device_type="cuda", dtype=torch.bfloat16):
+    logits = model(input_ids, attention_mask=mask)
+    loss = ce_loss(logits, labels)                  # BF16: no scaler required
+loss.backward(); optimizer.step(); scaler.update()
+```
 
 ## Q44: How do you implement the LogSumExp trick for numerically stable softmax and cross-entropy?
 **A:** Subtract the maximum logit before exponentiation to prevent overflow. Cross-entropy with built-in log-softmax handles this, but when implementing manually:
+**Code:**
 
 ```python
 def stable_softmax(logits):
@@ -441,6 +610,7 @@ def stable_softmax(logits):
 
 ## Q45: How do you implement data augmentation for 3D data (point clouds, voxels, meshes)?
 **A:** For point clouds: random rotation (SO(3)), scaling, jitter (add noise to points), random dropout, random crop. For voxels: random flipping, rotation, scaling, elastic deformation. Implement with `torchvision3d` or custom transforms using PyTorch3D or Open3D:
+**Code:**
 
 ```python
 def augment_pointcloud(points):
@@ -456,6 +626,7 @@ def augment_pointcloud(points):
 
 ## Q46: How do you implement training on multiple datasets simultaneously with different distributions (multi-dataset training)?
 **A:** Use stratified sampling where each batch contains samples from different datasets. Implement a `ConcatDataset` with dataset-specific loss weighting. Handle differing label spaces via shared projection layers or task-specific heads. Normalize dataset sizes to prevent larger datasets from dominating:
+**Code:**
 
 ```python
 weights = [1.0 / len(ds) for ds in datasets]
@@ -464,6 +635,7 @@ sampler = WeightedRandomSampler(weights, num_samples=total_samples, replacement=
 
 ## Q47: How do you implement differential privacy training (DP-SGD) with gradient clipping and noise injection?
 **A:** DP-SGD clips per-sample gradients to a maximum norm C, adds Gaussian noise scaled to C * privacy_multiplier, then averages. Use `opacus` library:
+**Code:**
 
 ```python
 from opacus import PrivacyEngine
@@ -477,6 +649,7 @@ model, optimizer, loader = privacy_engine.make_private(
 
 ## Q48: How do you implement population-based training (PBT) for hyperparameter optimization?
 **A:** PBT maintains a population of models training in parallel. Periodically, underperforming models inherit parameters from better models ("exploit") and mutate their hyperparameters ("explore"). This combines the parallelism of random search with the adaptability of schedule-based methods:
+**Code:**
 
 ```python
 # Population of N models training concurrently
@@ -489,6 +662,7 @@ model, optimizer, loader = privacy_engine.make_private(
 
 ## Q49: How do you implement training with virtual batch normalization for consistency regularization?
 **A:** Virtual Batch Normalization uses a fixed reference batch to compute normalization statistics, combined with the current batch's statistics via exponential moving average. This provides consistent normalization for semi-supervised learning (used in StyleGAN and VAT):
+**Code:**
 
 ```python
 # Compute stats on reference batch once
@@ -501,6 +675,7 @@ var = 0.5 * ref_var + 0.5 * cur_var
 
 ## Q50: How do you implement the Ranger optimizer (RAdam + Lookahead + Gradient Centralization)?
 **A:** Ranger combines RAdam (automatic warmup), Lookahead (slow-fast weight averaging), and Gradient Centralization (centering gradients to zero mean). Each component addresses different training challenges:
+**Code:**
 
 ```python
 # Use ranger library
@@ -510,6 +685,7 @@ optimizer = Ranger(model.parameters(), lr=1e-3, k=6, alpha=0.5)
 
 ## Q51: How do you implement cosine similarity-based weight initialization for better gradient flow in very deep networks?
 **A:** Layer-sequential unit-variance (LSUV) initialization: initialize weights with orthonormal matrices or simple variance scaling, then run a forward pass with a batch, measure output variance, and rescale weights to achieve unit variance. This ensures consistent signal propagation:
+**Code:**
 
 ```python
 def lsuv_init(model, batch):
@@ -523,6 +699,7 @@ def lsuv_init(model, batch):
 
 ## Q52: How do you implement training with auxiliary losses at intermediate layers (deep supervision) to improve gradient flow?
 **A:** Add auxiliary classifiers at intermediate layers. Total loss is a weighted sum of main loss and auxiliary losses. This provides direct gradient signals to early layers, improving training of very deep networks:
+**Code:**
 
 ```python
 # In forward:
@@ -534,6 +711,7 @@ loss = F.cross_entropy(main, targets) + 0.3 * F.cross_entropy(aux1, targets) + 0
 
 ## Q53: How do you implement consistency training (FixMatch, UDA) for semi-supervised learning?
 **A:** Generate two views of unlabeled data via weak and strong augmentation. Enforce prediction consistency between them. The weakly augmented prediction generates pseudo-labels, and the model learns to predict the same on the strongly augmented view:
+**Code:**
 
 ```python
 weak_aug = WeakAugment(unlabeled)
@@ -546,6 +724,7 @@ unsup_loss = F.cross_entropy(model(strong_aug), pseudo, reduction='none') * mask
 
 ## Q54: How do you implement meta-learning with MAML (Model-Agnostic Meta-Learning) for few-shot learning?
 **A:** MAML learns initialization parameters that can quickly adapt to new tasks with a few gradient steps. The inner loop adapts to a task, the outer loop optimizes the initialization for fast adaptation:
+**Code:**
 
 ```python
 for task in tasks:
@@ -558,6 +737,7 @@ optimizer.step()
 
 ## Q55: How do you implement Nesterov Accelerated Gradient (NAG) momentum correctly?
 **A:** NAG computes gradients at the lookahead position (parameters + momentum * direction), not at the current position. PyTorch's SGD with `nesterov=True` implements this:
+**Code:**
 
 ```python
 # NAG: look ahead, compute gradient at lookahead, update from original position
@@ -566,6 +746,7 @@ optimizer = torch.optim.SGD(model.parameters(), lr=0.01, momentum=0.9, nesterov=
 
 ## Q56: How do you implement automated mixed precision with dynamic loss scaling for FP16?
 **A:** Dynamic loss scaling starts with a large scale factor (2^16) and adjusts based on gradient overflows. If inf/NaN detected in gradients, skip the step and decrease scale. If no overflow for N steps, increase scale:
+**Code:**
 
 ```python
 scaler = torch.cuda.amp.GradScaler(init_scale=2**16, growth_factor=2.0, backoff_factor=0.5, growth_interval=2000)
@@ -573,6 +754,7 @@ scaler = torch.cuda.amp.GradScaler(init_scale=2**16, growth_factor=2.0, backoff_
 
 ## Q57: How do you implement padding strategies for variable-length sequence training (packing, padding, attention masking)?
 **A:** For Transformers: padding to max length in batch with attention masks. For RNNs: use `pack_padded_sequence` after sorting by length descending. For efficient training, sort batches by length to minimize padding. Use dynamic batching:
+**Code:**
 
 ```python
 # Sort indices by sequence length
@@ -583,6 +765,7 @@ attention_mask = (padded != pad_token_id)
 
 ## Q58: How do you implement training with dynamic batch sizes to maximize GPU utilization?
 **A:** Start with small batches, increase until GPU memory is nearly full (within 90%). Monitor memory usage with `torch.cuda.memory_allocated()`. Adjust batch size per gradient accumulation step:
+**Code:**
 
 ```python
 def find_max_batch_size(model, sample, max_memory=0.9):
@@ -597,6 +780,7 @@ def find_max_batch_size(model, sample, max_memory=0.9):
 
 ## Q59: How do you implement the NovelN optimization algorithm with Nesterov momentum and decoupled weight decay?
 **A:** NovelN (Nadam + Nesterov + AdamW) combines Nesterov momentum with Adam's adaptive learning rates and decoupled weight decay. Paper "Nadam: Incorporating Nesterov Momentum into Adam":
+**Code:**
 
 ```python
 # Nadam = Adam with Nesterov momentum
@@ -605,6 +789,7 @@ optimizer = torch.optim.NAdam(model.parameters(), lr=1e-3, weight_decay=0.01)
 
 ## Q60: How do you implement training with fixed-point iterations (Deep Equilibrium Models) instead of explicit layers?
 **A:** DEQ finds the fixed point of a transformation z* = f(z*, x) using root-finding (Broyden, Anderson). Instead of backpropagating through many layers, use implicit differentiation on the fixed point. This enables infinite-depth representations with O(1) memory:
+**Code:**
 
 ```python
 def deq_forward(f, x, max_iter=50):
@@ -616,6 +801,7 @@ def deq_forward(f, x, max_iter=50):
 
 ## Q61: How do you implement training with spectral normalization for all layers including attention?
 **A:** Apply `torch.nn.utils.spectral_norm` to linear and convolutional layers. For attention, apply to Q, K, V projections. For transformers, this is called "Spectral Normalization for Transformers":
+**Code:**
 
 ```python
 for name, module in model.named_modules():
@@ -625,6 +811,7 @@ for name, module in model.named_modules():
 
 ## Q62: How do you implement adaptive gradient clipping (AGC) for NFNets and other normalizer-free networks?
 **A:** AGC clips gradients based on the ratio of gradient norm to parameter norm, per layer. This prevents exploding gradients in networks without normalization layers:
+**Code:**
 
 ```python
 def adaptive_grad_clip(model, clip_factor=0.01):
@@ -638,6 +825,7 @@ def adaptive_grad_clip(model, clip_factor=0.01):
 
 ## Q63: How do you implement the Lion optimizer (EvoLved Sign Momentum) and when is it preferred over AdamW?
 **A:** Lion uses sign operations and momentum, being more memory-efficient than Adam (no need to store second moments). It updates: `update = sign(momentum * beta1 + grad * (1 - beta1))`. Preferred for large batch training and when memory is constrained. Often requires lower learning rate than AdamW:
+**Code:**
 
 ```python
 optimizer = torch.optim.Lion(model.parameters(), lr=1e-4, weight_decay=0.01)
@@ -645,6 +833,7 @@ optimizer = torch.optim.Lion(model.parameters(), lr=1e-4, weight_decay=0.01)
 
 ## Q64: How do you implement k-fold cross-validation with model averaging for robust performance estimates?
 **A:** Train k separate models on k folds, save all checkpoints. For final prediction, average outputs (or average weights). For performance estimation, compute mean and std across folds. Use stratified k-fold for imbalanced datasets. Implement with sklearn's `KFold`:
+**Code:**
 
 ```python
 from sklearn.model_selection import KFold
@@ -658,6 +847,7 @@ for fold, (train_idx, val_idx) in enumerate(kf.split(data)):
 
 ## Q65: How do you implement training with exponential moving average (EMA) of model weights for better inference?
 **A:** Maintain an exponential moving average of model parameters during training. EMA weights often provide better performance than the final checkpoint:
+**Code:**
 
 ```python
 ema_model = copy.deepcopy(model)
@@ -668,6 +858,7 @@ for param, ema_param in zip(model.parameters(), ema_model.parameters()):
 
 ## Q66: How do you implement sparse attention training (e.g., Longformer, BigBird, Reformer) for long sequences?
 **A:** Replace full O(n^2) attention with sparse patterns: sliding window, dilated sliding window, global tokens, and random attention. Implement via custom CUDA kernels (blocksparse, triton) or use HuggingFace's implementation:
+**Code:**
 
 ```python
 config = LongformerConfig(attention_window=[512] * 12)
@@ -677,6 +868,7 @@ model = LongformerModel(config)
 
 ## Q67: How do you implement training with memory-efficient optimizers like Adafactor (factorized second moment)?
 **A:** Adafactor factorizes the second moment matrix into row and column sums, reducing memory from O(n^2) to O(n). It's ideal for transformers where weight matrices are large. It also handles relative step size automatically, reducing LR tuning:
+**Code:**
 
 ```python
 optimizer = transformers.optimization.Adafactor(
@@ -686,6 +878,7 @@ optimizer = transformers.optimization.Adafactor(
 
 ## Q68: How do you implement gradient centralization (GC) for improved training stability and generalization?
 **A:** Gradient centralization subtracts the mean of each gradient vector, centering gradients to zero. This constrains the loss landscape and improves Lipschitzness:
+**Code:**
 
 ```python
 def gradient_centralization(model):
@@ -696,6 +889,7 @@ def gradient_centralization(model):
 
 ## Q69: How do you implement dropout scheduling (increasing dropout rate over training)?
 **A:** Start with low dropout and increase over time. This allows the model to initially learn coarse patterns with full capacity, then regularize more as it memorizes:
+**Code:**
 
 ```python
 dropout_rate = initial_dropout + (final_dropout - initial_dropout) * (epoch / total_epochs)
@@ -705,6 +899,7 @@ for module in model.modules():
 
 ## Q70: How do you implement neural tangent kernel (NTK) analysis to diagnose training dynamics?
 **A:** The NTK characterizes how infinitesimal parameter changes affect outputs. Compute the NTK during training to analyze convergence speed, spectral properties, and feature learning. The NTK's eigenvalues determine which frequencies are learned first:
+**Code:**
 
 ```python
 def compute_ntk(model, x):
@@ -716,6 +911,7 @@ def compute_ntk(model, x):
 
 ## Q71: How do you implement training with off-policy correction (importance sampling) for distribution shift?
 **A:** When training on a distribution different from the target, weight samples by the likelihood ratio p_target(x) / p_data(x). Clip importance weights to [0.01, 100] for stability. This is crucial in RL and domain adaptation:
+**Code:**
 
 ```python
 importance_weight = target_probs / behavior_probs
@@ -724,6 +920,7 @@ loss = (importance_weight * per_sample_loss).mean()
 
 ## Q72: How do you implement training with projection head for contrastive learning and its removal at inference?
 **A:** A projection head (MLP) maps representations to the contrastive loss space. After training, the projection head is discarded and representations before it are used. This prevents the model from losing information that is relevant for downstream tasks:
+**Code:**
 
 ```python
 class SimCLR(nn.Module):
@@ -738,6 +935,7 @@ class SimCLR(nn.Module):
 
 ## Q73: How do you implement training with stop-gradient operators for preventing representation collapse (used in BYOL, SimSiam)?
 **A:** Stop-gradient prevents gradients from flowing through one branch, forcing the model to predict the representation rather than taking a trivial solution (collapsing all representations to a constant):
+**Code:**
 
 ```python
 # BYOL-style: target branch has stop-gradient
@@ -746,6 +944,7 @@ loss = F.mse_loss(student(x1), target(x2).detach())
 
 ## Q74: How do you implement the T5-style span corruption pretraining objective for encoder-decoder models?
 **A:** Replace random contiguous spans of input tokens with a sentinel token. The decoder predicts the replaced tokens. This is more efficient than masked language modeling:
+**Code:**
 
 ```python
 def span_corrupt(input_ids, mask_rate=0.15, mean_span_length=3):
@@ -759,6 +958,7 @@ def span_corrupt(input_ids, mask_rate=0.15, mean_span_length=3):
 
 ## Q75: How do you implement the soft neural dPPL (differential privacy) with per-example gradient clipping?
 **A:** Efficient per-example gradient clipping computes and clips gradients for each sample individually. Use `opacus` for efficient per-sample gradient computation via ghost clipping:
+**Code:**
 
 ```python
 from opacus.layers import DPLinear
@@ -774,6 +974,7 @@ model, optimizer, loader = privacy_engine.make_private_with_dp(
 
 ## Q76: How do you implement training with dynamic neural architecture search using REINFORCE?
 **A:** A controller (policy network) proposes architectures by sampling operations. The sampled architecture is trained on a validation set. Validation accuracy is used as the reward to update the controller via REINFORCE (policy gradient):
+**Code:**
 
 ```python
 # Controller outputs architecture parameters
@@ -788,6 +989,7 @@ loss.backward()
 
 ## Q77: How do you implement training with adaptive batch normalization statistics for domain adaptation?
 **A:** Replace running statistics with domain-specific statistics. During inference, use statistics from the target domain. For domain adaptation, blend source and target statistics:
+**Code:**
 
 ```python
 # Compute target domain statistics
@@ -801,6 +1003,7 @@ for bn, mean, var in zip(bn_layers, blended_mean, blended_var):
 
 ## Q78: How do you implement training with Orthogonal Weight Normalization (OWN) for improved conditioning?
 **A:** OWN constrains weight matrices to be (approximately) orthogonal. This maintains gradient norms and improves conditioning. Implement via QR decomposition or Cayley transform:
+**Code:**
 
 ```python
 def orthogonal_step(param, lr):
@@ -815,6 +1018,7 @@ def orthogonal_step(param, lr):
 
 ## Q79: How do you implement training with Gated Linear Units (GLU, SwiGLU, GeGLU) activations?
 **A:** GLU variants use a gating mechanism: output = activation(XW + b) * (XV + c). SwiGLU (used in PaLM, Llama) uses Swish as the activation. GeGLU uses GELU. These often outperform plain ReLU/GeLU:
+**Code:**
 
 ```python
 class SwiGLU(nn.Module):
@@ -825,6 +1029,7 @@ class SwiGLU(nn.Module):
 
 ## Q80: How do you implement training with entropy penalties (maximum entropy, minimum entropy) for semi-supervised learning?
 **A:** Minimum entropy regularization encourages confident predictions on unlabeled data. Maximum entropy (in policy gradient) encourages exploration. For semi-supervised:
+**Code:**
 
 ```python
 def entropy_regularization(logits, unlabeled_mask):
@@ -835,6 +1040,7 @@ def entropy_regularization(logits, unlabeled_mask):
 
 ## Q81: How do you implement the LAMB optimizer (Layer-wise Adaptive Moments) for large batch training?
 **A:** LAMB computes a layer-wise adaptive learning rate: trust_ratio = ||w|| / ||update||. This enables training with batch sizes up to 64K without loss of accuracy:
+**Code:**
 
 ```python
 optimizer = torch.optim.LAMB(model.parameters(), lr=1e-3, weight_decay=0.01)
@@ -842,6 +1048,7 @@ optimizer = torch.optim.LAMB(model.parameters(), lr=1e-3, weight_decay=0.01)
 
 ## Q82: How do you implement neural architecture search with DARTS (Differentiable Architecture Search)?
 **A:** DARTS relaxes discrete architecture choices to continuous parameters (alpha). The search network is a supernet where each edge computes a weighted sum of all operations. After bi-level optimization (train weights then architecture parameters), discrete architecture is derived by pruning low-weight operations:
+**Code:**
 
 ```python
 # Bi-level optimization loop:
@@ -858,6 +1065,7 @@ for step in range(steps):
 
 ## Q83: How do you implement the Proximal Policy Optimization (PPO) clipping for RL-based training of language models?
 **A:** PPO clips the probability ratio to prevent too-large policy updates. Used in RLHF for aligning LLMs:
+**Code:**
 
 ```python
 ratio = (new_log_probs - old_log_probs).exp()
@@ -867,6 +1075,7 @@ loss = -torch.min(ratio * advantages, clipped_ratio * advantages).mean()
 
 ## Q84: How do you implement training with Reversible Layers (RevNet) for memory-efficient backpropagation?
 **A:** Reversible layers reconstruct activations during backward pass from outputs, eliminating the need to store intermediate activations (O(1) memory per layer). Used in architectures like The Reformer:
+**Code:**
 
 ```python
 # RevNet: x1, x2 -> y1 = x1 + F(x2), y2 = x2 + G(y1)
@@ -875,6 +1084,7 @@ loss = -torch.min(ratio * advantages, clipped_ratio * advantages).mean()
 
 ## Q85: How do you implement training with manifold mixup (mixup in feature space, not input space)?
 **A:** Manifold Mixup applies mixup to intermediate representations (hidden states) rather than inputs. This creates smoother representations:
+**Code:**
 
 ```python
 for layer in model.layers:
@@ -888,6 +1098,7 @@ for layer in model.layers:
 
 ## Q86: How do you implement the Tensor Processing Unit (TPU) with `torch_xla` for large-scale training orchestration?
 **A:** Use `torch_xla` to run PyTorch models on TPUs. Key differences: lazy tensor execution, `xm.optimizer_step(optimizer)` instead of `optimizer.step()`, and parallel training via `xla_model.parallel_loader`:
+**Code:**
 
 ```python
 import torch_xla.core.xla_model as xm
@@ -902,6 +1113,7 @@ for batch in loader:
 
 ## Q87: How do you implement training with the Chowdhury & Goutam optimizer (CGO)?
 **A:** CGO uses a combination of gradient centralization, adaptive momentum, and weight decay with Nesterov acceleration. It's designed for large-scale distributed training:
+**Code:**
 
 ```python
 # Implementation combines GC + Adam + NAG + decoupled WD
@@ -911,6 +1123,7 @@ optimizer = torch_optimizer.DiffGrad(model.parameters(), lr=1e-3)
 
 ## Q88: How do you implement FlashAttention in training custom transformer models?
 **A:** FlashAttention computes exact attention without materializing the NxN attention matrix, using tiling to reduce HBM reads/writes. Use PyTorch's `torch.nn.functional.scaled_dot_product_attention` (PyTorch 2.0+) which uses FlashAttention internally:
+**Code:**
 
 ```python
 attn_output = F.scaled_dot_product_attention(query, key, value, attn_mask=mask, is_causal=True)
@@ -918,6 +1131,7 @@ attn_output = F.scaled_dot_product_attention(query, key, value, attn_mask=mask, 
 
 ## Q89: How do you implement training with the Noam Optimizer (used in Transformer paper)?
 **A:** The Noam learning rate schedule increases linearly for warmup steps, then decays proportionally to the inverse square root of the step number:
+**Code:**
 
 ```python
 class NoamSchedule:
@@ -932,6 +1146,7 @@ class NoamSchedule:
 
 ## Q90: How do you implement bfloat16 training on A100/H100 GPUs with deterministic execution?
 **A:** BF16 has same exponent range as FP32 but less precision. It eliminates the need for loss scaling. For determinism, set `torch.use_deterministic_algorithms(True)` and `torch.backends.cudnn.deterministic = True`. Note that some operations may be non-deterministic in BF16:
+**Code:**
 
 ```python
 with torch.autocast(device_type='cuda', dtype=torch.bfloat16):
@@ -940,6 +1155,7 @@ with torch.autocast(device_type='cuda', dtype=torch.bfloat16):
 
 ## Q91: How do you implement training with Perceiver IO architecture (cross-attention for arbitrary input sizes)?
 **A:** Perceiver IO uses cross-attention from a fixed-size latent array to the input, then self-attention in the latent space. This enables O(n) scaling with input size. Training requires careful initialization of the latent array:
+**Code:**
 
 ```python
 latents = nn.Parameter(torch.randn(512, d_model))
@@ -951,6 +1167,7 @@ def forward(self, x):
 
 ## Q92: How do you implement training with bias correction in Adam-family optimizers?
 **A:** Bias correction accounts for the fact that moving averages of gradient moments are initialized at zero, biasing estimates toward zero early in training. Adam's bias correction divides by (1 - beta^t) for first moment and sqrt(1 - beta2^t) for second moment:
+**Code:**
 
 ```python
 m_hat = m / (1 - beta1 ** step)
@@ -960,6 +1177,7 @@ update = lr * m_hat / (sqrt(v_hat) + eps)
 
 ## Q93: How do you implement training with ternary/XNOR weight networks for extreme quantization?
 **A:** Ternary networks use weights in {-1, 0, +1}. Training uses full-precision shadow weights, quantized during forward pass, with straight-through estimator for gradients:
+**Code:**
 
 ```python
 def ternary_forward(weights):
@@ -976,6 +1194,7 @@ class TernaryFunction(torch.autograd.Function):
 
 ## Q94: How do you implement training with Factorized Networks (low-rank approximations during training)?
 **A:** Factorize weight matrices into two low-rank matrices W_approx = U @ V (where U: d1 x r, V: r x d2). Train U and V instead of W. This reduces parameters and computation. The rank r controls the tradeoff:
+**Code:**
 
 ```python
 self.U = nn.Parameter(torch.randn(in_features, rank))
@@ -985,6 +1204,7 @@ def forward(self, x): return x @ self.U @ self.V
 
 ## Q95: How do you implement the Shampoo optimizer (second-order optimization with Kronecker-factored preconditioner)?
 **A:** Shampoo maintains Kronecker-factored preconditioners for each layer, providing second-order optimization benefits at O(n) memory per layer. It's more memory-efficient than full-matrix methods:
+**Code:**
 
 ```python
 # Use distributed_shampoo library
@@ -994,6 +1214,7 @@ optimizer = DistributedShampoo(model.parameters(), lr=1e-3, betas=(0.9, 0.999))
 
 ## Q96: How do you implement training with the Muon optimizer (Sophia-style second-order clipping)?
 **A:** Muon uses Newton's method-inspired updates: clipping the update by the ratio of gradient to Hessian diagonal estimate. This provides adaptive step sizes per parameter:
+**Code:**
 
 ```python
 # Sophia (sign-constant) optimizer
@@ -1003,6 +1224,7 @@ param.data -= lr * grad_clipped
 
 ## Q97: How do you implement training with the UNet-style skip connections for deep supervision and gradient flow?
 **A:** UNet connects encoder layers to corresponding decoder layers via skip connections. During training, this provides gradient shortcuts to early layers. Implement with weighted sum of encoder feature maps via concatenation or addition:
+**Code:**
 
 ```python
 def forward(self, x):
@@ -1016,6 +1238,7 @@ def forward(self, x):
 
 ## Q98: How do you implement training with the Neural Tangent Kernel (NTK) parameterization (μP, Maximal Update Parameterization)?
 **A:** μP enables hyperparameter transfer across model widths: optimal LR, init, and muP scalings for small models transfer to large models. Key changes: learning rate scales as 1/width, output weights scale as 1/width, and embeddings scale as sqrt(width):
+**Code:**
 
 ```python
 # μP: output weights scaled by 1/fan_in
@@ -1024,6 +1247,7 @@ nn.init.normal_(output_layer.weight, std=0.01 / math.sqrt(fan_in))
 
 ## Q99: How do you implement training with the T-Few (IA3) parameter-efficient fine-tuning method?
 **A:** IA3 (Infused Adapter by Inhibiting and Amplifying Inner Activations) learns element-wise rescaling vectors (l_A, l_K, l_V, l_FF) applied to key, value, and feed-forward activations. It modifies fewer parameters than LoRA and can be merged with the base model:
+**Code:**
 
 ```python
 class IA3(nn.Module):
@@ -1035,6 +1259,7 @@ class IA3(nn.Module):
 
 ## Q100: How do you implement experiment tracking with Weights & Biases (W&B) sweeps for automated hyperparameter search?
 **A:** W&B sweeps automate hyperparameter tuning with Bayesian, grid, or random search. Define a sweep config, agent runs training with suggested parameters, and results are logged:
+**Code:**
 
 ```python
 import wandb
