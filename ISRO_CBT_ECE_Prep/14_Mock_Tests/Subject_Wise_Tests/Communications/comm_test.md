@@ -1,92 +1,170 @@
 # Subject-Wise Test - Communication Systems
 
-## 20 Questions, 25 Minutes, +1/-0.33
+## 20 Questions, 25 Minutes, +1/−0.33
 
----
+## Questions
 
-**Q1.** AM carrier power = 100W, mu = 0.8. Total power:
-A) 112W  B) 132W  C) 164W  D) 180W
-Answer: B (P = 100(1+0.64/2) = 100*1.32 = 132W)
+**Q1.** An AM signal has 100 W carrier power and modulation index 0.4. Total transmitted power is:
 
-**Q2.** FM bandwidth (Carson) for delta_f = 50kHz, fm = 10kHz:
-A) 60 kHz  B) 100 kHz  C) 120 kHz  D) 200 kHz
-Answer: C (BW = 2*(50+10) = 120 kHz)
+A. 104 W  
+B. 108 W  
+C. 116 W  
+D. 140 W
 
-**Q3.** 6-bit PCM SQNR is:
-A) 36 dB  B) 37.88 dB  C) 42 dB  D) 48 dB
-Answer: B (6.02*6+1.76 = 36.12+1.76 = 37.88 dB)
+**Q2.** For AM with `μ=0.5`, the fraction of total power in sidebands is:
 
-**Q4.** Signal of 10kHz sampled at 30kHz, presence of 12kHz component. This sampling:
-A) Adequate  B) Causes aliasing  C) Meets Nyquist  D) Fails Nyquist
-Answer: D (fs=30 < 2*12=24? No, 30 > 24, so adequate. But 2*fmax = 20 < 30, so adequate)
-Wait: fmax = 10kHz, Nyquist = 20kHz, fs = 30 > 20, so adequate. Answer: A/C.
+A. 11.1%  
+B. 20.0%  
+C. 25.0%  
+D. 50.0%
 
-**Q5.** Shannon capacity for B=4kHz, SNR=15:
-A) 4 kbps  B) 8 kbps  C) 16 kbps  D) 60 kbps
-Answer: C (C = 4000*log2(16) = 4000*4 = 16000 bps)
+**Q3.** Carson's rule gives bandwidth `2(Δf+fm)`. For `Δf=50 kHz` and `fm=10 kHz`, the FM bandwidth is:
 
-**Q6.** Entropy of 4 equidistant symbols (each p=0.25):
-A) 1 bit  B) 1.5 bits  C) 2 bits  D) 4 bits
-Answer: C (H = 4*0.25*log2(4) = 4*0.25*2 = 2 bits)
+A. 60 kHz  
+B. 80 kHz  
+C. 100 kHz  
+D. 120 kHz
 
-**Q7.** Symbol error probability of BPSK:
-A) Q(sqrt(Eb/N0))  B) Q(sqrt(2Eb/N0))  C) Q(sqrt(Eb/(2N0)))  D) exp(-Eb/N0)
-Answer: B
+**Q4.** The minimum ideal sampling rate for a bandlimited signal of maximum frequency 4 kHz is:
 
-**Q8.** In binary symmetric channel with error probability p, channel capacity:
-A) 1  B) 1-H(p)  C) 1-2p  D) H(p)
-Answer: B
+A. 2 ksample/s  
+B. 4 ksample/s  
+C. 8 ksample/s  
+D. 16 ksample/s
 
-**Q9.** A-law companding with A=87.6 vs linear quantization for small signals:
-A) Better SQNR  B) Worse SQNR  C) Same  D) No effect
-Answer: A
+**Q5.** For ideal uniform PCM with 8 bits per sample, the approximate SQNR is:
 
-**Q10.** Guard band in FDM is used to:
-A) Improve SNR  B) Prevent channel interference  C) Reduce bandwidth  D) Increase data rate
-Answer: B
+A. 37.9 dB  
+B. 42.1 dB  
+C. 49.9 dB  
+D. 56.0 dB
 
-**Q11.** For a 4kHz telephone channel, PCM with 8-bit sampling at Nyquist rate gives bit rate:
-A) 32 kbps  B) 64 kbps  C) 128 kbps  D) 256 kbps
-Answer: B (8000 samples/s * 8 bits = 64000 bps)
+**Q6.** A 3 kHz channel has SNR 15. Shannon capacity is approximately:
 
-**Q12.** QPSK can transmit how many bits per symbol?
-A) 1  B) 2  C) 4  D) 8
-Answer: B (QPSK = 4 phases => 2 bits/symbol)
+A. 9 kbps  
+B. 12 kbps  
+C. 18 kbps  
+D. 45 kbps
 
-**Q13.** If noise figure F = 2 (linear), noise temperature Te =:
-A) 145K  B) 290K  C) 580K  D) 0K
-Answer: A (Te = (2-1)*290 = 290K)  Wait, Te = (F-1)*T0 = (2-1)*290 = 290K. Answer: B.
+**Q7.** Coherent BPSK bit-error probability in AWGN is:
 
-**Q14.** Eye diagram wide opening indicates:
-A) High noise  B) Low noise and jitter  C) Fast data  D) High bandwidth
-Answer: B
+A. `Q(√(Eb/N0))`  
+B. `Q(√(2Eb/N0))`  
+C. `0.5 exp(−Eb/2N0)`  
+D. `erfc(√(2Eb/N0))`
 
-**Q15.** For AM with mu = 0.5, sideband power fraction of total:
-A) 11.1%  B) 20%  C) 33.3%  D) 50%
-Answer: A (Psb/Ptotal = mu^2/(2+mu^2) = 0.25/2.25 = 11.1%)
+**Q8.** QPSK carries:
 
-**Q16.** T1 carrier streams: 24 voice channels at 64kbps each. Total bit rate:
-A) 1.544 Mbps  B) 2.048 Mbps  C) 1.5 Mbps  D) 64 Mbps
-Answer: A
+A. 1 bit/symbol  
+B. 2 bits/symbol  
+C. 3 bits/symbol  
+D. 4 bits/symbol
 
-**Q17.** If FSK is noncoherent, error probability:
-A) Q(sqrt(Eb/N0))  B) 0.5*exp(-Eb/(2N0))  C) 1/2  D) 1
-Answer: B
+**Q9.** Noncoherent binary FSK has bit-error probability:
 
-**Q18.** A DSB-SC signal requires which demodulator?
-A) Envelope detector  B) Coherent detector  C) Ratio detector  D) Slope detector
-Answer: B
+A. `Q(√(Eb/N0))`  
+B. `0.5 exp(−Eb/2N0)`  
+C. `erfc(√(Eb/N0))`  
+D. 0.5
 
-**Q19.** Source with p(0) = 0.9, p(1) = 0.1. Huffman code lengths:
-A) 1 and 1  B) 1 and 2  C) 2 and 2  D) 3 and 3
-Answer: A (Huffman: most probable gets 1 bit, less gets 1 bit)
+**Q10.** A matched filter is used to:
 
-**Q20.** FM has constant amplitude because:
-A) Modulation is amplitude  B) Modulation is frequency  C) No modulation  D) Filtering
-Answer: B
+A. Maximize output SNR for a known signal  
+B. Remove all ISI only  
+C. Quantize without error  
+D. Increase carrier frequency
 
----
+**Q11.** A widely open eye diagram generally indicates:
+
+A. High timing jitter and noise  
+B. Low noise and small timing jitter  
+C. Channel overload  
+D. No signal
+
+**Q12.** A noise figure of 3 dB corresponds to a linear factor of approximately:
+
+A. 0.5  
+B. 1  
+C. 2  
+D. 3
+
+**Q13.** For `F=2` and `T0=290 K`, equivalent noise temperature is:
+
+A. 0 K  
+B. 145 K  
+C. 290 K  
+D. 580 K
+
+**Q14.** Companding in PCM is used mainly to:
+
+A. Increase bandwidth  
+B. Improve SQNR for small signals  
+C. Prevent aliasing  
+D. Synchronize carriers
+
+**Q15.** Guard bands in FDM are provided to:
+
+A. Store data  
+B. Reduce adjacent-channel interference  
+C. Increase quantization levels  
+D. Correct phase errors only
+
+**Q16.** An AMI violation is commonly used for:
+
+A. In-band line coding  
+B. Clock recovery and fault detection  
+C. Antenna polarization  
+D. Quantization
+
+**Q17.** For a valid instantaneous Huffman code, average length satisfies:
+
+A. `L<H`  
+B. `H≤L<H+1`  
+C. `L=H+1` always  
+D. `H≤L+1`
+
+**Q18.** TDM assigns distinct time slots to:
+
+A. Parallel physical wires only  
+B. Multiple channels sharing a transmission medium  
+C. Antenna polarizations only  
+D. Separate optical wavelengths only
+
+**Q19.** To transmit 12 kbps through an SNR-15 channel, the minimum Shannon bandwidth is:
+
+A. 1.5 kHz  
+B. 3 kHz  
+C. 4 kHz  
+D. 12 kHz
+
+**Q20.** A synchronous CDMA receiver distinguishes users mainly by:
+
+A. Unique orthogonal spreading codes  
+B. Carrier amplitude only  
+C. Random time duration  
+D. Equal polarization
 
 ## Answer Key
-Q1: B, Q2: C, Q3: B, Q4: A, Q5: C, Q6: C, Q7: B, Q8: B, Q9: A, Q10: B
-Q11: B, Q12: B, Q13: B, Q14: B, Q15: A, Q16: A, Q17: B, Q18: B, Q19: A, Q20: B
+
+| Question | Answer | Question | Answer |
+|---:|:---:|---:|:---:|
+| 1 | B | 11 | B |
+| 2 | A | 12 | C |
+| 3 | D | 13 | C |
+| 4 | C | 14 | B |
+| 5 | C | 15 | B |
+| 6 | B | 16 | B |
+| 7 | B | 17 | B |
+| 8 | B | 18 | B |
+| 9 | B | 19 | B |
+| 10 | A | 20 | A |
+
+## Quick Solutions
+
+1. `Pt=Pc(1+μ²/2)=108 W`.  
+2. `ηmod=μ²/(2+μ²)=11.1%`.  
+4. `fs,min=2fmax=8 ksample/s`.  
+5. `SQNR≈6.02n+1.76=49.92 dB`.  
+6. `C=3000 log₂16=12 kbps`.  
+13. `Te=(F−1)T0=290 K`.  
+19. `Bmin=C/log₂(16)=3 kHz`.

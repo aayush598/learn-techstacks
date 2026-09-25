@@ -2,71 +2,72 @@
 
 ---
 
-### Q1. (Easy) Waveguides are used at:
-(A) Audio  (B) Microwave frequencies  (C) DC  (D) Only low freq
+### Q1. (Easy) A hollow rectangular waveguide cannot support which mode?
+(A) TE10  (B) TE20  (C) TM11  (D) TEM
 
-**Answer: (B) Microwave frequencies (low loss, high power)**
-
----
-
-### Q2. (Moderate) Fundamental mode of rectangular waveguide:
-(A) TE10  (B) TM11  (C) TE01  (D) TEM
-
-**Answer: (A) TE10 (lowest cutoff)**
+**Answer: (D) TEM**
 
 ---
 
-### Q3. (Moderate) Cutoff frequency for mode depends on:
-(A) Dimensions and mode  (B) Only length  (C) Only power  (D) Only material
+### Q2. (Easy) For a rectangular waveguide with a > b, the dominant mode is:
+(A) TE01  (B) TE10  (C) TM11  (D) TE11
 
-**Answer: (A) Waveguide dimensions (a,b) and mode indices (m,n)**
-
----
-
-### Q4. (Moderate) Above cutoff, guided wavelength is:
-(A) > free-space λ  (B) = free-space λ  (C) < free-space λ  (D) 0
-
-**Answer: (A) λg > λ (guide wavelength longer than free space)**
+**Answer: (B) TE10**
 
 ---
 
-### Q5. (Moderate) TEM mode propagation in rectangular waveguide:
-(A) Possible  (B) Not possible  (C) Always  (D) Only TM
+### Q3. (Moderate) The cutoff frequency of the TE10 mode in a rectangular guide of width a is:
+(A) c/a  (B) c/(2a)  (C) 2c/a  (D) c/(4a)
 
-**Answer: (B) TEM not possible in hollow rectangular waveguide (needs 2 conductors)**
-
----
-
-### Q6. (Moderate) Below cutoff, waveguide:
-(A) Attenuates (evanescent)  (B) Passes  (C) Amplifies  (D) Resonates
-
-**Answer: (A) Below cutoff - fields decay (evanescent), no propagation**
+**Answer: (B) fc10 = c/(2a)**
 
 ---
 
-### Q7. (Moderate) For TE10 in WR-90 (a=22.86 mm) cutoff freq approx:
-(A) 6.56 GHz  (B) 3 GHz  (C) 10 GHz  (D) 1 GHz
+### Q4. (Moderate) A rectangular waveguide has a = 4.5 cm. Its TE10 cutoff frequency is approximately:
+(A) 3.33 GHz  (B) 6.67 GHz  (C) 10 GHz  (D) 13.33 GHz
 
-**Solution:** fc = c/(2a) = 3e8/(2*0.02286) = 3e8/0.04572 = 6.56 GHz
-**Answer: (A) ~6.56 GHz**
-
----
-
-### Q8. (Moderate) Dominant mode = :
-(A) Lowest cutoff frequency mode  (B) Highest  (C) Any  (D) TEM
-
-**Answer: (A) Mode with lowest cutoff frequency (TE10)**
+**Solution:** fc10 = 3 x 10^8/(2 x 0.045) = 6.67 GHz.
+**Answer: (B) 6.67 GHz**
 
 ---
 
-### Q9. (Moderate) Waveguide attenuation is low because:
-(A) Air dielectric (no conductor in center)  (B) High loss  (C) Copper  (D) Short
+### Q5. (Moderate) At 10 GHz, the TE10 mode propagates in an air-filled guide with a = 2.25 cm. The guide wavelength is:
+(A) 3.00 cm  (B) 3.46 cm  (C) 4.02 cm  (D) 6.67 cm
 
-**Answer: (A) Uses air dielectric with large conductors - low loss (no center conductor dielectric loss)**
+**Solution:** lambda0 = 3 cm, lambdac = 2a = 4.5 cm. lambda_g = 3/sqrt(1 - (3/4.5)^2) = 4.02 cm.
+**Answer: (C) 4.02 cm**
 
 ---
 
-### Q10. (Moderate) For propagation in waveguide fc < f, i.e.:
-(A) Frequency above cutoff  (B) Below  (C) Equal  (D) Always
+### Q6. (Moderate) A mode operating below its cutoff frequency is:
+(A) Propagating with zero phase velocity  (B) Evanescent and decays along the guide  (C) TEM  (D) Always faster than c
 
-**Answer: (A) Operating frequency must be above cutoff frequency**
+**Answer: (B) Evanescent and decays along the guide.**
+
+---
+
+### Q7. (Moderate) In a waveguide above cutoff, phase velocity and group velocity satisfy:
+(A) vp = vg = c  (B) vp > c and vg < c, with vp vg = c^2  (C) vp < c and vg > c  (D) vp vg = lambda^2
+
+**Answer: (B) vp > c and vg < c, with vp vg = c^2.**
+
+---
+
+### Q8. (Moderate) The guide wavelength relative to free-space wavelength is:
+(A) lambda_g < lambda0  (B) lambda_g = lambda0  (C) lambda_g > lambda0  (D) lambda_g = c/fc only
+
+**Answer: (C) lambda_g > lambda0 for a propagating mode.**
+
+---
+
+### Q9. (Moderate) In a circular waveguide, the lowest-order dominant mode is:
+(A) TE11  (B) TM01  (C) TE21  (D) TEM
+
+**Answer: (A) TE11**
+
+---
+
+### Q10. (Moderate) The single-mode range of a rectangular guide is generally:
+(A) 0 < f < fc10  (B) fc10 < f < fc20  (C) fc20 < f < fc30  (D) f = fc11 only
+
+**Answer: (B) fc10 < f < fc20 when a > 2b.**

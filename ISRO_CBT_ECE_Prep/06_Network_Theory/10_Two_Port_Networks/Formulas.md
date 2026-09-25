@@ -65,10 +65,9 @@ For matched: transmission without reflection
 
 ## Special Networks
 ```
-Series Z: 
-  Z11 = Z22 = Z, Z12 = Z21 = Z  (symmetric)
-Series RLC simple cases
-Shunt element:
+Series impedance Z with both port currents referenced into the ports:
+  [Z11 Z12; Z21 Z22] = [Z -Z; -Z Z]
+Shunt admittance Y:
   Y11 = Y12 = Y21 = Y22 = Y
 ```
 

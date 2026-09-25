@@ -2,70 +2,73 @@
 
 ---
 
-### Q1. (Easy) Smith chart plots:
-(A) Impedance/admittance on complex plane  (B) Only resistance  (C) Only reactance  (D) Power
+### Q1. (Easy) The center of the Smith chart represents:
+(A) z = 0  (B) z = 1  (C) Gamma = 1  (D) z = infinity
 
-**Answer: (A) Normalized impedance (and admittance) on complex reflection plane**
-
----
-
-### Q2. (Moderate) Center of Smith chart corresponds to:
-(A) Short  (B) Z0 (matched, Γ=0)  (C) Open  (D) infinity
-
-**Answer: (B) Matched load (Γ=0, normalized 1+j0)**
+**Answer: (B) z = 1, a matched load**
 
 ---
 
-### Q3. (Moderate) Outer boundary of Smith chart (|Γ|=1):
-(A) Purely reactive  (B) Purely resistive  (C) Match  (D) Short only
+### Q2. (Easy) The upper half of the Smith chart represents positive reactance:
+(A) Capacitive  (B) Inductive  (C) Resistive only  (D) Open circuit
 
-**Answer: (A) Outer circle = purely reactive loads (|Γ|=1)**
-
----
-
-### Q4. (Moderate) Right-hand horizontal axis point (far right):
-(A) Short  (B) Open circuit  (C) Match  (D) -j
-
-**Answer: (B) Open circuit (Z=infinity)**
+**Answer: (B) Inductive**
 
 ---
 
-### Q5. (Moderate) Left-hand horizontal axis point (far left):
-(A) Open  (B) Short circuit  (C) 50 ohm  (D) Match
+### Q3. (Moderate) For zL = 2 + j0, the reflection coefficient is:
+(A) 1/3 angle 0 degrees  (B) 1/3 angle 180 degrees  (C) 3 angle 0 degrees  (D) 0 angle 0 degrees
 
-**Answer: (B) Short circuit (Z=0)**
-
----
-
-### Q6. (Moderate) One full rotation around Smith chart = __ wavelength:
-(A) λ/2  (B) λ  (C) λ/4  (D) 2λ
-
-**Answer: (A) Half wavelength (λ/2) - impedance repeats**
+**Solution:** Gamma = (2 - 1)/(2 + 1) = 1/3.
+**Answer: (A) 1/3 angle 0 degrees**
 
 ---
 
-### Q7. (Moderate) Distance between two VSWR minima on line:
-(A) λ/2  (B) λ/4  (C) λ  (D) λ/8
+### Q4. (Moderate) The VSWR for zL = 2 + j0 is:
+(A) 1  (B) 2  (C) 3  (D) 0.5
 
-**Answer: (A) λ/2 (voltage maxima/minima repeat every half wavelength)**
-
----
-
-### Q8. (Moderate) VSWR circle center:
-(A) At chart center  (B) Off-center  (C) On boundary  (D) Outside
-
-**Answer: (A) Concentric circles centered at chart center; radius = |Γ|**
+**Solution:** |Gamma| = 1/3, so VSWR = (1 + 1/3)/(1 - 1/3) = 2.
+**Answer: (B) 2**
 
 ---
 
-### Q9. (Moderate) To move toward generator you rotate:
-(A) Clockwise  (B) Counterclockwise  (C) Either  (D) Not possible
+### Q5. (Moderate) A movement of lambda/4 toward the generator changes normalized impedance to:
+(A) z  (B) z*  (C) 1/z  (D) 1/z*
 
-**Answer: (A) Clockwise (toward generator direction)**
+**Answer: (C) 1/z**
 
 ---
 
-### Q10. (Moderate) Adding series inductance moves point:
-(A) Clockwise along constant-r circle (increasing jx)  (B) Counterclockwise  (C) Radial  (D) No change
+### Q6. (Moderate) A complete revolution around a constant-|Gamma| circle corresponds to moving:
+(A) lambda/4  (B) lambda/2  (C) lambda  (D) 2lambda
 
-**Answer: (A) Along constant resistance circle toward +jx (inductive)**
+**Answer: (B) lambda/2**
+
+---
+
+### Q7. (Moderate) The admittance point corresponding to a given impedance point is:
+(A) At the same point  (B) Diametrically opposite on the chart  (C) Always on the real axis  (D) At the circumference
+
+**Answer: (B) Diametrically opposite, because y = 1/z.**
+
+---
+
+### Q8. (Moderate) A load with |Gamma| = 0.5 has a VSWR equal to:
+(A) 1  (B) 2  (C) 3  (D) 4
+
+**Solution:** VSWR = (1 + 0.5)/(1 - 0.5) = 3.
+**Answer: (C) 3**
+
+---
+
+### Q9. (Moderate) The point z = 1 + j0.5 is:
+(A) A matched load  (B) An open circuit  (C) A short circuit  (D) A normalized impedance with conductance one and positive susceptance
+
+**Answer: (D) A normalized impedance with conductance one and positive susceptance.**
+
+---
+
+### Q10. (Moderate) In a single-stub admittance-chart design, the first step toward a match is to find a point where:
+(A) Normalized resistance is one  (B) Normalized conductance is one  (C) VSWR is maximum  (D) Reactance is zero only
+
+**Answer: (B) Normalized conductance is one.**

@@ -10,8 +10,8 @@
 
 ### Monopole (quarter-wave)
 - lambda/4 over ground plane
-- Rr ~ 36.5 ohms, D ~ 3.28 (2x dipole), 
-- Gain ~ dipole but half the size (image theory)
+- Rr ~ 36.5 ohms, D ~ 1.64 (2.15 dBi)
+- Same ideal directivity as a half-wave dipole, but half the physical length above ground (image theory)
 
 ### Loop Antenna
 - Small loop: electrically small, low Rr, used for receiving/direction finding
@@ -79,7 +79,7 @@
 
 ## ISRO Key Points
 - Half-wave dipole: 73 ohm, 2.15 dBi
-- Monopole: 36.5 ohm, gain 2x dipole
+- Monopole: 36.5 ohm, ideal directivity 1.64 (2.15 dBi)
 - Parabolic: G = eta(piD/lambda)^2
 - Folded dipole: 300 ohm, 4x
 - Patch: low profile, narrowband

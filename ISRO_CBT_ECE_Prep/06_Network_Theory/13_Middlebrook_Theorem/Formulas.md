@@ -2,52 +2,56 @@
 
 ## Extra Element Theorem (EET)
 ```
-T(z) = T(0) * (1 + Z_n/Z) / (1 + Z_d/Z)
+T(Z) = T(infinity) * (1 + Z_n/Z) / (1 + Z_d/Z)
 
-T(0): transfer function with extra element shorted/removed
-Z_n: null output driving-point impedance (output = 0, element removed)
-Z_d: driving-point impedance with input zeroed (element removed)
+T(infinity): transfer with the extra impedance open-circuited
+T(0): transfer with the extra impedance short-circuited
+Z_n: null double-injection driving-point impedance
+Z_d: single-injection impedance with the input signal zeroed
 Z: value of the added element
 ```
 
-## Equivalent Admittance Form
+## Equivalent Forms
 ```
-T(z) = T(0) * (1 + Y_d/Y) / (1 + Y_n/Y)  (using admittance)
-Equivalent form with Y=1/Z
+T(Z) = T(infinity) * (1 + Z_n/Z)/(1 + Z_d/Z)
+T(Z) = T(0) * (1 + Z/Z_n)/(1 + Z/Z_d)
+T(0) = T(infinity) * Z_n/Z_d
 ```
 
 ## Where:
 ```
-Z_d = Req seen at element location with input source off
-Z_n = Req seen at element location with output forced to zero
+Z_d = Req seen at element location with the input signal set to zero
+Z_n = Null double-injection driving-point impedance
 ```
 
 ## N-Element (N-EET)
 ```
-Generalizable: multiply correction factors for each extra element
-T = T0 * PT (correction for each extra element)
-Commonly 1-2 elements in practice
+The theorem extends to several inserted elements.
+The general bilinear correction includes higher-order cross terms,
+so multiple-element corrections are not generally a simple product
+of independent single-element factors.
+```
 ```
 
-## Nulling the Output
+## Null Double Injection
 ```
-"Null" = make the transfer output zero (not just grounded)
-For a transfer of interest, null = 
-  set dependent-variable (output) to zero via adjusting source
+A null condition sets the relevant transfer response to zero.
+It determines the null driving-point impedance needed by EET;
+it is not generally the same as grounding the physical output node.
 ```
 
 ## Quick Reference
 | Symbol | Meaning |
 |--------|---------|
-| T(0) | transfer with element shorted |
-| Z_d | driving impedance (input zeroed) |
-| Z_n | null impedance (output nulled) |
-| Z | element value |
-| Correction | (1+Zn/Z)/(1+Zd/Z) |
+| T(infinity) | transfer with the extra impedance open |
+| T(0) | transfer with the extra impedance shorted |
+| Z_d | driving-point impedance with the input zeroed |
+| Z_n | null double-injection impedance |
+| Z | extra-element impedance |
 
 ## Typical application: add capacitor C
 ```
-To add compensation cap C:
-  T = T0*(1+Zn*C... convert)
-  Produces pole/zero, used in feedback compensation
+Z = 1/(sC)
+T(Z) = T(infinity) * (1 + s C Z_n)/(1 + s C Z_d)
+The correction factor introduces the associated pole-zero behavior
 ```

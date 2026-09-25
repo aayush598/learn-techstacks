@@ -66,7 +66,7 @@
 
 ---
 
-### Q10. (Moderate) Quarter-wave monopole over ground has:
-(A) ~half dipole radiation resistance / pattern  (B) Same as dipole  (C) Zero  (D) Double gain
+### Q10. (Moderate) An ideal quarter-wave monopole over a perfect ground plane has:
+(A) Radiation resistance of 36.5 ohm and the upper-half pattern of a dipole  (B) The same full-space pattern and 73 ohm radiation resistance as a dipole  (C) Zero radiation resistance  (D) Twice the directivity of a half-wave dipole
 
-**Answer: (A) Monopole is half of dipole (over ground plane), rad resistance ~36.5 ohm**
+**Answer: (A) Its input radiation resistance is about 36.5 ohm; the ground image produces the upper-half dipole pattern.**

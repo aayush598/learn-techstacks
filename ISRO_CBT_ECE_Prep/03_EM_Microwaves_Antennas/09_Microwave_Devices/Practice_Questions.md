@@ -2,70 +2,70 @@
 
 ---
 
-### Q1. (Easy) Magnetron is used as:
-(A) Oscillator (high power microwave)  (B) Amplifier only  (C) Switch  (D) Attenuator
+### Q1. (Easy) The Gunn diode produces microwave oscillation using:
+(A) Avalanche breakdown  (B) Transferred-electron effect  (C) Quantum tunneling  (D) Ferromagnetic resonance
 
-**Answer: (A) High-power microwave oscillator (radar)**
-
----
-
-### Q2. (Moderate) Klystron produces:
-(A) High power at microwave via velocity modulation  (B) Only DC  (C) Audio  (D) Light
-
-**Answer: (A) Microwave amplification via velocity modulation + bunching**
+**Answer: (B) Transferred-electron effect**
 
 ---
 
-### Q3. (Moderate) TWT (Traveling Wave Tube) is:
-(A) Broadband amplifier  (B) Narrowband oscillator  (C) Attenuator  (D) Filter
+### Q2. (Easy) The IMPATT diode combines:
+(A) Gunn effect and transit time  (B) Avalanche multiplication and transit time  (C) Magnetic resonance and drift  (D) P-N junction capacitance only
 
-**Answer: (A) Broadband microwave amplifier (wide bandwidth)**
-
----
-
-### Q4. (Moderate) GUNN diode exhibits:
-(A) Negative resistance (for oscillation)  (B) Positive rectification  (C) Zener  (D) Varactor
-
-**Answer: (A) Negative resistance - used in oscillators (Gunn effect) at X/Ku band**
+**Answer: (B) Avalanche multiplication and transit time**
 
 ---
 
-### Q5. (Moderate) IMPATT diode is:
-(A) Negative resistance oscillator (avalanche transit)  (B) Rectifier  (C) Photodiode  (D) Schottky for detection
+### Q3. (Moderate) A TWT is preferred over a klystron when:
+(A) Maximum output power is the only goal  (B) Broad bandwidth is required  (C) Very low noise is required  (D) A low-cost oscillator is required
 
-**Answer: (A) IMPATT - avalanche transit time negative resistance oscillator**
-
----
-
-### Q6. (Moderate) Varactor diode is:
-(A) Voltage-variable capacitor  (B) Fixed cap  (C) Rectifier  (D) Amplifier
-
-**Answer: (A) Voltage-controlled capacitance (tuning)**
+**Answer: (B) Broad bandwidth is required.**
 
 ---
 
-### Q7. (Moderate) Schottky (hot-carrier) diode used for:
-(A) Mixer/detector (fast, low Vf)  (B) High power  (C) Only rectification DC  (D) Zener
+### Q4. (Moderate) The magnetron is most commonly used as:
+(A) A low-noise LNA  (B) A high-power pulsed radar oscillator  (C) A variable capacitor  (D) A detector diode
 
-**Answer: (A) Microwave mixer/detector (fast switching, low forward voltage)**
-
----
-
-### Q8. (Moderate) PIN diode is used as:
-(A) RF switch/attenuator  (B) Oscillator  (C) Amplifier  (D) Filter
-
-**Answer: (A) RF switch/attenuator (low capacitance in RF, controlled by DC bias)**
+**Answer: (B) A high-power pulsed radar oscillator.**
 
 ---
 
-### Q9. (Moderate) Velocity modulation refers to:
-(A) Klystron/TWT bunching  (B) Amplitude  (C) Frequency  (D) Phase only
+### Q5. (Moderate) A HEMT is especially suitable for:
+(A) High-power magnetron replacement only  (B) Low-noise microwave amplification  (C) Audio loudspeakers  (D) Rectification at mains frequency
 
-**Answer: (A) Velocity modulation (speed varies, forms electron bunches) - basis of klystron/TWT**
+**Answer: (B) Low-noise microwave amplification.**
 
 ---
 
-### Q10. (Moderate) Highest CW power microwave generator:
-(A) Magnetron  (B) Klystron  (C) TWT  (D) Gunn
+### Q6. (Moderate) A varactor diode is commonly used for:
+(A) Oscillator frequency tuning  (B) High-power mechanical switching  (C) Generation of DC  (D) Amplification at RF only
 
-**Answer: (A) Magnetron (pulsed, very high power)**
+**Answer: (A) Oscillator frequency tuning.**
+
+---
+
+### Q7. (Moderate) Schottky diodes are widely used in microwave systems as:
+(A) High-voltage rectifiers  (B) Mixers and detectors  (C) Magnetron cavities  (D) Waveguide flanges
+
+**Answer: (B) Mixers and detectors.**
+
+---
+
+### Q8. (Moderate) A reflex klystron is primarily a:
+(A) Narrowband oscillator  (B) Broad-band power amplifier  (C) Low-noise receiver  (D) Frequency divider
+
+**Answer: (A) Narrowband oscillator.**
+
+---
+
+### Q9. (Moderate) Compared with a Gunn oscillator, an IMPATT oscillator generally has:
+(A) Lower noise and lower power  (B) Higher noise but higher achievable power  (C) No negative resistance  (D) No transit-time effect
+
+**Answer: (B) Higher noise but higher achievable power.**
+
+---
+
+### Q10. (Moderate) The slow-wave structure in a TWT is used to:
+(A) Increase electron transit time for energy exchange  (B) Cool the electron beam  (C) Convert microwave energy to DC  (D) Block RF leakage
+
+**Answer: (A) Reduce the electron axial velocity relative to the RF wave for energy exchange.**

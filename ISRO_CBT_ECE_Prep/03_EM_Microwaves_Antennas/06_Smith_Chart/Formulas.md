@@ -21,10 +21,11 @@ Read from constant |Gamma| circle crossing real axis (max R value)
 
 ## Motion / Rotation
 ```
-Input impedance at distance d from load:
-  z_in = z_load rotated clockwise by angle:
-    theta = 2 beta d = 4 pi d/lambda (electrical length)
-Full circle: lambda/2 (180 electrical deg = 2*pi*... )
+Input impedance at distance d from the load:
+  z_in = z_load rotated by the electrical length:
+    theta = 2 beta d = 4 pi d/lambda
+Full revolution: lambda/2 (180 electrical degrees).
+In the standard impedance Smith-chart convention, toward-generator rotation is clockwise.
 ```
 Important: A full revolution around the chart corresponds to a length of lambda/2.
 

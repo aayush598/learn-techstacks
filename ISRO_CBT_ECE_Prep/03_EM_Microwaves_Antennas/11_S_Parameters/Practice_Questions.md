@@ -2,71 +2,72 @@
 
 ---
 
-### Q1. (Easy) S-parameters characterize devices using:
-(A) Incident and reflected waves  (B) Voltage only  (C) Current only  (D) Power only
+### Q1. (Easy) S11 of a two-port network is:
+(A) Forward voltage gain  (B) Input reflection coefficient  (C) Output impedance  (D) Noise figure
 
-**Answer: (A) Scattering (incident/reflected) waves - convenient at RF**
-
----
-
-### Q2. (Moderate) S11 is:
-(A) Input reflection coefficient  (B) Forward gain  (C) Reverse gain  (D) Output match
-
-**Answer: (A) S11 = input reflection coefficient (b1/a1 with a2=0)**
+**Answer: (B) Input reflection coefficient**
 
 ---
 
-### Q3. (Moderate) For a matched device (Zin=Zo), S11:
-(A) 0  (B) 1  (C) -1  (D) 0.5
+### Q2. (Easy) S21 represents:
+(A) Forward transmission coefficient  (B) Input reflection coefficient  (C) Reverse reflection coefficient  (D) Port power
 
-**Answer: (A) 0 (no reflection)**
-
----
-
-### Q4. (Moderate) |S11| in dB for VSWR=2:
-(A) -9.54 dB  (B) -3 dB  (C) -20 dB  (D) 0 dB
-
-**Solution:** Γ=(VSWR-1)/(VSWR+1)=1/3; 20log(1/3) = -9.54 dB
-**Answer: (A) -9.54 dB**
+**Answer: (A) Forward transmission coefficient**
 
 ---
 
-### Q5. (Moderate) S21 for an amplifier represents:
-(A) Forward power gain  (B) Input match  (C) Output match  (D) Isolation
+### Q3. (Moderate) S11 is measured when:
+(A) Port 1 is open  (B) Port 2 is terminated in the reference impedance  (C) The network is lossless  (D) The input is matched
 
-**Answer: (A) Forward transmission (gain) - S21**
-
----
-
-### Q6. (Moderate) Reciprocal passive network has S12:
-(A) = S21  (B) = 0  (C) >S21  (D) =1
-
-**Answer: (A) S12 = S21 (reciprocal) for passive devices**
+**Answer: (B) Port 2 is terminated in the reference impedance.**
 
 ---
 
-### Q7. (Moderate) Return loss (dB) relates to S11:
-(A) Return loss = -20log|S11|  (B) =20log|S11|  (C) =|S11|  (D) =1/|S11|
+### Q4. (Moderate) A reciprocal network has:
+(A) S12 = S21  (B) S11 = S22 = 1  (C) S21 = 0  (D) S = 0
 
-**Answer: (A) Return Loss = -20 log|S11| (positive dB, larger better)**
-
----
-
-### Q8. (Moderate) S22 is:
-(A) Output reflection coefficient  (B) Forward gain  (C) Reverse gain  (D) Isolation
-
-**Answer: (A) S22 = output reflection coefficient**
+**Answer: (A) S12 = S21**
 
 ---
 
-### Q9. (Moderate) For power splitter S21=S31=... ~:
-(A) -3 dB each (half power)  (B) 0 dB  (C) 3 dB  (D) -6 dB
+### Q5. (Moderate) For a lossless two-port with port 2 matched:
+(A) |S11|^2 + |S21|^2 = 1  (B) S11 + S21 = 1  (C) S11 S21 = 1  (D) |S11|^2 = 1
 
-**Answer: (A) Equal 2-way split -> -3 dB each branch**
+**Answer: (A) |S11|^2 + |S21|^2 = 1**
 
 ---
 
-### Q10. (Moderate) Perfectly matched & lossless device, |S11| and |S21|:
-(A) |S11|=0, |S21|=1  (B) |S11|=1  (C) both 0  (D) both 1
+### Q6. (Moderate) If |S21| = 0.5 under matched conditions, the forward transmission loss is:
+(A) 0 dB  (B) 3 dB  (C) 6 dB  (D) 20 dB
 
-**Answer: (A) S11=0 (matched), S21=1 (all power passes, lossless)**
+**Solution:** 20 log10(0.5) = -6.02 dB, so loss is about 6 dB.
+**Answer: (C) 6 dB**
+
+---
+
+### Q7. (Moderate) An ideal matched through connection has:
+(A) S11 = S22 = 0 and S21 = S12 = 1  (B) S11 = S22 = 1  (C) S21 = 0  (D) S12 = 1 only
+
+**Answer: (A) S11 = S22 = 0 and S21 = S12 = 1**
+
+---
+
+### Q8. (Moderate) An ideal isolator differs from an ideal reciprocal through device because:
+(A) Its ports are not matched  (B) S12 = 0 while S21 = 1  (C) It has S11 = 1  (D) It cannot be a two-port
+
+**Answer: (B) S12 = 0 while S21 = 1.**
+
+---
+
+### Q9. (Moderate) A reciprocal, lossless, and perfectly matched three-port can:
+(A) Exist with all Sii = 0  (B) Exist only with unequal ports  (C) Not exist  (D) Exist only at DC
+
+**Answer: (C) Not exist.**
+
+---
+
+### Q10. (Moderate) A network has S11 = 0.2 angle 0 degrees and S21 = 0.98 magnitude. Its approximate return loss is:
+(A) 5 dB  (B) 14 dB  (C) 20 dB  (D) 0 dB
+
+**Solution:** Return loss = -20 log10(0.2) = 13.98 dB.
+**Answer: (B) 14 dB**

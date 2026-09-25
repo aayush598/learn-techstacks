@@ -30,10 +30,10 @@
 
 ---
 
-### Q5. (Moderate) Antenna effective aperture Ae:
-(A) D λ^2 / 4π  (B) λ/D  (C) D/λ  (D) 4π D λ^2
+### Q5. (Moderate) Antenna effective aperture Ae is:
+(A) G λ^2 / 4π  (B) λ/G  (C) G/λ  (D) 4π G λ^2
 
-**Answer: (A) Ae = D λ^2 / 4π**
+**Answer: (A) Ae = G λ^2 / 4π**
 
 ---
 

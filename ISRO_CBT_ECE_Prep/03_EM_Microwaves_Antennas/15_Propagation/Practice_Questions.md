@@ -65,7 +65,8 @@
 
 ---
 
-### Q10. (Moderate) Line-of-sight range approx:
-(A) ~sqrt(2 h) miles (h in ft)  (B) Constant  (C) Independent of height  (D) h^2
+### Q10. (Moderate) The radio horizon from an antenna of height h metres is approximately:
+(A) 4.12 sqrt(h) km  (B) 4.12 h km  (C) 412 sqrt(h) km  (D) h/4.12 km
 
-**Answer: (A) LOS distance ≈ sqrt(2 h) (antenna height dependent)**
+**Solution:** The standard 4/3-Earth approximation is d(km) = 4.12 sqrt(h(m)).
+**Answer: (A) 4.12 sqrt(h) km**

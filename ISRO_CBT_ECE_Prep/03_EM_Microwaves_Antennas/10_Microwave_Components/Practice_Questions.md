@@ -2,70 +2,71 @@
 
 ---
 
-### Q1. (Easy) Microwave circulator provides:
-(A) Directional transmission (port isolation)  (B) Amplification  (C) Detection  (D) Filtering
+### Q1. (Easy) An isolator allows power flow:
+(A) In both directions equally  (B) In one direction only  (C) Only from load to generator  (D) Only when VSWR = infinity
 
-**Answer: (A) Circulates signal directionally between ports (3-port, uses ferrite)**
-
----
-
-### Q2. (Moderate) Isolator:
-(A) Passes fwd, absorbs reverse  (B) Amplifies both  (C) Attenuates both  (D) Phase only
-
-**Answer: (A) One-way device (forward pass, reverse isolation/absorb) - uses ferrite**
+**Answer: (B) In one direction only.**
 
 ---
 
-### Q3. (Moderate) Directional coupler measures:
-(A) Forward/reflected power (sampling)  (B) Impedance only  (C) Frequency  (D) Phase
+### Q2. (Easy) A three-port circulator routes power from port 1 to port 2 and then:
+(A) Back to port 1  (B) Port 3  (C) All ports equally  (D) The isolated port only
 
-**Answer: (A) Samples forward and/or reflected power (coupling + directivity)**
-
----
-
-### Q4. (Moderate) Magic-T is a:
-(A) 4-port hybrid (sum/difference)  (B) 3-port  (C) 2-port  (D) 1-port
-
-**Answer: (A) 4-port hybrid junction (sum/difference, E/H arms)**
+**Answer: (B) Port 3**
 
 ---
 
-### Q5. (Moderate) Ferrite device depends on:
-(A) Magnetic bias + electron spin  (B) Temperature only  (C) Voltage  (D) Light
+### Q3. (Moderate) A directional coupler is specified to have 6 dB coupling. The coupled-port power relative to incident power is:
+(A) 1/2  (B) 1/4  (C) 1/8  (D) 1/16
 
-**Answer: (A) Ferrite - biased ferrite material (non-reciprocal from electron spin/magnetization)**
-
----
-
-### Q6. (Moderate) Waveguide attenuator is used to:
-(A) Control/absorb power level  (B) Amplify  (C) Phase shift  (D) Generate
-
-**Answer: (A) Reduce signal power (calibrated attenuation)**
+**Solution:** 6 dB means 10^(-6/10) = 1/4.
+**Answer: (B) 1/4**
 
 ---
 
-### Q7. (Moderate) E-plane T-junction has:
-(A) 3-port  (B) 2-port  (C) 4-port  (D) 1-port
+### Q4. (Moderate) For a directional coupler, directivity measures:
+(A) Power loss in the coupler  (B) Separation of forward and backward coupled waves  (C) Port impedance  (D) Phase shift through the through port
 
-**Answer: (A) 3-port waveguide tee (E-plane or H-plane)**
-
----
-
-### Q8. (Moderate) Purpose of hybrid ring (rat-race):
-(A) Power combining/splitting in/out phase  (B) Only amplification  (C) Filter  (D) Speeding
-
-**Answer: (A) Power splitting/combining with phase relationships (180 deg hybrid ring)**
+**Answer: (B) Separation of forward and backward coupled waves.**
 
 ---
 
-### Q9. (Moderate) Waveguide flange/coupling:
-(A) Mechanical connector  (B) Amplifier  (C) Diode  (D) Resonator
+### Q5. (Moderate) A magic tee is primarily used for:
+(A) Power combining and splitting  (B) Frequency multiplication  (C) Dielectric measurement  (D) Antenna radiation
 
-**Answer: (A) Mechanical connection between waveguide sections (flanges)**
+**Answer: (A) Power combining and splitting.**
 
 ---
 
-### Q10. (Moderate) Bolometer is:
-(A) Power detector (temperature-dependent resistance)  (B) Amplifier  (C) Oscillator  (D) Filter
+### Q6. (Moderate) A high-Q cavity resonator is useful in:
+(A) Oscillators and filters  (B) DC supplies  (C) Audio speakers  (D) Rectifier circuits
 
-**Answer: (A) Power measurement device - resistive element changes with absorbed RF power**
+**Answer: (A) Oscillators and filters.**
+
+---
+
+### Q7. (Moderate) A phase shifter with phase shift theta has forward transmission coefficient:
+(A) theta  (B) 1 - theta  (C) e^(j theta)  (D) 1/theta
+
+**Answer: (C) e^(j theta)**
+
+---
+
+### Q8. (Moderate) The nonreciprocal behavior of isolators and circulators is obtained using:
+(A) Ferrite materials  (B) Carbon resistors  (C) Air gaps only  (D) P-type semiconductors
+
+**Answer: (A) Ferrite materials.**
+
+---
+
+### Q9. (Moderate) An isolator is commonly placed before a microwave source to:
+(A) Increase transmitter gain  (B) Protect the source from load reflections  (C) Remove all noise  (D) Convert the frequency
+
+**Answer: (B) Protect the source from load reflections.**
+
+---
+
+### Q10. (Moderate) A matched load absorbs incident microwave power with:
+(A) Infinite reflection  (B) Very low reflection  (C) Zero conductance  (D) A short circuit
+
+**Answer: (B) Very low reflection.**

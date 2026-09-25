@@ -32,11 +32,11 @@ The Smith chart maps z-plane (impedance) to unit circle in Gamma-plane
 | Constant VSWR circle | same as |Gamma| circle |
 
 ## Motions on Chart
-- Toward load: clockwise (counterclockwise rotation? - convention)
-- Away from load / toward generator: one direction
-- A full rotation = lambda/2 (half wavelength)
-  Moving distance L (lambda) rotates angle 4*pi*L/lambda
-- Quarter-wave (lambda/4) = 180 degree rotation (z -> 1/z)
+- In the standard impedance Smith-chart convention, moving toward the generator rotates a point clockwise.
+- Moving toward the load rotates a point counterclockwise.
+- A full rotation = lambda/2 (180 electrical degrees).
+- The rotation for a distance d is theta = 2 beta d = 4 pi d/lambda.
+- Quarter-wave (lambda/4) = 90 electrical degrees of line length, which rotates the reflection-coefficient point by 180 degrees on the chart (z -> 1/z).
 
 ## Reading Values
 ```
@@ -62,7 +62,7 @@ Match: find z=1 point (center)
 ## ISRO Key Points
 - Smith chart = impedance + reflection coefficient combined
 - Full rotation = lambda/2
-- Quarter wave = 180 deg -> z becomes 1/z
+- Quarter wave = 180 degrees of reflection-coefficient rotation -> z becomes 1/z
 - Match at center (z=1, Gamma=0)
 - Top inductive, bottom capacitive
 - VSWR from constant |Gamma| circle

@@ -69,9 +69,9 @@ Butterworth/Chebyshev implementations common as active (Sallen-Key)
 
 ## Sallen-Key (2nd order active LPF)
 ```
-fc = 1/(2 pi sqrt(R1 R2 C1 C2))
+fc = 1/(2 pi sqrt(R1 R2 C1 C2)) for the unity-gain balanced case
 Q controlled by gain/component ratios
-Unity gain version: equal R, C
+  Unity-gain balanced version: R1 = R2 = R and C1 = C2 = C
 ```
 
 ## dB and Decade

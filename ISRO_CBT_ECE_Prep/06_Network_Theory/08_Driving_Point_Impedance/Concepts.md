@@ -9,15 +9,15 @@
 - For passive RLC networks: Z(s) is a **positive real function**
 - Real rational function: coefficients real
 - Re[Z(jw)] >= 0 for passive (real part non-negative)
-- Poles/zeros on negative real axis or in conjugate pairs (in LHP real part <=0)
-- Simple poles on imaginary axis have positive residues
-- Z(s) has no poles in RHP (passive/stability)
+- Z(s) has no right-half-plane poles; simple imaginary-axis poles must have positive residues
+- Zeros of a positive-real function may occur in the right-half-plane
+- Non-real poles and zeros occur in conjugate pairs because the coefficients are real
 
 ## Positive Real (PR) Function Conditions
 1. Z(s) rational with real coefficients
 2. Z(s) real for real s
 3. Re[Z(s)] >= 0 for Re[s] >= 0 (in the RHP, real part >=0)
-4. (Equivalently: poles in LHP, imaginary-axis poles simple with + residues)
+4. Pole restrictions: no RHP poles; any imaginary-axis poles are simple with positive residues
 
 ## Realization
 ```

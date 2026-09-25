@@ -1,93 +1,171 @@
-# Subject-Wise Test - EM/Microwaves/Antennas
+# Subject-Wise Test - EM, Microwaves and Antennas
 
-## 20 Questions, 25 Minutes, +1/-0.33
+## 20 Questions, 25 Minutes, +1/−0.33
 
----
+## Questions
 
-**Q1.** Lossless line with L=0.25uH/m, C=100pF/m. Z0:
-A) 25 ohms  B) 50 ohms  C) 75 ohms  D) 100 ohms
-Answer: B (Z0 = sqrt(0.25e-6/100e-12) = sqrt(2500) = 50 ohms)
+**Q1.** A lossless line has `L=0.25 μH/m` and `C=100 pF/m`. Its characteristic impedance is:
 
-**Q2.** VSWR for ZL = 200, Z0 = 50:
-A) 1  B) 2  C) 3  D) 4
-Answer: D (Gamma = (200-50)/(200+50) = 150/250 = 0.6, VSWR = (1+0.6)/(1-0.6) = 1.6/0.4 = 4)
+A. 25 Ω  
+B. 50 Ω  
+C. 75 Ω  
+D. 100 Ω
 
-**Q3.** TE10 cutoff for a=3cm waveguide:
-A) 2.5 GHz  B) 5 GHz  C) 7.5 GHz  D) 10 GHz
-Answer: B (fc = 3e8/(2*0.03) = 3e8/0.06 = 5 GHz)
+**Q2.** A load produces a magnitude-0.5 reflection coefficient. The VSWR is:
 
-**Q4.** S11 = 0.5 (linear). Power reflection coefficient:
-A) 0.25  B) 0.5  C) 0.75  D) 1.0
-Answer: A (|Gamma|^2 = 0.25)
+A. 1.5  
+B. 2.0  
+C. 3.0  
+D. 4.0
 
-**Q5.** Friis: Pt = 10W, Gt = 2, Gr = 2, lambda = 0.1m, R = 100m. Pr:
-A) 1 mW  B) 0.1 mW  C) 10 mW  D) 100 mW
-Answer: B (Pr = 10*2*2*(0.1/(4*pi*100))^2 = 40*(0.1/1256.6)^2 = 40*(7.96e-5)^2 = 40*6.33e-9 = 2.53e-7 W = 0.253 mW)
-Closest to 0.1 mW.
+**Q3.** A quarter-wave transformer matches 50 Ω to 200 Ω. Its intermediate impedance is:
 
-**Q6.** Half-wave dipole directivity:
-A) 1.64 (2.15 dBi)  B) 2.0 (3 dBi)  C) 3.0 (4.77 dBi)  D) 10
-Answer: A
+A. 50 Ω  
+B. 75 Ω  
+C. 100 Ω  
+D. 150 Ω
 
-**Q7.** Gunn diode operates due to:
-A) Impact ionization  B) Transferred electron effect  C) Thermal emission  D) Avalanche
-Answer: B
+**Q4.** The `TE₁₀` cutoff frequency of a rectangular waveguide with broad wall `a=3 cm` is:
 
-**Q8.** In a reciprocal network, S-matrix:
-A) S = S^T  B) S = S^H  C) S = S^-1  D) S = I
-Answer: A
+A. 2.5 GHz  
+B. 5.0 GHz  
+C. 7.5 GHz  
+D. 10.0 GHz
 
-**Q9.** A 3-port reciprocal lossless network:
-A) Is always matched  B) Cannot have all ports matched  C) Is unitary  D) Has all Sii = 0
-Answer: B
+**Q5.** If `S₁₁=0.4` in magnitude, the reflected-power ratio is:
 
-**Q10.** Quarter-wave transformer matching 50 to 200 ohms needs Z0 =:
-A) 50  B) 100  C) 150  D) 250
-Answer: B (Z0 = sqrt(50*200) = sqrt(10000) = 100)
+A. 0.16  
+B. 0.40  
+C. 0.64  
+D. 1.60
 
-**Q11.** In a rectangular waveguide, propagation is possible when:
-A) f > fc always  B) f < fc  C) f = fc  D) Any frequency
-Answer: A (f must exceed cutoff)
+**Q6.** A passive lossless microwave network has an S-matrix satisfying:
 
-**Q12.** E-plane tee:
-A) Series junction  B) Shunt junction  C) T junction  D) Magic tee
-Answer: B
+A. `S=ST`  
+B. `S=S*`  
+C. `S=S†`  
+D. `S=0`
 
-**Q13.** TWT provides:
-A) High power narrowband  B) Broadband moderate power  C) Low noise narrowband  D) High power broadband only
-Answer: B
+**Q7.** Reciprocity of a microwave network implies:
 
-**Q14.** Skin depth depends on:
-A) Frequency only  B) Conductivity only  C) Both frequency and conductivity  D) Neither
-Answer: C (delta = sqrt(2/(w*mu*sigma)))
+A. `S12=S21`  
+B. `S11=S22`  
+C. `|S11|=1`  
+D. `S21=0`
 
-**Q15.** Brewster angle occurs when:
-A) Reflection = 0 for parallel polarization  B) Refraction = 0  C) Total internal reflection  D) Critical angle
-Answer: A
+**Q8.** For `Pt=1 W`, `Gt=Gr=100`, `λ=1 m`, and `R=1 m`, free-space received power is approximately:
 
-**Q16.** Radar range equation: Pr decreases with distance as:
-A) 1/R^2  B) 1/R^4  C) 1/R  D) 1/ln(R)
-Answer: B (radar round-trip gives R^-4)
+A. 25.3 W  
+B. 100 W  
+C. 253 W  
+D. 1,000 W
 
-**Q17.** Isolator S-parameters:
-A) S11=0, S12=0, S21=1  B) S11=1  C) All S=1  D) S12=1
-Answer: A
+**Q9.** The directivity of an ideal infinitesimal dipole is:
 
-**Q18.** Microstrip line propagates:
-A) Pure TEM  B) Quasi-TEM  C) TE mode  D) TM mode
-Answer: B
+A. 1.15 dBi  
+B. 1.64 dBi  
+C. 2.15 dBi  
+D. 7.78 dBi
 
-**Q19.** Antenna aperture Ae for G=20, lambda = 0.3m:
-A) 7.16 cm^2  B) 71.6 cm^2  C) 0.716 m^2  D) 0.0716 m^2
-Answer: A (Ae = lambda^2*G/(4*pi) = 0.09*20/12.57 = 0.143 m^2 = 1430 cm^2)
-Hmm: 0.09*20 = 1.8, /4pi = 1.8/12.57 = 0.143 m^2 = 1430 cm^2. None match. Let me assume G=2 for 0.09*2/12.57 = 0.0143 = 143 cm^2. Still no match. Let me use Ae = lambda^2*G/(4pi), if G=4: 0.09*4/12.57 = 0.0287 m^2 = 287 cm^2. Still no. Recheck options. Given G=20: Ae = 0.143 m^2 = 1430 cm^2. None match. The question may have inconsistent options. Skip detailed.
+**Q10.** An antenna with gain 20 and wavelength 0.3 m has effective aperture:
 
-**Q20.** Which device produces negative incremental resistance?
-A) Gunn diode  B) TWT  C) Klystron  D) HEMT
-Answer: A
+A. 0.0143 m²  
+B. 0.143 m²  
+C. 1.43 m²  
+D. 14.3 m²
 
----
+**Q11.** With all radar parameters fixed, received power varies with range as:
+
+A. `R⁻¹`  
+B. `R⁻²`  
+C. `R⁻³`  
+D. `R⁻⁴`
+
+**Q12.** Ordinary microstrip propagation is best described as:
+
+A. Pure TEM under all conditions  
+B. Quasi-TEM  
+C. TE only  
+D. TM only
+
+**Q13.** Above cutoff, a rectangular-waveguide phase velocity is:
+
+A. Less than `c`  
+B. Equal to `c`  
+C. Greater than `c`  
+D. Always zero
+
+**Q14.** Brewster's angle gives zero reflection for which polarization when incidence is from air to a lossless dielectric?
+
+A. Perpendicular  
+B. Parallel  
+C. Circular only  
+D. Both at every angle
+
+**Q15.** Skin depth decreases when:
+
+A. Frequency decreases  
+B. Conductivity decreases  
+C. Frequency or conductivity increases  
+D. Permeability increases
+
+**Q16.** The ideal resonant length of a short-circuited quarter-wave guide is:
+
+A. `λg/4`  
+B. `λg/2`  
+C. `3λg/2`  
+D. `λ0/4` necessarily
+
+**Q17.** In an ideal isolator, reverse transmission is ideally:
+
+A. Unity  
+B. Zero  
+C. Twice unity  
+D. Equal to reflection
+
+**Q18.** EIRP is approximately:
+
+A. `Pt/Gt`  
+B. `PtGt`  
+C. `PrGr`  
+D. `Gt+Pt` in linear units
+
+**Q19.** For polarization efficiency `ρ=cos²(Δψ)`, perfect match requires:
+
+A. `ρ=0.5`  
+B. `ρ=1`  
+C. `ρ=−1`  
+D. `ρ=0` always
+
+**Q20.** The radio horizon for two terminals is approximately `4.12(√h₁+√h₂)` kilometres when antenna heights are in metres. This is mainly the:
+
+A. Optical surface including diffraction  
+B. Skip-ionosphere path only  
+C. Troposcatter range only  
+D. Waveguide cutoff range
 
 ## Answer Key
-Q1: B, Q2: D, Q3: B, Q4: A, Q5: B, Q6: A, Q7: B, Q8: A, Q9: B, Q10: B
-Q11: A, Q12: B, Q13: B, Q14: C, Q15: A, Q16: B, Q17: A, Q18: B, Q19: A(see note), Q20: A
+
+| Question | Answer | Question | Answer |
+|---:|:---:|---:|:---:|
+| 1 | B | 11 | D |
+| 2 | C | 12 | B |
+| 3 | C | 13 | C |
+| 4 | B | 14 | B |
+| 5 | A | 15 | C |
+| 6 | C | 16 | A |
+| 7 | A | 17 | B |
+| 8 | C | 18 | B |
+| 9 | C | 19 | B |
+| 10 | B | 20 | A |
+
+## Quick Solutions
+
+1. `Z0=√(L/C)=50 Ω`.  
+2. `VSWR=(1+0.5)/(1−0.5)=3`.  
+3. `Z0=√(50×200)=100 Ω`.  
+4. `fc=c/(2a)=5 GHz`.  
+5. Reflected power ratio is `|Γ|²=0.16`.  
+8. `Pr=10000/(4π)²≈253 W`.  
+10. `Ae=Gλ²/(4π)=0.143 m²`.  
+20. `4.12(√h₁+√h₂)` is the standard 4/3-earth approximation with the effective-radius factor absorbed into the coefficient.

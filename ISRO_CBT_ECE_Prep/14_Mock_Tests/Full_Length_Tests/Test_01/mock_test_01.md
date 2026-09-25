@@ -1,429 +1,456 @@
 # Full-Length Mock Test 01
 
-## ISRO Scientist/Engineer 'SC' (ECE) - Mock Test
+## ISRO CBT ECE Full-Length Examination
 
----
+- Total time: 120 minutes
+- Part A: 80 questions, 80 marks, +1/−0.33
+- Part B: 15 questions, 20 marks, no negative marking
+- Total: 95 questions, 100 marks
 
-### Instructions:
-- Total Time: 120 minutes (2 hours)
-- Part A: 80 Questions, 80 Marks (+1/-0.33)
-- Part B: 15 Questions, 20 Marks (No negative marking)
-- Total: 95 Questions, 100 Marks
+## Part A: Discipline-Specific Questions
 
----
+### Analog Circuits
 
-## PART A: DISCIPLINE SPECIFIC (80 Questions, 80 Marks)
+**Q1.** An inverting amplifier has `Rf=100 kΩ` and `R1=10 kΩ`. Its ideal gain is:
 
-### Section 1: Analog Circuits (10 Questions)
+A. −10  B. +10  C. 11  D. −11
 
-**Q1.** The closed-loop gain of an inverting amplifier with Rf = 100k and R1 = 10k is:
-(A) 10  (B) -10  (C) 11  (D) -11
+**Q2.** A non-inverting amplifier has `R1=1 kΩ` and `Rf=9 kΩ`. Its gain is:
 
-**Q2.** Schmitt trigger has UTP = 4V, LTP = -4V. The hysteresis width is:
-(A) 4V  (B) 8V  (C) 2V  (D) 0V
+A. 1  B. 9  C. 10  D. −10
 
-**Q3.** The maximum efficiency of a Class B push-pull amplifier is:
-(A) 25%  (B) 50%  (C) 78.5%  (D) 100%
+**Q3.** The input resistance of an ideal op-amp is:
 
-**Q4.** Wien bridge oscillator frequency with R = 10k, C = 10nF:
-(A) 1.59 kHz  (B) 15.9 kHz  (C) 159 Hz  (D) 1.59 MHz
+A. 0 Ω  B. Infinite  C. 1 Ω  D. 1/GΩ
 
-**Q5.** In negative feedback, the bandwidth:
-(A) Decreases  (B) Increases  (C) Remains same  (D) Becomes zero
+**Q4.** Common-mode rejection ratio measures the ability to:
 
-**Q6.** The gain-bandwidth product of an op-amp is 10 MHz. For gain of 100, the bandwidth is:
-(A) 100 kHz  (B) 1 MHz  (C) 10 MHz  (D) 1 GHz
+A. Reject differential signals  B. Reject common-mode signals  C. Reject only clock noise  D. Increase gain
 
-**Q7.** A non-inverting amplifier has R1 = 5k, Rf = 45k. The voltage gain is:
-(A) 9  (B) 10  (C) -9  (D) -10
+**Q5.** An op-amp has 10 MHz unity-gain bandwidth. At a noise gain of 50, its bandwidth is:
 
-**Q8.** Class D amplifier uses:
-(A) Linear amplification  (B) PWM  (C) AM  (D) FM
+A. 50 kHz  B. 100 kHz  C. 200 kHz  D. 5 MHz
 
-**Q9.** Crystal oscillator has Q-factor in the range:
-(A) 10-100  (B) 100-1000  (C) 10^4-10^6  (D) 10^8-10^10
+**Q6.** A slew rate of 10 V/μs limits a 2 V-peak sine wave to approximately:
 
-**Q10.** The feedback fraction beta for oscillation using Barkhausen criterion |A*beta|=1 when A=50 is:
-(A) 0.02  (B) 0.05  (C) 0.5  (D) 50
+A. 159 kHz  B. 398 kHz  C. 796 kHz  D. 1.59 MHz
 
----
+**Q7.** The maximum theoretical efficiency of a complementary Class-B push-pull amplifier is:
 
-### Section 2: Digital Circuits and HDL (8 Questions)
+A. 25%  B. 50%  C. 78.5%  D. 100%
 
-**Q11.** De Morgan's law states (A+B)' equals:
-(A) A'+B'  (B) A'.B'  (C) A+B  (D) A.B
+**Q8.** Class-AB biasing is used primarily to reduce:
 
-**Q12.** How many flip-flops are needed for a mod-13 counter?
-(A) 2  (B) 3  (C) 4  (D) 5
+A. Gain  B. Crossover distortion  C. Slew rate  D. Input impedance
 
-**Q13.** In VHDL, signal assignment inside a process uses:
-(A) :=  (B) <=  (C) ==  (D) =
+**Q9.** A Schmitt trigger has upper threshold 4 V and lower threshold −4 V. Its hysteresis width is:
 
-**Q14.** A 4:1 MUX can implement any function of:
-(A) 2 variables  (B) 3 variables  (C) 4 variables  (D) 5 variables
+A. 0 V  B. 4 V  C. 8 V  D. 16 V
 
-**Q15.** Metastability occurs when:
-(A) Setup time is met  (B) Setup time is violated  (C) Clock is stable  (D) Power is stable
+**Q10.** An RC low-pass filter has `R=10 kΩ` and `C=100 nF`. Its cutoff frequency is:
 
-**Q16.** JK flip-flop characteristic equation is:
-(A) Q+ = JQ' + K'Q  (B) Q+ = JQ + K'Q'  (C) Q+ = J'Q + KQ'  (D) Q+ = JK
+A. 159 Hz  B. 1.59 kHz  C. 15.9 kHz  D. 159 kHz
 
-**Q17.** Gray code for decimal 5 (binary 101) is:
-(A) 110  (B) 111  (C) 011  (D) 101
+### Digital Circuits and HDL
 
-**Q18.** In Moore machine, output depends on:
-(A) Current state only  (B) Current state and input  (C) Input only  (D) Previous input
+**Q11.** By De Morgan's theorem, `(A+B)′` equals:
 
----
+A. `A′+B′`  B. `A′B′`  C. `A+B`  D. `AB`
 
-### Section 3: Electromagnetics, Microwaves and Antennas (10 Questions)
+**Q12.** A full adder requires how many input bits?
 
-**Q19.** Characteristic impedance of a lossless transmission line is:
-(A) sqrt(R/G)  (B) sqrt(L/C)  (C) sqrt(RC)  (D) sqrt(LG)
+A. 2  B. 3  C. 4  D. 5
 
-**Q20.** VSWR of a matched line (ZL = Z0) is:
-(A) 0  (B) 1  (C) Infinity  (D) 2
+**Q13.** A 4-bit ripple-carry adder consists of how many full adders?
 
-**Q21.** The cutoff frequency of TE10 mode in rectangular waveguide with a = 2cm:
-(A) 7.5 GHz  (B) 15 GHz  (C) 3.75 GHz  (D) 30 GHz
+A. 2  B. 3  C. 4  D. 8
 
-**Q22.** Intrinsic impedance of free space is approximately:
-(A) 50 ohms  (B) 75 ohms  (C) 377 ohms  (D) 1000 ohms
+**Q14.** The minimum number of flip-flops for a modulo-13 counter is:
 
-**Q23.** For a quarter-wave transformer matching 50 ohm to 200 ohm, Z0 should be:
-(A) 50 ohms  (B) 100 ohms  (C) 150 ohms  (D) 200 ohms
+A. 2  B. 3  C. 4  D. 13
 
-**Q24.** In S-parameters, S11 represents:
-(A) Forward gain  (B) Input reflection coefficient  (C) Isolation  (D) Output impedance
+**Q15.** A 4:1 multiplexer has how many select lines?
 
-**Q25.** Friis equation relates:
-(A) Attenuation and frequency  (B) Received and transmitted power  (C) VSWR and impedance  (D) Gain and bandwidth
+A. 1  B. 2  C. 3  D. 4
 
-**Q26.** Half-wave dipole radiation resistance is approximately:
-(A) 36.5 ohms  (B) 50 ohms  (C) 73 ohms  (D) 100 ohms
+**Q16.** A conventional 6-transistor SRAM cell uses:
 
-**Q27.** Phase velocity in a waveguide is:
-(A) Less than c  (B) Equal to c  (C) Greater than c  (D) Zero
+A. A capacitor and one transistor  B. Cross-coupled inverter latches  C. A magnetic core only  D. Floating-gate charge
 
-**Q28.** EIRP is defined as:
-(A) Input power * efficiency  (B) Transmitted power * transmit antenna gain  (C) Received power * distance  (D) Output power / frequency
+**Q17.** In VHDL, a signal assignment uses:
 
----
+A. `:=`  B. `<=`  C. `==`  D. `=>`
 
-### Section 4: Communication Systems (9 Questions)
+**Q18.** A nonblocking assignment in synthesizable Verilog uses:
 
-**Q29.** AM modulation index mu = 1 gives sideband power equal to:
-(A) 100% of carrier  (B) 50% of carrier  (C) 25% of carrier  (D) 0% of carrier
+A. `:=`  B. `<=`  C. `==`  D. `===`
 
-**Q30.** SQNR for 8-bit PCM is approximately:
-(A) 48 dB  (B) 49.76 dB  (C) 50 dB  (D) 56 dB
+### EM, Microwaves and Antennas
 
-**Q31.** Carson's rule for FM bandwidth is:
-(A) 2*fm  (B) 2*(delta_f + fm)  (C) delta_f  (D) 2*delta_f
+**Q19.** A lossless line has `L=0.25 μH/m` and `C=100 pF/m`. Its `Z0` is:
 
-**Q32.** Nyquist sampling rate for 4 kHz signal is:
-(A) 2 kHz  (B) 4 kHz  (C) 8 kHz  (D) 16 kHz
+A. 25 Ω  B. 50 Ω  C. 75 Ω  D. 100 Ω
 
-**Q33.** Shannon's channel capacity formula for B = 1MHz, SNR = 63:
-(A) 1 Mbps  (B) 6 Mbps  (C) 7 Mbps  (D) 63 Mbps
+**Q20.** For a load reflection magnitude of 0.5, the VSWR is:
 
-**Q34.** In Huffman coding, average code length L satisfies:
-(A) L = H  (B) H <= L < H+1  (C) L < H  (D) L > H+1
+A. 1.5  B. 2  C. 3  D. 4
 
-**Q35.** Noise figure of cascaded amplifiers is dominated by:
-(A) Last stage  (B) First stage  (C) Middle stage  (D) All equally
+**Q21.** A quarter-wave transformer matching 50 Ω to 200 Ω has intermediate impedance:
 
-**Q36.** BPSK bit error probability is:
-(A) Q(sqrt(Eb/N0))  (B) Q(sqrt(2Eb/N0))  (C) erfc(sqrt(Eb/N0))  (D) 0.5*Q(sqrt(Eb/N0))
+A. 50 Ω  B. 75 Ω  C. 100 Ω  D. 150 Ω
 
-**Q37.** TDM is used to multiplex:
-(A) Analog signals  (B) Digital signals  (C) Both  (D) Neither
+**Q22.** The `TE10` cutoff frequency of a rectangular waveguide with `a=3 cm` is:
 
----
+A. 2.5 GHz  B. 5 GHz  C. 7.5 GHz  D. 10 GHz
 
-### Section 5: Signals and Systems / DSP (9 Questions)
+**Q23.** If the magnitude of `S11` is 0.4, the reflected-power ratio is:
 
-**Q38.** Convolution of x(t) with delta(t) gives:
-(A) 0  (B) 1  (C) x(t)  (D) delta(t)
+A. 0.16  B. 0.40  C. 0.64  D. 1.60
 
-**Q39.** For a stable LTI system, the ROC of the transfer function:
-(A) Is in left half plane  (B) Includes jw axis  (C) Is in right half plane  (D) Is inside unit circle
+**Q24.** A passive lossless microwave network has:
 
-**Q40.** Number of stages in Radix-2 FFT for N=1024 points:
-(A) 5  (B) 10  (C) 20  (D) 1024
+A. `S=ST`  B. `S=S*`  C. `S=S†`  D. `S=0`
 
-**Q41.** DTFT of a discrete signal is always:
-(A) Discrete  (B) Continuous  (C) Periodic  (D) Both B and C
+**Q25.** For a reciprocal microwave network:
 
-**Q42.** Time shifting property of Fourier Transform: x(t-t0) transforms to:
-(A) X(jw-t0)  (B) e^(-jwt0)*X(jw)  (C) X(j(w-t0))  (D) e^(jwt0)*X(jw)
+A. `S12=S21`  B. `S11=S22`  C. `|S11|=1`  D. `S21=0`
 
-**Q43.** Z-transform ROC for a causal right-sided sequence is:
-(A) Inside unit circle  (B) Outside unit circle  (C) Entire z-plane  (D) Strip
+**Q26.** For `Pt=1 W`, `Gt=Gr=100`, `λ=1 m`, and `R=1 m`, free-space received power is approximately:
 
-**Q44.** Initial value theorem applies when X(s) is:
-(A) Proper  (B) Strictly proper  (C) Improper  (D) Any
+A. 25.3 W  B. 100 W  C. 253 W  D. 1,000 W
 
-**Q45.** LTI system is BIBO stable if:
-(A) Poles in RHP  (B) Impulse response absolutely summable  (C) All zeros at origin  (D) Gain is high
+**Q27.** The directivity of an ideal infinitesimal dipole is:
 
-**Q46.** Laplace transform of e^(-at)*u(t) is:
-(A) 1/(s-a)  (B) 1/(s+a)  (C) a/(s+a)  (D) s/(s+a)
+A. 1.15 dBi  B. 1.64 dBi  C. 2.15 dBi  D. 7.78 dBi
 
----
+**Q28.** An antenna with gain 20 and wavelength 0.3 m has effective aperture:
 
-### Section 6: Network Theory (7 Questions)
+A. 0.0143 m²  B. 0.143 m²  C. 1.43 m²  D. 14.3 m²
 
-**Q47.** Time constant of RC circuit with R=10k, C=1uF:
-(A) 1 ms  (B) 10 ms  (C) 100 ms  (D) 1 s
+### Communication Systems
 
-**Q48.** At t=0+, an uncharged capacitor acts as:
-(A) Open circuit  (B) Short circuit  (C) Current source  (D) Inductor
+**Q29.** AM has 100 W carrier power and modulation index 0.4. Total power is:
 
-**Q49.** Thevenin voltage is found by:
-(A) Shorting all sources  (B) Opening all sources  (C) Finding open circuit voltage  (D) Finding short circuit current
+A. 104 W  B. 108 W  C. 116 W  D. 140 W
 
-**Q50.** Q-factor of series RLC with R=10, L=1mH, C=1uF at resonance:
-(A) 10  (B) 100  (C) 1000  (D) 0.1
+**Q30.** For AM with `μ=0.5`, the sideband fraction of total power is:
 
-**Q51.** Mason's gain formula denominator includes:
-(A) Only forward paths  (B) Loop gains  (C) Only input  (D) Only output
+A. 11.1%  B. 20%  C. 25%  D. 50%
 
-**Q52.** Maximum power transfer occurs when load equals:
-(A) 0  (B) Source impedance  (C) Infinity  (D) 2*source impedance
+**Q31.** For `Δf=50 kHz` and `fm=10 kHz`, Carson's FM bandwidth is:
 
-**Q53.** At parallel resonance, impedance is:
-(A) Minimum  (B) Maximum  (C) Zero  (D) R
+A. 60 kHz  B. 80 kHz  C. 100 kHz  D. 120 kHz
 
----
+**Q32.** The minimum sampling rate for a 4 kHz bandlimited signal is:
 
-### Section 7: Electronic Devices (7 Questions)
+A. 2 ksample/s  B. 4 ksample/s  C. 8 ksample/s  D. 16 ksample/s
 
-**Q54.** kT/q at room temperature (300K) is approximately:
-(A) 26 mV  (B) 260 mV  (C) 2.6 mV  (D) 260 uV
+**Q33.** Ideal 8-bit PCM SQNR is approximately:
 
-**Q55.** Intrinsic carrier concentration of silicon at 300K is approximately:
-(A) 1.5e10/cm^3  (B) 1.5e16/cm^3  (C) 1.5e6/cm^3  (D) 1.5e20/cm^3
+A. 37.9 dB  B. 42.1 dB  C. 49.9 dB  D. 56.0 dB
 
-**Q56.** MOSFET operates in saturation when:
-(A) Vds < Vgs-Vt  (B) Vds >= Vgs-Vt  (C) Vgs < Vt  (D) Vds = 0
+**Q34.** A 3 kHz channel with SNR 15 has Shannon capacity:
 
-**Q57.** BJT current gain beta = 100, then alpha is approximately:
-(A) 0.99  (B) 1.01  (C) 100  (D) 0.01
+A. 9 kbps  B. 12 kbps  C. 18 kbps  D. 45 kbps
 
-**Q58.** Bandgap of silicon is approximately:
-(A) 0.7 eV  (B) 1.12 eV  (C) 1.4 eV  (D) 2.2 eV
+**Q35.** Coherent BPSK has BER:
 
-**Q59.** Depletion width of PN junction increases with:
-(A) Forward bias  (B) Reverse bias  (C) Temperature  (D) Doping
+A. `Q(√(Eb/N0))`  B. `Q(√(2Eb/N0))`  C. `0.5 exp(−Eb/2N0)`  D. `erfc(√(2Eb/N0))`
 
-**Q60.** Transconductance gm of MOSFET in saturation:
-(A) kn*(Vgs-Vt)  (B) kn*Vds  (C) Vgs/Vt  (D) Id/Vds
+**Q36.** QPSK carries:
 
----
+A. 1 bit/symbol  B. 2 bits/symbol  C. 3 bits/symbol  D. 4 bits/symbol
 
-### Section 8: Control Systems (6 Questions)
+**Q37.** Companding in PCM primarily improves:
 
-**Q61.** Routh array first column has 2 sign changes. Number of RHP poles:
-(A) 0  (B) 1  (C) 2  (D) 3
+A. Sampling rate  B. SQNR for small signals  C. Carrier frequency  D. Antenna gain
 
-**Q62.** A system with transfer function 1/(s+2) is:
-(A) Stable  (B) Unstable  (C) Marginally stable  (D) Oscillatory
+### Signals, Systems and DSP
 
-**Q63.** For a second-order system with zeta = 0.5, the response is:
-(A) Overdamped  (B) Underdamped  (C) Critically damped  (D) Undamped
+**Q38.** Convolution with `δ(t)` gives:
 
-**Q64.** Phase margin of 45 degrees indicates:
-(A) Very stable  (B) Marginally stable  (C) Unstable  (D) Oscillatory
+A. 0  B. 1  C. `x(t)`  D. `dx(t)/dt`
 
-**Q65.** State-space representation requires:
-(A) Transfer function  (B) Differential equations  (C) Only input  (D) Only output
+**Q39.** If `X(ω)` is the Fourier transform of `x(t)`, the transform of `x(t−t0)` is:
 
-**Q66.** PID controller eliminates:
-(A) Rise time  (B) Overshoot  (C) Steady-state error  (D) Bandwidth
+A. `X(ω)`  B. `e⁻ʲωt0X(ω)`  C. `e⁺ʲωt0X(ω)`  D. `ωX(ω)`
 
----
+**Q40.** Multiplication by `e⁺ʲω0t` shifts frequency by:
 
-### Section 9: Engineering Mathematics (4 Questions)
+A. `−2ω0`  B. `−ω0` only  C. `+ω0`  D. 0
 
-**Q67.** If a 3x3 matrix has eigenvalues 1, 2, 3, then det(A) =
-(A) 5  (B) 6  (C) 8  (D) 9
+**Q41.** Parseval's theorem states that:
 
-**Q68.** The solution of dy/dx + 2y = 0 with y(0) = 1 is:
-(A) e^(2x)  (B) e^(-2x)  (C) 2e^(-x)  (D) e^(-x)
+A. Time and frequency energies have equal squared L2 norms  B. All poles are stable  C. The ROC is outside the unit circle  D. The DFT is periodic
 
-**Q69.** Poisson distribution with lambda = 4, P(X=2) is approximately:
-(A) 0.146  (B) 0.293  (C) 0.073  (D) 0.587
+**Q42.** The Laplace transform of `e⁻ᵃᵗu(t)` is:
 
-**Q70.** A singular matrix has:
-(A) All eigenvalues nonzero  (B) At least one zero eigenvalue  (C) Determinant = 1  (D) Full rank
+A. `1/(s−a)`  B. `1/(s+a)`  C. `1/(a−s)` only  D. `s/(s+a)`
 
----
+**Q43.** A causal rational continuous-time system is BIBO stable when its poles are:
 
-### Section 10: Power Electronics (5 Questions)
+A. In the right half-plane  B. On the imaginary axis  C. In the open left half-plane  D. At zero
 
-**Q71.** Output voltage of buck converter with Vin=20V, D=0.5:
-(A) 5V  (B) 10V  (C) 20V  (D) 40V
+**Q44.** A causal right-sided Z-transform has an ROC:
 
-**Q72.** Output voltage of boost converter with Vin=12V, D=0.5:
-(A) 6V  (B) 12V  (C) 24V  (D) 36V
+A. Inside the smallest nonzero pole  B. Outside the largest pole in magnitude  C. Always the full plane  D. Only at `|z|=1`
 
-**Q73.** SCR can be turned off by:
-(A) Gate pulse  (B) Reducing anode current below holding current  (C) Increasing gate current  (D) Forward voltage only
+**Q45.** A DTFT is generally:
 
-**Q74.** Average output voltage of single-phase full-wave rectifier with Vm=311V:
-(A) 99V  (B) 198V  (C) 220V  (D) 311V
+A. Continuous-time and nonperiodic  B. Discrete-time and nonperiodic  C. Discrete-time and periodic  D. Always finite-duration
 
-**Q75.** PWM inverter produces output with:
-(A) Only fundamental  (B) Fundamental and harmonics  (C) Only harmonics  (D) DC output
+**Q46.** The Z-transform of `aⁿu[n]` is:
 
----
+A. `1/(1−az⁻¹)`, ROC `|z|>|a|`  B. `1/(1−az⁻¹)`, ROC `|z|<|a|`  C. `1/(1−az)` only  D. `1/(z−a)` with no ROC
 
-### Section 11: Measurements and Transducers (5 Questions)
+### Network Theory
 
-**Q76.** LVDT is used to measure:
-(A) Temperature  (B) Displacement  (C) Pressure  (D) Flow
+**Q47.** An RC circuit with `R=10 kΩ` and `C=1 μF` has time constant:
 
-**Q77.** Wheatstone bridge is balanced when:
-(A) All resistors equal  (B) R1/R2 = R3/R4  (C) R1*R2 = R3*R4  (D) R1+R4 = R2+R3
+A. 1 ms  B. 10 ms  C. 100 ms  D. 1 s
 
-**Q78.** Gauge factor of a strain gauge is defined as:
-(A) (dR/R)/strain  (B) strain/(dR/R)  (C) R/strain  (D) strain*R
+**Q48.** A series RLC circuit with `L=100 mH` and `C=1 μF` resonates at approximately:
 
-**Q79.** Wien bridge is used to measure:
-(A) Inductance  (B) Capacitance  (C) Frequency  (D) Resistance
+A. 50.3 Hz  B. 159 Hz  C. 503 Hz  D. 1,590 Hz
 
-**Q80.** Voltmeter with sensitivity 20kohm/V on 10V range has resistance:
-(A) 20kohm  (B) 100kohm  (C) 200kohm  (D) 2Mohm
+**Q49.** At series resonance, the input impedance is:
 
----
+A. 0  B. `X_L`  C. `X_C`  D. `R`
 
-## PART B: APTITUDE AND ABILITY TEST (15 Questions, 20 Marks)
+**Q50.** The Thevenin voltage is:
 
-**Q81.** (2 marks) Find the next figure in the series: Circle, Square, Triangle, Circle, Square, ?
-(A) Triangle  (B) Circle  (C) Pentagon  (D) Hexagon
+A. `Rth/Isc`  B. `IscRth` only  C. The open-circuit terminal voltage  D. The short-circuit current
 
-**Q82.** (2 marks) If ALL roses are flowers, and SOME flowers are red, then:
-(A) All roses are red  (B) Some roses may be red  (C) No roses are red  (D) All flowers are roses
+**Q51.** A 6 V source with 3 Ω internal resistance supplies a 6 Ω load. Load current is:
 
-**Q83.** (1 mark) Mirror image of E25 is:
-(A) 52E  (B) E52  (C) 523  (D) 325
+A. 1 A  B. 0.67 A  C. 0.5 A  D. 1.33 A
 
-**Q84.** (2 marks) In a Venn diagram of Cricket, Football, and Hockey players: 20 play only Cricket, 15 play only Football, 10 play only Hockey, 5 play all three. If 30 play Cricket and Football but not Hockey, find total players who play at least one game: (More data needed for exact, but practice type)
+**Q52.** Maximum power transfer requires:
 
-**Q85.** (1 mark) A is taller than B. C is shorter than B. D is taller than C. Who is the shortest?
-(A) A  (B) B  (C) C  (D) D
+A. `RL=2Rth`  B. `RL=Rth`  C. `RL=0`  D. `RL→∞`
 
-**Q86.** (2 marks) Find the odd one out: 2, 5, 11, 17, 23, 29
-(A) 17  (B) 23  (C) 11  (D) 29
+**Q53.** In Mason's formula, `Δk` is found by removing loops that:
 
-**Q87.** (1 mark) Paper folded and punched with 2 holes. When unfolded, number of holes visible:
-(A) 2  (B) 4  (C) 6  (D) 8
+A. Touch forward path k  B. Touch the source only  C. Have positive gain only  D. Repeat source nodes
 
-**Q88.** (2 marks) Complete the analogy: Book : Author :: Painting : ?
-(A) Canvas  (B) Brush  (C) Artist  (D) Color
+### Electronic Devices and Circuits
 
-**Q89.** (1 mark) If 3 machines produce 3 widgets in 3 minutes, how many widgets do 100 machines produce in 100 minutes?
-(A) 100  (B) 3333  (C) 10000  (D) 1
+**Q54.** At 300 K, `kT/q` is approximately:
 
-**Q90.** (2 marks) Statement: "No cat is a dog." Conclusion I: "Some cats are not dogs." Conclusion II: "All cats are animals."
-(A) Only I follows  (B) Only II follows  (C) Both follow  (D) Neither follows
+A. 2.6 mV  B. 26 mV  C. 260 mV  D. 26 V
 
-**Q91.** (1 mark) Clock shows 3:15. Angle between hour and minute hand:
-(A) 0 degrees  (B) 7.5 degrees  (C) 15 degrees  (D) 22.5 degrees
+**Q55.** In the ideal diode equation, forward current is:
 
-**Q92.** (2 marks) 10% increase in price reduces demand by 20%. Price elasticity of demand:
-(A) 0.5  (B) 1  (C) 2  (D) 0.2
+A. Linear for all voltages  B. Exponentially increasing  C. Constant until breakdown  D. Negative for forward bias
 
-**Q93.** (1 mark) Next in series: 1, 1, 2, 3, 5, 8, ?
-(A) 10  (B) 11  (C) 13  (D) 15
+**Q56.** Reverse saturation current of a silicon diode approximately:
 
-**Q94.** (2 marks) A project needs 10 workers for 20 days. If 5 workers join after 10 days, total days needed:
-(A) 20  (B) 25  (C) 30  (D) 15
+A. Doubles for every 10°C rise  B. Halves for every 10°C rise  C. Is temperature-independent  D. Changes only above 200°C
 
-**Q95.** (1 mark) Which number is both a perfect square and perfect cube?
-(A) 64  (B) 36  (C) 16  (D) 8
+**Q57.** Zener breakdown occurs mainly in:
 
----
+A. Forward bias  B. Reverse bias near breakdown  C. Cutoff  D. Saturation
 
-## ANSWER KEY
+**Q58.** Avalanche breakdown is associated with:
 
-### Part A:
-Q1: B, Q2: B, Q3: C, Q4: A, Q5: B, Q6: A, Q7: B, Q8: B, Q9: C, Q10: A
-Q11: B, Q12: C, Q13: B, Q14: B, Q15: B, Q16: A, Q17: A, Q18: A
-Q19: B, Q20: B, Q21: A, Q22: C, Q23: B, Q24: B, Q25: B, Q26: C, Q27: C, Q28: B
-Q29: C, Q30: B, Q31: B, Q32: C, Q33: B, Q34: B, Q35: B, Q36: B, Q37: C
-Q38: C, Q39: B, Q40: B, Q41: D, Q42: B, Q43: B, Q44: A, Q45: B, Q46: B
-Q47: B, Q48: B, Q49: C, Q50: B, Q51: B, Q52: B, Q53: B
-Q54: A, Q55: A, Q56: B, Q57: A, Q58: B, Q59: B, Q60: A
-Q61: C, Q62: A, Q63: B, Q64: A, Q65: B, Q66: C
-Q67: B, Q68: B, Q69: A, Q70: B
-Q71: B, Q72: C, Q73: B, Q74: B, Q75: B
-Q76: B, Q77: B, Q78: A, Q79: C, Q80: C
+A. Impact ionization  B. Thermal drift only  C. Majority-carrier extraction  D. Gate injection
 
-### Part B:
-Q81: A, Q82: B, Q83: A, Q84: (Data dependent), Q85: C, Q86: A
-Q87: B, Q88: C, Q89: C, Q90: A, Q91: B, Q92: C, Q93: C, Q94: B, Q95: A
+**Q59.** Increasing reverse bias on a junction generally:
 
----
+A. Decreases depletion width  B. Increases depletion width  C. Sets width to zero  D. Makes capacitance infinite
 
-## Detailed Solutions
+**Q60.** A long-channel NMOS is in saturation when:
 
-### Q1 Solution:
-Inverting amplifier gain: Av = -Rf/R1 = -100k/10k = -10
-**Answer: (B) -10**
+A. `VDS≥VGS−VT`  B. `VDS<VGS−VT`  C. `VGS<VT`  D. `ID=0` by definition
 
-### Q3 Solution:
-Class B push-pull maximum efficiency = pi/4 = 3.14159/4 = 0.785 = 78.5%
-**Answer: (C) 78.5%**
+### Control Systems
 
-### Q23 Solution:
-Quarter-wave transformer: Z0 = sqrt(Z1*Z2) = sqrt(50*200) = sqrt(10000) = 100 ohms
-**Answer: (B) 100 ohms**
+**Q61.** A causal continuous-time LTI system is BIBO stable when all poles are:
 
-### Q30 Solution:
-SQNR = 6.02*n + 1.76 = 6.02*8 + 1.76 = 48.16 + 1.76 = 49.92 dB approximately 49.76 dB
-**Answer: (B) 49.76 dB**
+A. In the open left half-plane  B. On the imaginary axis  C. In the right half-plane  D. At the origin only
 
-### Q33 Solution:
-C = B*log2(1+SNR) = 10^6 * log2(64) = 10^6 * 6 = 6 Mbps
-**Answer: (B) 6 Mbps**
+**Q62.** The system `1/(s+2)` with unity negative feedback is:
 
-### Q50 Solution:
-Q = (1/R)*sqrt(L/C) = (1/10)*sqrt(10^-3/10^-6) = 0.1*sqrt(1000) = 0.1*31.6 = 3.16
-Wait: Q = w0*L/R = (1/sqrt(LC))*L/R = sqrt(L/C)/R = sqrt(10^-3/10^-6)/10 = sqrt(1000)/10 = 31.6/10 = 3.16
-This gives approximately 10 if we use Q = (1/R)*sqrt(L/C) = (1/10)*sqrt(10^-3/10^-6) = 3.16
-Hmm, let me recalculate. Q = (1/R)*sqrt(L/C) = (1/10)*sqrt(10^-3/10^-6) = (1/10)*sqrt(1000) = 31.6/10 = 3.16
-Closest option is (A) 10. But actually with these values Q = 3.16. The options may have an error.
-**Answer: (B) 10** (assuming different component values were intended)
+A. Stable  B. Unstable  C. Marginally stable  D. Uncontrollable
 
-### Q71 Solution:
-Buck converter: Vo = D*Vin = 0.5*20 = 10V
-**Answer: (B) 10V**
+**Q63.** A second-order system with damping ratio 0.5 is:
 
-### Q72 Solution:
-Boost converter: Vo = Vin/(1-D) = 12/(1-0.5) = 12/0.5 = 24V
-**Answer: (C) 24V**
+A. Overdamped  B. Underdamped  C. Critically damped  D. Undamped
 
-### Q89 Solution:
-3 machines make 3 widgets in 3 min => 1 machine makes 1 widget in 3 min
-100 machines make 100 widgets in 3 min
-In 100 min: 100 machines make (100/3)*100 = 3333.33 widgets
-But wait: 100 machines in 100 min: rate = 100 widgets/3min, so in 100 min = (100/3)*100 = 3333.33
-Actually: each machine makes 1 widget per 3 min. 100 machines in 100 min = 100 * (100/3) = 3333.33
-Closest: (C) 10000? No, that's wrong. Let me re-read: "3 machines produce 3 widgets in 3 minutes"
-Rate per machine = 1 widget / 3 min = 1/3 widget/min
-100 machines in 100 min = 100 * 100 * (1/3) = 10000/3 = 3333.33
-**Answer: (B) 3333** (approximately)
+**Q64.** The number of right-half-plane poles equals the sign changes in the:
 
-### Q91 Solution:
-At 3:15:
-Minute hand position: 15 min = 90 degrees from 12
-Hour hand position: at 3 o'clock = 90 degrees, plus 15/60 * 30 = 7.5 degrees = 97.5 degrees
-Angle between = 97.5 - 90 = 7.5 degrees
-**Answer: (B) 7.5 degrees**
+A. Last column of the Routh array  B. First column of the Routh array  C. Numerator only  D. Gain margin
 
-### Q93 Solution:
-Fibonacci sequence: 1,1,2,3,5,8,13,21,...
-Next term = 5+8 = 13
-**Answer: (C) 13**
+**Q65.** Gain margin at phase crossover is:
+
+A. `1/|T|`  B. `−180°−phase`  C. `|T(jωgc)|`  D. Closed-loop pole count
+
+**Q66.** An integral controller is introduced mainly to:
+
+A. Reduce steady-state error  B. Increase natural frequency only  C. Remove all noise  D. Eliminate actuator limits
+
+### Engineering Mathematics
+
+**Q67.** A 3×3 matrix has eigenvalues 1, 2, and 3. Its determinant is:
+
+A. 5  B. 6  C. 8  D. 9
+
+**Q68.** The solution of `dy/dx+2y=0`, `y(0)=1`, is:
+
+A. `e²ˣ`  B. `e⁻²ˣ`  C. `2e⁻ˣ`  D. `e⁻ˣ`
+
+**Q69.** For a Poisson variable with mean 4, `P(X=2)` is approximately:
+
+A. 0.073  B. 0.147  C. 0.293  D. 0.587
+
+**Q70.** A radix-2 FFT of 1024 points has:
+
+A. 5 stages  B. 10 stages  C. 20 stages  D. 1024 stages
+
+### Power Electronics
+
+**Q71.** An ideal buck converter has `Vin=20 V` and `D=0.5`. Average output is:
+
+A. 5 V  B. 10 V  C. 15 V  D. 20 V
+
+**Q72.** An ideal boost converter has `Vin=12 V` and `D=0.5`. Output is:
+
+A. 6 V  B. 12 V  C. 24 V  D. 36 V
+
+**Q73.** An inverting buck-boost converter has `Vin=12 V` and `D=1/3`. Output-voltage magnitude is:
+
+A. 3 V  B. 6 V  C. 9 V  D. 12 V
+
+**Q74.** A 20 W input stage has 50% efficiency. Output power is:
+
+A. 5 W  B. 10 W  C. 20 W  D. 40 W
+
+**Q75.** Converter ripple factor is:
+
+A. `Vr,rms/Vo`  B. `Vr,pk/Vin` only  C. `Io/Iin`  D. `f/P`
+
+### Measurements and Transducers
+
+**Q76.** An LVDT primarily measures:
+
+A. Temperature  B. Linear displacement  C. Radio frequency  D. Light intensity
+
+**Q77.** The strain-gauge gauge factor is:
+
+A. `(ΔR/R)/strain`  B. `strain/(ΔR/R)`  C. `R×strain`  D. `ΔR/R` only
+
+**Q78.** A Wheatstone bridge is balanced when its corresponding arm ratios are:
+
+A. Unequal  B. Equal  C. Infinite  D. Zero
+
+**Q79.** A CRO time base is specified in:
+
+A. V/div  B. Time/div  C. Ω/div  D. dB/div
+
+**Q80.** A voltmeter sensitivity of 20 kΩ/V on the 10 V range has input resistance:
+
+A. 20 kΩ  B. 100 kΩ  C. 200 kΩ  D. 2 MΩ
+
+## Part B: Aptitude and Ability
+
+**Q81.** (1 mark) What comes next: 2, 4, 8, 16, 32, ?
+
+A. 48  B. 60  C. 64  D. 128
+
+**Q82.** (1 mark) In the sequence `AZ, BY, CX, DW, ?`, the next pair is:
+
+A. EV  B. EU  C. FW  D. FX
+
+**Q83.** (1 mark) If all engineers are graduates and all graduates are literate, then all engineers are:
+
+A. Literate  B. Non-literate  C. Robots  D. Uneducated
+
+**Q84.** (1 mark) The simple interest on 8,000 at 5% per year for 2 years is:
+
+A. 400  B. 800  C. 1,600  D. 8,800
+
+**Q85.** (1 mark) Ten workers complete a job in 12 days. If 15 workers work at the same rate, the job is completed in:
+
+A. 6 days  B. 8 days  C. 10 days  D. 18 days
+
+**Q86.** (2 marks) What is 40% of 250?
+
+A. 80  B. 90  C. 100  D. 125
+
+**Q87.** (2 marks) A bag contains 3 red and 2 blue balls. The probability of drawing a blue ball in one draw is:
+
+A. 1/5  B. 2/5  C. 3/5  D. 1
+
+**Q88.** (2 marks) The angle between the hands of a clock at 6:30 is:
+
+A. 7.5°  B. 15°  C. 22.5°  D. 30°
+
+**Q89.** (2 marks) What comes next: 3, 6, 11, 18, 27, ?
+
+A. 34  B. 36  C. 38  D. 42
+
+**Q90.** (2 marks) No A are B, and all C are A. Which conclusion follows?
+
+A. No C are B  B. Some C are B  C. All B are C  D. No conclusion follows
+
+**Q91.** (2 marks) The average of 8, 12, 16, 20, and 24 is:
+
+A. 14  B. 16  C. 18  D. 20
+
+**Q92.** (2 marks) Two numbers are in the ratio 3:4 and their difference is 7. The smaller number is:
+
+A. 12  B. 16  C. 21  D. 28
+
+**Q93.** (2 marks) The binary sum `1101₂+101₂` is:
+
+A. `10000₂`  B. `10100₂`  C. `10110₂`  D. `11010₂`
+
+**Q94.** (2 marks) Some A are B, and all B are C. Which conclusion follows?
+
+A. Some A are C  B. No A are C  C. All C are A  D. Some C are not C
+
+**Q95.** (2 marks) The average of five numbers is 30. If one number, 20, is replaced by 30, the new average is:
+
+A. 30  B. 31  C. 32  D. 33
+
+## Part A Answer Key
+
+1 A, 2 C, 3 B, 4 B, 5 C, 6 C, 7 C, 8 B, 9 C, 10 B  
+11 B, 12 B, 13 C, 14 C, 15 B, 16 B, 17 B, 18 B  
+19 B, 20 C, 21 C, 22 B, 23 A, 24 C, 25 A, 26 C, 27 C, 28 B  
+29 B, 30 A, 31 D, 32 C, 33 C, 34 B, 35 B, 36 B, 37 B  
+38 C, 39 B, 40 C, 41 A, 42 B, 43 C, 44 B, 45 C, 46 A  
+47 B, 48 C, 49 D, 50 C, 51 B, 52 B, 53 A  
+54 B, 55 B, 56 A, 57 B, 58 A, 59 B, 60 A  
+61 A, 62 A, 63 B, 64 B, 65 A, 66 A  
+67 B, 68 B, 69 B, 70 B  
+71 B, 72 C, 73 B, 74 B, 75 A  
+76 B, 77 A, 78 B, 79 B, 80 C
+
+## Part B Answer Key
+
+81 C, 82 A, 83 A, 84 B, 85 B, 86 C, 87 B, 88 B, 89 C, 90 A, 91 B, 92 C, 93 C, 94 A, 95 C
+
+## Selected Solutions
+
+1. `Av=−Rf/R1=−10`.  
+5. `BW=10 MHz/50=200 kHz`.  
+6. `fmax=SR/(2πVp)≈796 kHz`.  
+10. `fc=1/(2πRC)=1.59 kHz`.  
+19. `Z0=√(L/C)=50 Ω`.  
+22. `fc=c/(2a)=5 GHz`.  
+29. `Pt=Pc(1+μ²/2)=108 W`.  
+33. `SQNR≈6.02n+1.76=49.92 dB`.  
+34. `C=3000log₂16=12 kbps`.  
+47. `τ=RC=10 ms`.  
+48. `f0=1/(2π√LC)=503 Hz`.  
+71. `Vo=DVin=10 V`.  
+72. `Vo=Vin/(1−D)=24 V`.  
+77. Gauge factor is `(ΔR/R)/strain`.  
+80. `Rin=20 kΩ/V×10 V=200 kΩ`.  
+84. `SI=8000×0.05×2=800`.  
+85. Work is constant: `10×12=15×T`, so `T=8 days`.  
+88. At 6:30, the minute hand is at 180° and the hour hand at 195°.  
+89. The terms are `n²+2`; the next term is `6²+2=38`.  
+93. `13+5=18`, which is `10110₂`.  
+95. Original sum is 150; replacing 20 with 30 gives 160, and `160/5=32`.

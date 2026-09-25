@@ -11,8 +11,8 @@ Full-wave: Rr ~ 200 ohm (high)
 ## Monopole (quarter-wave over ground)
 ```
 L = lambda/4, Rr ~ 36.5 ohm
-G ~ 2x dipole (~3.28 or 5.15 dBi)
-(Z_image theory doubles gain)
+D = G = 1.64 (2.15 dBi) for an ideal lossless monopole over a perfect ground plane
+Its image is a half-wave dipole, so the radiation pattern above ground is the upper half of a dipole pattern.
 ```
 
 ## Parabolic Dish
@@ -61,7 +61,7 @@ Gain ~ 5-8 dBi, BW ~ 1-5%
 | Antenna | Key value |
 |---------|-----------|
 | Half-wave dipole | 73 ohm, 2.15 dBi |
-| Monopole | 36.5 ohm, +3dB |
+| Monopole | 36.5 ohm, 2.15 dBi ideal |
 | Dish G | eta(piD/lam)^2 |
 | Dish HPBW | 70 lam/D deg |
 | Folded dipole | ~300 ohm |

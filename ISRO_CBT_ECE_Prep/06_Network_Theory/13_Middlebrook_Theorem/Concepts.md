@@ -10,15 +10,20 @@ If you know the transfer function without a given element, you can correct it fo
 
 ## EET Formula
 ```
-For an extra element Z (impedance) added to a circuit:
-  T(z) = T(0) * (1 + Z_n/Z) / (1 + Z_d/Z)
+For an extra impedance Z added to a circuit:
 
-T(0)  = transfer function with the extra element SHORTED (Z=0) 
-        (or removed appropriately)
-Z_n   = "null" impedance: driving-point impedance seen by the extra 
-        element when the output is NULLED (set to zero) with the extra element removed
-Z_d   = "driving" impedance: driving-point impedance seen by the extra 
-        element when the input source is zeroed (input = 0), extra element removed
+  T(Z) = T(infinity) * (1 + Z_n/Z) / (1 + Z_d/Z)
+
+or equivalently,
+
+  T(Z) = T(0) * (1 + Z/Z_n) / (1 + Z/Z_d)
+
+T(infinity) = transfer function with the extra impedance open-circuited
+T(0)        = transfer function with the extra impedance short-circuited
+Z_n         = null double-injection driving-point impedance seen by the
+              extra element, with the extra element absent
+Z_d         = single-injection driving-point impedance seen by the extra
+              element, with the input signal set to zero
 ```
 
 ## Where Useful
@@ -34,22 +39,22 @@ Z_d   = "driving" impedance: driving-point impedance seen by the extra
 
 ## Step-by-step EET
 1. Remove the extra element Z
-2. Compute T(0) (with the element shorted) - the "reference"
-3. Compute Z_d: impedance at the terminals where Z was, with input zeroed
-4. Compute Z_n: impedance at the terminals where Z was, with output nulled
-5. Apply: T = T(0) * (1 + Zn/Z)/(1 + Zd/Z)
+2. Compute a reference transfer function, normally T(infinity) with Z open
+3. Compute Z_d at the element terminals with the input signal set to zero
+4. Compute Z_n at the element terminals using the null double-injection test
+5. Apply: T(Z) = T(infinity) * (1 + Z_n/Z)/(1 + Z_d/Z)
 
 ## Insights
-- When Z short (Z=0): T -> T(0) (consistent)
-- As Z->inf: T -> T(0)*Zn/Zd
+- As Z tends to infinity, T(Z) tends to T(infinity)
+- As Z tends to zero, T(Z) tends to T(0) = T(infinity) Z_n/Z_d
 - Correct pole/zero behavior emerges automatically
 
 ---
 
 ## ISRO Key Points
-- EET: T = T(0)*(1+Zn/Z)/(1+Zd/Z)
-- T(0): with extra element shorted
-- Zn: null output impedance
-- Zd: zeroed-input impedance
+- EET: T = T(infinity)*(1+Zn/Z)/(1+Zd/Z)
+- T(infinity): with the extra impedance open-circuited
+- Zn: null double-injection impedance
+- Zd: zeroed-input driving-point impedance
 - Extends to N-element theorem
 - Theorist: Middlebrook (extra element theorem)
