@@ -165,6 +165,58 @@
 - For large A_OL × β: A_CL ≈ 1/β
 - This is the ideal gain formula
 
+### Inverting Amplifier
+- The inverting input is a virtual ground when the non-inverting input is grounded
+- Gain: A_CL = -R_f / R_in
+- For R_in = 10 kΩ and R_f = 20 kΩ, A_CL = -2
+
+```circuit
+op = elm.Opamp(leads=True).label("U1", loc="center")
+elm.Line().down(0.25).at(op.in2)
+elm.Ground(lead=False)
+Rin = elm.Resistor().left().at(op.in1).idot().label("Rin 10k", loc="bottom")
+elm.Line().left(0.25).at(Rin.start).label("Vin", loc="left")
+elm.Line().up(0.5).at(op.in1)
+elm.Resistor().tox(op.out).label("Rf 20k", loc="left")
+elm.Line().toy(op.out).dot()
+elm.Line().right(0.5).at(op.out).label("Vout", loc="right")
+```
+
+### Non-Inverting Amplifier
+- The input is applied to the non-inverting terminal
+- Gain: A_CL = 1 + R_f / R_1
+- For R_1 = 10 kΩ and R_f = 20 kΩ, A_CL = 3
+
+```circuit
+op = elm.Opamp(leads=True).label("U1", loc="center")
+out = elm.Line().at(op.out).length(0.75)
+elm.Line().up().at(op.in1).length(1.5).dot()
+elm.Resistor().left().label("R1 10k", loc="bottom")
+elm.Ground()
+elm.Resistor().tox(op.out).label("Rf 20k", loc="left")
+elm.Line().toy(op.out).dot()
+elm.Resistor().left().at(op.in2).idot().label("R2 20k", loc="bottom")
+elm.SourceV().down().reverse().label("Vin", loc="left")
+elm.Line().right().dot()
+elm.Resistor().up().label("R3 20k", loc="right").hold()
+elm.Line().tox(out.end)
+elm.Gap().toy(op.out).label(["-", "Vout", "+"])
+```
+
+### Open-Loop Comparator
+- No negative feedback is present
+- V+ = 0 V and V- = V_in
+- A positive V_in drives the output negative; a negative V_in drives it positive
+- The virtual-short condition does not apply because the op-amp operates in saturation
+
+```circuit
+op = elm.Opamp(leads=True).label("Comparator", loc="center")
+Rin = elm.Resistor().left().at(op.in1).idot().label("Rin 1k", loc="bottom")
+elm.Line().left(0.25).at(Rin.start).label("Vin", loc="left")
+elm.Ground().at(op.in2)
+elm.Line().right(0.75).at(op.out).label("Vout: saturated", loc="right")
+```
+
 ---
 
 ## 9. Op-Amp Specifications for ISRO
