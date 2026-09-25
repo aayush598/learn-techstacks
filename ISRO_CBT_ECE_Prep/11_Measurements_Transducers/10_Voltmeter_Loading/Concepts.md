@@ -61,6 +61,23 @@ Sensitivity = R_v / V_range
 Loading reduces the effective resistance of the measured element.
 Measured voltage is always less than true voltage.
 
+```circuit
+# Voltage divider with a load R_L drawing current at the output node
+V = elm.SourceV().up().label("V_in 10V")
+R1 = elm.Resistor().right().label("R1 10k", loc="bottom")
+elm.Line().right()
+R2 = elm.Resistor().down().label("R2 10k", loc="bottom")
+elm.Line().down()
+elm.Dot().label("out", loc="right")
+RL = elm.Resistor().right().label("R_L 10k", loc="bottom")
+elm.Line().down()
+elm.Line().left()
+elm.Line().up()
+elm.Line().left()
+elm.Line().up().to(V.start)
+elm.Ground()
+```
+
 ### 6.2 Thevenin Equivalent
 Use Thevenin equivalent at measurement point:
 ```
