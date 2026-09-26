@@ -57,6 +57,15 @@ then a **"traps to avoid"** box.
 | 28 | `28-Graphical-Interpretation.md` | I-V curves, load lines, Bode plots, hysteresis, waveforms — read any graph |
 | 29 | `29-Formula-Sheet.md` | Every formula in the subject on one page |
 | 30 | `30-Priority-Checklist.md` | Mark off chapters; "must know" vs "good to know" |
+| 31 | `31-Practice-Bank-Every-Pattern.md` | 120 quick Q&A across all patterns to learn methods |
+| 32 | `32-Single-File-Cheatsheet.md` | THE 1-page exam-eve formula/method cheat sheet |
+| 33 | `33-GATE-and-PYQ-Bank.md` | Master GATE-format question bank + classic PYQ patterns |
+| — | `Practice/Practice-NN-*.md` | Per-topic question files (26 topics) — practice-by-solving |
+
+> **Shortcut if you prefer questions over notes:** skip to `33-GATE-and-PYQ-Bank.md`
+> and the per-topic `Practice/Practice-*.md` files directly. Every concept is
+> taught there through solved problems; open the chapter files only when a
+> solution surprises you.
 
 ---
 
@@ -70,6 +79,10 @@ then a **"traps to avoid"** box.
   mirror / differential pair, and 3–5 op-amp circuit questions.
 - Strategy: master chapters **02 → 09, 19 → 25** first (they carry ~80% of the
   marks). Everything else supports those.
+- **Fastest route (questions-first person):** sit `33-GATE-and-PYQ-Bank.md`
+  Section A–D → for weak topics open the matching `Practice/Practice-NN-*.md`
+  → revise `32-Single-File-Cheatsheet.md` on exam eve. This alone is a complete
+  course.
 
 ## How to read a chapter
 

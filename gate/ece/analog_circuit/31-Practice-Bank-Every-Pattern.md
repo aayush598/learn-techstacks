@@ -539,7 +539,7 @@ voltage-sample ↓R_out, current ↑.
 **A:** `f_o = 1/(2π√(1m·1n)) ≈ 159 kHz`.
 
 **Q102. Hartley L1=1m, L2=3m, C=1µ. f_o?**
-**A:** `L_eff = 4m`; `f_o = 1/(2π√(4m·1µ)) ≈ 7.96 kHz` → ≈ 8 kHz.
+**A:** `L_eff = L1+L2 = 4m`; `f_o = 1/(2π√(4m·1µ)) = 1/(2π·6.32×10⁻⁵) ≈ 2.52 kHz`.
 
 **Q103. Relaxation osc: R=10k, C=10n, R1=10k, R2=10k. T, thresholds?**
 **A:** `T = 2RC·ln(1+2·R1/R2) = 200µ·ln(3) ≈ 220 µs`; thresholds `±V_sat/2`.
