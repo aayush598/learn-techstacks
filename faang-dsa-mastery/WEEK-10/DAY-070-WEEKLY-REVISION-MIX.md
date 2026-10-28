@@ -1,0 +1,1 @@
+# DAY-070 | WEEKLY REVISION MIX | 1H+2M+3E MIXED\n\n> Revise unaided from week. Do mixed set.\n\n## E1-Mix\n## E2-Mix\n## E3-Mix\n## M1-Mix\n## M2-Mix\n## H1-Mix\n\n## Audit\n- [ ] All 6 done unaided\n- [ ] Weak fixed\n- [ ] Tracker updated

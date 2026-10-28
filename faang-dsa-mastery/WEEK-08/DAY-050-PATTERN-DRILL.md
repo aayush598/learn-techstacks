@@ -1,0 +1,1 @@
+# DAY-050 | PATTERN DRILL (WEEK-08) | 1H+2M+3E\n\n> Follow template strictly.\n\n### EASY-1\n### EASY-2\n### EASY-3\n### MEDIUM-1\n### MEDIUM-2\n### HARD-1\n\n### Checklist\n- [ ] Approach + Java + TC/SC + Similar\n- [ ] Marked in tracker\n- [ ] Revision due set
